@@ -3,16 +3,18 @@ using UnityEngine;
 
 public class GameLoopManager : MonoBehaviour
 {
-    public bool IsGameLoopScene => GameManager.Instance.Scene.CurrentSceneType == SceneType.GameLoop;
-    private float loopDuration = 20f;
+    public bool IsGameLoopScene => GameManager.Instance.Scene.CurrentSceneType == SceneType.GameLoop; 
      
     private GameLoopEventManager eventManager; 
     private Action<float> OnTick;
     private float timer;
     private bool isRunning = false;
+    private bool isPaused = false;
 
     public float Timer { get { return timer; } }
     public bool IsRunning => isRunning;
+
+    public bool IsPaused => isPaused;
     public GameLoopEventManager Events => eventManager; 
     private void Awake()
     { 
@@ -20,7 +22,7 @@ public class GameLoopManager : MonoBehaviour
     } 
     public void PrepareReveal()
     {
-        timer = loopDuration;
+        timer = 0;
         OnTick?.Invoke(Timer);
     }
     public void StartLoop()
@@ -36,7 +38,9 @@ public class GameLoopManager : MonoBehaviour
         if (!isRunning)
             return;
 
-        timer -= Time.deltaTime; 
+        if (isPaused) return;
+
+        timer += Time.deltaTime; 
         OnTick?.Invoke(Timer);
 
         if (timer <= 0f)
@@ -50,7 +54,16 @@ public class GameLoopManager : MonoBehaviour
         isRunning = false;
         eventManager.Invoke(GameLoopEventType.LoopEnded);
     }
-
+    public void Pause()
+    {
+        isPaused = true;
+        eventManager.Invoke(GameLoopEventType.Pause);
+    }
+    public void UnPause()
+    {
+        isPaused = false;
+        eventManager.Invoke(GameLoopEventType.UnPause);
+    }
     public void SubscribeTick(Action<float> ev)
     {
         OnTick += ev;
