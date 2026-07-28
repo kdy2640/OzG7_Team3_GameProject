@@ -6,6 +6,8 @@ public enum GameLoopEventType
 {
     BeforeLoopStarted,
     LoopStarted,
+    Pause,
+    UnPause,
     LoopEnded
 }
 
