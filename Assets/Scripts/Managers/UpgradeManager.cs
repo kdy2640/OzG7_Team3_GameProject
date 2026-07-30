@@ -9,7 +9,7 @@ public class UpgradeManager : MonoBehaviour
     private Dictionary<string, UpgradeState> upgradeStateMap = new();
 
     private StatCalculator statCalculator;
-    private CurrencyManager currencyManager;
+    private StockManager stockManager;
 
     public RuntimeStat RuntimeStat => runtimeStat;
 
@@ -22,7 +22,7 @@ public class UpgradeManager : MonoBehaviour
 
     private void Start()
     {
-        currencyManager = GameManager.Instance.CurrencyManager;
+        stockManager = GameManager.Instance.StockManager;
     }
      
     public UpgradeState GetState(UpgradeDataSO data)
@@ -65,7 +65,7 @@ public class UpgradeManager : MonoBehaviour
         if (state == null || IsMaxLevel(state))
             return false;
 
-        if (!currencyManager.TrySpend(state.GetCurrentCost()))
+        if (!stockManager.TryConsumeCurrency(state.GetCurrentCost()))
             return false;
 
         state.level++;
