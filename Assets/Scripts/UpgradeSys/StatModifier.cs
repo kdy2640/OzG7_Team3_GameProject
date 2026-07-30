@@ -2,11 +2,10 @@ using System;
 
 public enum StatType
 {
-    ArrowDamage,
-    ArrowFrequency,
-    ArrowSpeed,
-    ArrowRange,
-    ArrowCount
+    SawSize,
+    SawSharpness,
+    TruckSpeed,
+    TruckCapacity
 }
 
 public enum ModifierType
