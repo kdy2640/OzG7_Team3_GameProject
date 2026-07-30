@@ -2,14 +2,11 @@ using System.Collections.Generic;
 
 public class StatCalculator
 {
-    public RuntimeStat Calculate(
-        IReadOnlyList<UpgradeState> permanentUpgradeStates,
-        IReadOnlyList<UpgradeState> temporaryUpgradeStates)
+    public RuntimeStat Calculate(IReadOnlyList<UpgradeState> upgradeStates)
     {
         RuntimeStat calculatedStat = new RuntimeStat();
 
-        ApplyStates(calculatedStat, permanentUpgradeStates);
-        ApplyStates(calculatedStat, temporaryUpgradeStates);
+        ApplyStates(calculatedStat, upgradeStates);
 
         return calculatedStat;
     }

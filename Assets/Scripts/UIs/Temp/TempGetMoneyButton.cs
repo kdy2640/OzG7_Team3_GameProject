@@ -14,7 +14,7 @@ public class TempGetMoney : MonoBehaviour
 
     private void OnButtonClicked()
     {
-        GameManager.Instance.CurrencyManager.Add(100);
+        GameManager.Instance.StockManager.AddCurrency(100);
     }
     void Start()
     {

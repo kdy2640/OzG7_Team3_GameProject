@@ -4,14 +4,12 @@ using UnityEngine;
 public class UpgradeManager : MonoBehaviour
 {
     [SerializeField] private List<UpgradeState> upgradeStates = new();
-    [SerializeField] private List<UpgradeState> temporaryUpgradeStates = new();
     [SerializeField] private RuntimeStat runtimeStat;
 
     private Dictionary<string, UpgradeState> upgradeStateMap = new();
-    private Dictionary<string, UpgradeState> temporaryUpgradeStateMap = new();
 
     private StatCalculator statCalculator;
-    private CurrencyManager currencyManager; 
+    private StockManager stockManager;
 
     public RuntimeStat RuntimeStat => runtimeStat;
 
@@ -24,7 +22,7 @@ public class UpgradeManager : MonoBehaviour
 
     private void Start()
     {
-        currencyManager = GameManager.Instance.CurrencyManager; 
+        stockManager = GameManager.Instance.StockManager;
     }
      
     public UpgradeState GetState(UpgradeDataSO data)
@@ -32,19 +30,7 @@ public class UpgradeManager : MonoBehaviour
         if (data == null || string.IsNullOrEmpty(data.id))
             return null;
 
-        Dictionary<string, UpgradeState> targetMap =
-            data.IsTemporary ? temporaryUpgradeStateMap : upgradeStateMap;
-        Dictionary<string, UpgradeState> otherMap =
-            data.IsTemporary ? upgradeStateMap : temporaryUpgradeStateMap;
-
-        if (otherMap.ContainsKey(data.id))
-        {
-            Debug.LogError(
-                $"UpgradeData id '{data.id}'가 영구/임시 업그레이드 양쪽에 사용되고 있습니다.");
-            return null;
-        }
-
-        if (targetMap.TryGetValue(data.id, out UpgradeState state))
+        if (upgradeStateMap.TryGetValue(data.id, out UpgradeState state))
         {
             if (state.data != data)
             {
@@ -61,12 +47,8 @@ public class UpgradeManager : MonoBehaviour
             level = 0
         };
 
-        if (data.IsTemporary)
-            temporaryUpgradeStates.Add(state);
-        else
-            upgradeStates.Add(state);
-
-        targetMap.Add(data.id, state);
+        upgradeStates.Add(state);
+        upgradeStateMap.Add(data.id, state);
 
         return state;
     }
@@ -83,19 +65,12 @@ public class UpgradeManager : MonoBehaviour
         if (state == null || IsMaxLevel(state))
             return false;
 
-        if (!data.IsTemporary && !currencyManager.TrySpend(state.GetCurrentCost()))
+        if (!stockManager.TryConsumeCurrency(state.GetCurrentCost()))
             return false;
 
         state.level++;
         RecalculateRuntimeStat();
         return true;
-    }
-
-    public void ClearTemporaryUpgrades()
-    {
-        temporaryUpgradeStates.Clear();
-        temporaryUpgradeStateMap.Clear();
-        RecalculateRuntimeStat();
     }
 
     public bool IsMaxLevel(UpgradeState state)
@@ -108,10 +83,7 @@ public class UpgradeManager : MonoBehaviour
         if (data == null || string.IsNullOrEmpty(data.id))
             return false;
 
-        Dictionary<string, UpgradeState> targetMap =
-            data.IsTemporary ? temporaryUpgradeStateMap : upgradeStateMap;
-
-        return targetMap.ContainsKey(data.id);
+        return upgradeStateMap.ContainsKey(data.id);
     }
 
     private void BuildUpgradeStateMap()
@@ -124,15 +96,6 @@ public class UpgradeManager : MonoBehaviour
 
             if (state?.data == null || string.IsNullOrEmpty(state.data.id))
             {
-                upgradeStates.RemoveAt(i);
-                i--;
-                continue;
-            }
-
-            if (state.data.IsTemporary)
-            {
-                Debug.LogError(
-                    $"Temporary UpgradeData가 영구 상태 리스트에 들어 있습니다: {state.data.id}");
                 upgradeStates.RemoveAt(i);
                 i--;
                 continue;
@@ -152,6 +115,6 @@ public class UpgradeManager : MonoBehaviour
 
     private void RecalculateRuntimeStat()
     {
-        runtimeStat = statCalculator.Calculate(upgradeStates, temporaryUpgradeStates);
+        runtimeStat = statCalculator.Calculate(upgradeStates);
     }
 }

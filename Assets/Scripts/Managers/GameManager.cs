@@ -7,7 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public CurrencyManager CurrencyManager { get; private set; }
+    public StockManager StockManager { get; private set; }
+    public CookingManager CookingManager { get; private set; }
     public SceneController Scene { get; private set; }
     public UpgradeManager Upgrade { get; private set; }
     public GameLoopManager GameLoop { get; private set; } 
@@ -25,7 +26,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        CurrencyManager = GetComponent<CurrencyManager>();
+        StockManager = GetComponent<StockManager>();
+        CookingManager = StockManager.CookingManager;
         Scene = GetComponent<SceneController>();
         Upgrade = GetComponent<UpgradeManager>();
         GameLoop = GetComponent<GameLoopManager>(); 
