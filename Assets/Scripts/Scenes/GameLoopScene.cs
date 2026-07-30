@@ -20,7 +20,6 @@ public class GameLoopScene : SceneBase
     public override IEnumerator Exit()
     {
         GameManager.Instance.GameLoop.EndLoop();
-        GameManager.Instance.Upgrade.ClearTemporaryUpgrades();
         yield return null;
     }
 }
