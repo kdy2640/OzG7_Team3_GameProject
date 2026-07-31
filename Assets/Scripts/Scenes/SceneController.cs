@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 public enum SceneType
 {
     Main,
-    Upgrade,
-    GameLoop
+    Hub,
+    Harvest
 }
 
 public class SceneController : MonoBehaviour
@@ -23,8 +23,8 @@ public class SceneController : MonoBehaviour
         scenes = new Dictionary<SceneType, SceneBase>
         {
             { SceneType.Main, new MainScene() },
-            { SceneType.Upgrade, new UpgradeScene() },
-            { SceneType.GameLoop, new GameLoopScene() }
+            { SceneType.Hub, new HubScene() },
+            { SceneType.Harvest, new HarvestScene() }
         };
 
         currentScene = scenes[SceneType.Main];

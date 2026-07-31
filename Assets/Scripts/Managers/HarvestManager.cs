@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
 
-public class GameLoopManager : MonoBehaviour
+public class HarvestManager : MonoBehaviour
 {
-    public bool IsGameLoopScene => GameManager.Instance.Scene.CurrentSceneType == SceneType.GameLoop; 
+    public bool IsHarvestScene => GameManager.Instance.Scene.CurrentSceneType == SceneType.Harvest; 
      
-    private GameLoopEventManager eventManager; 
+    private HarvestEventManager eventManager; 
     private Action<float> OnTick;
     private float timer;
     private bool isRunning = false;
@@ -15,10 +15,10 @@ public class GameLoopManager : MonoBehaviour
     public bool IsRunning => isRunning;
 
     public bool IsPaused => isPaused;
-    public GameLoopEventManager Events => eventManager; 
+    public HarvestEventManager Events => eventManager; 
     private void Awake()
     { 
-        eventManager = new GameLoopEventManager(); 
+        eventManager = new HarvestEventManager(); 
     } 
     public void PrepareReveal()
     {
@@ -27,10 +27,10 @@ public class GameLoopManager : MonoBehaviour
     }
     public void StartLoop()
     {
-        if (!IsGameLoopScene) return; 
+        if (!IsHarvestScene) return; 
         isRunning = true;
 
-        eventManager.Invoke(GameLoopEventType.LoopStarted);
+        eventManager.Invoke(HarvestEventType.LoopStarted);
     }
 
     private void Update()
@@ -50,19 +50,19 @@ public class GameLoopManager : MonoBehaviour
     public void EndLoop()
     {
         if (!isRunning) return;
-        if (!IsGameLoopScene) return;
+        if (!IsHarvestScene) return;
         isRunning = false;
-        eventManager.Invoke(GameLoopEventType.LoopEnded);
+        eventManager.Invoke(HarvestEventType.LoopEnded);
     }
     public void Pause()
     {
         isPaused = true;
-        eventManager.Invoke(GameLoopEventType.Pause);
+        eventManager.Invoke(HarvestEventType.Pause);
     }
     public void UnPause()
     {
         isPaused = false;
-        eventManager.Invoke(GameLoopEventType.UnPause);
+        eventManager.Invoke(HarvestEventType.UnPause);
     }
     public void SubscribeTick(Action<float> ev)
     {
@@ -74,7 +74,7 @@ public class GameLoopManager : MonoBehaviour
     }
     public void Restart()
     {
-        GameManager.Instance.Scene.RestartScene(SceneType.GameLoop);
+        GameManager.Instance.Scene.RestartScene(SceneType.Harvest);
     }
 
 }

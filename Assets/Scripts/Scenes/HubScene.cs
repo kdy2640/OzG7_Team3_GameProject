@@ -1,9 +1,9 @@
 using System.Collections;
 
-public class UpgradeScene : SceneBase
+public class HubScene : SceneBase
 {
-    public override SceneType SceneType => SceneType.Upgrade;
-    public override string SceneName => "UpgradeScene";
+    public override SceneType SceneType => SceneType.Hub;
+    public override string SceneName => "HubScene";
 
     public override IEnumerator Enter()
     {
