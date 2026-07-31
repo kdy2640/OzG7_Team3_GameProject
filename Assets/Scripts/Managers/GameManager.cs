@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public CookingManager CookingManager { get; private set; }
     public SceneController Scene { get; private set; }
     public UpgradeManager Upgrade { get; private set; }
-    public GameLoopManager GameLoop { get; private set; } 
+    public HarvestManager Harvest { get; private set; } 
     public AudioManager AudioManager { get; private set; }
     public TutorialManager Tutorial { get; private set; }
 
@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
         CookingManager = StockManager.CookingManager;
         Scene = GetComponent<SceneController>();
         Upgrade = GetComponent<UpgradeManager>();
-        GameLoop = GetComponent<GameLoopManager>(); 
+        Harvest = GetComponent<HarvestManager>(); 
         AudioManager = GetComponentInChildren<AudioManager>();
         Tutorial = GetComponentInChildren<TutorialManager>();
     }

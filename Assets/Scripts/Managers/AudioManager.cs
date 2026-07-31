@@ -10,7 +10,7 @@ public enum BGMType
     None,
     Titie,
     Upgrade,
-    GameLoop
+    Harvest
 }
 public enum SFXType
 {

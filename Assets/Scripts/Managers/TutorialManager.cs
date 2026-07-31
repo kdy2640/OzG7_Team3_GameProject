@@ -5,7 +5,7 @@ public class TutorialManager : MonoBehaviour
 {
     public enum TutorialType
     {
-        BeforeGameLoop, 
+        BeforeHarvest, 
         Length
     }
 

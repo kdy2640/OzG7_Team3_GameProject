@@ -14,7 +14,7 @@ public class StockManager : MonoBehaviour
 
     // 요리 제작 로직을 사용할 때 사용.
     public CookingManager CookingManager => cookingManager ??= new CookingManager(
-        CanConsumeGrocery,
+        CalculateGroceryAmount,
         TryConsumeGrocery,
         AddDish);
 
