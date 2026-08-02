@@ -22,11 +22,10 @@ public class StatCalculator
         {
             UpgradeState state = upgradeStates[i];
 
-            if (state?.data?.statModifiers == null)
+            if (state?.data == null || state.level <= 0)
                 continue;
 
-            foreach (StatModifier modifier in state.data.statModifiers)
-                calculatedStat.Apply(modifier, state.level);
+            state.data.ApplyTo(calculatedStat, state.level);
         }
     }
 }

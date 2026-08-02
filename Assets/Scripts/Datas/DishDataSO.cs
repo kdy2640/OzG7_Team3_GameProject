@@ -1,6 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum DishType
+{
+    Steak,
+    Bread,
+    Hamburger,
+    Count
+}
+
 [CreateAssetMenu(menuName = "Game/DishDataSO")]
 public class DishDataSO : ScriptableObject
 {

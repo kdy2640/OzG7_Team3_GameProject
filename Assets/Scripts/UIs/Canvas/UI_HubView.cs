@@ -1,8 +1,9 @@
 using System.Collections;
+using UnityEngine;
 
 public sealed class UI_HubView : UI_Base
 {
-    private enum Buttons
+    private enum GameObjects
     {
         To_HarvestSelection,
         To_ServiceSelection,
@@ -13,12 +14,22 @@ public sealed class UI_HubView : UI_Base
 
     protected override void OnInit()
     {
-        Bind<UI_HubStateButton>(typeof(Buttons));
-        GetUI<UI_HubStateButton>((int)Buttons.To_HarvestSelection)?.Init(Owner);
-        GetUI<UI_HubStateButton>((int)Buttons.To_ServiceSelection)?.Init(Owner);
-        GetUI<UI_HubStateButton>((int)Buttons.To_MenuManagement)?.Init(Owner);
-        GetUI<UI_HubStateButton>((int)Buttons.To_HarvestUpgrade)?.Init(Owner);
-        GetUI<UI_HubStateButton>((int)Buttons.To_StoreManagement)?.Init(Owner);
+        Bind<GameObject>(typeof(GameObjects));
+        GetGameObject((int)GameObjects.To_HarvestSelection)?
+            .GetComponent<UI_HubStateButton>()?
+            .Init(Owner);
+        GetGameObject((int)GameObjects.To_ServiceSelection)?
+            .GetComponent<UI_HubStateButton>()?
+            .Init(Owner);
+        GetGameObject((int)GameObjects.To_MenuManagement)?
+            .GetComponent<UI_HubStateButton>()?
+            .Init(Owner);
+        GetGameObject((int)GameObjects.To_HarvestUpgrade)?
+            .GetComponent<UI_HubStateButton>()?
+            .Init(Owner);
+        GetGameObject((int)GameObjects.To_StoreManagement)?
+            .GetComponent<UI_HubStateButton>()?
+            .Init(Owner);
     }
 
     private void Start()

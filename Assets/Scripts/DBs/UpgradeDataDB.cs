@@ -7,12 +7,16 @@ public static class UpgradeDataDB
 
     private static readonly Dictionary<string, string> idMigrationMap = new()
     {
-        // id¸¦ ¹Ù²Û °æ¿ì ¿©±â¿¡ ¿¬°áÇÑ´Ù.
+        // idë¥¼ ë°”ê¾¼ ê²½ìš° ì—¬ê¸°ì— ì—°ê²°í•œë‹¤.
         // { "old_id", "new_id" },
     };
+
     private static readonly string[] LoadPaths =
     {
-        "Sos/UpgradeDataSO", 
+        "SOs/UpgradeDatas/Harvest",
+        "SOs/UpgradeDatas/Dish",
+        "SOs/UpgradeDatas/Employee",
+        "SOs/UpgradeDatas/Facility"
     };
 
     public static UpgradeDataSO GetData(string id)
@@ -21,7 +25,7 @@ public static class UpgradeDataDB
             Debug.LogWarning($"There is no UpgradeDataSO. id : {id}");
 
         return data;
-    }// id¿¡ ¸Â´Â UpgradeDataSO ¹İÈ¯ÇÑ´Ù.
+    }// idì— ë§ëŠ” UpgradeDataSOë¥¼ ë°˜í™˜í•œë‹¤.
 
     public static bool TryGetData(string id, out UpgradeDataSO data)
     {
@@ -29,8 +33,8 @@ public static class UpgradeDataDB
 
         string migratedId = MigrateId(id);
         return upgradeDataMap.TryGetValue(migratedId, out data);
-    }// id·Î UpgradeDataSO¸¦ Ã£´Â´Ù.
-    // id°¡ ¹Ù²ï Àû ÀÖÀ¸¸é migration mapÀ» °ÅÃÄ¼­ »õ id·Î Ã£´Â´Ù.
+    }// idë¡œ UpgradeDataSOë¥¼ ì°¾ëŠ”ë‹¤.
+    // idê°€ ë°”ë€ ì  ìˆìœ¼ë©´ migration mapì„ ê±°ì³ì„œ ìƒˆ idë¡œ ì°¾ëŠ”ë‹¤.
 
     private static string MigrateId(string id)
     {
@@ -41,8 +45,8 @@ public static class UpgradeDataDB
             return migratedId;
 
         return id;
-    }// ¿¹Àü ÀúÀå ÆÄÀÏÀÇ old id¸¦ ÇöÀç »ç¿ëÇÏ´Â new id·Î ¹Ù²ãÁØ´Ù.
-    // id°¡ ¹Ù²ï Àû ¾øÀ¸¸é ¿ø·¡ id¸¦ ±×´ë·Î ¹İÈ¯ÇÑ´Ù.
+    }// ì˜ˆì „ ì €ì¥ íŒŒì¼ì˜ old idë¥¼ í˜„ì¬ ì‚¬ìš©í•˜ëŠ” new idë¡œ ë°”ê¿”ì¤€ë‹¤.
+    // idê°€ ë°”ë€ ì  ì—†ìœ¼ë©´ ì›ë˜ idë¥¼ ê·¸ëŒ€ë¡œ ë°˜í™˜í•œë‹¤.
 
     private static void Initialize()
     {
@@ -68,13 +72,14 @@ public static class UpgradeDataDB
 
                 if (upgradeDataMap.ContainsKey(data.id))
                 {
-                    Debug.LogWarning($"UpgradeDataSO id duplication. id : {data.id}, SO Name : {data.name}");
+                    Debug.LogWarning(
+                        $"UpgradeDataSO id duplication. id : {data.id}, SO Name : {data.name}");
                     continue;
                 }
 
                 upgradeDataMap.Add(data.id, data);
             }
         }
-    }// Resources Æú´õ ¾ÈÀÇ ¸ğµç UpgradeDataSO¸¦ Ã£¾Æ id ±âÁØÀ¸·Î µñ¼Å³Ê¸®¿¡ ÀúÀåÇÑ´Ù.
-    // Áßº¹ id³ª ºó id´Â ÀúÀåÇÏÁö ¾Ê°í °æ°í¸¸ ¶ç¿î´Ù.    
+    }// Resources í´ë” ì•ˆì˜ ëª¨ë“  UpgradeDataSOë¥¼ ì°¾ì•„ id ê¸°ì¤€ìœ¼ë¡œ ë”•ì…”ë„ˆë¦¬ì— ì €ì¥í•œë‹¤.
+    // ì¤‘ë³µ idë‚˜ ë¹ˆ idëŠ” ì €ì¥í•˜ì§€ ì•Šê³  ê²½ê³ ë§Œ ë„ìš´ë‹¤.
 }

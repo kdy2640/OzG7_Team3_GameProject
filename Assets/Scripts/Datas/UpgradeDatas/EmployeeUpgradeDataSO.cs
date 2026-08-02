@@ -1,0 +1,15 @@
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "Game/Upgrade/Employee")]
+public sealed class EmployeeUpgradeDataSO : UpgradeDataSO
+{
+    public EmployeeType targetEmployee = EmployeeType.Count;
+
+    public override void ApplyTo(RuntimeStat runtimeStat, int level)
+    {
+        if (runtimeStat == null)
+            return;
+
+        runtimeStat.Employee.Apply(targetEmployee, level);
+    }
+}
