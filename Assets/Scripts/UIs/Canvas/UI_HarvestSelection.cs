@@ -1,16 +1,19 @@
 using System.Collections;
+using UnityEngine;
 
 public sealed class UI_HarvestSelection : UI_Base
 {
-    private enum Buttons
+    private enum GameObjects
     {
         To_HubView
     }
 
     protected override void OnInit()
     {
-        Bind<UI_HubStateButton>(typeof(Buttons));
-        GetUI<UI_HubStateButton>((int)Buttons.To_HubView)?.Init(Owner);
+        Bind<GameObject>(typeof(GameObjects));
+        GetGameObject((int)GameObjects.To_HubView)?
+            .GetComponent<UI_HubStateButton>()?
+            .Init(Owner);
     }
 
     private void Start()

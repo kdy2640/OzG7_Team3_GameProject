@@ -1,16 +1,27 @@
 using System.Collections;
+using TMPro;
+using UnityEngine;
 
 public sealed class UI_HarvestUpgrade : UI_Base
 {
-    private enum Buttons
+    private enum GameObjects
     {
         To_HubView
+    }
+    private enum Texts
+    {
+        UI_TempText
     }
 
     protected override void OnInit()
     {
-        Bind<UI_HubStateButton>(typeof(Buttons));
-        GetUI<UI_HubStateButton>((int)Buttons.To_HubView)?.Init(Owner);
+        Bind<GameObject>(typeof(GameObjects));
+        Bind<TextMeshProUGUI>(typeof(Texts));
+
+        GetGameObject((int)GameObjects.To_HubView)?
+            .GetComponent<UI_HubStateButton>()?
+            .Init(Owner);
+        GetUI<TextMeshProUGUI>((int)Texts.UI_TempText).text = "임시";
     }
 
     private void Start()
