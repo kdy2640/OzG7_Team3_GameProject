@@ -9,13 +9,6 @@ public enum GroceryType
     Count
 }
 
-public enum DishType
-{
-    Steak,
-    Bread,
-    Hamburger,
-    Count
-}
 
 [Serializable]
 public class GroceryAmount

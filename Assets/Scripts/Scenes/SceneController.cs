@@ -7,7 +7,8 @@ public enum SceneType
 {
     Main,
     Hub,
-    Harvest
+    Harvest,
+    Service
 }
 
 public class SceneController : MonoBehaviour
@@ -24,7 +25,8 @@ public class SceneController : MonoBehaviour
         {
             { SceneType.Main, new MainScene() },
             { SceneType.Hub, new HubScene() },
-            { SceneType.Harvest, new HarvestScene() }
+            { SceneType.Harvest, new HarvestScene() },
+            { SceneType.Service, new ServiceScene() }
         };
 
         currentScene = scenes[SceneType.Main];
