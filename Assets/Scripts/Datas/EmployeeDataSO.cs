@@ -27,11 +27,19 @@ public enum WorkType
 [CreateAssetMenu(menuName = "Game/EmployeeDataSO")]
 public sealed class EmployeeDataSO : ScriptableObject
 {
-    public string id;
-    public string displayName;
-    public EmployeeType employeeType = EmployeeType.Count;
-    public WorkType workType = WorkType.Count;
-    [Min(0)] public int cost;
-    [Min(0f)] public float upgradeMultiplier = 1f;
-    [Min(1)] public int maxLevel = 1;
+    [SerializeField] private string id;
+    [SerializeField] private string displayName;
+    [SerializeField] private EmployeeType employeeType = EmployeeType.Count;
+    [SerializeField] private WorkType workType = WorkType.Count;
+    [SerializeField, Min(0)] private int cost;
+    [SerializeField, Min(0f)] private float upgradeMultiplier = 1f;
+    [SerializeField, Min(1)] private int maxLevel = 1;
+
+    public string Id => id;
+    public string DisplayName => displayName;
+    public EmployeeType EmployeeType => employeeType;
+    public WorkType WorkType => workType;
+    public int Cost => cost;
+    public float UpgradeMultiplier => upgradeMultiplier;
+    public int MaxLevel => maxLevel;
 }

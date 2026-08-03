@@ -64,20 +64,20 @@ public static class UpgradeDataDB
                 if (data == null)
                     continue;
 
-                if (string.IsNullOrEmpty(data.id))
+                if (string.IsNullOrEmpty(data.Id))
                 {
                     Debug.LogWarning($"{data.name} UpgradeDataSO id is empty.");
                     continue;
                 }
 
-                if (upgradeDataMap.ContainsKey(data.id))
+                if (upgradeDataMap.ContainsKey(data.Id))
                 {
                     Debug.LogWarning(
-                        $"UpgradeDataSO id duplication. id : {data.id}, SO Name : {data.name}");
+                        $"UpgradeDataSO id duplication. id : {data.Id}, SO Name : {data.name}");
                     continue;
                 }
 
-                upgradeDataMap.Add(data.id, data);
+                upgradeDataMap.Add(data.Id, data);
             }
         }
     }// Resources 폴더 안의 모든 UpgradeDataSO를 찾아 id 기준으로 딕셔너리에 저장한다.

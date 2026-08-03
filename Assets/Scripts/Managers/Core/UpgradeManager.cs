@@ -29,14 +29,14 @@ public class UpgradeManager : MonoBehaviour
 
     public UpgradeState GetState(UpgradeDataSO data)
     {
-        if (data == null || string.IsNullOrEmpty(data.id))
+        if (data == null || string.IsNullOrEmpty(data.Id))
             return null;
 
-        if (upgradeStateMap.TryGetValue(data.id, out UpgradeState state))
+        if (upgradeStateMap.TryGetValue(data.Id, out UpgradeState state))
         {
             if (state.data != data)
             {
-                Debug.LogError($"중복된 UpgradeData id가 있습니다: {data.id}");
+                Debug.LogError($"중복된 UpgradeData id가 있습니다: {data.Id}");
                 return null;
             }
 
@@ -50,7 +50,7 @@ public class UpgradeManager : MonoBehaviour
         };
 
         upgradeStates.Add(state);
-        upgradeStateMap.Add(data.id, state);
+        upgradeStateMap.Add(data.Id, state);
 
         return state;
     }
@@ -77,15 +77,15 @@ public class UpgradeManager : MonoBehaviour
 
     public bool IsMaxLevel(UpgradeState state)
     {
-        return state != null && state.data != null && state.level >= state.data.maxLevel;
+        return state != null && state.data != null && state.level >= state.data.MaxLevel;
     }
 
     public bool HasState(UpgradeDataSO data)
     {
-        if (data == null || string.IsNullOrEmpty(data.id))
+        if (data == null || string.IsNullOrEmpty(data.Id))
             return false;
 
-        return upgradeStateMap.ContainsKey(data.id);
+        return upgradeStateMap.ContainsKey(data.Id);
     }
 
     public void SubscribeRuntimeStatRefresh(Action<RuntimeStat> ev)
@@ -107,22 +107,22 @@ public class UpgradeManager : MonoBehaviour
         {
             UpgradeState state = upgradeStates[i];
 
-            if (state?.data == null || string.IsNullOrEmpty(state.data.id))
+            if (state?.data == null || string.IsNullOrEmpty(state.data.Id))
             {
                 upgradeStates.RemoveAt(i);
                 i--;
                 continue;
             }
 
-            if (upgradeStateMap.ContainsKey(state.data.id))
+            if (upgradeStateMap.ContainsKey(state.data.Id))
             {
-                Debug.LogError($"중복된 UpgradeData id가 있습니다: {state.data.id}");
+                Debug.LogError($"중복된 UpgradeData id가 있습니다: {state.data.Id}");
                 upgradeStates.RemoveAt(i);
                 i--;
                 continue;
             }
 
-            upgradeStateMap.Add(state.data.id, state);
+            upgradeStateMap.Add(state.data.Id, state);
         }
     }
 
@@ -146,10 +146,10 @@ public class UpgradeManager : MonoBehaviour
             if (state.data == null)
                 continue;
 
-            if (string.IsNullOrEmpty(state.data.id))
+            if (string.IsNullOrEmpty(state.data.Id))
                 continue;
 
-            saveData.Add(new UpgradeSaveData(state.data.id, state.level));
+            saveData.Add(new UpgradeSaveData(state.data.Id, state.level));
         }
 
         return saveData;
@@ -179,11 +179,11 @@ public class UpgradeManager : MonoBehaviour
                 UpgradeState state = new()
                 {
                     data = data,
-                    level = Mathf.Clamp(savedState.level, 0, data.maxLevel)
+                    level = Mathf.Clamp(savedState.level, 0, data.MaxLevel)
                 };
 
                 upgradeStates.Add(state);
-                upgradeStateMap.Add(data.id, state);
+                upgradeStateMap.Add(data.Id, state);
             }
         }
 

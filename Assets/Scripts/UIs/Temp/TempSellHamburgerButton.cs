@@ -27,6 +27,6 @@ public sealed class TempSellHamburgerButton : MonoBehaviour
         if (!stockManager.TryConsumeDish(new DishAmount(DishType.Hamburger, 1)))
             return;
 
-        stockManager.AddCurrency(data.cost);
+        stockManager.AddCurrency(data.Cost);
     }
 }

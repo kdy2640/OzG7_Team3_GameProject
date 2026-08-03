@@ -4,7 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Upgrade/Harvest")]
 public sealed class HarvestUpgradeDataSO : UpgradeDataSO
 {
-    public List<HarvestStatModifier> statModifiers = new();
+    [SerializeField] private List<HarvestStatModifier> statModifiers = new();
+
+    public List<HarvestStatModifier> StatModifiers => statModifiers;
 
     public override void ApplyTo(RuntimeStat runtimeStat, int level)
     {

@@ -3,7 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Upgrade/Dish")]
 public sealed class DishUpgradeDataSO : UpgradeDataSO
 {
-    public DishType targetDish = DishType.Count;
+    [SerializeField] private DishType targetDish = DishType.Count;
+
+    public DishType TargetDish => targetDish;
 
     public override void ApplyTo(RuntimeStat runtimeStat, int level)
     {

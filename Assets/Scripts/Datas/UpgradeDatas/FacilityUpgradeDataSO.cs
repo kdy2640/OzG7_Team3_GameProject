@@ -3,7 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Upgrade/Facility")]
 public sealed class FacilityUpgradeDataSO : UpgradeDataSO
 {
-    public FacilityType targetFacility = FacilityType.Count;
+    [SerializeField] private FacilityType targetFacility = FacilityType.Count;
+
+    public FacilityType TargetFacility => targetFacility;
 
     public override void ApplyTo(RuntimeStat runtimeStat, int level)
     {

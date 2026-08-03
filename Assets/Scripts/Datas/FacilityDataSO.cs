@@ -24,11 +24,19 @@ public enum FacilityCategory
 [CreateAssetMenu(menuName = "Game/FacilityDataSO")]
 public sealed class FacilityDataSO : ScriptableObject
 {
-    public string id;
-    public string displayName;
-    public FacilityType facilityType = FacilityType.Count;
-    public FacilityCategory facilityCategory = FacilityCategory.Count;
-    [Min(0)] public int cost;
-    [Min(0f)] public float upgradeMultiplier = 1f;
-    [Min(1)] public int maxLevel = 1;
+    [SerializeField] private string id;
+    [SerializeField] private string displayName;
+    [SerializeField] private FacilityType facilityType = FacilityType.Count;
+    [SerializeField] private FacilityCategory facilityCategory = FacilityCategory.Count;
+    [SerializeField, Min(0)] private int cost;
+    [SerializeField, Min(0f)] private float upgradeMultiplier = 1f;
+    [SerializeField, Min(1)] private int maxLevel = 1;
+
+    public string Id => id;
+    public string DisplayName => displayName;
+    public FacilityType FacilityType => facilityType;
+    public FacilityCategory FacilityCategory => facilityCategory;
+    public int Cost => cost;
+    public float UpgradeMultiplier => upgradeMultiplier;
+    public int MaxLevel => maxLevel;
 }
