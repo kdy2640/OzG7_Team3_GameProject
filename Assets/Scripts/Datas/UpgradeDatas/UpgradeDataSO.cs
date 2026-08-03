@@ -5,13 +5,20 @@ using UnityEngine;
 /// </summary>
 public abstract class UpgradeDataSO : ScriptableObject
 {
-    public string id;
-    public string displayName;
-    [field: SerializeField] public Sprite displayIcon;
+    [SerializeField] private string id;
+    [SerializeField] private string displayName;
+    [SerializeField] private Sprite displayIcon;
 
-    public int baseCost;
-    public float costMultiplier = 1.2f;
-    public int maxLevel = 1;
+    [SerializeField] private int baseCost;
+    [SerializeField] private float costMultiplier = 1.2f;
+    [SerializeField] private int maxLevel = 1;
+
+    public string Id => id;
+    public string DisplayName => displayName;
+    public Sprite DisplayIcon => displayIcon;
+    public int BaseCost => baseCost;
+    public float CostMultiplier => costMultiplier;
+    public int MaxLevel => maxLevel;
 
     public abstract void ApplyTo(RuntimeStat runtimeStat, int level);
 

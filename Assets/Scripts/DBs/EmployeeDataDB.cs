@@ -43,20 +43,20 @@ public static class EmployeeDataDB
             if (data == null)
                 continue;
 
-            if (data.employeeType == EmployeeType.Count)
+            if (data.EmployeeType == EmployeeType.Count)
             {
                 Debug.LogWarning($"{data.name} EmployeeDataSO employeeType is Count.");
                 continue;
             }
 
-            if (employeeDataMap.ContainsKey(data.employeeType))
+            if (employeeDataMap.ContainsKey(data.EmployeeType))
             {
                 Debug.LogWarning(
-                    $"EmployeeDataSO employeeType duplication. employeeType : {data.employeeType}, SO Name : {data.name}");
+                    $"EmployeeDataSO employeeType duplication. employeeType : {data.EmployeeType}, SO Name : {data.name}");
                 continue;
             }
 
-            employeeDataMap.Add(data.employeeType, data);
+            employeeDataMap.Add(data.EmployeeType, data);
         }
     }
 }

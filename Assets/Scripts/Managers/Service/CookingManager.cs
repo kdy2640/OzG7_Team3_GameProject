@@ -28,12 +28,12 @@ public sealed class CookingManager
     {
         if (dish == DishType.Count
             || !DishDataDB.TryGetData(dish, out DishDataSO data)
-            || data.ingredients == null)
+            || data.Ingredients == null)
             return 0;
 
         Dictionary<GroceryType, long> requiredAmounts = new();
 
-        foreach (GroceryAmount ingredient in data.ingredients)
+        foreach (GroceryAmount ingredient in data.Ingredients)
         {
             if (ingredient == null
                 || ingredient.grocery == GroceryType.Count
@@ -73,7 +73,7 @@ public sealed class CookingManager
             || !DishDataDB.TryGetData(dish, out DishDataSO data))
             return false;
 
-        if (!tryConsumeGrocery(data.ingredients))
+        if (!tryConsumeGrocery(data.Ingredients))
             return false;
 
         addDish(new DishAmount(dish, 1));

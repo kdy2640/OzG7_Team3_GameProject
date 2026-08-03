@@ -43,20 +43,20 @@ public static class FacilityDataDB
             if (data == null)
                 continue;
 
-            if (data.facilityType == FacilityType.Count)
+            if (data.FacilityType == FacilityType.Count)
             {
                 Debug.LogWarning($"{data.name} FacilityDataSO facilityType is Count.");
                 continue;
             }
 
-            if (facilityDataMap.ContainsKey(data.facilityType))
+            if (facilityDataMap.ContainsKey(data.FacilityType))
             {
                 Debug.LogWarning(
-                    $"FacilityDataSO facilityType duplication. facilityType : {data.facilityType}, SO Name : {data.name}");
+                    $"FacilityDataSO facilityType duplication. facilityType : {data.FacilityType}, SO Name : {data.name}");
                 continue;
             }
 
-            facilityDataMap.Add(data.facilityType, data);
+            facilityDataMap.Add(data.FacilityType, data);
         }
     }
 }

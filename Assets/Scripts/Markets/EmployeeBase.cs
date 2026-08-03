@@ -30,8 +30,8 @@ public class EmployeeBase
     public EmployeeBase(EmployeeDataSO dataSO)
     {
         this.dataSO = dataSO;
-        id = dataSO.id;
-        displayName = dataSO.displayName;
+        id = dataSO.Id;
+        displayName = dataSO.DisplayName;
         nowLevel = 0;
     }
 }

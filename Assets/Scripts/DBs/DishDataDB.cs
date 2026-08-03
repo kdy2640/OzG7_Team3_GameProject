@@ -42,20 +42,20 @@ public static class DishDataDB
                 if (data == null)
                     continue;
 
-                if (data.dish == DishType.Count)
+                if (data.Dish == DishType.Count)
                 {
                     Debug.LogWarning($"{data.name} DishDataSO dish is Count.");
                     continue;
                 }
 
-                if (dishDataMap.ContainsKey(data.dish))
+                if (dishDataMap.ContainsKey(data.Dish))
                 {
                     Debug.LogWarning(
-                        $"DishDataSO dish duplication. dish : {data.dish}, SO Name : {data.name}");
+                        $"DishDataSO dish duplication. dish : {data.Dish}, SO Name : {data.name}");
                     continue;
                 }
 
-                dishDataMap.Add(data.dish, data);
+                dishDataMap.Add(data.Dish, data);
             }
         }
     }
