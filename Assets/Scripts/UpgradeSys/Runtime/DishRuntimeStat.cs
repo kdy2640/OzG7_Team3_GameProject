@@ -4,7 +4,12 @@ using UnityEngine;
 [Serializable]
 public sealed class DishRuntimeStat
 {
-    [SerializeField] private int[] levels = Array.Empty<int>();
+    [SerializeField] private LevelStatViewer[] levels = Array.Empty<LevelStatViewer>();
+
+    public DishRuntimeStat()
+    {
+        EnsureCapacity();
+    }
 
     public int GetLevel(DishType dishType)
     {
@@ -14,7 +19,7 @@ public sealed class DishRuntimeStat
             return 0;
 
         EnsureCapacity();
-        return Mathf.Max(0, levels[index]);
+        return Mathf.Max(0, levels[index].Value);
     }
 
     internal void Apply(DishType dishType, int level)
@@ -25,7 +30,7 @@ public sealed class DishRuntimeStat
             return;
 
         EnsureCapacity();
-        levels[index] = Mathf.Max(0, level);
+        levels[index].SetValue(Mathf.Max(0, level));
     }
 
     private static bool IsValidIndex(int index)
@@ -35,9 +40,12 @@ public sealed class DishRuntimeStat
 
     private void EnsureCapacity()
     {
-        levels ??= Array.Empty<int>();
+        levels ??= Array.Empty<LevelStatViewer>();
 
         if (levels.Length != (int)DishType.Count)
             Array.Resize(ref levels, (int)DishType.Count);
+
+        for (int i = 0; i < levels.Length; i++)
+            levels[i].SetName(((DishType)i).ToString());
     }
 }

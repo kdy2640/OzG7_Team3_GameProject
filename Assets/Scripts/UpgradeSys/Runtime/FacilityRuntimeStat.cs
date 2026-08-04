@@ -5,7 +5,12 @@ using UnityEngine;
 [Serializable]
 public sealed class FacilityRuntimeStat
 {
-    [SerializeField] private int[] levels = Array.Empty<int>();
+    [SerializeField] private LevelStatViewer[] levels = Array.Empty<LevelStatViewer>();
+
+    public FacilityRuntimeStat()
+    {
+        EnsureCapacity();
+    }
 
     public int GetLevel(FacilityType facilityType)
     {
@@ -15,7 +20,7 @@ public sealed class FacilityRuntimeStat
             return 0;
 
         EnsureCapacity();
-        return Mathf.Max(0, levels[index]);
+        return Mathf.Max(0, levels[index].Value);
     }
 
     internal void Apply(FacilityType facilityType, int level)
@@ -26,7 +31,7 @@ public sealed class FacilityRuntimeStat
             return;
 
         EnsureCapacity();
-        levels[index] = Mathf.Max(0, level);
+        levels[index].SetValue(Mathf.Max(0, level));
     }
 
     private static bool IsValidIndex(int index)
@@ -36,9 +41,12 @@ public sealed class FacilityRuntimeStat
 
     private void EnsureCapacity()
     {
-        levels ??= Array.Empty<int>();
+        levels ??= Array.Empty<LevelStatViewer>();
 
         if (levels.Length != (int)FacilityType.Count)
             Array.Resize(ref levels, (int)FacilityType.Count);
+
+        for (int i = 0; i < levels.Length; i++)
+            levels[i].SetName(((FacilityType)i).ToString());
     }
 }

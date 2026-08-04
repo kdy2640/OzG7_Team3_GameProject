@@ -6,6 +6,7 @@ public enum GroceryType
 {
     Wheat,
     Beaf,
+    Carrot,
     Count
 }
 

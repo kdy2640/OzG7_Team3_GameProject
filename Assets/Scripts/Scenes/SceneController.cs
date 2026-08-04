@@ -66,6 +66,7 @@ public class SceneController : MonoBehaviour
             yield return null;
 
         yield return currentScene.PrepareBeforeReveal();
+
         yield return currentScene.Enter();
 
         isChangingScene = false;
