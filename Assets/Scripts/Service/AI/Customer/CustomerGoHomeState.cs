@@ -4,7 +4,6 @@ public class CustomerGoHomeState : IState
 {
     private CustomerStateManager stateManager;
     private AIMove aiMove;
-
     private Transform exitPoint;
 
 
@@ -16,11 +15,12 @@ public class CustomerGoHomeState : IState
 
     public void Enter()
     {
-        stateManager.AiMove.OnArrived += ArrivedHome;
+        Debug.Log(stateManager.CurrentTable);
+        stateManager.CurrentTable.ReleaseSeat(stateManager);
 
-        stateManager.AiMove.MoveTo(
-            stateManager.ExitPoint
-        );
+        stateManager.AiMove.OnArrived += ArrivedHome;
+        
+        stateManager.AiMove.MoveTo(stateManager.ExitPoint);
     }
 
 

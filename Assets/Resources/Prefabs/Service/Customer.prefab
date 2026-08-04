@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7564732706329234286}
   - component: {fileID: 3843908252529632513}
   - component: {fileID: 2869692549815148100}
+  - component: {fileID: 3354956650745518048}
+  - component: {fileID: 5076835922417037982}
   m_Layer: 0
   m_Name: Customer
   m_TagString: Untagged
@@ -114,3 +116,33 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3354956650745518048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380039380401995004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 435df136c26f8984a9d93f333d908b22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomerStateManager
+  aiMove: {fileID: 5076835922417037982}
+  exitPoint: {fileID: 0}
+  tableManager: {fileID: 0}
+--- !u!114 &5076835922417037982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380039380401995004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fdcdadcd0294aa449ef050b0d694ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AIMove
+  moveSpeed: 2
+  pathManager: {fileID: 0}
+  graph: {fileID: 0}

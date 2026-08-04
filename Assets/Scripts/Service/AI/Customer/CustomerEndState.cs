@@ -24,6 +24,6 @@ public class CustomerEndState : IState
 
     public void Exit()
     {
-
+        GameObject.Destroy(stateManager);
     }
 }

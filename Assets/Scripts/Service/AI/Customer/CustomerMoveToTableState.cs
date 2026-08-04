@@ -4,17 +4,17 @@ public class CustomerMoveToTableState : IState
 {
     private CustomerStateManager stateManager;
     private AIMove aiMove;
-    private Transform table;
+    private Transform seat;
 
 
     public CustomerMoveToTableState(
         CustomerStateManager stateManager,
         AIMove aiMove,
-        Transform table)
+        Transform seat)
     {
         this.stateManager = stateManager;
         this.aiMove = aiMove;
-        this.table = table;
+        this.seat = seat;
     }
 
 
@@ -22,7 +22,7 @@ public class CustomerMoveToTableState : IState
     {
         aiMove.OnArrived += Arrived;
 
-        aiMove.MoveTo(table);
+        aiMove.MoveTo(seat);
     }
 
 
