@@ -4,13 +4,10 @@ using UnityEngine;
 public class TableManager : MonoBehaviour
 {
     // 테이블 매니저 인스펙터 사용
-    private List<Table> tables = new();
+    [SerializeField] private List<Table> tables = new();
     private Queue<CustomerStateManager> waitingQueue = new();
 
-    private void Awake()
-    {
-        tables.AddRange(FindObjectsByType<Table>(FindObjectsSortMode.None));
-    }
+    public IReadOnlyList<Table> Tables => tables;
 
     public Table FindEmptyTable()
     {
