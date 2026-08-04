@@ -7,11 +7,15 @@ public sealed class HarvestActor : MonoBehaviour
 {
     [SerializeField] private HPHandler hpHandler;
     [SerializeField] private HarvestPresenter presenter;
+    [SerializeField] private HarvestMover mover;
 
     private HarvestDataSO harvestDataSO;
 
 
-    public void Init(HarvestType type)
+    public void Init(
+        HarvestType type,
+        Transform player,
+        HarvestSpawner spawner)
     {
         harvestDataSO = HarvestDataDB.GetData(type);
 
@@ -30,6 +34,24 @@ public sealed class HarvestActor : MonoBehaviour
 
         GameObject solid = Instantiate(harvestDataSO.SolidPrefab, transform);
         presenter.Init(solid);
+
+        if (harvestDataSO.IsMove)
+        {
+            if (mover == null)
+                mover = GetComponent<HarvestMover>();
+
+            if (mover == null)
+            {
+                Debug.LogError("[HarvestActor] HarvestMover is not assigned.", this);
+                return;
+            }
+
+            mover.Init(player, harvestDataSO.Speed, spawner);
+        }
+        else if (mover != null)
+        {
+            mover.enabled = false;
+        }
     }
 
     private void OnDestroy()
@@ -62,6 +84,7 @@ public sealed class HarvestActor : MonoBehaviour
     {
         hpHandler = GetComponent<HPHandler>();
         presenter = GetComponent<HarvestPresenter>();
+        mover = GetComponent<HarvestMover>();
     }
 #endif
 }

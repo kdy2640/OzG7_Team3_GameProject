@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6616311700274952520}
   - component: {fileID: 8137749692546121123}
   - component: {fileID: 2424644141719764984}
+  - component: {fileID: 6072916682551283211}
   - component: {fileID: 3303071145808237000}
   m_Layer: 0
   m_Name: Crop
@@ -44,7 +45,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40880cff488dc6b46ab80ddc3a1a79be, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::HPHandler
   maxHp: 3
 --- !u!114 &2424644141719764984
@@ -62,6 +63,21 @@ MonoBehaviour:
   visualRoot: {fileID: 0}
   shakeDuration: 0.2
   shakeAmplitude: 0.15
+--- !u!114 &6072916682551283211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170371248692864655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9d2e2b7c11f4347809bbd9dc09d23dc, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::HarvestMover
+  fleeRange: 3
+  arrivalDistance: 0.25
+  state: 0
 --- !u!114 &3303071145808237000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,3 +92,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CropActor
   hpHandler: {fileID: 8137749692546121123}
   presenter: {fileID: 2424644141719764984}
+  mover: {fileID: 6072916682551283211}
