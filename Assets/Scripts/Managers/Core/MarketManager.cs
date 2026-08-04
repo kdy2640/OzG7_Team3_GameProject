@@ -12,6 +12,9 @@ public class MarketManager : MonoBehaviour
     public IReadOnlyList<DishType> SelectedDishes => marketData.SelectedDishes;
     public int DishSelectionLimit => marketData.DishSelectionLimit;
 
+    public IReadOnlyList<EmployeeBase> Employees => employees;
+    public IReadOnlyList<FacilityBase> Facilities => facilities;
+
     public int CurrentBusinessDay
     {
         get => marketData.CurrentBusinessDay;
