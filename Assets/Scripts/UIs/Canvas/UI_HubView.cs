@@ -5,31 +5,29 @@ public sealed class UI_HubView : UI_Base
 {
     private enum GameObjects
     {
-        To_HarvestSelection,
-        To_ServiceSelection,
-        To_MenuManagement,
-        To_HarvestUpgrade,
-        To_StoreManagement
+        UI_ToStoreManagementButton,
+        UI_ToMenuManagementButton,
+        UI_ToStoreButton,
+        UI_ToLogButton,
+        UI_ToHarvestButton,
+        UI_ToServiceSelectionButton
     }
 
     protected override void OnInit()
     {
         Bind<GameObject>(typeof(GameObjects));
-        GetGameObject((int)GameObjects.To_HarvestSelection)?
+        GetGameObject((int)GameObjects.UI_ToStoreManagementButton)?
             .GetComponent<UI_HubStateButton>()?
             .Init(Owner);
-        GetGameObject((int)GameObjects.To_ServiceSelection)?
+        GetGameObject((int)GameObjects.UI_ToMenuManagementButton)?
             .GetComponent<UI_HubStateButton>()?
             .Init(Owner);
-        GetGameObject((int)GameObjects.To_MenuManagement)?
+        GetGameObject((int)GameObjects.UI_ToHarvestButton)?
             .GetComponent<UI_HubStateButton>()?
             .Init(Owner);
-        GetGameObject((int)GameObjects.To_HarvestUpgrade)?
+        GetGameObject((int)GameObjects.UI_ToServiceSelectionButton)?
             .GetComponent<UI_HubStateButton>()?
-            .Init(Owner);
-        GetGameObject((int)GameObjects.To_StoreManagement)?
-            .GetComponent<UI_HubStateButton>()?
-            .Init(Owner);
+            .Init(Owner); 
     }
 
     private void Start()

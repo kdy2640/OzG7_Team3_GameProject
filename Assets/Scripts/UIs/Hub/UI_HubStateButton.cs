@@ -9,8 +9,7 @@ using UnityEngine.EventSystems;
 public sealed class UI_HubStateButton : UI_EventHandler
 {
     [SerializeField] private HubCanvasController.HubCanvasState targetState =
-        HubCanvasController.HubCanvasState.None;
-    [SerializeField] private TMP_Text label;
+        HubCanvasController.HubCanvasState.None; 
 
     private HubCanvasController hubController;
     private bool isInitialized;
@@ -39,8 +38,7 @@ public sealed class UI_HubStateButton : UI_EventHandler
 
         hubController = controller;
         isInitialized = true;
-        this.AddUIEvent(HandleClick, UIEvent.LClick);
-        RefreshLabel();
+        this.AddUIEvent(HandleClick, UIEvent.LClick); 
     }
 
     private void HandleClick(PointerEventData _)
@@ -61,15 +59,7 @@ public sealed class UI_HubStateButton : UI_EventHandler
     }
 
     private void OnValidate()
-    {
-        RefreshLabel();
+    { 
     }
-
-    private void RefreshLabel()
-    {
-        if (label != null)
-        {
-            label.text = targetState.ToString();
-        }
-    }
+     
 }
