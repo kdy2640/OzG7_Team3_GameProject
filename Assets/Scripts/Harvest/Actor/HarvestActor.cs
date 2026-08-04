@@ -2,14 +2,19 @@ using UnityEngine;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(HPHandler))]
-[RequireComponent(typeof(CropPresenter))]
-public sealed class CropActor : MonoBehaviour
+[RequireComponent(typeof(HarvestPresenter))]
+public sealed class HarvestActor : MonoBehaviour
 {
     [SerializeField] private HPHandler hpHandler;
-    [SerializeField] private CropPresenter presenter;
+    [SerializeField] private HarvestPresenter presenter;
 
-    private void Awake()
+    private HarvestDataSO harvestDataSO;
+
+
+    public void Init(HarvestType type)
     {
+        harvestDataSO = HarvestDataDB.GetData(type);
+
         if (hpHandler == null)
         {
             hpHandler = GetComponent<HPHandler>();
@@ -17,18 +22,21 @@ public sealed class CropActor : MonoBehaviour
 
         if (presenter == null)
         {
-            presenter = GetComponent<CropPresenter>();
+            presenter = GetComponent<HarvestPresenter>();
         }
 
-        hpHandler.SubscribeDying(presenter.Disappear);
+        hpHandler.SubscribeDying(OnDied); 
         hpHandler.Init();
+
+        GameObject solid = Instantiate(harvestDataSO.SolidPrefab, transform);
+        presenter.Init(solid);
     }
 
     private void OnDestroy()
     {
         if (hpHandler != null && presenter != null)
-        {
-            hpHandler.UnSubscribeDying(presenter.Disappear);
+        { 
+            hpHandler.UnSubscribeDying(OnDied);
         }
     }
 
@@ -43,11 +51,17 @@ public sealed class CropActor : MonoBehaviour
         hpHandler.TakeDamage(damage);
     }
 
+    private void OnDied()
+    {
+        GameManager.Instance.StockManager.AddGrocery(harvestDataSO.Rewards);
+        presenter.Disappear();
+    }
+
 #if UNITY_EDITOR
     private void Reset()
     {
         hpHandler = GetComponent<HPHandler>();
-        presenter = GetComponent<CropPresenter>();
+        presenter = GetComponent<HarvestPresenter>();
     }
 #endif
 }

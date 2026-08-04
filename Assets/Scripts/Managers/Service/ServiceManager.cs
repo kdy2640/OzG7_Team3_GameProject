@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ServiceManager : MonoBehaviour
 {
-    public bool IsGameLoopScene => GameManager.Instance.Scene.CurrentSceneType == SceneType.Service;
+    public bool IsServiceScene => GameManager.Instance.Scene.CurrentSceneType == SceneType.Service;
     private float loopDuration = 20f;
 
     private ServiceEventManager eventManager;
@@ -28,7 +28,7 @@ public class ServiceManager : MonoBehaviour
 
     public void StartLoop()
     {
-        if (!IsGameLoopScene) return;
+        if (!IsServiceScene) return;
         isRunning = true;
 
         eventManager.Invoke(ServiceEventType.LoopStarted);
@@ -49,7 +49,7 @@ public class ServiceManager : MonoBehaviour
     public void EndLoop()
     {
         if (!isRunning) return;
-        if (!IsGameLoopScene) return;
+        if (!IsServiceScene) return;
         isRunning = false;
         eventManager.Invoke(ServiceEventType.LoopEnded);
     }
