@@ -29,7 +29,12 @@ public struct HarvestStatModifier
 [Serializable]
 public sealed class HarvestRuntimeStat
 {
-    [SerializeField] private float[] values = Array.Empty<float>();
+    [SerializeField] private HarvestStatViewer[] values = Array.Empty<HarvestStatViewer>();
+
+    public HarvestRuntimeStat()
+    {
+        EnsureCapacity();
+    }
 
     public float Get(HarvestStatType statType)
     {
@@ -39,7 +44,7 @@ public sealed class HarvestRuntimeStat
             return 0f;
 
         EnsureCapacity();
-        return Mathf.Max(0f, values[index]);
+        return Mathf.Max(0f, values[index].Value);
     }
 
     internal void Apply(
@@ -58,10 +63,10 @@ public sealed class HarvestRuntimeStat
                 continue;
 
             EnsureCapacity();
-            values[index] = ApplyValue(
-                values[index],
+            values[index].SetValue(ApplyValue(
+                values[index].Value,
                 modifier.modifierType,
-                modifier.value * level);
+                modifier.value * level));
         }
     }
 
@@ -83,9 +88,12 @@ public sealed class HarvestRuntimeStat
 
     private void EnsureCapacity()
     {
-        values ??= Array.Empty<float>();
+        values ??= Array.Empty<HarvestStatViewer>();
 
         if (values.Length != (int)HarvestStatType.Count)
             Array.Resize(ref values, (int)HarvestStatType.Count);
+
+        for (int i = 0; i < values.Length; i++)
+            values[i].SetName(((HarvestStatType)i).ToString());
     }
 }

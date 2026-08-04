@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: Own the persisted market state (day, employees, and facilities).
 public class MarketManager : MonoBehaviour
 {
-    [SerializeField] private int currentBusinessDay;
+    [SerializeField] private MarketData marketData = new();
     [SerializeField] private List<EmployeeBase> employees = new();
     [SerializeField] private List<FacilityBase> facilities = new();
 
+    public IReadOnlyList<EmployeeType> UnlockedEmployees => marketData.UnlockedEmployees;
+    public IReadOnlyList<FacilityType> UnlockedFacilities => marketData.UnlockedFacilities;
+    public IReadOnlyList<DishType> SelectedDishes => marketData.SelectedDishes;
+    public int DishSelectionLimit => marketData.DishSelectionLimit;
+
     public int CurrentBusinessDay
     {
-        get => currentBusinessDay;
-        set => currentBusinessDay = value;
+        get => marketData.CurrentBusinessDay;
+        set => marketData.CurrentBusinessDay = value;
     }
 
     private void Start()
@@ -74,21 +78,36 @@ public class MarketManager : MonoBehaviour
 
     public MarketSaveData CreateMarketSaveData()
     {
-        return new MarketSaveData(currentBusinessDay);
+        MarketSaveData saveData = new()
+        {
+            currentBusinessDay = marketData.CurrentBusinessDay,
+            dishSelectionLimit = marketData.DishSelectionLimit
+        };
+
+        saveData.unlockedEmployees.AddRange(marketData.UnlockedEmployees);
+        saveData.unlockedFacilities.AddRange(marketData.UnlockedFacilities);
+        saveData.selectedDishes.AddRange(marketData.SelectedDishes);
+
+        return saveData;
     }
 
     public void LoadMarketSaveData(MarketSaveData saveData)
     {
-        currentBusinessDay = saveData == null
-            ? 0
-            : Mathf.Max(0, saveData.currentBusinessDay);
+        marketData = saveData == null
+            ? new MarketData()
+            : new MarketData(
+                Mathf.Max(0, saveData.currentBusinessDay),
+                Mathf.Max(0, saveData.dishSelectionLimit),
+                saveData.unlockedEmployees,
+                saveData.unlockedFacilities,
+                saveData.selectedDishes);
 
         Refresh();
     }
 
     public void ResetMarketSaveData()
     {
-        currentBusinessDay = 0;
+        marketData = new MarketData();
         Refresh();
     }
 

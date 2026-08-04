@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public sealed class CropPresenter : MonoBehaviour
+public sealed class HarvestPresenter : MonoBehaviour
 {
     [SerializeField] private Transform visualRoot;
     [SerializeField, Min(0f)] private float shakeDuration = 0.2f;
@@ -11,14 +11,13 @@ public sealed class CropPresenter : MonoBehaviour
     private Vector3 originLocalPosition;
     private Coroutine shakeCoroutine;
 
-    private void Awake()
-    {
-        if (visualRoot == null)
+    public void Init(GameObject solid)
+    { 
+        if (solid != null)
         {
-            visualRoot = transform;
+            visualRoot = solid.transform; 
+            originLocalPosition = visualRoot.localPosition;
         }
-
-        originLocalPosition = visualRoot.localPosition;
     }
 
     private void OnDisable()

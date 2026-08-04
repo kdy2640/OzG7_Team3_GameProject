@@ -18,7 +18,7 @@ public sealed class CropCutter : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        CropActor crop = other.GetComponentInParent<CropActor>();
+        HarvestActor crop = other.GetComponentInParent<HarvestActor>();
 
         if (crop == null)
         {

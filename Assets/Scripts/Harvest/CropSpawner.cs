@@ -3,7 +3,8 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class CropSpawner : MonoBehaviour
 {
-    [SerializeField] private CropActor cropPrefab;
+    [SerializeField] private HarvestActor cropPrefab;
+    [SerializeField] private HarvestType harvestType = HarvestType.Wheat;
     [SerializeField, Min(0)] private int spawnCount = 30;
     [SerializeField] private Vector2 spawnArea = new(9f, 9f);
     [SerializeField] private float spawnHeight;
@@ -29,8 +30,9 @@ public sealed class CropSpawner : MonoBehaviour
             Quaternion rotation =
                 transform.rotation * Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
 
-            CropActor crop = Instantiate(cropPrefab, worldPosition, rotation, container);
+            HarvestActor crop = Instantiate(cropPrefab, worldPosition, rotation, container);
             crop.name = "Crop";
+            crop.Init(harvestType);
         }
     }
 

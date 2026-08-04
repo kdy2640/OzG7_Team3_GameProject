@@ -6,7 +6,7 @@ public enum ServiceEventType
     BeforeLoopStarted,
     LoopStarted,
     Pause,
-    UnPause,
+    UnPause, 
     LoopEnded
 }
 
