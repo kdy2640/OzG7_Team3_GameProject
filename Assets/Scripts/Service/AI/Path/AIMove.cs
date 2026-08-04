@@ -22,6 +22,8 @@ public class AIMove : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private PathManager pathManager;
+    [SerializeField] private GraphManager graph;
+
 
     
     private Transform destination;
@@ -31,11 +33,18 @@ public class AIMove : MonoBehaviour
 
     private Waypoint startWaypoint;
 
-    private void Start()
+    private void Awake()
     {
-        
-    }
+        if(pathManager == null)
+        {
+            pathManager = FindFirstObjectByType<PathManager>();
+        }
 
+        if(graph == null)
+        {
+            graph = FindFirstObjectByType<GraphManager>();
+        }
+    }
 
     private void Update()
     {
@@ -66,6 +75,11 @@ public class AIMove : MonoBehaviour
 
     private void MoveToNearWayPoint()
     {
+        if(startWaypoint == null)
+        {
+            Debug.Log("startWaypoint = " + startWaypoint);
+        }
+        
         transform.position = Vector3.MoveTowards(
             transform.position,
             startWaypoint.transform.position,
@@ -81,7 +95,7 @@ public class AIMove : MonoBehaviour
 
     private void FollowPath()
     {
-        if (pathIndex >= currentPath.Count)
+        if (currentPath == null || pathIndex >= currentPath.Count)
         {
             moveState = MoveState.ToDestination;
             return;
@@ -123,14 +137,11 @@ public class AIMove : MonoBehaviour
 
         
 
-        currentPath = pathManager.GetPath(
-            transform.position,
-            destination.position
-        );
+        currentPath = pathManager.GetPath(transform.position, destination.position);
 
-        if (currentPath == null || currentPath.Count == 0)
+        if (currentPath == null)
         {
-            Debug.Log("경로 없음");
+            startWaypoint = graph.GetClosestWaypoint(transform.position);
             return;
         }
 
@@ -139,6 +150,12 @@ public class AIMove : MonoBehaviour
         startWaypoint = currentPath[0];
 
         moveState = MoveState.ToStartWaypoint;
+    }
+
+    public void StopMove()
+    {
+        moveState = MoveState.Arrived;
+        currentPath = null;
     }
 
     private void OnDrawGizmos()
