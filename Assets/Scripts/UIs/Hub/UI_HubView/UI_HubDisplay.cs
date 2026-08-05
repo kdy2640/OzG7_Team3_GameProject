@@ -14,10 +14,6 @@ public sealed class UI_HubDisplay : MonoBehaviour
     [Header("Player Information")]
     [SerializeField] private Image[] levelImages = new Image[4];
 
-    [SerializeField] private Sprite levelInactiveSprite;
-
-    [SerializeField] private Sprite levelActiveSprite;
-
     [SerializeField] private TMP_Text playerNameText;
 
     [Header("Sales Progress")]
@@ -36,9 +32,9 @@ public sealed class UI_HubDisplay : MonoBehaviour
 
     [SerializeField] private Image[] promotionStepImages = new Image[5];
 
-    [SerializeField] private Sprite missionInactiveSprite;
-
-    [SerializeField] private Sprite missionActiveSprite;
+    [Header("Image Color")]
+    [SerializeField] private Color inactiveColor = Color.gray;
+    [SerializeField] private Color activeColor = Color.green;
 
     private void Awake()
     {
@@ -72,10 +68,8 @@ public sealed class UI_HubDisplay : MonoBehaviour
 
         for (int i = 0; i < levelImages.Length; i++)
         {
-            if (levelImages[i] == null) continue;
-
-            levelImages[i].sprite =
-                (i < level) ? levelActiveSprite : levelInactiveSprite;
+            levelImages[i].color =
+                i < level ? activeColor : inactiveColor;
         }
     }
     private void RefreshSales(int currentSales, int targetSales)
@@ -101,10 +95,8 @@ public sealed class UI_HubDisplay : MonoBehaviour
 
         for (int i = 0; i < promotionStepImages.Length; i++)
         {
-            if (promotionStepImages[i] == null) continue;
-
-            promotionStepImages[i].sprite =
-                (i < step) ? missionActiveSprite : missionInactiveSprite;
+            promotionStepImages[i].color =
+                i < step ? activeColor : inactiveColor;
         }
     }
 
