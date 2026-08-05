@@ -68,9 +68,8 @@ public class StockSaveData
 public class MarketSaveData
 {
     public int currentBusinessDay;
-    public int dishSelectionLimit = 1;
-    public List<EmployeeType> unlockedEmployees = new();
-    public List<FacilityType> unlockedFacilities = new();
+    public int currentLevel;
+    public int currentEXP;
     public List<DishType> selectedDishes = new();
 
     public MarketSaveData()

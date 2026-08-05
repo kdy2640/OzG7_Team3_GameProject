@@ -6,25 +6,57 @@ using UnityEngine;
 public sealed class MarketData
 {
     [SerializeField, Min(0)] private int currentBusinessDay;
-    [SerializeField, Min(0)] private int dishSelectionLimit = 1;
-    [SerializeField] private List<EmployeeType> unlockedEmployees = new();
-    [SerializeField] private List<FacilityType> unlockedFacilities = new();
+    [SerializeField, Min(0)] private int currentLevel;
+    [SerializeField, Min(0)] private int currentEXP;
     [SerializeField] private List<DishType> selectedDishes = new();
+
+    internal event Action OnMarketDataChanged;
 
     public int CurrentBusinessDay
     {
         get => currentBusinessDay;
-        internal set => currentBusinessDay = value;
+        set
+        {
+            int nextBusinessDay = Mathf.Max(0, value);
+
+            if (currentBusinessDay == nextBusinessDay)
+                return;
+
+            currentBusinessDay = nextBusinessDay;
+            NotifyMarketDataChanged();
+        }
     }
 
-    public int DishSelectionLimit
+    public int CurrentLevel
     {
-        get => dishSelectionLimit;
-        internal set => dishSelectionLimit = value;
+        get => currentLevel;
+        set
+        {
+            int nextLevel = Mathf.Max(0, value);
+
+            if (currentLevel == nextLevel)
+                return;
+
+            currentLevel = nextLevel;
+            NotifyMarketDataChanged();
+        }
     }
 
-    public IReadOnlyList<EmployeeType> UnlockedEmployees => unlockedEmployees;
-    public IReadOnlyList<FacilityType> UnlockedFacilities => unlockedFacilities;
+    public int CurrentEXP
+    {
+        get => currentEXP;
+        set
+        {
+            int nextEXP = Mathf.Max(0, value);
+
+            if (currentEXP == nextEXP)
+                return;
+
+            currentEXP = nextEXP;
+            NotifyMarketDataChanged();
+        }
+    }
+
     public IReadOnlyList<DishType> SelectedDishes => selectedDishes;
 
     public MarketData()
@@ -33,21 +65,39 @@ public sealed class MarketData
 
     internal MarketData(
         int currentBusinessDay,
-        int dishSelectionLimit,
-        List<EmployeeType> unlockedEmployees,
-        List<FacilityType> unlockedFacilities,
+        int currentLevel,
+        int currentEXP,
         List<DishType> selectedDishes)
     {
         this.currentBusinessDay = currentBusinessDay;
-        this.dishSelectionLimit = dishSelectionLimit;
-        this.unlockedEmployees = unlockedEmployees == null
-            ? new List<EmployeeType>()
-            : new List<EmployeeType>(unlockedEmployees);
-        this.unlockedFacilities = unlockedFacilities == null
-            ? new List<FacilityType>()
-            : new List<FacilityType>(unlockedFacilities);
+        this.currentLevel = currentLevel;
+        this.currentEXP = currentEXP;
         this.selectedDishes = selectedDishes == null
             ? new List<DishType>()
             : new List<DishType>(selectedDishes);
+    }
+
+    public bool SelectDish(DishType dishType)
+    {
+        if (selectedDishes.Contains(dishType))
+            return false;
+
+        selectedDishes.Add(dishType);
+        NotifyMarketDataChanged();
+        return true;
+    }
+
+    public bool DeselectDish(DishType dishType)
+    {
+        if (!selectedDishes.Remove(dishType))
+            return false;
+
+        NotifyMarketDataChanged();
+        return true;
+    }
+
+    private void NotifyMarketDataChanged()
+    {
+        OnMarketDataChanged?.Invoke();
     }
 }
