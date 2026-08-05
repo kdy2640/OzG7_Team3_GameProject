@@ -1,24 +1,25 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MarketManager : MonoBehaviour
 {
     [SerializeField] private MarketData marketData = new();
+    [SerializeField] private LevelData levelData = new();
     [SerializeField] private List<EmployeeBase> employees = new();
     [SerializeField] private List<FacilityBase> facilities = new();
 
-    public IReadOnlyList<EmployeeType> UnlockedEmployees => marketData.UnlockedEmployees;
-    public IReadOnlyList<FacilityType> UnlockedFacilities => marketData.UnlockedFacilities;
-    public List<DishType> SelectedDishes => marketData.SelectedDishes;
-    public int DishSelectionLimit => marketData.DishSelectionLimit;
+    private Action onMarketDataChanged;
 
+    public MarketData Data => marketData;
+    public LevelData LevelData => levelData;
     public IReadOnlyList<EmployeeBase> Employees => employees;
     public IReadOnlyList<FacilityBase> Facilities => facilities;
 
-    public int CurrentBusinessDay
+    private void Awake()
     {
-        get => marketData.CurrentBusinessDay;
-        set => marketData.CurrentBusinessDay = value;
+        marketData ??= new MarketData();
+        SubscribeMarketData();
     }
 
     private void Start()
@@ -29,6 +30,9 @@ public class MarketManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (marketData != null)
+            marketData.OnMarketDataChanged -= HandleMarketDataChanged;
+
         if (GameManager.Instance == null || GameManager.Instance.Upgrade == null)
             return;
 
@@ -37,6 +41,8 @@ public class MarketManager : MonoBehaviour
 
     public void Refresh()
     {
+        levelData = LevelDataDB.GetData(marketData.CurrentLevel) ?? new LevelData();
+
         employees.Clear();
         facilities.Clear();
 
@@ -84,11 +90,10 @@ public class MarketManager : MonoBehaviour
         MarketSaveData saveData = new()
         {
             currentBusinessDay = marketData.CurrentBusinessDay,
-            dishSelectionLimit = marketData.DishSelectionLimit
+            currentLevel = marketData.CurrentLevel,
+            currentEXP = marketData.CurrentEXP
         };
 
-        saveData.unlockedEmployees.AddRange(marketData.UnlockedEmployees);
-        saveData.unlockedFacilities.AddRange(marketData.UnlockedFacilities);
         saveData.selectedDishes.AddRange(marketData.SelectedDishes);
 
         return saveData;
@@ -96,22 +101,59 @@ public class MarketManager : MonoBehaviour
 
     public void LoadMarketSaveData(MarketSaveData saveData)
     {
-        marketData = saveData == null
+        MarketData loadedData = saveData == null
             ? new MarketData()
             : new MarketData(
                 Mathf.Max(0, saveData.currentBusinessDay),
-                Mathf.Max(0, saveData.dishSelectionLimit),
-                saveData.unlockedEmployees,
-                saveData.unlockedFacilities,
+                Mathf.Max(0, saveData.currentLevel),
+                Mathf.Max(0, saveData.currentEXP),
                 saveData.selectedDishes);
 
+        ReplaceMarketData(loadedData);
         Refresh();
+        NotifyMarketDataChanged();
     }
 
     public void ResetMarketSaveData()
     {
-        marketData = new MarketData();
+        ReplaceMarketData(new MarketData());
         Refresh();
+        NotifyMarketDataChanged();
+    }
+
+    public void SubscribeMarketDataChanged(Action callback)
+    {
+        onMarketDataChanged += callback;
+    }
+
+    public void UnsubscribeMarketDataChanged(Action callback)
+    {
+        onMarketDataChanged -= callback;
+    }
+
+    private void ReplaceMarketData(MarketData newMarketData)
+    {
+        if (marketData != null)
+            marketData.OnMarketDataChanged -= HandleMarketDataChanged;
+
+        marketData = newMarketData ?? new MarketData();
+        SubscribeMarketData();
+    }
+
+    private void SubscribeMarketData()
+    {
+        marketData.OnMarketDataChanged -= HandleMarketDataChanged;
+        marketData.OnMarketDataChanged += HandleMarketDataChanged;
+    }
+
+    private void HandleMarketDataChanged()
+    {
+        NotifyMarketDataChanged();
+    }
+
+    private void NotifyMarketDataChanged()
+    {
+        onMarketDataChanged?.Invoke();
     }
 
     private void OnRuntimeStatRefresh(RuntimeStat runtimeStat)

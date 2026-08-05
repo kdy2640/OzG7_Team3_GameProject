@@ -2,15 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GroceryType
-{
-    Wheat,
-    Beaf,
-    Carrot,
-    Count
-}
-
-
 [Serializable]
 public class GroceryAmount
 {

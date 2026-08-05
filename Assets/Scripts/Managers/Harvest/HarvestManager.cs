@@ -51,6 +51,7 @@ public class HarvestManager : MonoBehaviour
         if (!IsGameLoopScene) return;
         isRunning = false;
         eventManager.Invoke(HarvestEventType.LoopEnded);
+        GameManager.Instance.Scene.ChangeScene(SceneType.Hub);
     }
 
     public void SubscribeTick(Action<float> ev)

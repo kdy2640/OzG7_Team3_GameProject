@@ -19,6 +19,6 @@ public sealed class TempCookHamburgerButton : MonoBehaviour
 
     private void OnButtonClicked()
     {
-        GameManager.Instance.CookingManager.TryCook(DishType.Hamburger);
+        GameManager.Instance.CookingManager.TryCook(DishType.MeatOnigiri);
     }
 }

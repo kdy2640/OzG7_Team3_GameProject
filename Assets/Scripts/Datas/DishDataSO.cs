@@ -3,9 +3,14 @@ using UnityEngine;
 
 public enum DishType
 {
+    MeatOnigiri,
+    VegetableGimbap,
     Steak,
-    Bread,
-    Hamburger,
+    Meatloaf,
+    OnionBagel,
+    LambSteak,
+    PotatoNoodles,
+    LambSoup,
     Count
 }
 
