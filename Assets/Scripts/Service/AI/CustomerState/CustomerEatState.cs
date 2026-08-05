@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CustomerEatState : IState
 {
@@ -25,12 +24,23 @@ public class CustomerEatState : IState
 
         if (timer <= 0)
         {
-            stateManager.ChangeState(
-                new CustomerGoHomeState(stateManager)
-            );
-
+            FinishEating();
             return;
         }
+    }
+
+    private void FinishEating()
+    {
+        DishDataSO data = DishDataDB.GetData(stateManager.Order.dish);
+
+        if(data != null)
+        {
+            // 돈 획득
+            GameManager.Instance.StockManager.AddCurrency(data.Cost);
+        }
+
+
+        stateManager.ChangeState(new CustomerGoHomeState(stateManager));
     }
 
     public void Exit()

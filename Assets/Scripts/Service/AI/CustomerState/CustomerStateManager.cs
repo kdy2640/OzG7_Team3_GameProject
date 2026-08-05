@@ -87,7 +87,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public void CreateOrder()
     {
-        IReadOnlyList<DishType> selectedDishes = GameManager.Instance.Market.SelectedDishes;
+        IReadOnlyList<DishType> selectedDishes = GameManager.Instance.Market.Data.SelectedDishes;
 
         if (selectedDishes == null || selectedDishes.Count == 0)
         {
@@ -96,7 +96,6 @@ public class CustomerStateManager : MonoBehaviour
         }
 
         DishType dish = selectedDishes[Random.Range(0, selectedDishes.Count)];
-
         order = new DishAmount(dish, 1);
     }
 }
