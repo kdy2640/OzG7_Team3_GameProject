@@ -5,15 +5,18 @@ public sealed class UI_ServiceSelection : UI_Base
 {
     private enum GameObjects
     {
-        To_HubView
+        UI_ToHubView,
+        UI_StartServiceButton
     }
 
     protected override void OnInit()
     {
         Bind<GameObject>(typeof(GameObjects));
-        GetGameObject((int)GameObjects.To_HubView)?
+        GetGameObject((int)GameObjects.UI_ToHubView)?
             .GetComponent<UI_HubStateButton>()?
             .Init(Owner);
+        UI_EventHandler StartServiceButton = GetGameObject((int)GameObjects.UI_StartServiceButton)?.GetComponent<UI_EventHandler>();
+        StartServiceButton?.AddUIEvent(_ => GameManager.Instance.Scene.ChangeScene(SceneType.Service), UI_EventHandler.UIEvent.LClick);
     }
 
     private void Start()

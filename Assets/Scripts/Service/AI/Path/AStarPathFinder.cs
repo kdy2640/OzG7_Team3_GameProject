@@ -26,6 +26,8 @@ public class AStarPathFinder
             node.Parent = null;
         }
 
+        start.GCost = 0;
+
         while (openList.Count > 0)
         {
             Waypoint current = openList[0];
@@ -49,7 +51,6 @@ public class AStarPathFinder
 
             
 
-            start.GCost = 0;
 
             foreach (Waypoint neighbor in current.Neighbors)
             {
@@ -81,11 +82,11 @@ public class AStarPathFinder
     }
 
     // 경로 반환
-    private List<Waypoint> RetracePath(Waypoint start, Waypoint end)
+    private List<Waypoint> RetracePath(Waypoint start, Waypoint goal)
     {
         List<Waypoint> path = new();
 
-        Waypoint current = end;
+        Waypoint current = goal;
 
         while (current != start)
         {

@@ -48,7 +48,8 @@ public class PathManager : MonoBehaviour
         {
             return path;
         }
-        Debug.Log("GetPath (Waypoint)Fail");
+        Debug.Log(start + "-" + goal + " : GetPath (Waypoint)Fail");
+        
         return null;
     }
 
@@ -57,6 +58,11 @@ public class PathManager : MonoBehaviour
         
         Waypoint start = graph.GetClosestWaypoint(startPos);
         Waypoint goal = graph.GetClosestWaypoint(goalPos);
+
+        if(start == goal)
+        {
+            return null;
+        }
 
         return GetPath(start, goal);
     }
