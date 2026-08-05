@@ -2,7 +2,10 @@ using UnityEngine;
 
 public class CustomerEatState : IState
 {
+
+
     private CustomerStateManager stateManager;
+
     private float timer;
 
     public CustomerEatState(CustomerStateManager stateManager)
@@ -13,7 +16,6 @@ public class CustomerEatState : IState
     public void Enter()
     {
         timer = 5.0f;
-        Debug.Log("식사 시작");
     }
 
     public void Execute()
@@ -22,16 +24,26 @@ public class CustomerEatState : IState
 
         if (timer <= 0)
         {
-            stateManager.ChangeState(
-                new CustomerGoHomeState(stateManager)
-            );
-
+            FinishEating();
             return;
         }
     }
 
+    private void FinishEating()
+    {
+        DishDataSO data = DishDataDB.GetData(stateManager.Order.dish);
+
+        if(data != null)
+        {
+            // 돈 획득
+            GameManager.Instance.StockManager.AddCurrency(data.Cost);
+        }
+
+
+        stateManager.ChangeState(new CustomerGoHomeState(stateManager));
+    }
+
     public void Exit()
     {
-        Debug.Log("식사 종료");
     }
 }
