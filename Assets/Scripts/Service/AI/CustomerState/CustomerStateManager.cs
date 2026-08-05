@@ -1,19 +1,26 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CustomerStateManager : MonoBehaviour
 {
     [SerializeField] private AIMove aiMove;
     [SerializeField] private Transform exitPoint;
-    
     [SerializeField] private TableManager tableManager;
+    [SerializeField] private OrderButton orderButton;
+
     public AIMove AiMove => aiMove;
     public Transform ExitPoint => exitPoint;
+    public OrderButton OrderButton => orderButton;
 
     private Table currentTable;
     private Transform seat;
-
+    private DishAmount order;
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
+    public DishAmount Order => order;
+    
+
     private IState currentState;
 
     private void Awake()
@@ -26,6 +33,7 @@ public class CustomerStateManager : MonoBehaviour
         {
             tableManager = FindFirstObjectByType<TableManager>();
         }
+        
     }
 
     private void Start()
@@ -64,8 +72,6 @@ public class CustomerStateManager : MonoBehaviour
 
     public void ChangeState(IState newState)
     {
-        Debug.Log("상태변경 : " + currentState + " => " + newState);
-
         currentState?.Exit();
 
         currentState = newState;
@@ -77,5 +83,20 @@ public class CustomerStateManager : MonoBehaviour
     {
         currentTable = table;
         this.seat = seat;
+    }
+
+    public void CreateOrder()
+    {
+        IReadOnlyList<DishType> selectedDishes = GameManager.Instance.Market.SelectedDishes;
+
+        if (selectedDishes == null || selectedDishes.Count == 0)
+        {
+            Debug.Log("선택된 메뉴가 없습니다.");
+            return;
+        }
+
+        DishType dish = selectedDishes[Random.Range(0, selectedDishes.Count)];
+
+        order = new DishAmount(dish, 1);
     }
 }

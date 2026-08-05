@@ -13,7 +13,6 @@ public class ServerServeState : IState
     public void Enter()
     {
         timer = 5.0f;
-        Debug.Log("음식 제공 중");
     }
 
     public void Execute()
@@ -32,6 +31,5 @@ public class ServerServeState : IState
 
     public void Exit()
     {
-        Debug.Log("제공 완료");
     }
 }

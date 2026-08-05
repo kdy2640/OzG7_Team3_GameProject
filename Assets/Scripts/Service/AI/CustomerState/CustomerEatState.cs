@@ -1,8 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CustomerEatState : IState
 {
+
+
     private CustomerStateManager stateManager;
+
     private float timer;
 
     public CustomerEatState(CustomerStateManager stateManager)
@@ -13,7 +17,6 @@ public class CustomerEatState : IState
     public void Enter()
     {
         timer = 5.0f;
-        Debug.Log("식사 시작");
     }
 
     public void Execute()
@@ -32,6 +35,5 @@ public class CustomerEatState : IState
 
     public void Exit()
     {
-        Debug.Log("식사 종료");
     }
 }

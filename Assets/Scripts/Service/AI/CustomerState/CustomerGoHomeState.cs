@@ -15,7 +15,6 @@ public class CustomerGoHomeState : IState
 
     public void Enter()
     {
-        Debug.Log(stateManager.CurrentTable);
         stateManager.CurrentTable.ReleaseSeat(stateManager);
 
         stateManager.AiMove.OnArrived += ArrivedHome;
