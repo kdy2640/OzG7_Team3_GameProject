@@ -9,6 +9,9 @@ public sealed class UI_HubDisplay : MonoBehaviour
     [Header("Top Resource")]
     [SerializeField] private TMP_Text goldText;
 
+    [Header("Center Effect")]
+    [SerializeField] private TMP_Text currentEffectText;
+
     [Header("Player Information")]
     [SerializeField] private TMP_Text playerLevelText;
 
@@ -26,6 +29,8 @@ public sealed class UI_HubDisplay : MonoBehaviour
 
         goldText.text = data.Gold.ToString("N0");
 
+        currentEffectText.text = data.CurrentEffect;
+
         playerLevelText.text = $"Lv. {data.PlayerLevel}";
         playerNameText.text = data.PlayerName;
 
@@ -39,6 +44,7 @@ public sealed class UI_HubDisplay : MonoBehaviour
 //HubDisplayData data = new HubDisplayData
 //{
 //    Gold = 15000,
+//    CurrentEffect = "Double Gold",
 //    PlayerLevel = 1,
 //    PlayerName = "Restaurant Master",
 //    TotalGold = 125000,
