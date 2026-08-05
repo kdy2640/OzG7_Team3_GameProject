@@ -14,4 +14,6 @@ public class HubDisplayData
     public string PromotionQuestTitle;
 
     public string PromotionQuestDescription;
+
+    public string CurrentEffect;
 }
