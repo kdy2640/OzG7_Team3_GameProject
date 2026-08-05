@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -5,20 +6,70 @@ public sealed class HarvestSpawner : MonoBehaviour
 {
     [SerializeField] private HarvestActor cropPrefab;
     [SerializeField] private Transform player;
+    [SerializeField] private StageType stageType = StageType.Stage_1;
     [SerializeField, Min(0)] private int spawnCount = 60;
     [SerializeField] private Vector2 spawnArea = new(9f, 9f);
     [SerializeField] private float spawnHeight;
+    [SerializeField] private List<HarvestActor> spawnedCrops = new();
+
+    private Transform cropContainer;
 
     private void Start()
     {
-        if (cropPrefab == null)
+        Initialize();
+    }
+
+    [ContextMenu("Initialize")]
+    public void Initialize()
+    {
+        if (!Application.isPlaying)
         {
-            Debug.LogError("[CropSpawner] Crop prefab is not assigned.", this);
+            Debug.LogWarning(
+                "[HarvestSpawner] Initialize can only be used in Play Mode.",
+                this);
             return;
         }
 
-        Transform container = new GameObject("Crops").transform;
-        container.SetParent(transform, false);
+        if (cropPrefab == null)
+        {
+            Debug.LogError("[HarvestSpawner] Crop prefab is not assigned.", this);
+            return;
+        }
+
+        if (!StageDataDB.TryGetData(stageType, out StageDataSO stageData))
+        {
+            Debug.LogError(
+                $"[HarvestSpawner] StageDataSO is not found. stageType : {stageType}",
+                this);
+            return;
+        }
+
+        if (stageData.HarvestList == null || stageData.HarvestList.Count == 0)
+        {
+            Debug.LogError(
+                $"[HarvestSpawner] HarvestList is empty. stageType : {stageType}",
+                this);
+            return;
+        }
+
+        foreach (HarvestActor crop in spawnedCrops)
+        {
+            if (crop != null)
+                Destroy(crop.gameObject);
+        }
+
+        spawnedCrops.Clear();
+
+        if (cropContainer == null)
+        {
+            cropContainer = transform.Find("Crops");
+
+            if (cropContainer == null)
+            {
+                cropContainer = new GameObject("Crops").transform;
+                cropContainer.SetParent(transform, false);
+            }
+        }
 
         for (int i = 0; i < spawnCount; i++)
         {
@@ -26,11 +77,16 @@ public sealed class HarvestSpawner : MonoBehaviour
             Quaternion rotation =
                 transform.rotation * Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
             HarvestType randomType =
-                (HarvestType)Random.Range(0, (int)HarvestType.Count);
+                stageData.HarvestList[Random.Range(0, stageData.HarvestList.Count)];
 
-            HarvestActor crop = Instantiate(cropPrefab, worldPosition, rotation, container);
+            HarvestActor crop = Instantiate(
+                cropPrefab,
+                worldPosition,
+                rotation,
+                cropContainer);
             crop.name = "Crop";
             crop.Init(randomType, player, this);
+            spawnedCrops.Add(crop);
         }
     }
 
