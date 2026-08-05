@@ -64,6 +64,7 @@ public class SaveManager : MonoBehaviour
         Debug.Log($"Save deleted. path : {SavePath}");
     }// 저장 파일이 있으면 삭제한다.
 
+    [ContextMenu("Reset Save")]
     public void ResetSave()
     {
         GameManager.Instance.Upgrade.ResetUpgradeSaveData();

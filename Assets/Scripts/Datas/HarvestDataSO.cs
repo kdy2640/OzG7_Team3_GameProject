@@ -3,9 +3,15 @@ using UnityEngine;
 
 public enum HarvestType
 {
-    Wheat,
+    Rice,
     Carrot,
+    Chicken,
+    Wheat,
+    Onion,
     Cow,
+    Potato,
+    Cabbage,
+    Sheep,
     Count
 }
 
