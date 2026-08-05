@@ -9,7 +9,7 @@ public class MarketManager : MonoBehaviour
 
     public IReadOnlyList<EmployeeType> UnlockedEmployees => marketData.UnlockedEmployees;
     public IReadOnlyList<FacilityType> UnlockedFacilities => marketData.UnlockedFacilities;
-    public IReadOnlyList<DishType> SelectedDishes => marketData.SelectedDishes;
+    public List<DishType> SelectedDishes => marketData.SelectedDishes;
     public int DishSelectionLimit => marketData.DishSelectionLimit;
 
     public IReadOnlyList<EmployeeBase> Employees => employees;

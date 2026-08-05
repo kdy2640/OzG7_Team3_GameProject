@@ -25,7 +25,7 @@ public sealed class MarketData
 
     public IReadOnlyList<EmployeeType> UnlockedEmployees => unlockedEmployees;
     public IReadOnlyList<FacilityType> UnlockedFacilities => unlockedFacilities;
-    public IReadOnlyList<DishType> SelectedDishes => selectedDishes;
+    public List<DishType> SelectedDishes => selectedDishes;
 
     public MarketData()
     {
