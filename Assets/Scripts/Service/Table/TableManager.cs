@@ -18,7 +18,6 @@ public class TableManager : MonoBehaviour
                 return table;
             }
         }
-        Debug.Log("빈 자리 찾기 실패");
         return null;
     }
 
@@ -54,7 +53,6 @@ public class TableManager : MonoBehaviour
             waitingQueue.Dequeue();
 
             Transform seat = table.ReserveSeat(customer);
-            Debug.Log("Seat : " + seat);
 
             customer.AssignTable(table, seat);
 

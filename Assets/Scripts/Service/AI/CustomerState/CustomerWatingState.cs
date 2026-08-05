@@ -16,7 +16,6 @@ public class CustomerWatingState : IState
     {
         stateManager.AiMove.StopMove();
         tableManager.AddWaitingCustomer(stateManager);
-        Debug.Log("웨이팅 시작");
     }
 
     public void Execute()

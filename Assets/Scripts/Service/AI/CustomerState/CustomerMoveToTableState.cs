@@ -41,7 +41,7 @@ public class CustomerMoveToTableState : IState
     private void Arrived()
     {
         stateManager.ChangeState(
-            new CustomerEatState(stateManager)
+            new CustomerOrderState(stateManager)
         );
     }
 }

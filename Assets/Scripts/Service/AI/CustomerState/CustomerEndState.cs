@@ -12,7 +12,6 @@ public class CustomerEndState : IState
 
     public void Enter()
     {
-        Debug.Log("손님 퇴장 완료");
     }
 
 
