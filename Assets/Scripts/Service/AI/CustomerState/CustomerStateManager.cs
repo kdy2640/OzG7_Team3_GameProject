@@ -91,7 +91,7 @@ public class CustomerStateManager : MonoBehaviour
 
         if (selectedDishes == null || selectedDishes.Count == 0)
         {
-            Debug.Log("선택된 메뉴가 없습니다.");
+            Debug.Log("오늘의 메뉴가 없습니다.");
             return;
         }
 
