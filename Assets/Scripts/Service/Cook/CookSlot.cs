@@ -7,10 +7,18 @@ public class CookSlot : MonoBehaviour
 {
     public event Action OnClicked;
 
-    [SerializeField] private DishType dishType;
+    
     [SerializeField] private TMP_Text dishName;
     [SerializeField] private TMP_Text stateText;
     [SerializeField] private TMP_Text amountText;
+
+    private DishType dishType;
+
+    public void Initialize(DishType dish)
+    {
+        dishType = dish;
+        UpdateUI();
+    }
     
     private void OnEnable()
     {
