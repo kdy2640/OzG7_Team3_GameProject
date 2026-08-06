@@ -7,10 +7,13 @@ public class DishStorageUI : MonoBehaviour
 
     private void OnEnable()
     {
+        GameManager.Instance.StockManager.SubscribeStockDataChange(UpdateUI);
+
         UpdateUI();
     }
 
-    public void UpdateUI()
+
+    private void UpdateUI()
     {
         IReadOnlyList<DishAmount> dishes = GameManager.Instance.StockManager.StockData.Dishes;
 
@@ -25,5 +28,10 @@ public class DishStorageUI : MonoBehaviour
                 slots[i].Clear();
             }
         }
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.StockManager.UnsubscribeStockDataChange(UpdateUI);
     }
 }

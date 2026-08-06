@@ -1,16 +1,22 @@
+using TMPro;
 using UnityEngine;
 
 public class KitchenSlot : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private TMP_Text dishName;
+    [SerializeField] private TMP_Text timerText;
+
+    public void SetCooking(DishType dish, float time)
     {
-        
+        DishDataSO data = DishDataDB.GetData(dish);
+
+        dishName.text = data.DisplayName;
+        timerText.text = time.ToString("F0") + "s";
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Clear()
     {
-        
+        dishName.text = "";
+        timerText.text = "";
     }
 }
