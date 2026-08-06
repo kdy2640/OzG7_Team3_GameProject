@@ -1,16 +1,29 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DishStorageUI : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private DishSlot[] slots;
+
+    private void OnEnable()
     {
-        
+        UpdateUI();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateUI()
     {
-        
+        IReadOnlyList<DishAmount> dishes = GameManager.Instance.StockManager.StockData.Dishes;
+
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if(i<dishes.Count)
+            {
+                slots[i].SetDish(dishes[i]);
+            }
+            else
+            {
+                slots[i].Clear();
+            }
+        }
     }
 }

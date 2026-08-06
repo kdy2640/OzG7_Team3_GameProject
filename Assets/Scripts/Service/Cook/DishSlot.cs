@@ -9,13 +9,22 @@ public class DishSlot : MonoBehaviour
 
     public void SetDish(DishAmount dishAmount)
     {
-        DishDataSO data =
-            DishDataDB.GetData(dishAmount.dish);
+        DishDataSO data = DishDataDB.GetData(dishAmount.dish);
 
         if (data == null)
+        {
+            Clear();
             return;
+        }
+            
 
         dishName.text = data.DisplayName;
         amountText.text = $"x {dishAmount.amount}";
+    }
+
+    public void Clear()
+    {
+        dishName.text = "";
+        amountText.text = "";
     }
 }
