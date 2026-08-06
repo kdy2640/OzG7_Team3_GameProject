@@ -9,7 +9,7 @@ public class CookingQueue : MonoBehaviour
 
     private void Update()
     {
-        if(currentDish == null)
+        if(currentDish == DishType.Count)
         {
             StartNextCooking();
             return;
