@@ -22,16 +22,15 @@ public class CookSlot : MonoBehaviour
         if (data == null) return;
 
         dishName.text = data.DisplayName;
-
+        stateText.text = "No\nGrocery";
+        stateText.enabled = false;
         bool canCook = GameManager.Instance.CookingManager.CanCook(dishType);
 
-        if( canCook )
+        
+        if ( !canCook )
         {
-            stateText.text = "제작 가능";
-        }
-        else
-        {
-            stateText.text = "식자재 부족";
+            dishName.enabled = false;
+            stateText.enabled = true;
         }
     }
 
