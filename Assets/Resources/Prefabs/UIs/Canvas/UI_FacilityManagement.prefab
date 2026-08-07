@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3258823164528377129}
   - component: {fileID: 9216143226369213211}
   - component: {fileID: 492861845836850362}
+  - component: {fileID: 1118275040125842713}
   m_Layer: 0
   m_Name: StaffManagerButton
   m_TagString: Untagged
@@ -153,6 +154,20 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &1118275040125842713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24109690386865510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7dd6fb31c7d43b2a435f2ae13d44ac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_HubStateButton
+  holdThreshold: 0.5
+  targetState: 6
 --- !u!1 &131371240698979976
 GameObject:
   m_ObjectHideFlags: 0
@@ -3254,7 +3269,7 @@ GameObject:
   - component: {fileID: 3246551128841906497}
   - component: {fileID: 3562384172331153488}
   m_Layer: 0
-  m_Name: UI_ToHubView
+  m_Name: ExitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4242,6 +4257,7 @@ GameObject:
   - component: {fileID: 8568314152820459471}
   - component: {fileID: 7820858087226392394}
   - component: {fileID: 8008564240358473258}
+  - component: {fileID: 2228275040125842713}
   m_Layer: 0
   m_Name: DinerInteriorButton
   m_TagString: Untagged
@@ -4381,6 +4397,20 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &2228275040125842713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6396468509707956440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7dd6fb31c7d43b2a435f2ae13d44ac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_HubStateButton
+  holdThreshold: 0.5
+  targetState: 1
 --- !u!1 &6435801172562094318
 GameObject:
   m_ObjectHideFlags: 0
@@ -6262,7 +6292,7 @@ GameObject:
   - component: {fileID: 5971953031205564747}
   - component: {fileID: 3124407380116089243}
   m_Layer: 5
-  m_Name: UI_StoreManagement
+  m_Name: UI_FacilityManagement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6304,7 +6334,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5d820661a3a97246b5dd49ee4a1a512, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_StoreManagement
+  m_EditorClassIdentifier: Assembly-CSharp::UI_FacilityManagement
 --- !u!225 &3124407380116089243
 CanvasGroup:
   m_ObjectHideFlags: 0

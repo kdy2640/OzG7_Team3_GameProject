@@ -9,16 +9,15 @@ public sealed class UI_IngredientCard : MonoBehaviour
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text countText;
 
-    public void SetData(IngredientCardData data)
+    public void SetData(GroceryAmount ingredient, int ownedAmount)
     {
-        if (data == null) return;
+        if (ingredient == null)
+            return;
 
-        icon.sprite = data.Icon;
-
-        countText.text = $"{data.RequiredAmount} / {data.OwnedAmount}";
+        countText.text = $"{ownedAmount} / {ingredient.amount}";
 
         countText.color = 
-            data.OwnedAmount >= data.RequiredAmount 
+            ownedAmount >= ingredient.amount
             ? Color.white : Color.red;
     }
 }

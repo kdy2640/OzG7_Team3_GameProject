@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,25 +6,24 @@ public sealed class UI_SelectedMenuCard : MonoBehaviour
 {
     [SerializeField] private Image menuIcon;
 
-    [SerializeField] private TMP_Text menuNameText;
+    [SerializeField] private TMP_Text levelText;
 
-    [SerializeField] private Button button;
+    [SerializeField] private GameObject lockedCover;
 
-    public Button Button => button;
-
-    public void SetData(MenuCardData data)
+    public void SetData(DishType dishType)
     {
-        if (data == null) return;
+        DishDataSO data = DishDataDB.GetData(dishType);
+        if (data == null)
+            return;
 
-        menuIcon.sprite = data.MenuIcon;
+        int level = GameManager.Instance.Upgrade.RuntimeStat.Dish.GetLevel(dishType);
 
-        menuNameText.text = data.MenuName;
+        menuIcon.sprite = data.Icon;
+        levelText.text = $"Lv.{level}";
     }
-    public void Bind(Action onClick)
-    {
-        button.onClick.RemoveAllListeners();
 
-        if (onClick != null)
-            button.onClick.AddListener(() => onClick());
+    public void SetCover(bool setCover)
+    {
+        lockedCover.SetActive(setCover);
     }
 }
