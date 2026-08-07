@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class FacilityDataDB
 {
-    private const string LoadPath = "SOs/FacilityDataSO";
+    private const string LoadPath = "SOs/DefinitionDatas/FacilityDataSO";
 
     private static Dictionary<FacilityType, FacilityDataSO> facilityDataMap;
 

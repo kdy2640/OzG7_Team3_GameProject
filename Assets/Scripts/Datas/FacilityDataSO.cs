@@ -30,7 +30,6 @@ public sealed class FacilityDataSO : ScriptableObject
     [SerializeField] private FacilityCategory facilityCategory = FacilityCategory.Count;
     [SerializeField, Min(0)] private int cost;
     [SerializeField, Min(0f)] private float upgradeMultiplier = 1f;
-    [SerializeField, Min(1)] private int maxLevel = 1;
 
     public string Id => id;
     public string DisplayName => displayName;
@@ -38,5 +37,4 @@ public sealed class FacilityDataSO : ScriptableObject
     public FacilityCategory FacilityCategory => facilityCategory;
     public int Cost => cost;
     public float UpgradeMultiplier => upgradeMultiplier;
-    public int MaxLevel => maxLevel;
 }
