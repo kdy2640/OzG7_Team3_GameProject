@@ -5,7 +5,7 @@ public sealed class UI_HubView : UI_Base
 {
     private enum GameObjects
     {
-        UI_ToStoreManagementButton,
+        UI_ToFacilityManagementButton,
         UI_ToMenuManagementButton,
         UI_ToStoreButton,
         UI_ToLogButton,
@@ -16,7 +16,7 @@ public sealed class UI_HubView : UI_Base
     protected override void OnInit()
     {
         Bind<GameObject>(typeof(GameObjects));
-        GetGameObject((int)GameObjects.UI_ToStoreManagementButton)?
+        GetGameObject((int)GameObjects.UI_ToFacilityManagementButton)?
             .GetComponent<UI_HubStateButton>()?
             .Init(Owner);
         GetGameObject((int)GameObjects.UI_ToMenuManagementButton)?

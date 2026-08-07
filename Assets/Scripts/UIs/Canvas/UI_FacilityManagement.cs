@@ -1,18 +1,23 @@
 using System.Collections;
 using UnityEngine;
 
-public sealed class UI_StoreManagement : UI_Base
+public sealed class UI_FacilityManagement : UI_Base
 {
-    private enum GameObjects
+    private enum HubStateButtons
     {
-        To_HubView
+        ExitButton,
+        DinerInteriorButton,
+        StaffManagerButton
     }
 
     protected override void OnInit()
     {
-        Bind<GameObject>(typeof(GameObjects));
-        GetGameObject((int)GameObjects.To_HubView)?
-            .GetComponent<UI_HubStateButton>()?
+        Bind<UI_HubStateButton>(typeof(HubStateButtons));
+        GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?
+            .Init(Owner);
+        GetUI<UI_HubStateButton>((int)HubStateButtons.DinerInteriorButton)?
+            .Init(Owner);
+        GetUI<UI_HubStateButton>((int)HubStateButtons.StaffManagerButton)?
             .Init(Owner);
     }
 

@@ -1,7 +1,13 @@
 using TMPro;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
+
+public enum MenuDevelopStatus
+{
+    Opened,
+    CanOpen,
+    Locked
+}
 
 public class UI_MenuDevelopCard : MonoBehaviour
 {
@@ -13,34 +19,52 @@ public class UI_MenuDevelopCard : MonoBehaviour
 
     [SerializeField] private TMP_Text levelText;
 
+    [SerializeField] private TMP_Text cookText;
+
     [SerializeField] private TMP_Text priceText;
 
-    [SerializeField] private Button button;
+    [SerializeField] private GameObject canOpen;
+
+    [SerializeField] private GameObject lockOverlay;
 
     [SerializeField] private Color developedColor = Color.yellow;
 
     [SerializeField] private Color lockedColor = Color.gray;
 
-    public void SetData(MenuCardData data)
+    private DishType dishType;
+    public DishType DishType => dishType;
+
+    public void SetData(DishType dishType)
     {
-        if (data == null) return;
+        DishDataSO data = DishDataDB.GetData(dishType);
+        if (data == null)
+            return;
 
-        menuIcon.sprite = data.MenuIcon;
+        this.dishType = dishType;
 
-        menuNameText.text = data.MenuName;
+        int level = GameManager.Instance.Upgrade.RuntimeStat.Dish.GetLevel(dishType);
 
-        levelText.text = $"Lv.{data.Level}";
+        menuIcon.sprite = data.Icon;
 
-        priceText.text = $"{data.Price:N0} G";
+        menuNameText.text = data.DisplayName;
 
-        backgroundImage.color = data.IsDeveloped
-            ? developedColor : lockedColor;
+        levelText.text = $"Lv.{level}";
+
+        int cookableAmount = GameManager.Instance.CookingManager
+            .CalculateCookableAmount(dishType);
+
+        cookText.text = $"C {cookableAmount:N0}";
+        priceText.text = $"G {data.Cost:N0}";
     }
-    public void Bind(Action onClick)
-    {
-        button.onClick.RemoveAllListeners();
 
-        if (onClick != null)
-            button.onClick.AddListener(() => onClick());
+    public void SetStatus(MenuDevelopStatus status)
+    {
+        bool isOpened = status == MenuDevelopStatus.Opened;
+
+        canOpen.SetActive(status == MenuDevelopStatus.CanOpen);
+        lockOverlay.SetActive(!isOpened);
+
+        backgroundImage.color = isOpened
+            ? developedColor : lockedColor;
     }
 }

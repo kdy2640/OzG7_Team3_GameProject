@@ -52,6 +52,7 @@ public class ServiceManager : MonoBehaviour
         if (!IsServiceScene) return;
         isRunning = false;
         eventManager.Invoke(ServiceEventType.LoopEnded);
+        GameManager.Instance.Scene.ChangeScene(SceneType.Hub);
     }
 
     public void SubscribeTick(Action<float> ev)
