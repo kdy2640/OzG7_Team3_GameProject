@@ -3,14 +3,14 @@ using UnityEngine;
 
 public sealed class UI_MenuManagement : UI_Base
 {
-    private UI_SelectedMenuPanel selectedMenuPanel; 
+    private UI_SelectMenuPanel selectMenuPanel;
     private UI_MenuSlidePanel menuSlidePanel;
     private UI_MenuVisualizer menuVisualizer;
 
     private enum GameObjects
     {
         ExitButton,
-        UI_SelectedMenuPanel,
+        UI_SelectMenuPanel,
         UI_MenuSlidePanel,
         UI_MenuVisualizer
     }
@@ -21,20 +21,25 @@ public sealed class UI_MenuManagement : UI_Base
         GetUI<GameObject>((int)GameObjects.ExitButton)?
             .GetComponent<UI_HubStateButton>()?.Init(Owner);
 
-        selectedMenuPanel = GetUI<GameObject>((int)GameObjects.UI_SelectedMenuPanel)?
-            .GetComponent<UI_SelectedMenuPanel>(); 
+        selectMenuPanel = GetUI<GameObject>((int)GameObjects.UI_SelectMenuPanel)?
+            .GetComponent<UI_SelectMenuPanel>();
         menuSlidePanel = GetUI<GameObject>((int)GameObjects.UI_MenuSlidePanel)?
             .GetComponent<UI_MenuSlidePanel>();
         menuVisualizer = GetUI<GameObject>((int)GameObjects.UI_MenuVisualizer)?
             .GetComponent<UI_MenuVisualizer>();
 
-        selectedMenuPanel?.Refresh();
+        selectMenuPanel?.SetCanDeselect(true);
+        selectMenuPanel?.Init(Owner);
         menuSlidePanel?.Init();
-        menuVisualizer?.SetData(DishType.MeatOnigiri);
+        menuVisualizer?.SetData(DishType.None);
     }
 
     protected override IEnumerator OnShow()
     {
+        selectMenuPanel?.Refresh();
+        menuSlidePanel?.Refresh();
+        menuVisualizer?.SetData(DishType.None);
+
         yield break;
     }
 

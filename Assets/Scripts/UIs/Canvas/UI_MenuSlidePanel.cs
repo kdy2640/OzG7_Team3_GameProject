@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,10 +19,10 @@ public class UI_MenuSlidePanel : MonoBehaviour
     // - 동적 생성한 카드의 클릭 이벤트는 카드 회수 및 파괴 시 해제한다.
 
     [SerializeField] private UI_MenuContainer menuContainer;
-    [SerializeField] private List<UI_MenuDevelopCard> cards = new();
-    [SerializeField] private List<DishUpgradeDataSO> upgradeDatas = new();
+    [SerializeField] private List<UI_MenuVisualCard> cards = new();
 
     private bool isInitialized;
+    private event Action<DishType> onCardClicked;
 
     public void Init()
     {
@@ -31,7 +32,12 @@ public class UI_MenuSlidePanel : MonoBehaviour
         isInitialized = true;
         menuContainer.SetCards(cards);
 
-        GameManager.Instance.Upgrade.SubscribeRuntimeStatRefresh(OnRuntimeStatRefresh);
+        for (int i = 0; i < cards.Count; i++)
+        {
+            cards[i]?.SubscribeClicked(NotifyCardClicked);
+        }
+
+        GameManager.Instance.Upgrade.SubscribeUpgradeChanged(OnUpgradeChanged);
         GameManager.Instance.StockManager.SubscribeStockDataChange(Refresh);
 
         Refresh();
@@ -42,38 +48,63 @@ public class UI_MenuSlidePanel : MonoBehaviour
         if (!isInitialized || GameManager.Instance == null)
             return;
 
-        GameManager.Instance.Upgrade?.UnSubscribeRuntimeStatRefresh(OnRuntimeStatRefresh);
+        GameManager.Instance.Upgrade?.UnsubscribeUpgradeChanged(OnUpgradeChanged);
         GameManager.Instance.StockManager?.UnsubscribeStockDataChange(Refresh);
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            cards[i]?.UnsubscribeClicked(NotifyCardClicked);
+        }
     }
 
     public void Refresh()
     {
-        for (int i = 0; i < cards.Count; i++)
+        int cardCount = Mathf.Min(cards.Count, (int)DishType.Count);
+
+        for (int i = 0; i < cardCount; i++)
         {
-            if (i >= upgradeDatas.Count || upgradeDatas[i] == null)
+            UI_MenuVisualCard card = cards[i];
+            DishType dishType = (DishType)i;
+            DishUpgradeDataSO upgradeData = UpgradeDataDB.GetData(dishType);
+
+            if (card == null || upgradeData == null)
                 continue;
 
-            UI_MenuDevelopCard card = cards[i];
-            DishUpgradeDataSO upgradeData = upgradeDatas[i];
-            DishType dishType = upgradeData.TargetDish;
-            int level = GameManager.Instance.Upgrade.RuntimeStat.Dish.GetLevel(dishType);
+            int level = GameManager.Instance.Upgrade.GetLevel(dishType);
 
             card.SetData(dishType);
             card.SetStatus(GetStatus(upgradeData, level));
         }
     }
 
-    private MenuDevelopStatus GetStatus(DishUpgradeDataSO upgradeData, int level)
+    public void SubscribeCardClicked(Action<DishType> callback)
     {
-        if (level > 0)
-            return MenuDevelopStatus.Opened;
-
-        return GameManager.Instance.StockManager.CanConsumeCurrency(upgradeData.GetCosts(0))
-            ? MenuDevelopStatus.CanOpen
-            : MenuDevelopStatus.Locked;
+        onCardClicked += callback;
     }
 
-    private void OnRuntimeStatRefresh(RuntimeStat runtimeStat)
+    public void UnsubscribeCardClicked(Action<DishType> callback)
+    {
+        onCardClicked -= callback;
+    }
+
+    public void NotifyCardClicked(DishType dishType)
+    {
+        if (dishType == DishType.None || dishType == DishType.Count)
+            return;
+        onCardClicked?.Invoke(dishType);
+    }
+
+    private MenuVisualStatus GetStatus(DishUpgradeDataSO upgradeData, int level)
+    {
+        if (level > 0)
+            return MenuVisualStatus.Opened;
+
+        return GameManager.Instance.StockManager.CanConsumeCurrency(upgradeData.GetCosts(0))
+            ? MenuVisualStatus.CanOpen
+            : MenuVisualStatus.Locked;
+    }
+
+    private void OnUpgradeChanged()
     {
         Refresh();
     }

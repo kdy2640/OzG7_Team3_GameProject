@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public sealed class UI_MenuVisualizer : MonoBehaviour
 {
+    [SerializeField] private UI_MenuSlidePanel menuSlidePanel;
+
     [Header("Menu Information")]
     [SerializeField] private Image menuIcon;
     [SerializeField] private TMP_Text menuNameText;
@@ -25,18 +27,75 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
     [SerializeField] private GameObject isFullUpgradedPanel;
     [SerializeField] private GameObject isNonDevelopedPanel;
 
-    [Header("Upgrade Data")]
-    [SerializeField] private List<DishUpgradeDataSO> upgradeDatas = new();
+    [Header("Buttons")]
+    [SerializeField] private Button menuSelectionButton;
+    [SerializeField] private TMP_Text menuSelectionButtonText;
+    [SerializeField] private Button levelUpButton;
+    [SerializeField] private Button fullUpgradedMenuSelectionButton;
+    [SerializeField] private TMP_Text fullUpgradedMenuSelectionButtonText;
+    [SerializeField] private Button menuDevelopButton;
+
+    private DishType currentDishType = DishType.None;
+    private bool isMarketSubscribed;
+
+    private void Awake()
+    {
+        menuSelectionButton.onClick.AddListener(OnSelectionButtonClicked);
+        fullUpgradedMenuSelectionButton.onClick.AddListener(OnSelectionButtonClicked);
+        levelUpButton.onClick.AddListener(OnUpgradeButtonClicked);
+        menuDevelopButton.onClick.AddListener(OnUpgradeButtonClicked);
+
+        if (menuSlidePanel == null)
+        {
+            Debug.LogError($"[{nameof(UI_MenuVisualizer)}] UI_MenuSlidePanel is required.", this);
+            return;
+        }
+
+        menuSlidePanel.SubscribeCardClicked(SetData);
+    }
+
+    private void Start()
+    {
+        if (GameManager.Instance == null || GameManager.Instance.Market == null)
+            return;
+
+        GameManager.Instance.Market.SubscribeMarketDataChanged(OnMarketDataChanged);
+        isMarketSubscribed = true;
+        UpdateSelectionButtons();
+    }
+
+    private void OnDestroy()
+    {
+        menuSelectionButton.onClick.RemoveListener(OnSelectionButtonClicked);
+        fullUpgradedMenuSelectionButton.onClick.RemoveListener(OnSelectionButtonClicked);
+        levelUpButton.onClick.RemoveListener(OnUpgradeButtonClicked);
+        menuDevelopButton.onClick.RemoveListener(OnUpgradeButtonClicked);
+
+        if (menuSlidePanel != null)
+            menuSlidePanel.UnsubscribeCardClicked(SetData);
+
+        if (isMarketSubscribed && GameManager.Instance != null)
+            GameManager.Instance.Market?.UnsubscribeMarketDataChanged(OnMarketDataChanged);
+    }
 
     public void SetData(DishType dishType)
     {
+        if (dishType == DishType.None)
+        {
+            ResetData();
+            return;
+        }
+
         DishDataSO data = DishDataDB.GetData(dishType);
         if (data == null)
             return;
 
-        int level = GameManager.Instance.Upgrade.RuntimeStat.Dish.GetLevel(dishType);
-        DishUpgradeDataSO upgradeData = GetUpgradeData(dishType);
+        currentDishType = dishType;
 
+        int level = GameManager.Instance.Upgrade.GetLevel(dishType);
+        DishUpgradeDataSO upgradeData = UpgradeDataDB.GetData(dishType);
+
+        menuIcon.gameObject.SetActive(true);
         menuIcon.sprite = data.Icon;
         menuNameText.text = data.DisplayName;
         levelText.text = $"LV.{level}";
@@ -51,18 +110,38 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
         UpdateTasteCards(data.Tastes);
         UpdateIngredientCards(data.Ingredients);
         UpdateStatusPanels(level, upgradeData);
+        UpdateSelectionButtons();
     }
 
-    private DishUpgradeDataSO GetUpgradeData(DishType dishType)
+    private void ResetData()
     {
-        for (int i = 0; i < upgradeDatas.Count; i++)
+        currentDishType = DishType.None;
+
+        menuIcon.sprite = null;
+        menuIcon.gameObject.SetActive(false);
+
+        menuNameText.text = string.Empty;
+        levelText.text = string.Empty;
+        sellValueText.text = string.Empty;
+        cookValueText.text = string.Empty;
+        descriptionText.text = string.Empty;
+        ingredientTitleText.text = string.Empty;
+
+        for (int i = 0; i < tasteCards.Length; i++)
         {
-            DishUpgradeDataSO upgradeData = upgradeDatas[i];
-            if (upgradeData != null && upgradeData.TargetDish == dishType)
-                return upgradeData;
+            tasteCards[i].gameObject.SetActive(false);
         }
 
-        return null;
+        for (int i = 0; i < ingredientCards.Length; i++)
+        {
+            ingredientCards[i].gameObject.SetActive(false);
+        }
+
+        isDevelopedPanel.SetActive(false);
+        isFullUpgradedPanel.SetActive(false);
+        isNonDevelopedPanel.SetActive(false);
+
+        UpdateSelectionButtons();
     }
 
     private void UpdateTasteCards(List<TasteType> tastes)
@@ -104,6 +183,76 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
         isNonDevelopedPanel.SetActive(isNonDeveloped);
         isFullUpgradedPanel.SetActive(!isNonDeveloped && isFullUpgraded);
         isDevelopedPanel.SetActive(!isNonDeveloped && !isFullUpgraded);
+    }
+
+    private void OnUpgradeButtonClicked()
+    {
+        if (currentDishType == DishType.None)
+            return;
+
+        DishUpgradeDataSO upgradeData = UpgradeDataDB.GetData(currentDishType);
+        if (upgradeData == null)
+            return;
+
+        if (GameManager.Instance.Upgrade.TryUpgrade(upgradeData))
+            SetData(currentDishType);
+    }
+
+    private void OnSelectionButtonClicked()
+    {
+        if (currentDishType == DishType.None)
+            return;
+
+        MarketData marketData = GameManager.Instance.Market.MarketData;
+
+        if (IsCurrentDishSelected(marketData.SelectedDishes))
+        {
+            marketData.DeselectDish(currentDishType);
+            return;
+        }
+
+        if (marketData.SelectedDishes.Count
+            >= GameManager.Instance.Market.LevelData.MaxDishLimit)
+        {
+            return;
+        }
+
+        marketData.SelectDish(currentDishType);
+    }
+
+    private void OnMarketDataChanged()
+    {
+        UpdateSelectionButtons();
+    }
+
+    private void UpdateSelectionButtons()
+    {
+        bool hasDish = currentDishType != DishType.None;
+        IReadOnlyList<DishType> selectedDishes = GameManager.Instance?.Market?.MarketData?.SelectedDishes;
+        bool isSelected = hasDish && IsCurrentDishSelected(selectedDishes);
+        bool canSelect = selectedDishes != null
+            && selectedDishes.Count < GameManager.Instance.Market.LevelData.MaxDishLimit;
+        string buttonText = isSelected ? "Deselect" : "Select";
+
+        menuSelectionButtonText.text = buttonText;
+        fullUpgradedMenuSelectionButtonText.text = buttonText;
+
+        menuSelectionButton.interactable = hasDish && (isSelected || canSelect);
+        fullUpgradedMenuSelectionButton.interactable = hasDish && (isSelected || canSelect);
+    }
+
+    private bool IsCurrentDishSelected(IReadOnlyList<DishType> selectedDishes)
+    {
+        if (selectedDishes == null)
+            return false;
+
+        for (int i = 0; i < selectedDishes.Count; i++)
+        {
+            if (selectedDishes[i] == currentDishType)
+                return true;
+        }
+
+        return false;
     }
 
     private static int GetOwnedAmount(GroceryType groceryType)
