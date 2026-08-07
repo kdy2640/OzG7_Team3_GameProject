@@ -25,7 +25,20 @@ public class StatCalculator
             if (state?.data == null || state.level <= 0)
                 continue;
 
-            state.data.ApplyTo(calculatedStat, state.level);
+            switch (state.data)
+            {
+                case HarvestUpgradeDataSO harvestData:
+                    calculatedStat.Harvest.Apply(
+                        harvestData.StatModifiers,
+                        state.level);
+                    break;
+
+                case FacilityUpgradeDataSO facilityData:
+                    calculatedStat.Service.Apply(
+                        facilityData.ServiceStatModifiers,
+                        state.level);
+                    break;
+            }
         }
     }
 }

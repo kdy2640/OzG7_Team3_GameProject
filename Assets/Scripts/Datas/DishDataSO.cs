@@ -3,6 +3,7 @@ using UnityEngine;
 
 public enum DishType
 {
+    None = -1,
     MeatOnigiri,
     VegetableGimbap,
     Steak,

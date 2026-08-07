@@ -2,28 +2,22 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum HarvestStatType
+public enum ServiceStatType
 {
-    SawSize,
-    SawCount,
-    SawSpeed,
-    SawSharpness,
-    TruckSpeed,
-    TruckCapacity,
-    TruckFuel,
+    CustomerCount,
     Count
 }
 
 [Serializable]
-public struct HarvestStatModifier
+public struct ServiceStatModifier
 {
-    public HarvestStatType statType;
+    public ServiceStatType statType;
     public ModifierType modifierType;
     public float value;
 }
 
 [Serializable]
-public struct HarvestStatViewer
+public struct ServiceStatViewer
 {
     [SerializeField] private string statName;
     [SerializeField] private float value;
@@ -42,16 +36,16 @@ public struct HarvestStatViewer
 }
 
 [Serializable]
-public sealed class HarvestRuntimeStat
+public sealed class ServiceRuntimeStat
 {
-    [SerializeField] private HarvestStatViewer[] values = Array.Empty<HarvestStatViewer>();
+    [SerializeField] private ServiceStatViewer[] values = Array.Empty<ServiceStatViewer>();
 
-    public HarvestRuntimeStat()
+    public ServiceRuntimeStat()
     {
         EnsureCapacity();
     }
 
-    public float Get(HarvestStatType statType)
+    public float Get(ServiceStatType statType)
     {
         int index = (int)statType;
 
@@ -63,7 +57,7 @@ public sealed class HarvestRuntimeStat
     }
 
     internal void Apply(
-        IReadOnlyList<HarvestStatModifier> modifiers,
+        IReadOnlyList<ServiceStatModifier> modifiers,
         int level)
     {
         if (modifiers == null || level <= 0)
@@ -71,7 +65,7 @@ public sealed class HarvestRuntimeStat
 
         for (int i = 0; i < modifiers.Count; i++)
         {
-            HarvestStatModifier modifier = modifiers[i];
+            ServiceStatModifier modifier = modifiers[i];
             int index = (int)modifier.statType;
 
             if (!IsValidIndex(index))
@@ -98,17 +92,17 @@ public sealed class HarvestRuntimeStat
 
     private static bool IsValidIndex(int index)
     {
-        return index >= 0 && index < (int)HarvestStatType.Count;
+        return index >= 0 && index < (int)ServiceStatType.Count;
     }
 
     private void EnsureCapacity()
     {
-        values ??= Array.Empty<HarvestStatViewer>();
+        values ??= Array.Empty<ServiceStatViewer>();
 
-        if (values.Length != (int)HarvestStatType.Count)
-            Array.Resize(ref values, (int)HarvestStatType.Count);
+        if (values.Length != (int)ServiceStatType.Count)
+            Array.Resize(ref values, (int)ServiceStatType.Count);
 
         for (int i = 0; i < values.Length; i++)
-            values[i].SetName(((HarvestStatType)i).ToString());
+            values[i].SetName(((ServiceStatType)i).ToString());
     }
 }
