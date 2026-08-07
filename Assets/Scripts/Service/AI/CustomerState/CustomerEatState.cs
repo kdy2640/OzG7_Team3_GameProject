@@ -45,5 +45,6 @@ public class CustomerEatState : IState
 
     public void Exit()
     {
+
     }
 }
