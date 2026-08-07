@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class HarvestDataDB
 {
-    private const string LoadPath = "SOs/HarvestDataSO";
+    private const string LoadPath = "SOs/DefinitionDatas/HarvestDataSO";
 
     private static Dictionary<HarvestType, HarvestDataSO> harvestDataMap;
 

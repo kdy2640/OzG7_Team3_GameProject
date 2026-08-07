@@ -7,7 +7,7 @@ public static class DishDataDB
 
     private static readonly string[] LoadPaths =
     {
-        "SOs/DishDataSO",
+        "SOs/DefinitionDatas/DishDataSO",
     };
 
     // 요리 종류로 데이터를 가져올 때 사용.

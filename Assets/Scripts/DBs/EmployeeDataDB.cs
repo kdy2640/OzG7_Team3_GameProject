@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class EmployeeDataDB
 {
-    private const string LoadPath = "SOs/EmployeeDataSO";
+    private const string LoadPath = "SOs/DefinitionDatas/EmployeeDataSO";
 
     private static Dictionary<EmployeeType, EmployeeDataSO> employeeDataMap;
 
