@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public enum EmployeeType
@@ -42,4 +43,51 @@ public sealed class EmployeeDataSO : ScriptableObject
     public int Cost => cost;
     public float UpgradeMultiplier => upgradeMultiplier;
     public int MaxLevel => maxLevel;
+
+    [Header("Staff Info Panel")]
+    [SerializeField] private Sprite roleIcon;
+    [SerializeField] private EmployeeSkillInfo level1Skill;
+    [SerializeField] private EmployeeSkillInfo level3Skill;
+    [SerializeField] private EmployeeSkillInfo level5Skill;
+    [SerializeField, TextArea] private string level2Effect;
+    [SerializeField, TextArea] private string level3Effect;
+    [SerializeField, TextArea] private string level4Effect;
+    [SerializeField, TextArea] private string level5Effect;
+
+    public Sprite RoleIcon => roleIcon;
+
+    public EmployeeSkillInfo GetSkill(int unlockLevel)
+    {
+        return unlockLevel == 1 ? level1Skill
+             : unlockLevel == 3 ? level3Skill
+             : unlockLevel == 5 ? level5Skill
+             : default;
+    }
+
+    public string GetLevelEffect(int level)
+    {
+        return level == 2 ? level2Effect
+             : level == 3 ? level3Effect
+             : level == 4 ? level4Effect
+             : level == 5 ? level5Effect
+             : string.Empty;
+    }
 }
+
+[Serializable]
+public struct EmployeeSkillInfo
+{
+    [SerializeField] private string skillName;
+    [SerializeField, TextArea] private string description;
+    [SerializeField, TextArea] private string effect;
+
+    public string Name => skillName;
+    public string Description => description;
+    public string Effect => effect;
+}
+
+
+
+
+
+
