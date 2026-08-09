@@ -11,7 +11,7 @@ public class MarketManager : MonoBehaviour
 
     private Action onMarketDataChanged;
 
-    public MarketData Data => marketData;
+    public MarketData MarketData => marketData;
     public LevelData LevelData => levelData;
     public IReadOnlyList<EmployeeBase> Employees => employees;
     public IReadOnlyList<FacilityBase> Facilities => facilities;
@@ -24,7 +24,7 @@ public class MarketManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.Upgrade.SubscribeRuntimeStatRefresh(OnRuntimeStatRefresh);
+        GameManager.Instance.Upgrade.SubscribeUpgradeChanged(OnUpgradeChanged);
         Refresh();
     }
 
@@ -36,7 +36,7 @@ public class MarketManager : MonoBehaviour
         if (GameManager.Instance == null || GameManager.Instance.Upgrade == null)
             return;
 
-        GameManager.Instance.Upgrade.UnSubscribeRuntimeStatRefresh(OnRuntimeStatRefresh);
+        GameManager.Instance.Upgrade.UnsubscribeUpgradeChanged(OnUpgradeChanged);
     }
 
     public void Refresh()
@@ -47,8 +47,6 @@ public class MarketManager : MonoBehaviour
         facilities.Clear();
 
         int employeeCount = EmployeeDataDB.Count;
-        EmployeeRuntimeStat employeeRuntimeStat = GameManager.Instance.Upgrade.RuntimeStat.Employee;
-
         for (int index = 0; index < employeeCount; index++)
         {
             EmployeeType employeeType = (EmployeeType)index;
@@ -58,7 +56,7 @@ public class MarketManager : MonoBehaviour
             {
                 EmployeeBase employee = new EmployeeBase(dataSO)
                 {
-                    NowLevel = employeeRuntimeStat.GetLevel(employeeType)
+                    NowLevel = GameManager.Instance.Upgrade.GetLevel(employeeType)
                 };
 
                 employees.Add(employee);
@@ -66,8 +64,6 @@ public class MarketManager : MonoBehaviour
         }
 
         int facilityCount = FacilityDataDB.Count;
-        FacilityRuntimeStat facilityRuntimeStat = GameManager.Instance.Upgrade.RuntimeStat.Facility;
-
         for (int index = 0; index < facilityCount; index++)
         {
             FacilityType facilityType = (FacilityType)index;
@@ -77,7 +73,7 @@ public class MarketManager : MonoBehaviour
             {
                 FacilityBase facility = new FacilityBase(dataSO)
                 {
-                    NowLevel = facilityRuntimeStat.GetLevel(facilityType)
+                    NowLevel = GameManager.Instance.Upgrade.GetLevel(facilityType)
                 };
 
                 facilities.Add(facility);
@@ -156,14 +152,14 @@ public class MarketManager : MonoBehaviour
         onMarketDataChanged?.Invoke();
     }
 
-    private void OnRuntimeStatRefresh(RuntimeStat runtimeStat)
+    private void OnUpgradeChanged()
     {
         for (int index = 0; index < employees.Count; index++)
         {
             EmployeeBase employee = employees[index];
 
             if (employee != null)
-                employee.NowLevel = runtimeStat.Employee.GetLevel((EmployeeType)index);
+                employee.NowLevel = GameManager.Instance.Upgrade.GetLevel((EmployeeType)index);
         }
 
         for (int index = 0; index < facilities.Count; index++)
@@ -171,7 +167,7 @@ public class MarketManager : MonoBehaviour
             FacilityBase facility = facilities[index];
 
             if (facility != null)
-                facility.NowLevel = runtimeStat.Facility.GetLevel((FacilityType)index);
+                facility.NowLevel = GameManager.Instance.Upgrade.GetLevel((FacilityType)index);
         }
     }
 }

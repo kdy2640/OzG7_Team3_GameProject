@@ -4,21 +4,31 @@ using UnityEngine;
 
 public class UpgradeManager : MonoBehaviour
 {
+    #region Fields
+
     [SerializeField] private List<UpgradeState> upgradeStates = new();
     [SerializeField] private RuntimeStat runtimeStat;
 
     private Dictionary<string, UpgradeState> upgradeStateMap = new();
+    private Dictionary<HarvestUpgradeType, UpgradeState> harvestStateMap = new();
+    private Dictionary<DishType, UpgradeState> dishStateMap = new();
+    private Dictionary<EmployeeType, UpgradeState> employeeStateMap = new();
+    private Dictionary<FacilityType, UpgradeState> facilityStateMap = new();
 
     private StatCalculator statCalculator;
     private StockManager stockManager;
 
-    private Action<RuntimeStat> OnRuntimeStatRefresh;
+    private Action onUpgradeChanged;
     public RuntimeStat RuntimeStat => runtimeStat;
+
+    #endregion
+
+    #region Unity Lifecycle
 
     private void Awake()
     {
         statCalculator = new StatCalculator();
-        BuildUpgradeStateMap();
+        BuildUpgradeStateMaps();
         RecalculateRuntimeStat();
     }
 
@@ -26,6 +36,10 @@ public class UpgradeManager : MonoBehaviour
     {
         stockManager = GameManager.Instance.StockManager;
     }
+
+    #endregion
+
+    #region Upgrade
 
     public UpgradeState GetState(UpgradeDataSO data)
     {
@@ -51,8 +65,53 @@ public class UpgradeManager : MonoBehaviour
 
         upgradeStates.Add(state);
         upgradeStateMap.Add(data.Id, state);
+        RegisterTypedState(state);
 
         return state;
+    }
+
+    public int GetLevel(DishType dishType)
+    {
+        int index = (int)dishType;
+        if (index < 0 || index >= (int)DishType.Count)
+            return 0;
+
+        return dishStateMap.TryGetValue(dishType, out UpgradeState state)
+            ? Mathf.Max(0, state.level)
+            : 0;
+    }
+
+    public int GetLevel(HarvestUpgradeType harvestUpgradeType)
+    {
+        int index = (int)harvestUpgradeType;
+        if (index < 0 || index >= (int)HarvestUpgradeType.Count)
+            return 0;
+
+        return harvestStateMap.TryGetValue(harvestUpgradeType, out UpgradeState state)
+            ? Mathf.Max(0, state.level)
+            : 0;
+    }
+
+    public int GetLevel(EmployeeType employeeType)
+    {
+        int index = (int)employeeType;
+        if (index < 0 || index >= (int)EmployeeType.Count)
+            return 0;
+
+        return employeeStateMap.TryGetValue(employeeType, out UpgradeState state)
+            ? Mathf.Max(0, state.level)
+            : 0;
+    }
+
+    public int GetLevel(FacilityType facilityType)
+    {
+        int index = (int)facilityType;
+        if (index < 0 || index >= (int)FacilityType.Count)
+            return 0;
+
+        return facilityStateMap.TryGetValue(facilityType, out UpgradeState state)
+            ? Mathf.Max(0, state.level)
+            : 0;
     }
 
     public RuntimeStat GetRuntimeStat()
@@ -88,20 +147,31 @@ public class UpgradeManager : MonoBehaviour
         return upgradeStateMap.ContainsKey(data.Id);
     }
 
-    public void SubscribeRuntimeStatRefresh(Action<RuntimeStat> ev)
+    #endregion
+
+    #region Events
+
+    public void SubscribeUpgradeChanged(Action callback)
     {
-        OnRuntimeStatRefresh += ev;
+        onUpgradeChanged += callback;
     }
-    public void UnSubscribeRuntimeStatRefresh(Action<RuntimeStat> ev)
+
+    public void UnsubscribeUpgradeChanged(Action callback)
     {
-        OnRuntimeStatRefresh -= ev;
+        onUpgradeChanged -= callback;
     }
 
+    #endregion
 
+    #region Runtime Calculation
 
-    private void BuildUpgradeStateMap()
+    private void BuildUpgradeStateMaps()
     {
         upgradeStateMap.Clear();
+        harvestStateMap.Clear();
+        dishStateMap.Clear();
+        employeeStateMap.Clear();
+        facilityStateMap.Clear();
 
         for (int i = 0; i < upgradeStates.Count; i++)
         {
@@ -123,16 +193,48 @@ public class UpgradeManager : MonoBehaviour
             }
 
             upgradeStateMap.Add(state.data.Id, state);
+            RegisterTypedState(state);
+        }
+    }
+
+    private void RegisterTypedState(UpgradeState state)
+    {
+        switch (state.data)
+        {
+            case HarvestUpgradeDataSO harvestData
+                when (int)harvestData.TargetUpgrade >= 0
+                    && (int)harvestData.TargetUpgrade < (int)HarvestUpgradeType.Count:
+                harvestStateMap[harvestData.TargetUpgrade] = state;
+                break;
+
+            case DishUpgradeDataSO dishData
+                when (int)dishData.TargetDish >= 0 && (int)dishData.TargetDish < (int)DishType.Count:
+                dishStateMap[dishData.TargetDish] = state;
+                break;
+
+            case EmployeeUpgradeDataSO employeeData
+                when (int)employeeData.TargetEmployee >= 0
+                    && (int)employeeData.TargetEmployee < (int)EmployeeType.Count:
+                employeeStateMap[employeeData.TargetEmployee] = state;
+                break;
+
+            case FacilityUpgradeDataSO facilityData
+                when (int)facilityData.TargetFacility >= 0
+                    && (int)facilityData.TargetFacility < (int)FacilityType.Count:
+                facilityStateMap[facilityData.TargetFacility] = state;
+                break;
         }
     }
 
     private void RecalculateRuntimeStat()
     {
         runtimeStat = statCalculator.Calculate(upgradeStates);
-        OnRuntimeStatRefresh?.Invoke(runtimeStat);
+        onUpgradeChanged?.Invoke();
     }
 
+    #endregion
 
+    #region Save Data
 
     public List<UpgradeSaveData> CreateUpgradeSaveData()
     {
@@ -183,10 +285,10 @@ public class UpgradeManager : MonoBehaviour
                 };
 
                 upgradeStates.Add(state);
-                upgradeStateMap.Add(data.Id, state);
             }
         }
 
+        BuildUpgradeStateMaps();
         RecalculateRuntimeStat();
     }// 저장된 id로 UpgradeData를 다시 찾고 UpgradeState를 복구한다.
     // 복구 후 런타임 스탯과 스킬 레벨을 다시 반영한다.
@@ -195,9 +297,11 @@ public class UpgradeManager : MonoBehaviour
     {
 
         upgradeStates.Clear();
-        upgradeStateMap.Clear();
 
+        BuildUpgradeStateMaps();
         RecalculateRuntimeStat();
     }
+
+    #endregion
 
 }

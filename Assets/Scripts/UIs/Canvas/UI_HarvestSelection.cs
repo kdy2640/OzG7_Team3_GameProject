@@ -3,16 +3,15 @@ using UnityEngine;
 
 public sealed class UI_HarvestSelection : UI_Base
 {
-    private enum GameObjects
+    private enum HubStateButtons
     {
-        To_HubView
+        ExitButton
     }
 
     protected override void OnInit()
     {
-        Bind<GameObject>(typeof(GameObjects));
-        GetGameObject((int)GameObjects.To_HubView)?
-            .GetComponent<UI_HubStateButton>()?
+        Bind<UI_HubStateButton>(typeof(HubStateButtons));
+        GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?
             .Init(Owner);
     }
 

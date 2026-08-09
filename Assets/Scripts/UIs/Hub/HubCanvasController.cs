@@ -13,11 +13,12 @@ public sealed class HubCanvasController : MonoBehaviour
     {   
         None = -1,
         HubView,
-        StoreManagement,
+        FacilityManagement,
         MenuManagement,
         HarvestUpgrade,
         HarvestSelection,
-        ServiceSelection
+        ServiceSelection,
+        StaffManagement
     }
 
 

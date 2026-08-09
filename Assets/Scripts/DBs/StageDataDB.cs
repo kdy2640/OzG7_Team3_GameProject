@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class StageDataDB
 {
-    private const string LoadPath = "SOs/StageDataSO";
+    private const string LoadPath = "SOs/DefinitionDatas/StageDataSO";
 
     private static Dictionary<StageType, StageDataSO> stageDataMap;
 
