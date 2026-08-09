@@ -3,6 +3,8 @@ using UnityEngine;
 
 public sealed class UI_ServiceSelection : UI_Base
 {
+    private UI_MareketVisualPanel marketVisualPanel;
+
     private enum GameObjects
     {
         UI_StartServiceButton,
@@ -28,6 +30,9 @@ public sealed class UI_ServiceSelection : UI_Base
                 .GetComponent<UI_SelectMenuPanel>();
         selectMenuPanel?.SetCanDeselect(false);
         selectMenuPanel?.Init(Owner);
+
+        marketVisualPanel = GetComponentInChildren<UI_MareketVisualPanel>(true);
+        marketVisualPanel?.Refresh();
     }
 
     private void Start()
@@ -37,7 +42,7 @@ public sealed class UI_ServiceSelection : UI_Base
 
     protected override IEnumerator OnShow()
     {
-        // 화면을 표시할 때 갱신할 값과 등장 연출을 작성합니다.
+        marketVisualPanel?.Refresh();
         yield break;
     }
 

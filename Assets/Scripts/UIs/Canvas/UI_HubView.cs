@@ -3,6 +3,8 @@ using UnityEngine;
 
 public sealed class UI_HubView : UI_Base
 {
+    private UI_MareketVisualPanel marketVisualPanel;
+
     private enum GameObjects
     {
         UI_ToFacilityManagementButton,
@@ -27,7 +29,10 @@ public sealed class UI_HubView : UI_Base
             .Init(Owner);
         GetGameObject((int)GameObjects.UI_ToServiceSelectionButton)?
             .GetComponent<UI_HubStateButton>()?
-            .Init(Owner); 
+            .Init(Owner);
+
+        marketVisualPanel = GetComponentInChildren<UI_MareketVisualPanel>(true);
+        marketVisualPanel?.Refresh();
     }
 
     private void Start()
@@ -37,7 +42,7 @@ public sealed class UI_HubView : UI_Base
 
     protected override IEnumerator OnShow()
     {
-        // 화면을 표시할 때 갱신할 값과 등장 연출을 작성합니다.
+        marketVisualPanel?.Refresh();
         yield break;
     }
 
