@@ -3,45 +3,42 @@ using UnityEngine;
 
 public class CookingQueue : MonoBehaviour
 {
+    [SerializeField] private int queueMaxCount = 2;
+
     private Queue<DishType> cookingQueue = new();
-    private DishType currentDish;
-    private float timer;
+    
+    public int Count => cookingQueue.Count;
 
-    private void Update()
+    public bool CanRequestCook()
     {
-        if(currentDish == DishType.Count)
-        {
-            StartNextCooking();
-            return;
-        }
-
-        timer -= Time.deltaTime;
-
-        if(timer<= 0)
-        {
-            FinishCooking();
-        }
+        return cookingQueue.Count < queueMaxCount;
     }
 
-    public void RequestCook(DishType dish)
+    public bool RequestCook(DishType dish)
     {
+        if(!CanRequestCook())
+        {
+            return false;
+        }
         cookingQueue.Enqueue(dish);
+        return true;
     }
 
-    private void StartNextCooking()
+    public bool TryGetNextDish(out DishType dish)
     {
-        if(cookingQueue.Count == 0)
+        if(cookingQueue == null)
         {
-            return;
+            Debug.LogWarning("cookingQUeueNull");
+            dish = DishType.Count;
+            return false;
+        }
+        if(cookingQueue.Count > 0)
+        {
+            dish = cookingQueue.Dequeue();
+            return true;
         }
 
-        currentDish = cookingQueue.Dequeue();
-
-        timer = 3f;
-    }
-
-    private void FinishCooking()
-    {
-        
+        dish = DishType.Count;
+        return false;
     }
 }

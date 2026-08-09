@@ -7,10 +7,24 @@ public class CookSlot : MonoBehaviour
 {
     public event Action OnClicked;
 
-    [SerializeField] private DishType dishType;
+    
     [SerializeField] private TMP_Text dishName;
     [SerializeField] private TMP_Text stateText;
     [SerializeField] private TMP_Text amountText;
+
+    [SerializeField] CookingQueue cookingQueue;
+
+    private DishType dish;
+
+    public void Initialize(DishType dish)
+    {
+        this.dish = dish;
+        UpdateUI();
+        if(cookingQueue == null)
+        {
+            cookingQueue = transform.parent.parent.GetComponentInChildren<CookingQueue>();
+        }
+    }
     
     private void OnEnable()
     {
@@ -20,7 +34,7 @@ public class CookSlot : MonoBehaviour
 
     public void UpdateUI()
     {
-        DishDataSO data = DishDataDB.GetData(dishType);
+        DishDataSO data = DishDataDB.GetData(dish);
 
         if (data == null) return;
 
@@ -31,7 +45,7 @@ public class CookSlot : MonoBehaviour
 
         amountText.text = $"x {GetDishAmount()}";
 
-        bool canCook = GameManager.Instance.CookingManager.CanCook(dishType);
+        bool canCook = GameManager.Instance.CookingManager.CanCook(dish);
 
         
         if ( !canCook )
@@ -46,11 +60,11 @@ public class CookSlot : MonoBehaviour
         IReadOnlyList<DishAmount> dishes =
             GameManager.Instance.StockManager.StockData.Dishes;
 
-        foreach (DishAmount dish in dishes)
+        foreach (DishAmount dishAmount in dishes)
         {
-            if (dish.dish == dishType)
+            if (dishAmount.dish == this.dish)
             {
-                return dish.amount;
+                return dishAmount.amount;
             }
         }
 
@@ -59,8 +73,12 @@ public class CookSlot : MonoBehaviour
 
     public void OnClick()
     {
-        if (GameManager.Instance.CookingManager.TryCook(dishType))
+        if (!cookingQueue.CanRequestCook()) return;
+
+        if(GameManager.Instance.CookingManager.TryCook(dish))
         {
+            cookingQueue.RequestCook(dish);
+
             UpdateUI();
             OnClicked?.Invoke();
         }
