@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,7 +33,6 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
     [Header("Fixed card data")]
     [SerializeField] private EmployeeType employeeType = EmployeeType.Count;
 
-    private static Dictionary<EmployeeType, EmployeeUpgradeDataSO> upgradeDataMap;
     private StaffDevelopStatus status;
     private UI_StaffInfoPanel staffInfoPanel;
     private Button cardButton;
@@ -91,13 +89,14 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
             return;
 
         EmployeeDataSO employeeData = EmployeeDataDB.GetData(employeeType);
-        if (employeeData == null)
+        EmployeeUpgradeDataSO upgradeData = UpgradeDataDB.GetData(employeeType);
+        if (employeeData == null || upgradeData == null)
             return;
 
-        int level = GameManager.Instance.Upgrade.RuntimeStat.Employee.GetLevel(employeeType);
+        int level = GameManager.Instance.Upgrade.GetLevel(employeeType);
         float currency = GameManager.Instance.StockManager.StockData.Currency;
 
-        SetStatus(GetStatus(employeeData, level, currency), level);
+        SetStatus(GetStatus(upgradeData, level, currency), level);
     }
 
     public void SetStatus(StaffDevelopStatus newStatus, int currentLevel)
@@ -130,47 +129,28 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
             : locked ? lockedOutlineColor : normalOutlineColor;
     }
 
-    private StaffDevelopStatus GetStatus(EmployeeDataSO employeeData, int level, float currency)
+    private StaffDevelopStatus GetStatus(
+        EmployeeUpgradeDataSO upgradeData,
+        int level,
+        float currency)
     {
-        EmployeeUpgradeDataSO upgradeData = GetUpgradeData(employeeType);
-
         // Level 0은 미고용 상태입니다. 패널의 Recruit 버튼과 같은 강화 SO 비용을 사용합니다.
         if (level <= 0)
         {
-            bool canRecruit = upgradeData != null
-                              && currency >= upgradeData.GetCosts(0);
+            bool canRecruit = currency >= upgradeData.GetCosts(0);
             return canRecruit ? StaffDevelopStatus.CanRecruit : StaffDevelopStatus.Locked;
         }
 
-        bool isMaxLevel = level >= employeeData.MaxLevel;
+        bool isMaxLevel = level >= upgradeData.MaxLevel;
 
-        // 직원 강화 SO가 없거나 최대 레벨이면 일반 카드처럼 레벨만 표시합니다.
-        if (isMaxLevel || upgradeData == null)
+        // 최대 레벨이면 일반 카드처럼 레벨만 표시합니다.
+        if (isMaxLevel)
             return StaffDevelopStatus.Opened;
 
         int nextLevelCost = upgradeData.GetCosts(level);
         return currency >= nextLevelCost
             ? StaffDevelopStatus.CanUpgrade
             : StaffDevelopStatus.Opened;
-    }
-
-    private static EmployeeUpgradeDataSO GetUpgradeData(EmployeeType type)
-    {
-        if (upgradeDataMap == null)
-        {
-            upgradeDataMap = new Dictionary<EmployeeType, EmployeeUpgradeDataSO>();
-            EmployeeUpgradeDataSO[] allData =
-                Resources.LoadAll<EmployeeUpgradeDataSO>("SOs/UpgradeDatas/Employee");
-
-            foreach (EmployeeUpgradeDataSO data in allData)
-            {
-                if (data != null && data.TargetEmployee != EmployeeType.Count)
-                    upgradeDataMap[data.TargetEmployee] = data;
-            }
-        }
-
-        upgradeDataMap.TryGetValue(type, out EmployeeUpgradeDataSO result);
-        return result;
     }
 
     private void OnClickCard()
