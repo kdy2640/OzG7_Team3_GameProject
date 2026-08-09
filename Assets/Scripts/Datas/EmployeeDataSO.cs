@@ -41,7 +41,6 @@ public sealed class EmployeeDataSO : ScriptableObject
     public WorkType WorkType => workType;
     public int Cost => cost;
     public float UpgradeMultiplier => upgradeMultiplier;
-    public int MaxLevel => maxLevel;
 
     [Header("Staff Info Panel")]
     [SerializeField] private Sprite roleIcon;

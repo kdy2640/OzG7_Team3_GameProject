@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,8 +42,6 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
     [SerializeField] private Color availableButtonColor = new Color(0.48f, 0.83f, 0.56f);
     [SerializeField] private Color unavailableButtonColor = Color.gray;
 
-    private static Dictionary<EmployeeType, EmployeeUpgradeDataSO> upgradeDataMap;
-
     private EmployeeType selectedEmployeeType = EmployeeType.Count;
     private EmployeeDataSO selectedEmployeeData;
     private EmployeeUpgradeDataSO selectedUpgradeData;
@@ -62,7 +59,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
     {
         selectedEmployeeType = employeeType;
         selectedEmployeeData = EmployeeDataDB.GetData(employeeType);
-        selectedUpgradeData = GetUpgradeData(employeeType);
+        selectedUpgradeData = UpgradeDataDB.GetData(employeeType);
 
         if (selectedEmployeeData == null)
             return;
@@ -76,8 +73,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         if (selectedEmployeeData == null || GameManager.Instance == null)
             return;
 
-        int currentLevel = GameManager.Instance.Upgrade.RuntimeStat.Employee
-            .GetLevel(selectedEmployeeType);
+        int currentLevel = GameManager.Instance.Upgrade.GetLevel(selectedEmployeeType);
 
         SetTopInfo(currentLevel);
         SetSkills(currentLevel);
@@ -104,6 +100,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
 
     private void SetSkills(int currentLevel)
     {
+        int maxLevel = selectedUpgradeData == null ? 0 : selectedUpgradeData.MaxLevel;
         EmployeeSkillInfo skill1 = selectedEmployeeData.GetSkill(1);
         EmployeeSkillInfo skill3 = selectedEmployeeData.GetSkill(3);
         EmployeeSkillInfo skill5 = selectedEmployeeData.GetSkill(5);
@@ -115,11 +112,11 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         firstSkillEffectText.text = currentLevel >= 1 ? skill1.Effect : "";
 
         // '다음 레벨'은 현재 레벨 다음 수치를 보여 줍니다.
-        int nextLevel = Mathf.Min(currentLevel + 1, selectedEmployeeData.MaxLevel);
-        nextLevelDescriptionText.text = currentLevel >= selectedEmployeeData.MaxLevel
+        int nextLevel = Mathf.Min(currentLevel + 1, maxLevel);
+        nextLevelDescriptionText.text = currentLevel >= maxLevel
             ? "최대 레벨입니다."
             : $"다음 레벨: Lv.{nextLevel}";
-        nextLevelEffectText.text = currentLevel >= selectedEmployeeData.MaxLevel
+        nextLevelEffectText.text = currentLevel >= maxLevel
             ? ""
             : selectedEmployeeData.GetLevelEffect(nextLevel);
 
@@ -144,10 +141,10 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
 
     private void SetRecruitUpgradeButton(int currentLevel)
     {
-        bool isMaxLevel = currentLevel >= selectedEmployeeData.MaxLevel;
+        bool isMaxLevel = selectedUpgradeData == null
+            || currentLevel >= selectedUpgradeData.MaxLevel;
         int cost = selectedUpgradeData == null ? 0 : selectedUpgradeData.GetCosts(currentLevel);
         bool canPay = !isMaxLevel
-            && selectedUpgradeData != null
             && GameManager.Instance.StockManager.CanConsumeCurrency(cost);
 
         costText.text = isMaxLevel ? "-" : cost.ToString("N0");
@@ -179,22 +176,4 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         }
     }
 
-    private static EmployeeUpgradeDataSO GetUpgradeData(EmployeeType employeeType)
-    {
-        if (upgradeDataMap == null)
-        {
-            upgradeDataMap = new Dictionary<EmployeeType, EmployeeUpgradeDataSO>();
-            EmployeeUpgradeDataSO[] allData =
-                Resources.LoadAll<EmployeeUpgradeDataSO>("SOs/UpgradeDatas/Employee");
-
-            foreach (EmployeeUpgradeDataSO data in allData)
-            {
-                if (data != null && data.TargetEmployee != EmployeeType.Count)
-                    upgradeDataMap[data.TargetEmployee] = data;
-            }
-        }
-
-        upgradeDataMap.TryGetValue(employeeType, out EmployeeUpgradeDataSO result);
-        return result;
-    }
 }
