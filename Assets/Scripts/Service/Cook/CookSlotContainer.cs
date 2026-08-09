@@ -17,7 +17,7 @@ public class CookSlotContainer : MonoBehaviour
 
     private void CreateCookSlot()
     {
-        foreach (DishType dish in GameManager.Instance.Market.Data.SelectedDishes)
+        foreach (DishType dish in GameManager.Instance.Market.MarketData.SelectedDishes)
         {
             CookSlot slot = Instantiate(CookSlotPrefab, transform);
             slot.Initialize(dish);
