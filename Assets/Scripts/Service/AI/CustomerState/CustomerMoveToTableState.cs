@@ -20,6 +20,7 @@ public class CustomerMoveToTableState : IState
 
     public void Enter()
     {
+        stateManager.Renderer.material.color = Color.red;
         aiMove.OnArrived += Arrived;
 
         aiMove.MoveTo(seat);
