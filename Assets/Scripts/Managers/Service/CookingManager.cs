@@ -76,7 +76,13 @@ public sealed class CookingManager
         if (!tryConsumeGrocery(data.Ingredients))
             return false;
 
-        addDish(new DishAmount(dish, 1));
+        
         return true;
+    }
+
+    // 요리 만들어질 때 사용.
+    public void AddCookedDish(DishType dish)
+    {
+        addDish(new DishAmount(dish, 1));
     }
 }

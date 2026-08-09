@@ -6,15 +6,69 @@ public class KitchenSlot : MonoBehaviour
     [SerializeField] private TMP_Text dishName;
     [SerializeField] private TMP_Text timerText;
 
-    public void SetCooking(DishType dish, float time)
-    {
-        DishDataSO data = DishDataDB.GetData(dish);
+    private DishType currentDish = DishType.Count;
+    private float timer;
 
-        dishName.text = data.DisplayName;
-        timerText.text = time.ToString("F0") + "s";
+    public bool IsEmpty => currentDish == DishType.Count;
+
+    public void Initialize()
+    {
+        Clear();
     }
 
-    public void Clear()
+    public void StartCooking(DishType dish)
+    {
+        currentDish = dish;
+        timer = 3f;
+        
+        UpdateUI();
+    }
+
+    private void Update()
+    {
+        if (IsEmpty) return;
+
+        timer -= Time.deltaTime;
+
+        UpdateTimerUI();
+         
+        if(timer <= 0)
+        {
+            timer = 0;
+            FinishCooking();
+        }
+    }
+
+
+    private void FinishCooking()
+    {
+        DishType finishedDish = currentDish;
+
+        currentDish = DishType.Count;
+
+        Clear();
+
+        GameManager.Instance.CookingManager.AddCookedDish(finishedDish);
+    }
+
+
+
+    private void UpdateUI()
+    {
+        DishDataSO data = DishDataDB.GetData(currentDish);
+
+        if (data == null)
+            return;
+
+        dishName.text = data.DisplayName;
+    }
+
+    private void UpdateTimerUI()
+    {
+        timerText.text = timer.ToString("F0") + "s";
+    }
+
+    private void Clear()
     {
         dishName.text = "";
         timerText.text = "";

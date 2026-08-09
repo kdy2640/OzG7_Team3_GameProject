@@ -87,7 +87,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public void CreateOrder()
     {
-        IReadOnlyList<DishType> selectedDishes = GameManager.Instance.Market.Data.SelectedDishes;
+        IReadOnlyList<DishType> selectedDishes = GameManager.Instance.Market.MarketData.SelectedDishes;
 
         if (selectedDishes == null || selectedDishes.Count == 0)
         {

@@ -34,7 +34,6 @@ public sealed class EmployeeDataSO : ScriptableObject
     [SerializeField] private WorkType workType = WorkType.Count;
     [SerializeField, Min(0)] private int cost;
     [SerializeField, Min(0f)] private float upgradeMultiplier = 1f;
-    [SerializeField, Min(1)] private int maxLevel = 1;
 
     public string Id => id;
     public string DisplayName => displayName;
@@ -86,7 +85,7 @@ public struct EmployeeSkillInfo
     public string Effect => effect;
 }
 
-// EmployeeDataSO Å¬·¡½º '¾È'¿¡ ¾Æ·¡ ÇÊµå¿Í ÇÁ·ÎÆÛÆ¼¸¦ Ãß°¡ÇÕ´Ï´Ù.
+// EmployeeDataSO Å¬ï¿½ï¿½ï¿½ï¿½ 'ï¿½ï¿½'ï¿½ï¿½ ï¿½Æ·ï¿½ ï¿½Êµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Õ´Ï´ï¿½.
 
 
 
