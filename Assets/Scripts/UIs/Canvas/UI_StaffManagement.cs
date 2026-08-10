@@ -10,7 +10,6 @@ public sealed class UI_StaffManagement : UI_Base
     [SerializeField] private UI_StaffListPanel staffListPanel;
     [SerializeField] private UI_StaffInfoPanel staffInfoPanel;
 
-    private static Dictionary<EmployeeType, EmployeeUpgradeDataSO> upgradeDataMap;
     private EmployeeType selectedType = EmployeeType.Count;
 
     protected override void OnInit()
@@ -104,13 +103,13 @@ public sealed class UI_StaffManagement : UI_Base
 
     private static EmployeeUpgradeDataSO GetUpgradeData(EmployeeType type)
     {
-        if (upgradeDataMap == null)
+        if (!EmployeeDataDB.TryGetData(type, out EmployeeDataSO employeeData))
         {
-            upgradeDataMap = new Dictionary<EmployeeType, EmployeeUpgradeDataSO>();
-            foreach (EmployeeUpgradeDataSO data in Resources.LoadAll<EmployeeUpgradeDataSO>("SOs/UpgradeDatas/Employee"))
-                if (data != null) upgradeDataMap[data.TargetEmployee] = data;
+            Debug.LogWarning($"EmployeeData가 없습니다: {type}");
+            return null;
         }
-        upgradeDataMap.TryGetValue(type, out EmployeeUpgradeDataSO result);
-        return result;
+        UpgradeDataSO upgradeData = UpgradeDataDB.GetData(employeeData.Id);
+
+        return upgradeData as EmployeeUpgradeDataSO;
     }
 }
