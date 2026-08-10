@@ -20,11 +20,12 @@ public class KitchenSlotHandler : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < ServerTypes.Length; i++)
-        {
-            if (GameManager.Instance.Upgrade.GetLevel(ServerTypes[i]) >= 1)
-                concurrentCookingCount++;
-        }
+        //for (int i = 0; i < ServerTypes.Length; i++)
+        //{
+        //    if (GameManager.Instance.Upgrade.GetLevel(ServerTypes[i]) >= 1)
+        //        concurrentCookingCount++;
+        //}
+        concurrentCookingCount = 2;
     }
 
     public bool TryRequestCook(DishType dishType)
