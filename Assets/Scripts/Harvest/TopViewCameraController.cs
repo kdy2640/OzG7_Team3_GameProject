@@ -13,7 +13,10 @@ public sealed class TopViewCameraController : MonoBehaviour
     {
         if (target != null)
         {
-            transform.position = target.position + offset;
+            Quaternion targetYaw = Quaternion.Euler(0f, target.eulerAngles.y, 0f);
+            transform.position = target.position + targetYaw * offset;
+            transform.rotation = targetYaw * Quaternion.Euler(viewEulerAngles);
+            return;
         }
 
         transform.rotation = Quaternion.Euler(viewEulerAngles);
@@ -27,10 +30,18 @@ public sealed class TopViewCameraController : MonoBehaviour
         }
 
         float t = 1f - Mathf.Exp(-followSpeed * Time.deltaTime);
+        Quaternion targetYaw = Quaternion.Euler(0f, target.eulerAngles.y, 0f);
+        Vector3 targetPosition = target.position + targetYaw * offset;
+        Quaternion targetRotation =
+            targetYaw * Quaternion.Euler(viewEulerAngles);
+
         transform.position = Vector3.Lerp(
             transform.position,
-            target.position + offset,
+            targetPosition,
             t);
-        transform.rotation = Quaternion.Euler(viewEulerAngles);
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            t);
     }
 }
