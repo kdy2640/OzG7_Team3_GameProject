@@ -20,6 +20,8 @@ public class CustomerGoHomeState : IState
         stateManager.AiMove.OnArrived += ArrivedHome;
         
         stateManager.AiMove.MoveTo(stateManager.ExitPoint);
+
+        stateManager.Renderer.material.color = Color.green;
     }
 
 
