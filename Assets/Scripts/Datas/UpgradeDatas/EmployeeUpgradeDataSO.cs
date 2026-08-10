@@ -6,12 +6,4 @@ public sealed class EmployeeUpgradeDataSO : UpgradeDataSO
     [SerializeField] private EmployeeType targetEmployee = EmployeeType.Count;
 
     public EmployeeType TargetEmployee => targetEmployee;
-
-    public override void ApplyTo(RuntimeStat runtimeStat, int level)
-    {
-        if (runtimeStat == null)
-            return;
-
-        runtimeStat.Employee.Apply(targetEmployee, level);
-    }
 }

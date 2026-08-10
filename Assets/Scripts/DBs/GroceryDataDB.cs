@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class GroceryDataDB
 {
-    private const string LoadPath = "SOs/GroceryDataSO";
+    private const string LoadPath = "SOs/DefinitionDatas/GroceryDataSO";
 
     private static Dictionary<GroceryType, GroceryDataSO> groceryDataMap;
 

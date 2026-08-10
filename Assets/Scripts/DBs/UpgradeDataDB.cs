@@ -4,6 +4,10 @@ using UnityEngine;
 public static class UpgradeDataDB
 {
     private static Dictionary<string, UpgradeDataSO> upgradeDataMap;
+    private static Dictionary<HarvestUpgradeType, HarvestUpgradeDataSO> harvestUpgradeDataMap;
+    private static Dictionary<DishType, DishUpgradeDataSO> dishUpgradeDataMap;
+    private static Dictionary<FacilityType, FacilityUpgradeDataSO> facilityUpgradeDataMap;
+    private static Dictionary<EmployeeType, EmployeeUpgradeDataSO> employeeUpgradeDataMap;
 
     private static readonly Dictionary<string, string> idMigrationMap = new()
     {
@@ -26,6 +30,61 @@ public static class UpgradeDataDB
 
         return data;
     }// id에 맞는 UpgradeDataSO를 반환한다.
+
+    public static HarvestUpgradeDataSO GetData(HarvestUpgradeType harvestUpgradeType)
+    {
+        Initialize();
+
+        if (!harvestUpgradeDataMap.TryGetValue(
+                harvestUpgradeType,
+                out HarvestUpgradeDataSO data))
+        {
+            Debug.LogWarning(
+                $"There is no HarvestUpgradeDataSO. harvestUpgradeType : {harvestUpgradeType}");
+        }
+
+        return data;
+    }
+
+    public static DishUpgradeDataSO GetData(DishType dishType)
+    {
+        Initialize();
+
+        if (!dishUpgradeDataMap.TryGetValue(dishType, out DishUpgradeDataSO data))
+            Debug.LogWarning($"There is no DishUpgradeDataSO. dishType : {dishType}");
+
+        return data;
+    }
+
+    public static FacilityUpgradeDataSO GetData(FacilityType facilityType)
+    {
+        Initialize();
+
+        if (!facilityUpgradeDataMap.TryGetValue(
+                facilityType,
+                out FacilityUpgradeDataSO data))
+        {
+            Debug.LogWarning(
+                $"There is no FacilityUpgradeDataSO. facilityType : {facilityType}");
+        }
+
+        return data;
+    }
+
+    public static EmployeeUpgradeDataSO GetData(EmployeeType employeeType)
+    {
+        Initialize();
+
+        if (!employeeUpgradeDataMap.TryGetValue(
+                employeeType,
+                out EmployeeUpgradeDataSO data))
+        {
+            Debug.LogWarning(
+                $"There is no EmployeeUpgradeDataSO. employeeType : {employeeType}");
+        }
+
+        return data;
+    }
 
     public static bool TryGetData(string id, out UpgradeDataSO data)
     {
@@ -54,6 +113,10 @@ public static class UpgradeDataDB
             return;
 
         upgradeDataMap = new Dictionary<string, UpgradeDataSO>();
+        harvestUpgradeDataMap = new Dictionary<HarvestUpgradeType, HarvestUpgradeDataSO>();
+        dishUpgradeDataMap = new Dictionary<DishType, DishUpgradeDataSO>();
+        facilityUpgradeDataMap = new Dictionary<FacilityType, FacilityUpgradeDataSO>();
+        employeeUpgradeDataMap = new Dictionary<EmployeeType, EmployeeUpgradeDataSO>();
 
         foreach (string path in LoadPaths)
         {
@@ -78,8 +141,51 @@ public static class UpgradeDataDB
                 }
 
                 upgradeDataMap.Add(data.Id, data);
+                AddTargetData(data);
             }
         }
     }// Resources 폴더 안의 모든 UpgradeDataSO를 찾아 id 기준으로 딕셔너리에 저장한다.
     // 중복 id나 빈 id는 저장하지 않고 경고만 띄운다.
+    private static void AddTargetData(UpgradeDataSO data)
+    {
+        switch (data)
+        {
+            case HarvestUpgradeDataSO harvestData
+                when harvestData.TargetUpgrade != HarvestUpgradeType.Count:
+                if (!harvestUpgradeDataMap.TryAdd(harvestData.TargetUpgrade, harvestData))
+                {
+                    Debug.LogWarning(
+                        $"HarvestUpgradeDataSO target duplication. target : {harvestData.TargetUpgrade}, SO Name : {data.name}");
+                }
+                break;
+
+            case DishUpgradeDataSO dishData
+                when dishData.TargetDish != DishType.None
+                    && dishData.TargetDish != DishType.Count:
+                if (!dishUpgradeDataMap.TryAdd(dishData.TargetDish, dishData))
+                {
+                    Debug.LogWarning(
+                        $"DishUpgradeDataSO target duplication. target : {dishData.TargetDish}, SO Name : {data.name}");
+                }
+                break;
+
+            case FacilityUpgradeDataSO facilityData
+                when facilityData.TargetFacility != FacilityType.Count:
+                if (!facilityUpgradeDataMap.TryAdd(facilityData.TargetFacility, facilityData))
+                {
+                    Debug.LogWarning(
+                        $"FacilityUpgradeDataSO target duplication. target : {facilityData.TargetFacility}, SO Name : {data.name}");
+                }
+                break;
+
+            case EmployeeUpgradeDataSO employeeData
+                when employeeData.TargetEmployee != EmployeeType.Count:
+                if (!employeeUpgradeDataMap.TryAdd(employeeData.TargetEmployee, employeeData))
+                {
+                    Debug.LogWarning(
+                        $"EmployeeUpgradeDataSO target duplication. target : {employeeData.TargetEmployee}, SO Name : {data.name}");
+                }
+                break;
+        }
+    }
 }

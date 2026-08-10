@@ -1,8 +1,9 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CustomerEatState : IState
 {
-
+    
 
     private CustomerStateManager stateManager;
 
@@ -13,8 +14,11 @@ public class CustomerEatState : IState
         this.stateManager = stateManager;
     }
 
+
     public void Enter()
     {
+        
+        stateManager.Renderer.material.color = Color.yellow;
         timer = 5.0f;
     }
 

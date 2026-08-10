@@ -5,17 +5,13 @@ using UnityEngine;
 public enum HarvestStatType
 {
     SawSize,
+    SawCount,
+    SawSpeed,
     SawSharpness,
     TruckSpeed,
     TruckCapacity,
+    TruckFuel,
     Count
-}
-
-public enum ModifierType
-{
-    Add,
-    Multiply,
-    Max
 }
 
 [Serializable]
@@ -24,6 +20,25 @@ public struct HarvestStatModifier
     public HarvestStatType statType;
     public ModifierType modifierType;
     public float value;
+}
+
+[Serializable]
+public struct HarvestStatViewer
+{
+    [SerializeField] private string statName;
+    [SerializeField] private float value;
+
+    public float Value => value;
+
+    internal void SetName(string name)
+    {
+        statName = name;
+    }
+
+    internal void SetValue(float newValue)
+    {
+        value = newValue;
+    }
 }
 
 [Serializable]

@@ -1,18 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum HarvestUpgradeType
+{
+    SawSize,
+    SawCount,
+    SawSpeed,
+    SawSharpness,
+    TruckSpeed,
+    TruckCapacity,
+    TruckFuel,
+    Count
+}
+
 [CreateAssetMenu(menuName = "Game/Upgrade/Harvest")]
 public sealed class HarvestUpgradeDataSO : UpgradeDataSO
 {
+    [SerializeField] private HarvestUpgradeType targetUpgrade = HarvestUpgradeType.Count;
     [SerializeField] private List<HarvestStatModifier> statModifiers = new();
 
-    public List<HarvestStatModifier> StatModifiers => statModifiers;
-
-    public override void ApplyTo(RuntimeStat runtimeStat, int level)
-    {
-        if (runtimeStat == null)
-            return;
-
-        runtimeStat.Harvest.Apply(statModifiers, level);
-    }
+    public HarvestUpgradeType TargetUpgrade => targetUpgrade;
+    public IReadOnlyList<HarvestStatModifier> StatModifiers => statModifiers;
 }

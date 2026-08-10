@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -64,7 +63,14 @@ public static class LevelDataDB
             return 0;
         }
 
-        return Convert.ToInt32(value);
+        if (value is int intValue)
+            return intValue;
+
+        if (int.TryParse(value?.ToString(), out int parsedValue))
+            return parsedValue;
+
+        Debug.LogWarning($"LevelDataSheet value is not a valid int. column : {key}, value : {value}");
+        return 0;
     }
 
     private static float GetFloat(Dictionary<string, object> row, string key)
@@ -75,6 +81,16 @@ public static class LevelDataDB
             return 0f;
         }
 
-        return Convert.ToSingle(value);
+        if (value is float floatValue)
+            return floatValue;
+
+        if (value is int intValue)
+            return intValue;
+
+        if (float.TryParse(value?.ToString(), out float parsedValue))
+            return parsedValue;
+
+        Debug.LogWarning($"LevelDataSheet value is not a valid float. column : {key}, value : {value}");
+        return 0f;
     }
 }

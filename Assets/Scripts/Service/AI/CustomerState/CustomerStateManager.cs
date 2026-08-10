@@ -8,7 +8,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private Transform exitPoint;
     [SerializeField] private TableManager tableManager;
     [SerializeField] private OrderButton orderButton;
-
+    public Renderer Renderer => gameObject.GetComponent<Renderer>();
     public AIMove AiMove => aiMove;
     public Transform ExitPoint => exitPoint;
     public OrderButton OrderButton => orderButton;
@@ -87,7 +87,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public void CreateOrder()
     {
-        IReadOnlyList<DishType> selectedDishes = GameManager.Instance.Market.Data.SelectedDishes;
+        IReadOnlyList<DishType> selectedDishes = GameManager.Instance.Market.MarketData.SelectedDishes;
 
         if (selectedDishes == null || selectedDishes.Count == 0)
         {
