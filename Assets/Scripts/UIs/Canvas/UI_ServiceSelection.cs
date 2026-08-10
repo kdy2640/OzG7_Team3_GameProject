@@ -3,6 +3,7 @@ using UnityEngine;
 
 public sealed class UI_ServiceSelection : UI_Base
 {
+    private UI_SelectMenuPanel selectMenuPanel;
     private UI_MareketVisualPanel marketVisualPanel;
 
     private enum GameObjects
@@ -25,7 +26,7 @@ public sealed class UI_ServiceSelection : UI_Base
         UI_EventHandler StartServiceButton = GetGameObject((int)GameObjects.UI_StartServiceButton)?.GetComponent<UI_EventHandler>();
         StartServiceButton?.AddUIEvent(_ => GameManager.Instance.Scene.ChangeScene(SceneType.Service), UI_EventHandler.UIEvent.LClick);
 
-        UI_SelectMenuPanel selectMenuPanel =
+        selectMenuPanel =
             GetGameObject((int)GameObjects.UI_SelectMenuPanel)?
                 .GetComponent<UI_SelectMenuPanel>();
         selectMenuPanel?.SetCanDeselect(false);
@@ -42,6 +43,7 @@ public sealed class UI_ServiceSelection : UI_Base
 
     protected override IEnumerator OnShow()
     {
+        selectMenuPanel?.Refresh();
         marketVisualPanel?.Refresh();
         yield break;
     }
