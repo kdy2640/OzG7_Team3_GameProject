@@ -123,7 +123,8 @@ public class UpgradeManager : MonoBehaviour
     {
         UpgradeState state = GetState(data);
 
-        if (state == null || IsMaxLevel(state))
+        if (state == null || IsMaxLevel(state)
+            || !CanUpgradeAtCurrentMarketLevel(data, state.level))
             return false;
 
         if (!stockManager.TryConsumeCurrency(state.GetCurrentCost()))
@@ -132,6 +133,21 @@ public class UpgradeManager : MonoBehaviour
         state.level++;
         RecalculateRuntimeStat();
         return true;
+    }
+
+    public bool CanUpgradeAtCurrentMarketLevel(UpgradeDataSO data, int currentUpgradeLevel)
+    {
+        if (data == null || GameManager.Instance == null
+            || GameManager.Instance.Market == null)
+        {
+            return false;
+        }
+
+        int targetUpgradeLevel = currentUpgradeLevel + 1;
+        if (!data.TryGetRequiredMarketLevel(targetUpgradeLevel, out int requiredLevel))
+            return false;
+
+        return GameManager.Instance.Market.MarketData.CurrentLevel >= requiredLevel;
     }
 
     public bool IsMaxLevel(UpgradeState state)
