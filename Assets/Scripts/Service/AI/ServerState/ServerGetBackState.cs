@@ -3,9 +3,6 @@ using UnityEngine;
 public class ServerGetBackState : IState
 {
     private ServerStateManager stateManager;
-    private AIMove aiMove;
-
-    private Transform exitPoint;
 
 
     public ServerGetBackState(ServerStateManager stateManager)
@@ -16,10 +13,14 @@ public class ServerGetBackState : IState
 
     public void Enter()
     {
+        stateManager.IsBusy = false;
+
+        stateManager.Renderer.material.color = Color.black;
+
         stateManager.AiMove.OnArrived += ArrivedHome;
 
         stateManager.AiMove.MoveTo(
-            stateManager.ExitPoint
+            stateManager.WaitPoint
         );
     }
 
@@ -39,7 +40,7 @@ public class ServerGetBackState : IState
     private void ArrivedHome()
     {
         stateManager.ChangeState(
-            new ServerEndState(stateManager)
+            new ServerIdleState(stateManager)
         );
     }
 }
