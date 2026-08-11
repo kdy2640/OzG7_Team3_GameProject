@@ -1,20 +1,23 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MarketManager : MonoBehaviour
 {
+    #region Fields & Properties
+
     [SerializeField] private MarketData marketData = new();
     [SerializeField] private LevelData levelData = new();
-    [SerializeField] private List<EmployeeBase> employees = new();
-    [SerializeField] private List<FacilityBase> facilities = new();
 
     private Action onMarketDataChanged;
 
     public MarketData MarketData => marketData;
     public LevelData LevelData => levelData;
-    public IReadOnlyList<EmployeeBase> Employees => employees;
-    public IReadOnlyList<FacilityBase> Facilities => facilities;
+    public int CurrentBusinessDay => marketData.CurrentBusinessDay;
+    public TasteType TodayTaste => (TasteType)(CurrentBusinessDay % (int)TasteType.Count);
+
+    #endregion
+
+    #region Unity Lifecycle
 
     private void Awake()
     {
@@ -24,7 +27,6 @@ public class MarketManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.Upgrade.SubscribeUpgradeChanged(OnUpgradeChanged);
         Refresh();
     }
 
@@ -32,54 +34,25 @@ public class MarketManager : MonoBehaviour
     {
         if (marketData != null)
             marketData.OnMarketDataChanged -= HandleMarketDataChanged;
+    }
 
-        if (GameManager.Instance == null || GameManager.Instance.Upgrade == null)
-            return;
+    #endregion
 
-        GameManager.Instance.Upgrade.UnsubscribeUpgradeChanged(OnUpgradeChanged);
+    #region Runtime Data
+
+    public void CompleteCurrentBusinessDay()
+    {
+        marketData.CurrentBusinessDay++;
     }
 
     public void Refresh()
     {
         levelData = LevelDataDB.GetData(marketData.CurrentLevel) ?? new LevelData();
-
-        employees.Clear();
-        facilities.Clear();
-
-        int employeeCount = EmployeeDataDB.Count;
-        for (int index = 0; index < employeeCount; index++)
-        {
-            EmployeeType employeeType = (EmployeeType)index;
-            EmployeeDataSO dataSO = EmployeeDataDB.GetData(employeeType);
-
-            if (dataSO != null)
-            {
-                EmployeeBase employee = new EmployeeBase(dataSO)
-                {
-                    NowLevel = GameManager.Instance.Upgrade.GetLevel(employeeType)
-                };
-
-                employees.Add(employee);
-            }
-        }
-
-        int facilityCount = FacilityDataDB.Count;
-        for (int index = 0; index < facilityCount; index++)
-        {
-            FacilityType facilityType = (FacilityType)index;
-            FacilityDataSO dataSO = FacilityDataDB.GetData(facilityType);
-
-            if (dataSO != null)
-            {
-                FacilityBase facility = new FacilityBase(dataSO)
-                {
-                    NowLevel = GameManager.Instance.Upgrade.GetLevel(facilityType)
-                };
-
-                facilities.Add(facility);
-            }
-        }
     }
+
+    #endregion
+
+    #region Save Data
 
     public MarketSaveData CreateMarketSaveData()
     {
@@ -117,6 +90,10 @@ public class MarketManager : MonoBehaviour
         NotifyMarketDataChanged();
     }
 
+    #endregion
+
+    #region Events
+
     public void SubscribeMarketDataChanged(Action callback)
     {
         onMarketDataChanged += callback;
@@ -152,22 +129,5 @@ public class MarketManager : MonoBehaviour
         onMarketDataChanged?.Invoke();
     }
 
-    private void OnUpgradeChanged()
-    {
-        for (int index = 0; index < employees.Count; index++)
-        {
-            EmployeeBase employee = employees[index];
-
-            if (employee != null)
-                employee.NowLevel = GameManager.Instance.Upgrade.GetLevel((EmployeeType)index);
-        }
-
-        for (int index = 0; index < facilities.Count; index++)
-        {
-            FacilityBase facility = facilities[index];
-
-            if (facility != null)
-                facility.NowLevel = GameManager.Instance.Upgrade.GetLevel((FacilityType)index);
-        }
-    }
+    #endregion
 }

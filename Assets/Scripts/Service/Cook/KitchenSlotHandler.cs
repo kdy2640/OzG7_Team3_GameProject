@@ -22,7 +22,7 @@ public class KitchenSlotHandler : MonoBehaviour
     {
         //for (int i = 0; i < ServerTypes.Length; i++)
         //{
-        //    if (GameManager.Instance.Upgrade.GetLevel(ServerTypes[i]) >= 1)
+        //    if (GameManager.Instance.Upgrade.RuntimeLevel.Get(ServerTypes[i]) >= 1)
         //        concurrentCookingCount++;
         //}
         concurrentCookingCount = 2;

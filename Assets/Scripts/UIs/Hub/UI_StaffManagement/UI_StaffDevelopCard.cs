@@ -93,7 +93,7 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         if (employeeData == null || upgradeData == null)
             return;
 
-        int level = GameManager.Instance.Upgrade.GetLevel(employeeType);
+        int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(employeeType);
         float currency = GameManager.Instance.StockManager.StockData.Currency;
 
         SetStatus(GetStatus(upgradeData, level, currency), level);

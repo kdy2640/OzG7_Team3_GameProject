@@ -73,7 +73,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         if (selectedEmployeeData == null || GameManager.Instance == null)
             return;
 
-        int currentLevel = GameManager.Instance.Upgrade.GetLevel(selectedEmployeeType);
+        int currentLevel = GameManager.Instance.Upgrade.RuntimeLevel.Get(selectedEmployeeType);
 
         SetTopInfo(currentLevel);
         SetSkills(currentLevel);
