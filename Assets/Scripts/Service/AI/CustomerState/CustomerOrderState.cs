@@ -15,6 +15,8 @@ public class CustomerOrderState : IState
 
     public void Enter()
     {
+        stateManager.Renderer.material.color = Color.orange;
+
         timer = 5.0f;
         receiveFood = false;
 
