@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CookSlot : MonoBehaviour
 {
@@ -9,50 +10,43 @@ public class CookSlot : MonoBehaviour
 
     
     [SerializeField] private TMP_Text dishName;
-    [SerializeField] private TMP_Text stateText;
-    [SerializeField] private TMP_Text amountText;
-
-    [SerializeField] CookingQueue cookingQueue;
+    [SerializeField] private TMP_Text countText;
+    [SerializeField] private TMP_Text canCookText;
+    [SerializeField] private Image dishIcon;
 
     private DishType dish;
+    private KitchenSlotHandler kitchenSlotHandler;
+    private bool isInitialized;
 
-    public void Initialize(DishType dish)
+    public void Initialize(DishType dish, KitchenSlotHandler kitchenSlotHandler)
     {
         this.dish = dish;
+        this.kitchenSlotHandler = kitchenSlotHandler;
+        isInitialized = true;
         UpdateUI();
-        if(cookingQueue == null)
-        {
-            cookingQueue = transform.parent.parent.GetComponentInChildren<CookingQueue>();
-        }
     }
     
     private void OnEnable()
     {
         GameManager.Instance.StockManager.SubscribeStockDataChange(UpdateUI);
-        UpdateUI();
+
+        if (isInitialized)
+            UpdateUI();
     }
 
     public void UpdateUI()
     {
+        if (!isInitialized)
+            return;
+
         DishDataSO data = DishDataDB.GetData(dish);
 
         if (data == null) return;
 
         dishName.text = data.DisplayName;
-        stateText.text = "No\nGrocery";
-
-        stateText.enabled = false;
-
-        amountText.text = $"x {GetDishAmount()}";
-
-        bool canCook = GameManager.Instance.CookingManager.CanCook(dish);
-
-        
-        if ( !canCook )
-        {
-            dishName.enabled = false;
-            stateText.enabled = true;
-        }
+        countText.text = $"x {GetDishAmount()}";
+        canCookText.text = $"x {GameManager.Instance.CookingManager.CalculateCookableAmount(dish)}";
+        dishIcon.sprite = data.Icon;
     }
 
     private int GetDishAmount()
@@ -73,12 +67,11 @@ public class CookSlot : MonoBehaviour
 
     public void OnClick()
     {
-        if (!cookingQueue.CanRequestCook()) return;
+        if (kitchenSlotHandler == null)
+            return;
 
-        if(GameManager.Instance.CookingManager.TryCook(dish))
+        if (kitchenSlotHandler.TryRequestCook(dish))
         {
-            cookingQueue.RequestCook(dish);
-
             UpdateUI();
             OnClicked?.Invoke();
         }

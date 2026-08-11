@@ -7,8 +7,9 @@ public sealed class HarvestSpawner : MonoBehaviour
     [SerializeField] private HarvestActor cropPrefab;
     [SerializeField] private Transform player;
     [SerializeField] private StageType stageType = StageType.Stage_1;
-    [SerializeField, Min(0)] private int spawnCount = 60;
     [SerializeField] private Vector2 spawnArea = new(9f, 9f);
+    [SerializeField, Min(0.01f)] private float xDiff = 2.5f;
+    [SerializeField, Min(0.01f)] private float yDiff = 2.5f;
     [SerializeField] private float spawnHeight;
     [SerializeField] private List<HarvestActor> spawnedCrops = new();
 
@@ -52,6 +53,16 @@ public sealed class HarvestSpawner : MonoBehaviour
             return;
         }
 
+        float safeXDiff = Mathf.Max(0.01f, xDiff);
+        float safeYDiff = Mathf.Max(0.01f, yDiff);
+        int xCount = Mathf.Max(1, Mathf.FloorToInt(spawnArea.x / safeXDiff));
+        int yCount = Mathf.Max(1, Mathf.FloorToInt(spawnArea.y / safeYDiff));
+        int totalCount = xCount * yCount;
+
+        Debug.Log(
+            $"[HarvestSpawner] Grid X : {xCount}, Y : {yCount}, Total : {totalCount}",
+            this);
+
         foreach (HarvestActor crop in spawnedCrops)
         {
             if (crop != null)
@@ -71,22 +82,30 @@ public sealed class HarvestSpawner : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < spawnCount; i++)
-        {
-            Vector3 worldPosition = GetRandomPosition();
-            Quaternion rotation =
-                transform.rotation * Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
-            HarvestType randomType =
-                stageData.HarvestList[Random.Range(0, stageData.HarvestList.Count)];
+        float startX = (xCount - 1) * safeXDiff * -0.5f;
+        float startY = (yCount - 1) * safeYDiff * -0.5f;
 
-            HarvestActor crop = Instantiate(
-                cropPrefab,
-                worldPosition,
-                rotation,
-                cropContainer);
-            crop.name = "Crop";
-            crop.Init(randomType, player, this);
-            spawnedCrops.Add(crop);
+        for (int y = 0; y < yCount; y++)
+        {
+            for (int x = 0; x < xCount; x++)
+            {
+                Vector3 localPosition = new(
+                    startX + x * safeXDiff,
+                    spawnHeight,
+                    startY + y * safeYDiff);
+                Vector3 worldPosition = transform.TransformPoint(localPosition);
+                HarvestType randomType =
+                    stageData.HarvestList[Random.Range(0, stageData.HarvestList.Count)];
+
+                HarvestActor crop = Instantiate(
+                    cropPrefab,
+                    worldPosition,
+                    transform.rotation,
+                    cropContainer);
+                crop.name = "Crop";
+                crop.Init(randomType, player, this);
+                spawnedCrops.Add(crop);
+            }
         }
     }
 
