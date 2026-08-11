@@ -13,7 +13,22 @@ MonoBehaviour:
   m_Name: Level0
   m_EditorClassIdentifier: Assembly-CSharp::LevelMissionGroupSO
   level: 0
-  missions: []
+  missions:
+  - conditionType: 2
+    condition:
+      rid: 4385386984373485638
+  - conditionType: 3
+    condition:
+      rid: 4385386984373485641
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 4385386984373485638
+      type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        targetIncome: 0
+    - rid: 4385386984373485641
+      type: {class: FacilityUpgradeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        facilityType: 9
+        targetLevel: 1
