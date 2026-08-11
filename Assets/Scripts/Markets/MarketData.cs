@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [Serializable]
 public sealed class MarketData
 {
     [SerializeField, Min(0)] private int currentBusinessDay;
     [SerializeField, Min(0)] private int currentLevel;
-    [SerializeField, Min(0)] private int currentEXP;
+    [FormerlySerializedAs("currentEXP")]
+    [SerializeField, Min(0)] private int totalIncome;
     [SerializeField] private List<DishType> selectedDishes = new();
 
     internal event Action OnMarketDataChanged;
@@ -42,17 +44,17 @@ public sealed class MarketData
         }
     }
 
-    public int CurrentEXP
+    public int TotalIncome
     {
-        get => currentEXP;
+        get => totalIncome;
         set
         {
-            int nextEXP = Mathf.Max(0, value);
+            int nextTotalIncome = Mathf.Max(0, value);
 
-            if (currentEXP == nextEXP)
+            if (totalIncome == nextTotalIncome)
                 return;
 
-            currentEXP = nextEXP;
+            totalIncome = nextTotalIncome;
             NotifyMarketDataChanged();
         }
     }
@@ -66,12 +68,12 @@ public sealed class MarketData
     internal MarketData(
         int currentBusinessDay,
         int currentLevel,
-        int currentEXP,
+        int totalIncome,
         List<DishType> selectedDishes)
     {
         this.currentBusinessDay = currentBusinessDay;
         this.currentLevel = currentLevel;
-        this.currentEXP = currentEXP;
+        this.totalIncome = totalIncome;
         this.selectedDishes = selectedDishes == null
             ? new List<DishType>()
             : new List<DishType>(selectedDishes);

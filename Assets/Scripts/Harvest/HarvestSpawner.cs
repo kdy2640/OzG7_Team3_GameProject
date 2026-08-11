@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
+[RequireComponent(typeof(GridChunkHandler))]
 public sealed class HarvestSpawner : MonoBehaviour
 {
     [SerializeField] private HarvestActor cropPrefab;
@@ -14,6 +15,14 @@ public sealed class HarvestSpawner : MonoBehaviour
     [SerializeField] private List<HarvestActor> spawnedCrops = new();
 
     private Transform cropContainer;
+    private GridChunkHandler gridChunkHandler;
+
+    public Vector2 SpawnArea => spawnArea;
+
+    private void Awake()
+    {
+        gridChunkHandler ??= GetComponent<GridChunkHandler>();
+    }
 
     private void Start()
     {
@@ -53,6 +62,14 @@ public sealed class HarvestSpawner : MonoBehaviour
             return;
         }
 
+        if (gridChunkHandler == null)
+        {
+            Debug.LogError(
+                "[HarvestSpawner] GridChunkHandler is not assigned.",
+                this);
+            return;
+        }
+
         float safeXDiff = Mathf.Max(0.01f, xDiff);
         float safeYDiff = Mathf.Max(0.01f, yDiff);
         int xCount = Mathf.Max(1, Mathf.FloorToInt(spawnArea.x / safeXDiff));
@@ -66,7 +83,10 @@ public sealed class HarvestSpawner : MonoBehaviour
         foreach (HarvestActor crop in spawnedCrops)
         {
             if (crop != null)
+            {
+                gridChunkHandler.Unregister(crop.transform);
                 Destroy(crop.gameObject);
+            }
         }
 
         spawnedCrops.Clear();
@@ -103,7 +123,8 @@ public sealed class HarvestSpawner : MonoBehaviour
                     transform.rotation,
                     cropContainer);
                 crop.name = "Crop";
-                crop.Init(randomType, player, this);
+                crop.Init(randomType, player, this, gridChunkHandler);
+                gridChunkHandler.Register(crop.transform);
                 spawnedCrops.Add(crop);
             }
         }
