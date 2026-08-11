@@ -4,7 +4,7 @@ public class CustomerOrderState : IState
 {
     private CustomerStateManager stateManager;
     private float timer;
-    private bool receiveFood;
+    private bool receiveOrder;
 
     
 
@@ -18,7 +18,7 @@ public class CustomerOrderState : IState
         stateManager.Renderer.material.color = Color.orange;
 
         timer = 5.0f;
-        receiveFood = false;
+        receiveOrder = false;
 
         stateManager.CreateOrder();
         stateManager.OrderButton.SetOrder(stateManager.Order);
@@ -27,7 +27,9 @@ public class CustomerOrderState : IState
 
         stateManager.OrderButton.gameObject.SetActive(true);
 
-        stateManager.OrderButton.OnClicked += ReceiveFood;
+        stateManager.OrderButton.OnClicked += ReceiveOrder;
+
+        stateManager.foodReceived += StartEat;
     }
 
     public void Execute()
@@ -42,26 +44,28 @@ public class CustomerOrderState : IState
 
             return;
         }
-        if (receiveFood)
-        {
-            stateManager.ChangeState(
-                new CustomerEatState(stateManager)
-            );
-
-            return;
-        }
-       
     }
 
-    private void ReceiveFood()
-    {
-        receiveFood = true; 
-    }
+    
 
     public void Exit()
     {
         Debug.Log("주문 종료");
-        stateManager.OrderButton.OnClicked -= ReceiveFood;
+        stateManager.OrderButton.OnClicked -= ReceiveOrder;
         stateManager.OrderButton.gameObject.SetActive(false);
+    }
+
+    private void ReceiveOrder()
+    {
+        receiveOrder = true;
+    }
+
+    private void StartEat()
+    {
+        stateManager.ChangeState(
+                new CustomerEatState(stateManager)
+            );
+
+        return;
     }
 }
