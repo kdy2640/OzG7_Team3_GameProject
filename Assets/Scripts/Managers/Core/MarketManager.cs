@@ -7,11 +7,14 @@ public class MarketManager : MonoBehaviour
 
     [SerializeField] private MarketData marketData = new();
     [SerializeField] private LevelData levelData = new();
+    [SerializeField] private LevelMissionChecker levelMissionChecker = new();
 
     private Action onMarketDataChanged;
 
     public MarketData MarketData => marketData;
     public LevelData LevelData => levelData;
+    public LevelMissionChecker LevelMissionChecker => levelMissionChecker;
+    public LevelMissionGroupSO LevelMissionGroup => levelMissionChecker.MissionGroup;
     public int CurrentBusinessDay => marketData.CurrentBusinessDay;
     public TasteType TodayTaste => (TasteType)(CurrentBusinessDay % (int)TasteType.Count);
 
@@ -22,12 +25,13 @@ public class MarketManager : MonoBehaviour
     private void Awake()
     {
         marketData ??= new MarketData();
+        levelMissionChecker ??= new LevelMissionChecker();
         SubscribeMarketData();
     }
 
     private void Start()
     {
-        Refresh();
+        LevelRefresh();
     }
 
     private void OnDestroy()
@@ -45,9 +49,10 @@ public class MarketManager : MonoBehaviour
         marketData.CurrentBusinessDay++;
     }
 
-    public void Refresh()
+    public void LevelRefresh()
     {
         levelData = LevelDataDB.GetData(marketData.CurrentLevel) ?? new LevelData();
+        levelMissionChecker.SetMissionGroup(LevelMissionGroupDB.GetData(marketData.CurrentLevel));
     }
 
     #endregion
@@ -60,7 +65,7 @@ public class MarketManager : MonoBehaviour
         {
             currentBusinessDay = marketData.CurrentBusinessDay,
             currentLevel = marketData.CurrentLevel,
-            currentEXP = marketData.CurrentEXP
+            totalIncome = marketData.TotalIncome
         };
 
         saveData.selectedDishes.AddRange(marketData.SelectedDishes);
@@ -75,18 +80,18 @@ public class MarketManager : MonoBehaviour
             : new MarketData(
                 Mathf.Max(0, saveData.currentBusinessDay),
                 Mathf.Max(0, saveData.currentLevel),
-                Mathf.Max(0, saveData.currentEXP),
+                Mathf.Max(0, saveData.totalIncome),
                 saveData.selectedDishes);
 
         ReplaceMarketData(loadedData);
-        Refresh();
+        LevelRefresh();
         NotifyMarketDataChanged();
     }
 
     public void ResetMarketSaveData()
     {
         ReplaceMarketData(new MarketData());
-        Refresh();
+        LevelRefresh();
         NotifyMarketDataChanged();
     }
 

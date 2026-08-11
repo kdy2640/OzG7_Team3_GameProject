@@ -27,18 +27,18 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
         SetLevelSlot(levelSlot03, activeLevelCount >= 3);
         SetLevelSlot(levelSlot04, activeLevelCount >= 4);
 
-        int maxEXP = Mathf.Max(1, levelData.MaxEXPLimit);
-        int currentEXP = Mathf.Clamp(marketData.CurrentEXP, 0, maxEXP);
+        int incomeGoal = Mathf.Max(1, levelData.IncomeGoal);
+        int totalIncome = Mathf.Clamp(marketData.TotalIncome, 0, incomeGoal);
 
         if (salesSlider != null)
         {
             salesSlider.minValue = 0f;
-            salesSlider.maxValue = maxEXP;
-            salesSlider.value = currentEXP;
+            salesSlider.maxValue = incomeGoal;
+            salesSlider.value = totalIncome;
         }
 
         if (salesAmountText != null)
-            salesAmountText.text = $"{currentEXP:N0} / {maxEXP:N0}";
+            salesAmountText.text = $"{totalIncome:N0} / {incomeGoal:N0}";
     }
 
     private void SetLevelSlot(Image levelSlot, bool isActive)

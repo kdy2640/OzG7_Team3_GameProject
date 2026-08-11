@@ -1,12 +1,14 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [Serializable]
 public sealed class LevelData
 {
     [SerializeField, Min(0)] private int level;
     [SerializeField, Min(0)] private int maxDishLimit;
-    [SerializeField, Min(0)] private int maxEXPLimit;
+    [FormerlySerializedAs("maxEXPLimit")]
+    [SerializeField, Min(0)] private int incomeGoal;
 
     public int Level
     {
@@ -20,9 +22,9 @@ public sealed class LevelData
         set => maxDishLimit = Mathf.Max(0, value);
     }
 
-    public int MaxEXPLimit
+    public int IncomeGoal
     {
-        get => maxEXPLimit;
-        set => maxEXPLimit = Mathf.Max(0, value);
+        get => incomeGoal;
+        set => incomeGoal = Mathf.Max(0, value);
     }
 }
