@@ -6,70 +6,89 @@ public class FacilityDetailPanel : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private TMP_Text facilityNameText;
-
     [SerializeField] private TMP_Text levelText;
-
     [SerializeField] private Slider levelSlider;
-
     [SerializeField] private TMP_Text currentEffectText;
-
     [SerializeField] private TMP_Text nextEffectText;
 
     [SerializeField] private Button actionButton;
-
     [SerializeField] private TMP_Text actionButtonText;
 
     [SerializeField] private Button previousButton;
-
     [SerializeField] private Button nextButton;
-
+    [SerializeField] private Button closeButton;
 
     [Header("Facilities")]
     [SerializeField] private FacilityController[] facilities;
 
-
-    private int currentIndex = 0;
-
+    private int currentIndex;
     private FacilityController currentFacility;
 
-
-    private void Start()
+    private void Awake()
     {
-        if (facilities != null && facilities.Length > 0)
-        {
-            ShowFacility(0);
-        }
+        actionButton.onClick.AddListener(OnClickAction);
+        previousButton.onClick.AddListener(OnClickPrevious);
+        nextButton.onClick.AddListener(OnClickNext);
+
+        if (closeButton != null)
+            closeButton.onClick.AddListener(ClosePanel);
+
+        // 이 오브젝트는 씬 시작 시 Active 상태여야 합니다.
+        // Awake에서 한 번 초기화한 후 숨깁니다.
+        gameObject.SetActive(false);
     }
-
-
-    public void ShowFacility(int index)
-    {
-        if (facilities == null || facilities.Length == 0) return;
-
-        if (index < 0 || index >= facilities.Length) return;
-        currentIndex = index;
-
-        currentFacility = facilities[currentIndex];
-
-        Refresh();
-    }
-
 
     public void ShowFacility(FacilityController facility)
     {
-        if (facility == null) return;
+        if (facility == null)  return;
+
+        UnsubscribeCurrentFacility();
 
         currentFacility = facility;
+        currentFacility.StateChanged += OnFacilityStateChanged;
 
-        for (int i = 0; i < facilities.Length; i++)
-        {
-            if (facilities[i] == facility)
-            {
-                currentIndex = i;
-                break;
-            }
-        }
+        FindCurrentIndex();
+
+        gameObject.SetActive(true);
         Refresh();
+    }
+
+    public void OnClickAction()
+    {
+        if (currentFacility == null) return;
+
+        if (!currentFacility.IsPurchased)
+            currentFacility.TryPurchase();
+        else
+            currentFacility.TryUpgrade();
+    }
+
+    public void OnClickPrevious()
+    {
+        if (currentIndex <= 0) return;
+
+        ShowFacility(facilities[currentIndex - 1]);
+    }
+
+    public void OnClickNext()
+    {
+        if (facilities == null || currentIndex >= facilities.Length - 1) return;
+
+        ShowFacility(facilities[currentIndex + 1]);
+    }
+
+    public void ClosePanel()
+    {
+        UnsubscribeCurrentFacility();
+        currentFacility = null;
+
+        gameObject.SetActive(false);
+    }
+
+    private void OnFacilityStateChanged(FacilityController facility)
+    {
+        if (facility == currentFacility)
+            Refresh();
     }
 
     private void Refresh()
@@ -77,73 +96,67 @@ public class FacilityDetailPanel : MonoBehaviour
         if (currentFacility == null) return;
 
         facilityNameText.text = currentFacility.FacilityName;
-
-        levelText.text = $"Lv.{currentFacility.CurrentLevel} / Lv.{currentFacility.MaxLevel}";
+        levelText.text = 
+            $"Lv.{currentFacility.CurrentLevel} / Lv.{currentFacility.MaxLevel}";
 
         levelSlider.maxValue = currentFacility.MaxLevel;
-
         levelSlider.value = currentFacility.CurrentLevel;
-        
-        currentEffectText.text = currentFacility.GetCurrentEffect();
 
+        currentEffectText.text = currentFacility.GetCurrentEffect();
         nextEffectText.text = currentFacility.GetNextEffect();
 
         RefreshActionButton();
-
-        previousButton.gameObject.SetActive(currentIndex > 0);
-
-        nextButton.gameObject.SetActive(currentIndex < facilities.Length - 1);
+        RefreshNavigationButtons();
     }
-
 
     private void RefreshActionButton()
     {
         if (!currentFacility.IsPurchased)
         {
-            actionButtonText.text = "Purchase"; return;
+            actionButtonText.text = "Purchase";
+            actionButton.interactable = true;
+            return;
         }
-
 
         if (currentFacility.CanUpgrade())
         {
-            actionButtonText.text = "Upgrade"; return;
+            actionButtonText.text = "Upgrade";
+            actionButton.interactable = true;
+            return;
         }
-
 
         actionButtonText.text = "Max Level";
+        actionButton.interactable = false;
     }
 
-
-    public void OnClickAction()
+    private void RefreshNavigationButtons()
     {
-        if (currentFacility == null) return;
+        bool hasFacilities = facilities != null && facilities.Length > 0;
 
+        previousButton.gameObject.SetActive(hasFacilities && currentIndex > 0);
 
-        if (!currentFacility.IsPurchased)
+        nextButton.gameObject.SetActive
+            (hasFacilities && currentIndex < facilities.Length - 1);
+    }
+
+    private void FindCurrentIndex()
+    {
+        currentIndex = 0;
+
+        if (facilities == null) return;
+
+        for (int i = 0; i < facilities.Length; i++)
         {
-            currentFacility.Purchase();
-        }
-        else
-        {
-            currentFacility.Upgrade();
-        }
+            if (facilities[i] != currentFacility) continue;
 
-        Refresh();
+            currentIndex = i;
+            return;
+        }
     }
 
-
-    public void OnClickPrevious()
+    private void UnsubscribeCurrentFacility()
     {
-        if (currentIndex <= 0) return;
-
-        ShowFacility(currentIndex - 1);
-    }
-
-
-    public void OnClickNext()
-    {
-        if (currentIndex >= facilities.Length - 1) return;
-
-        ShowFacility(currentIndex + 1);
+        if (currentFacility != null)
+            currentFacility.StateChanged -= OnFacilityStateChanged;
     }
 }

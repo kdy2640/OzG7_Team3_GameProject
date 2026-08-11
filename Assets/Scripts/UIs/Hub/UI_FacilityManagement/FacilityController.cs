@@ -1,131 +1,113 @@
+using System;
 using UnityEngine;
 
 public class FacilityController : MonoBehaviour
 {
     [Header("Facility Info")]
     [SerializeField] private string facilityName;
-
-    [SerializeField] private int currentLevel = 0;
-
+    [SerializeField] private int currentLevel;
     [SerializeField] private int maxLevel = 3;
-
-    [SerializeField] private bool isPurchased = false;
-
-
-    [Header("Level Models")]
-    [SerializeField] private GameObject lockedModel;
-
-    [SerializeField] private GameObject[] levelModels;
-
-
-    [Header("Effects")]
-    [SerializeField] private ParticleSystem upgradeEffect;
-
-
-    [Header("Effect Text")]
+    [SerializeField] private bool isPurchased;
     [SerializeField] private string[] levelEffects;
 
+    [Header("Views")]
+    [SerializeField] private FacilityModelView modelView;
+    [SerializeField] private FacilityWorldUI worldUI;
 
     public string FacilityName => facilityName;
     public int CurrentLevel => currentLevel;
     public int MaxLevel => maxLevel;
     public bool IsPurchased => isPurchased;
 
+    // 상세 패널이 열려 있는 동안 외부 데이터가 변경되었을 때 갱신용입니다.
+    public event Action<FacilityController> StateChanged;
 
     private void Start()
     {
-        RefreshModel();
+        RefreshViews();
     }
 
-
-    public void Purchase()
+    // 외부 데이터 담당자가 호출하는 상태 반영 API입니다.
+    public void SetState(bool purchased, int level)
     {
-        if (isPurchased) return;
+        isPurchased = purchased;
+        currentLevel = purchased
+            ? Mathf.Clamp(level, 1, maxLevel) : 0;
+
+        RefreshViews();
+        StateChanged?.Invoke(this);
+    }
+
+    // 현재는 레이아웃/테스트용 로컬 구매 처리입니다.
+    public bool TryPurchase()
+    {
+        if (isPurchased) return false;
 
         isPurchased = true;
         currentLevel = 1;
 
-        RefreshModel();
-        PlayUpgradeEffect();
+        RefreshViews();
+        modelView?.PlayUpgradeEffect();
+        StateChanged?.Invoke(this);
+
+        return true;
     }
 
+    // 현재는 레이아웃/테스트용 로컬 강화 처리입니다.
+    public bool TryUpgrade()
+    {
+        if (!CanUpgrade()) return false;
+
+        currentLevel++;
+
+        RefreshViews();
+        modelView?.PlayUpgradeEffect();
+        StateChanged?.Invoke(this);
+
+        return true;
+    }
 
     public bool CanUpgrade()
     {
         return isPurchased && currentLevel < maxLevel;
     }
 
-
-    public void Upgrade()
-    {
-        if (!CanUpgrade()) return;
-
-        currentLevel++;
-
-        RefreshModel();
-        PlayUpgradeEffect();
-    }
-
-
-    private void RefreshModel()
-    {
-        // 모든 레벨 모델 끄기
-        if (lockedModel != null) lockedModel.SetActive(false);
-
-        for (int i = 0; i < levelModels.Length; i++)
-        {
-            if (levelModels[i] != null) levelModels[i].SetActive(false);
-        }
-
-
-        // 구매 전
-        if (!isPurchased)
-        {
-            if (lockedModel != null) lockedModel.SetActive(true);
-
-            return;
-        }
-
-
-        // 구매 후
-        int index = currentLevel - 1;
-
-        if (index >= 0 && index < levelModels.Length)
-        {
-            if (levelModels[index] != null) levelModels[index].SetActive(true);
-        }
-    }
-
-
-    private void PlayUpgradeEffect()
-    {
-        if (upgradeEffect == null) return;
-
-        upgradeEffect.Play();
-    }
-
-
     public string GetCurrentEffect()
     {
-        if (!isPurchased) return "Not Purchased";
+        if (!isPurchased) return "Lv.1 Effect";
 
         int index = currentLevel - 1;
 
-        if (index < 0 || index >= levelEffects.Length) return "";
+        if (levelEffects == null || index < 0 || index >= levelEffects.Length)
+            return string.Empty;
 
         return levelEffects[index];
     }
-
 
     public string GetNextEffect()
     {
-        if (!isPurchased) return levelEffects.Length > 0 ? levelEffects[0] : "";
+        if (!isPurchased) return GetEffect(0);
 
         if (currentLevel >= maxLevel) return "Max Level";
-        int index = currentLevel;
 
-        if (index < 0 || index >= levelEffects.Length) return "";
+        return GetEffect(currentLevel);
+    }
+
+    private string GetEffect(int index)
+    {
+        if (levelEffects == null || index < 0 || index >= levelEffects.Length)
+            return string.Empty;
 
         return levelEffects[index];
+    }
+
+    private void RefreshViews()
+    {
+        if (!isPurchased)
+            modelView?.ShowLocked();
+        else
+            modelView?.ShowLevel(currentLevel);
+
+        worldUI?.Refresh(isPurchased, currentLevel, CanUpgrade());
     }
 }
