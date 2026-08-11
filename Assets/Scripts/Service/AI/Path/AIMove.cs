@@ -78,8 +78,6 @@ public class AIMove : MonoBehaviour
         if(startWaypoint == null)
         {
             Debug.Log("startWaypoint = " + startWaypoint);
-            moveState = MoveState.ToDestination;
-            return;
         }
         
         transform.position = Vector3.MoveTowards(

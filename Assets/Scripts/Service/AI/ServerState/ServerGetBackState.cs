@@ -16,14 +16,10 @@ public class ServerGetBackState : IState
 
     public void Enter()
     {
-        stateManager.IsBusy = false;
-
-        stateManager.Renderer.material.color = Color.black;
-
         stateManager.AiMove.OnArrived += ArrivedHome;
 
         stateManager.AiMove.MoveTo(
-            stateManager.WaitPoint
+            stateManager.ExitPoint
         );
     }
 
@@ -43,7 +39,7 @@ public class ServerGetBackState : IState
     private void ArrivedHome()
     {
         stateManager.ChangeState(
-            new ServerIdleState(stateManager)
+            new ServerEndState(stateManager)
         );
     }
 }

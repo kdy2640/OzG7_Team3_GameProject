@@ -4,19 +4,12 @@ using UnityEngine;
 
 public class OrderButton : MonoBehaviour
 {
-    [SerializeField] ServerList serverList;
-    private CustomerStateManager customer;
     public event Action OnClicked;
     private DishAmount dishAmount;
 
     //[SerializeField] private Image dishIcon;
     [SerializeField] private TMP_Text dishName;
     [SerializeField] private TMP_Text amountText;
-
-    private void OnEnable()
-    {
-        customer = GetComponentInParent<CustomerStateManager>();
-    }
 
     public void SetOrder(DishAmount order)
     {
@@ -38,11 +31,6 @@ public class OrderButton : MonoBehaviour
         if (dishAmount == null)
         {
             Debug.LogWarning("주문 정보가 없습니다.");
-            return;
-        }
-
-        if(!serverList.TryAllocServe(dishAmount.dish, customer))
-        {
             return;
         }
 

@@ -12,8 +12,7 @@ public class ServerServeState : IState
 
     public void Enter()
     {
-        stateManager.Renderer.material.color = Color.darkGray;
-        timer = 2.0f;
+        timer = 5.0f;
     }
 
     public void Execute()

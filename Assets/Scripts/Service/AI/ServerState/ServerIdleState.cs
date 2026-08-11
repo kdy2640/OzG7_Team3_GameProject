@@ -1,28 +1,16 @@
 using UnityEngine;
 
-public class ServerIdleState : IState
+public class ServerIdleState : MonoBehaviour
 {
-    private ServerStateManager stateManager;
-
-    public ServerIdleState(ServerStateManager stateManager)
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
-        this.stateManager = stateManager;
+        
     }
 
-    public void Enter()
+    // Update is called once per frame
+    void Update()
     {
-        stateManager.IsBusy = false;
-        stateManager.Renderer.material.color = Color.white;
-       
-    }
-
-    public void Execute()
-    {
-
-    }
-
-    public void Exit()
-    {
-
+        
     }
 }
