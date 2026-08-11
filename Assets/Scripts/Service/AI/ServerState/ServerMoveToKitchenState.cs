@@ -1,51 +1,46 @@
+using System.Net;
 using UnityEngine;
 
-public class ServerMoveToTableState : IState
+public class ServerMoveToKitchenState : IState
 {
     private ServerStateManager stateManager;
     private AIMove aiMove;
-    private Transform servePoint;
+    private Transform kitchen;
 
-
-    public ServerMoveToTableState(
+    public ServerMoveToKitchenState(
         ServerStateManager stateManager,
         AIMove aiMove,
-        Transform servePoint)
+        Transform kitchen)
     {
         this.stateManager = stateManager;
         this.aiMove = aiMove;
-        this.servePoint = servePoint;
+        this.kitchen = kitchen;
     }
 
 
     public void Enter()
     {
+        stateManager.Renderer.material.color = Color.ivory;
         stateManager.IsBusy = true;
-
-        stateManager.Renderer.material.color = Color.lightGray;
 
         aiMove.OnArrived += Arrived;
 
-        aiMove.MoveTo(servePoint);
+        aiMove.MoveTo(kitchen);
     }
-
 
     public void Execute()
     {
 
     }
-
-
     public void Exit()
     {
         aiMove.OnArrived -= Arrived;
     }
 
-
     private void Arrived()
     {
         stateManager.ChangeState(
-            new ServerServeState(stateManager)
-        );
+            new ServerMoveToTableState(stateManager,stateManager.AiMove,stateManager.ServePoint)
+            );
     }
 }

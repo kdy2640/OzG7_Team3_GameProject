@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CustomerStateManager : MonoBehaviour
 {
@@ -16,9 +16,11 @@ public class CustomerStateManager : MonoBehaviour
     private Table currentTable;
     private Transform seat;
     private DishAmount order;
+    public Action foodReceived;
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
     public DishAmount Order => order;
+
     
 
     private IState currentState;
@@ -95,7 +97,7 @@ public class CustomerStateManager : MonoBehaviour
             return;
         }
 
-        DishType dish = selectedDishes[Random.Range(0, selectedDishes.Count)];
-        order = new DishAmount(dish, 1);
+        DishType dish = selectedDishes[UnityEngine.Random.Range(0, selectedDishes.Count)];
+        order = new DishAmount(dish, UnityEngine.Random.Range(0,3));
     }
 }
