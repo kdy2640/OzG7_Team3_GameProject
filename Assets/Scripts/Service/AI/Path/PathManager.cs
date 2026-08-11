@@ -55,13 +55,12 @@ public class PathManager : MonoBehaviour
 
     public List<Waypoint> GetPath(Vector3 startPos, Vector3 goalPos)
     {
-        
         Waypoint start = graph.GetClosestWaypoint(startPos);
         Waypoint goal = graph.GetClosestWaypoint(goalPos);
 
-        if(start == goal)
+        if (start == goal)
         {
-            return null;
+            return new List<Waypoint>();
         }
 
         return GetPath(start, goal);

@@ -20,6 +20,7 @@ public class ServerMoveToKitchenState : IState
 
     public void Enter()
     {
+        stateManager.IsBusy = true;
         stateManager.Renderer.material.color = Color.ivory;
         stateManager.IsBusy = true;
 
