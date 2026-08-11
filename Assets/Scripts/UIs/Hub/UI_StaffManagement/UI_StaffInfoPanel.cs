@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ¼±ÅÃµÈ Á÷¿øÀÇ »ó¼¼ Á¤º¸ Á¶È¸, Ç¥½Ã, ¹öÆ° Å¬¸¯ Àü´ÞÀ» ´ã´çÇÕ´Ï´Ù.
+// ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸, Ç¥ï¿½ï¿½, ï¿½ï¿½Æ° Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 public sealed class UI_StaffInfoPanel : MonoBehaviour
 {
     [SerializeField] private Image roleIcon;
@@ -62,19 +62,19 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    // »ó¼¼ ÆÐ³ÎÀÌ ÇÊ¿äÇÑ Á¤º¸¸¦ Á÷Á¢ Á¶È¸ÇØ UI¿¡ ¹Ý¿µÇÕ´Ï´Ù.
+    // ï¿½ï¿½ ï¿½Ð³ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ï¿½ï¿½ UIï¿½ï¿½ ï¿½Ý¿ï¿½ï¿½Õ´Ï´ï¿½.
     private bool CreateInfoData()
     {
         if (!EmployeeDataDB.TryGetData(selectedType, out EmployeeDataSO employeeData))
         {
-            Debug.LogWarning($"EmployeeData°¡ ¾ø½À´Ï´Ù: {selectedType}");
+            Debug.LogWarning($"EmployeeDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½: {selectedType}");
             return false;
         }
 
         UpgradeManager upgrade = GameManager.Instance.Upgrade;
         StockManager stockManager = GameManager.Instance.StockManager;
 
-        int level = upgrade.GetLevel(selectedType);
+        int level = upgrade.RuntimeLevel.Get(selectedType);
         bool isMaxLevel = level >= employeeData.MaxLevel;
 
         EmployeeUpgradeDataSO upgradeData =
