@@ -92,7 +92,7 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
 
         currentDishType = dishType;
 
-        int level = GameManager.Instance.Upgrade.GetLevel(dishType);
+        int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(dishType);
         DishUpgradeDataSO upgradeData = UpgradeDataDB.GetData(dishType);
 
         menuIcon.gameObject.SetActive(true);

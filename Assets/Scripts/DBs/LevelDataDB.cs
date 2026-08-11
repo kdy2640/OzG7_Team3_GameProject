@@ -43,12 +43,7 @@ public static class LevelDataDB
             {
                 Level = level,
                 MaxDishLimit = GetInt(row, "MaxDishLimit"),
-                MaxEXPLimit = GetInt(row, "MaxEXPLimit"),
-                UnlockedChef = GetFloat(row, "UnlockedChef"),
-                UnlockedServer = GetFloat(row, "UnlockedServer"),
-                UnlockedHarvester = GetFloat(row, "UnlockedHarvester"),
-                UnlockedTable = GetFloat(row, "UnlockedTable"),
-                UnlockedDeco = GetFloat(row, "UnlockedDeco")
+                IncomeGoal = GetInt(row, "IncomeGoal")
             };
 
             levelDataMap.Add(level, data);
@@ -71,26 +66,5 @@ public static class LevelDataDB
 
         Debug.LogWarning($"LevelDataSheet value is not a valid int. column : {key}, value : {value}");
         return 0;
-    }
-
-    private static float GetFloat(Dictionary<string, object> row, string key)
-    {
-        if (!row.TryGetValue(key, out object value))
-        {
-            Debug.LogWarning($"LevelDataSheet column does not exist. column : {key}");
-            return 0f;
-        }
-
-        if (value is float floatValue)
-            return floatValue;
-
-        if (value is int intValue)
-            return intValue;
-
-        if (float.TryParse(value?.ToString(), out float parsedValue))
-            return parsedValue;
-
-        Debug.LogWarning($"LevelDataSheet value is not a valid float. column : {key}, value : {value}");
-        return 0f;
     }
 }

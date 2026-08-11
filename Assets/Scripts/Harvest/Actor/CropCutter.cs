@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public sealed class CropCutter : MonoBehaviour
 {
+    [SerializeField] private GridChunkHandler gridChunkHandler;
+    [SerializeField, Min(0f)] private float cuttingRange = 0.5f;
     [SerializeField, Min(0f)] private float damage = 1f;
     [SerializeField, Min(0.25f)] private float damageDelay = 0.25f;
     [SerializeField, Range(0f, 1f)] private float cuttingMoveSpeedMultiplier = 0.35f;
@@ -16,27 +18,43 @@ public sealed class CropCutter : MonoBehaviour
     public float MoveSpeedMultiplier =>
         IsCutting ? cuttingMoveSpeedMultiplier : 1f;
 
-    private void OnTriggerStay(Collider other)
+    private void FixedUpdate()
     {
-        HarvestActor crop = other.GetComponentInParent<HarvestActor>();
-
-        if (crop == null)
+        if (gridChunkHandler == null)
         {
             return;
         }
 
-        cuttingUntilTime = Time.time + Time.fixedDeltaTime * 2f;
+        List<Transform> nearbyTransforms =
+            gridChunkHandler.GetNearbyTransforms(transform.position, cuttingRange);
 
-        int cropId = crop.GetInstanceID();
-
-        if (nextDamageTimes.TryGetValue(cropId, out float nextDamageTime)
-            && Time.time < nextDamageTime)
+        foreach (Transform target in nearbyTransforms)
         {
-            return;
-        }
+            if (target == null || !target.CompareTag("Harvestable"))
+            {
+                continue;
+            }
 
-        crop.TakeDamage(damage);
-        nextDamageTimes[cropId] =
-            Time.time + Mathf.Max(0.25f, damageDelay);
+            HarvestActor crop = target.GetComponent<HarvestActor>();
+
+            if (crop == null)
+            {
+                continue;
+            }
+
+            cuttingUntilTime = Time.time + Time.fixedDeltaTime * 2f;
+
+            int cropId = crop.GetInstanceID();
+
+            if (nextDamageTimes.TryGetValue(cropId, out float nextDamageTime)
+                && Time.time < nextDamageTime)
+            {
+                continue;
+            }
+
+            crop.TakeDamage(damage);
+            nextDamageTimes[cropId] =
+                Time.time + Mathf.Max(0.25f, damageDelay);
+        }
     }
 }

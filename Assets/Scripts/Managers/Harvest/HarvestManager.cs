@@ -8,10 +8,16 @@ public class HarvestManager : MonoBehaviour
 
     private HarvestEventManager eventManager; 
     private Action<float> OnTick;
-    private float timer;
+    [SerializeField] private float timer;
+    [SerializeField] private bool isPause;
     private bool isRunning = false;
 
     public float Timer { get { return timer; } }
+    public bool IsPause
+    {
+        get => isPause;
+        set => isPause = value;
+    }
     public bool IsRunning => isRunning;
     public HarvestEventManager Events => eventManager; 
 
@@ -35,7 +41,7 @@ public class HarvestManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isRunning)
+        if (!isRunning || isPause)
             return;
 
         timer -= Time.deltaTime;

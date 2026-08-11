@@ -10,13 +10,16 @@ public sealed class HarvestActor : MonoBehaviour
     [SerializeField] private HarvestMover mover;
 
     private HarvestDataSO harvestDataSO;
+    private GridChunkHandler gridChunkHandler;
 
 
     public void Init(
         HarvestType type,
         Transform player,
-        HarvestSpawner spawner)
+        HarvestSpawner spawner,
+        GridChunkHandler gridChunkHandler)
     {
+        this.gridChunkHandler = gridChunkHandler;
         harvestDataSO = HarvestDataDB.GetData(type);
 
         if (hpHandler == null)
@@ -46,7 +49,7 @@ public sealed class HarvestActor : MonoBehaviour
                 return;
             }
 
-            mover.Init(player, harvestDataSO.Speed, spawner);
+            mover.Init(player, harvestDataSO.Speed, spawner, gridChunkHandler);
         }
         else if (mover != null)
         {
@@ -59,6 +62,14 @@ public sealed class HarvestActor : MonoBehaviour
         if (hpHandler != null && presenter != null)
         { 
             hpHandler.UnSubscribeDying(OnDied);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (gridChunkHandler != null)
+        {
+            gridChunkHandler.Unregister(transform);
         }
     }
 
