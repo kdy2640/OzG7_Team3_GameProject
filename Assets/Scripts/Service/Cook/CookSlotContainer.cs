@@ -40,4 +40,9 @@ public class CookSlotContainer : MonoBehaviour
         ClearSlots();
         CreateCookSlot();
     }
+
+    private void OnDisable()
+    {
+        RefreshSlots();
+    }
 }
