@@ -37,7 +37,6 @@ public class CustomerStateManager : MonoBehaviour
         {
             tableManager = FindFirstObjectByType<TableManager>();
         }
-        
     }
 
     private void Start()
@@ -107,12 +106,16 @@ public class CustomerStateManager : MonoBehaviour
     {
         animator.SetBool("IsWalking", false);
         animator.SetBool("IsTyping", false);
-        animator.SetBool("IsServing", false);
         animator.SetBool("IsRunning", false);
     }
 
     private void OnDisable()
     {
         Destroy(this.gameObject);
+    }
+
+    public void SetAnimator(Animator animator)
+    {
+        this.animator = animator;
     }
 }

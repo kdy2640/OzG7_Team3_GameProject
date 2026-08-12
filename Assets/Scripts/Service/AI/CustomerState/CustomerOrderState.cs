@@ -18,7 +18,7 @@ public class CustomerOrderState : IState
             (stateManager.CurrentTable.transform.position - stateManager.transform.position)
             .normalized
             );
-        stateManager.Animator.SetBool("IsTyping", true);
+        stateManager.Animator.SetBool("IsOrdering", true);
         stateManager.Renderer.material.color = Color.orange;
 
         timer = 5.0f;
@@ -52,7 +52,7 @@ public class CustomerOrderState : IState
 
     public void Exit()
     {
-        stateManager.Animator.SetBool("IsTyping", false);
+        stateManager.Animator.SetBool("IsOrdering", false);
         stateManager.OrderButton.OnClicked -= ReceiveOrder;
         stateManager.OrderButton.gameObject.SetActive(false);
     }
