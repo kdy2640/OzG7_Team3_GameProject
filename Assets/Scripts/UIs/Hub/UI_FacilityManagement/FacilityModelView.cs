@@ -1,21 +1,16 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FacilityModelView : MonoBehaviour
 {
     [Header("Source")]
     [SerializeField] private FacilityController facility;
-    [SerializeField] private FacilityDataSO facilityData;
 
     [Header("Model")]
+    [Tooltip("런타임에 현재 레벨 모델 프리팹이 생성될 빈 오브젝트 컨테이너")]
     [SerializeField] private Transform facilityModelRoot;
 
-    private readonly List<GameObject> registeredModels = new();
-
-    private void Awake()
-    {
-        RegisterModelsFromRoot();
-    }
+    private GameObject currentModelInstance;
+    private int shownLevel = -1;
 
     private void OnEnable()
     {
@@ -31,32 +26,6 @@ public class FacilityModelView : MonoBehaviour
             facility.StateChanged -= OnFacilityStateChanged;
     }
 
-    private void RegisterModelsFromRoot()
-    {
-        registeredModels.Clear();
-
-        if (facilityModelRoot == null)
-        {
-            Debug.LogError($"{name}: Facility Model Root가 지정되지 않았습니다.");
-            return;
-        }
-
-        if (facilityData != null &&
-            facilityData.SolidPrefabs.Count != facilityModelRoot.childCount)
-        {
-            Debug.LogWarning(
-                $"{name}: SolidPrefabs 수({facilityData.SolidPrefabs.Count})와 " +
-                $"Model Root 자식 수({facilityModelRoot.childCount})가 다릅니다.");
-        }
-
-        // Model Root의 직계 자식만 자동 등록.
-        // 자식 순서는 SolidPrefabs의 순서와 동일해야 합니다.
-        for (int i = 0; i < facilityModelRoot.childCount; i++)
-        {
-            registeredModels.Add(facilityModelRoot.GetChild(i).gameObject);
-        }
-    }
-
     private void OnFacilityStateChanged(FacilityController changedFacility)
     {
         if (changedFacility == facility)
@@ -65,33 +34,58 @@ public class FacilityModelView : MonoBehaviour
 
     private void Refresh()
     {
-        if (facility == null) return;
-
-        ShowLevel(facility.CurrentLevel);
+        if (facility != null)
+            ShowLevel(facility.CurrentLevel);
     }
+
     public void ShowLocked()
     {
         ShowLevel(0);
     }
 
+    // Lv.0 = 미구매 모델, Lv.1 이상 = 해당 레벨 모델
     public void ShowLevel(int level)
     {
-        if (registeredModels.Count == 0) return;
+        if (facility == null || facilityModelRoot == null) return;
 
-        int modelIndex = Mathf.Clamp( level, 0, registeredModels.Count - 1);
+        FacilityDataSO facilityData =
+            FacilityDataDB.GetData(facility.FacilityType);
 
-        for (int i = 0; i < registeredModels.Count; i++)
+        if (facilityData == null) return;
+
+        if (shownLevel == level && currentModelInstance != null) return;
+
+        GameObject modelPrefab =
+            facilityData.GetSolidPrefabForLevel(level);
+
+        ClearCurrentModel();
+
+        if (modelPrefab == null)
         {
-            registeredModels[i].SetActive(i == modelIndex);
+            Debug.LogWarning
+                ($"{name}: {facilityData.DisplayName}의 Lv.{level} 모델이 없습니다.");
+            return;
         }
+
+        currentModelInstance = Instantiate(modelPrefab, facilityModelRoot);
+        currentModelInstance.transform.localPosition = Vector3.zero;
+        currentModelInstance.transform.localRotation = Quaternion.identity;
+        currentModelInstance.transform.localScale = Vector3.one;
+
+        shownLevel = level;
     }
 
     public void PlayUpgradeEffect()
     {
-        // 기존에 파티클/애니메이션 효과가 있었다면
-        // 그 코드를 이 메서드 안에 복원하면 됩니다.
-        // 모델 표시는 Controller가 호출하는 ShowLevel()에서 처리됩니다.
-
+        // 나중에 파티클/애니메이션을 추가할 위치입니다.
         if (facility != null) ShowLevel(facility.CurrentLevel);
+    }
+
+    private void ClearCurrentModel()
+    {
+        if (currentModelInstance != null) Destroy(currentModelInstance);
+
+        currentModelInstance = null;
+        shownLevel = -1;
     }
 }
