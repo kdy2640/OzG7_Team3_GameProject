@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+public enum MarketPhase
+{
+    Morning,
+    Afternoon,
+    Night
+}
+
 [Serializable]
 public sealed class MarketData
 {
     [SerializeField, Min(0)] private int currentBusinessDay;
+    [SerializeField] private MarketPhase currentPhase = MarketPhase.Morning;
     [SerializeField, Min(0)] private int currentLevel;
     [FormerlySerializedAs("currentEXP")]
     [SerializeField, Min(0)] private int totalIncome;
@@ -25,6 +33,19 @@ public sealed class MarketData
                 return;
 
             currentBusinessDay = nextBusinessDay;
+            NotifyMarketDataChanged();
+        }
+    }
+
+    public MarketPhase CurrentPhase
+    {
+        get => currentPhase;
+        set
+        {
+            if (currentPhase == value)
+                return;
+
+            currentPhase = value;
             NotifyMarketDataChanged();
         }
     }
@@ -67,11 +88,13 @@ public sealed class MarketData
 
     internal MarketData(
         int currentBusinessDay,
+        MarketPhase currentPhase,
         int currentLevel,
         int totalIncome,
         List<DishType> selectedDishes)
     {
         this.currentBusinessDay = currentBusinessDay;
+        this.currentPhase = currentPhase;
         this.currentLevel = currentLevel;
         this.totalIncome = totalIncome;
         this.selectedDishes = selectedDishes == null

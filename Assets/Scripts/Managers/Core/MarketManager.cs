@@ -49,6 +49,23 @@ public class MarketManager : MonoBehaviour
         marketData.CurrentBusinessDay++;
     }
 
+    public void MoveToNextPhase()
+    {
+        switch (marketData.CurrentPhase)
+        {
+            case MarketPhase.Morning:
+                marketData.CurrentPhase = MarketPhase.Afternoon;
+                break;
+            case MarketPhase.Afternoon:
+                marketData.CurrentPhase = MarketPhase.Night;
+                break;
+            case MarketPhase.Night:
+                marketData.CurrentBusinessDay++;
+                marketData.CurrentPhase = MarketPhase.Morning;
+                break;
+        }
+    }
+
     public void LevelRefresh()
     {
         levelData = LevelDataDB.GetData(marketData.CurrentLevel) ?? new LevelData();
@@ -64,6 +81,7 @@ public class MarketManager : MonoBehaviour
         MarketSaveData saveData = new()
         {
             currentBusinessDay = marketData.CurrentBusinessDay,
+            currentPhase = marketData.CurrentPhase,
             currentLevel = marketData.CurrentLevel,
             totalIncome = marketData.TotalIncome
         };
@@ -79,6 +97,7 @@ public class MarketManager : MonoBehaviour
             ? new MarketData()
             : new MarketData(
                 Mathf.Max(0, saveData.currentBusinessDay),
+                saveData.currentPhase,
                 Mathf.Max(0, saveData.currentLevel),
                 Mathf.Max(0, saveData.totalIncome),
                 saveData.selectedDishes);
