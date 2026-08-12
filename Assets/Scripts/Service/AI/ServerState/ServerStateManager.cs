@@ -75,4 +75,9 @@ public class ServerStateManager : MonoBehaviour
     {
         customer.foodReceived?.Invoke();
     }
+
+    private void OnDisable()
+    {
+        Destroy(this.gameObject);
+    }
 }
