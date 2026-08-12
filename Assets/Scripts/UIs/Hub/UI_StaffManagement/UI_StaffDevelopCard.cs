@@ -73,24 +73,17 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         }
 
         UpgradeManager upgrade = GameManager.Instance.Upgrade;
-        StockManager stockManager = GameManager.Instance.StockManager;
 
         level = upgrade.RuntimeLevel.Get(employeeType);
 
         EmployeeUpgradeDataSO upgradeData =
             UpgradeDataDB.GetData(employeeData.Id) as EmployeeUpgradeDataSO;
 
-        bool canPay = false;
-
-        if (upgradeData != null && level < employeeData.MaxLevel)
-        {
-            int cost = upgradeData.GetCosts(level);
-            canPay = stockManager.CanConsumeCurrency(cost);
-        }
+        bool canUpgrade = upgrade.CanUpgrade(upgradeData);
 
         if (level == 0)
         {
-            state = canPay
+            state = canUpgrade
                 ? StaffCardState.CanRecruit : StaffCardState.Locked;
         }
         else if (level >= employeeData.MaxLevel)
@@ -99,7 +92,7 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         }
         else
         {
-            state = canPay
+            state = canUpgrade
                 ? StaffCardState.CanUpgrade : StaffCardState.Normal;
         }
 

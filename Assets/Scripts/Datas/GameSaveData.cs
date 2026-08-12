@@ -69,6 +69,7 @@ public class StockSaveData
 public class MarketSaveData : ISerializationCallbackReceiver
 {
     public int currentBusinessDay;
+    public MarketPhase currentPhase;
     public int currentLevel;
     public int totalIncome;
     public List<DishType> selectedDishes = new();

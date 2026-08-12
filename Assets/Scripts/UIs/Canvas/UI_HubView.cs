@@ -4,15 +4,14 @@ using UnityEngine;
 public sealed class UI_HubView : UI_Base
 {
     private UI_MareketVisualPanel marketVisualPanel;
+    private UI_PhaseButtonPanel phaseButtonPanel;
 
     private enum GameObjects
     {
         UI_ToFacilityManagementButton,
         UI_ToMenuManagementButton,
         UI_ToStoreButton,
-        UI_ToLogButton,
-        UI_ToHarvestButton,
-        UI_ToServiceSelectionButton
+        UI_ToLogButton
     }
 
     protected override void OnInit()
@@ -24,15 +23,12 @@ public sealed class UI_HubView : UI_Base
         GetGameObject((int)GameObjects.UI_ToMenuManagementButton)?
             .GetComponent<UI_HubStateButton>()?
             .Init(Owner);
-        GetGameObject((int)GameObjects.UI_ToHarvestButton)?
-            .GetComponent<UI_HubStateButton>()?
-            .Init(Owner);
-        GetGameObject((int)GameObjects.UI_ToServiceSelectionButton)?
-            .GetComponent<UI_HubStateButton>()?
-            .Init(Owner);
 
         marketVisualPanel = GetComponentInChildren<UI_MareketVisualPanel>(true);
         marketVisualPanel?.Refresh();
+
+        phaseButtonPanel = GetComponentInChildren<UI_PhaseButtonPanel>(true);
+        phaseButtonPanel?.Init(Owner);
     }
 
     private void Start()
@@ -43,6 +39,7 @@ public sealed class UI_HubView : UI_Base
     protected override IEnumerator OnShow()
     {
         marketVisualPanel?.Refresh();
+        phaseButtonPanel?.Refresh();
         yield break;
     }
 

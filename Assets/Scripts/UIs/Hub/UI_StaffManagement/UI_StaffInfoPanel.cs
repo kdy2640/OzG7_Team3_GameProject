@@ -72,7 +72,6 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         }
 
         UpgradeManager upgrade = GameManager.Instance.Upgrade;
-        StockManager stockManager = GameManager.Instance.StockManager;
 
         int level = upgrade.RuntimeLevel.Get(selectedType);
         bool isMaxLevel = level >= employeeData.MaxLevel;
@@ -85,9 +84,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         if (!isMaxLevel && upgradeData != null)
             cost = upgradeData.GetCosts(level);
 
-        bool canAction = !isMaxLevel
-                         && upgradeData != null
-                         && stockManager.CanConsumeCurrency(cost);
+        bool canAction = upgrade.CanUpgrade(upgradeData);
 
         roleIcon.sprite = employeeData.RoleIcon;
         staffNameText.text = employeeData.DisplayName;
