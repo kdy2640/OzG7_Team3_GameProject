@@ -10,8 +10,10 @@ public class CustomerSpawner : MonoBehaviour
     [SerializeField] private float spawnInterval = 2f;
     [SerializeField] private RuntimeAnimatorController controller;
 
+
     [Header("랜덤 동물 범위")]
     [SerializeField] List<GameObject> animalPrefabs = new();
+    [SerializeField] float animalSize;
 
     private float timer;
 
@@ -32,8 +34,8 @@ public class CustomerSpawner : MonoBehaviour
             Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
         GameObject animal =
             Instantiate(animalPrefabs[Random.Range(0, animalPrefabs.Count)], customer.transform);
-        animal.transform.localScale = Vector3.one * 0.5f;
-        animal.transform.localPosition += Vector3.down * 0.5f;
+        animal.transform.localScale = Vector3.one * animalSize;
+        animal.transform.localPosition += Vector3.down * (1 - animalSize) * 2;
         
         Animator animator = animal.GetComponent<Animator>();
         animator.runtimeAnimatorController = controller;

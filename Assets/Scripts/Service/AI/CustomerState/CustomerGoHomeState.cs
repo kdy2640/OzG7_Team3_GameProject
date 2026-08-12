@@ -42,8 +42,6 @@ public class CustomerGoHomeState : IState
 
     private void ArrivedHome()
     {
-        stateManager.ChangeState(
-            new CustomerEndState(stateManager)
-        );
+        GameObject.Destroy(stateManager.gameObject);
     }
 }
