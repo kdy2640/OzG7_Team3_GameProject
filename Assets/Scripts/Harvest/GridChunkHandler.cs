@@ -15,14 +15,15 @@ public sealed class GridChunkHandler : MonoBehaviour
         public readonly List<Transform> Transforms = new();
     }
 
+    public float ChunkSize => Mathf.Max(0.01f, chunkSize);
+
     public Vector2Int GetChunkCoordinate(Vector3 worldPosition)
     {
         Vector3 localPosition = transform.InverseTransformPoint(worldPosition);
-        float safeChunkSize = Mathf.Max(0.01f, chunkSize);
 
         return new Vector2Int(
-            Mathf.FloorToInt(localPosition.x / safeChunkSize),
-            Mathf.FloorToInt(localPosition.z / safeChunkSize));
+            Mathf.FloorToInt(localPosition.x / ChunkSize),
+            Mathf.FloorToInt(localPosition.z / ChunkSize));
     }
 
     public void Register(Transform target)
@@ -175,7 +176,7 @@ public sealed class GridChunkHandler : MonoBehaviour
             return;
         }
 
-        float safeChunkSize = Mathf.Max(0.01f, chunkSize);
+        float safeChunkSize = ChunkSize;
         Vector2 halfArea = spawner.SpawnArea * 0.5f;
         int minX = Mathf.FloorToInt(-halfArea.x / safeChunkSize);
         int maxX = Mathf.CeilToInt(halfArea.x / safeChunkSize);

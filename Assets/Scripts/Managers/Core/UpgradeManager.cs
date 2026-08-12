@@ -2,6 +2,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum UpgradeAvailability
+{
+    Available,
+    InvalidData,
+    MaxLevel,
+    MarketLevelLocked,
+    InsufficientCurrency
+}
+
 public class UpgradeManager : MonoBehaviour
 {
     #region Fields
@@ -81,8 +90,8 @@ public class UpgradeManager : MonoBehaviour
     {
         UpgradeState state = GetState(data);
 
-        if (state == null || IsMaxLevel(state)
-            || !CanUpgradeAtCurrentMarketLevel(data, state.level))
+        if (state == null
+            || GetUpgradeAvailability(data, state.level) != UpgradeAvailability.Available)
             return false;
 
         if (!stockManager.TryConsumeCurrency(state.GetCurrentCost()))
@@ -91,6 +100,29 @@ public class UpgradeManager : MonoBehaviour
         state.level++;
         RefreshRuntimeData();
         return true;
+    }
+
+    public bool CanUpgrade(UpgradeDataSO data)
+    {
+        return GetUpgradeAvailability(data) == UpgradeAvailability.Available;
+    }
+
+    public UpgradeAvailability GetUpgradeAvailability(UpgradeDataSO data)
+    {
+        if (data == null || string.IsNullOrEmpty(data.Id))
+            return UpgradeAvailability.InvalidData;
+
+        int currentUpgradeLevel = 0;
+
+        if (upgradeStateMap.TryGetValue(data.Id, out UpgradeState state))
+        {
+            if (state.data != data)
+                return UpgradeAvailability.InvalidData;
+
+            currentUpgradeLevel = state.level;
+        }
+
+        return GetUpgradeAvailability(data, currentUpgradeLevel);
     }
 
     public bool CanUpgradeAtCurrentMarketLevel(UpgradeDataSO data, int currentUpgradeLevel)
@@ -111,6 +143,25 @@ public class UpgradeManager : MonoBehaviour
     public bool IsMaxLevel(UpgradeState state)
     {
         return state != null && state.data != null && state.level >= state.data.MaxLevel;
+    }
+
+    private UpgradeAvailability GetUpgradeAvailability(
+        UpgradeDataSO data,
+        int currentUpgradeLevel)
+    {
+        if (data == null || stockManager == null)
+            return UpgradeAvailability.InvalidData;
+
+        if (currentUpgradeLevel >= data.MaxLevel)
+            return UpgradeAvailability.MaxLevel;
+
+        if (!CanUpgradeAtCurrentMarketLevel(data, currentUpgradeLevel))
+            return UpgradeAvailability.MarketLevelLocked;
+
+        if (!stockManager.CanConsumeCurrency(data.GetCosts(currentUpgradeLevel)))
+            return UpgradeAvailability.InsufficientCurrency;
+
+        return UpgradeAvailability.Available;
     }
 
     public bool HasState(UpgradeDataSO data)
