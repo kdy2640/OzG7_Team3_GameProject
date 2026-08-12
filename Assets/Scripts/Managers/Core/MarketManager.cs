@@ -44,11 +44,6 @@ public class MarketManager : MonoBehaviour
 
     #region Runtime Data
 
-    public void CompleteCurrentBusinessDay()
-    {
-        marketData.CurrentBusinessDay++;
-    }
-
     public void MoveToNextPhase()
     {
         switch (marketData.CurrentPhase)
