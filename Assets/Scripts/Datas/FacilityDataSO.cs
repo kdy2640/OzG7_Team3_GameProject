@@ -1,4 +1,6 @@
+
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum FacilityType
 {
@@ -30,6 +32,10 @@ public sealed class FacilityDataSO : ScriptableObject
     [SerializeField] private FacilityCategory facilityCategory = FacilityCategory.Count;
     [SerializeField, Min(0)] private int cost;
     [SerializeField, Min(0f)] private float upgradeMultiplier = 1f;
+
+    [SerializeField] private List<GameObject> solidPrefabs = new List<GameObject>();
+
+    public List<GameObject> SolidPrefabs => solidPrefabs;
 
     public string Id => id;
     public string DisplayName => displayName;

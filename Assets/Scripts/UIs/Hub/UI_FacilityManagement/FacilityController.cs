@@ -22,7 +22,12 @@ public class FacilityController : MonoBehaviour
     // 상세 패널이 열려 있는 동안 외부 데이터가 변경되었을 때 갱신용입니다.
     public event Action<FacilityController> StateChanged;
 
-    private void Start()
+    private void Awake()
+    {
+        maxLevel = Mathf.Max(1, maxLevel);
+        RefreshViews();
+    }
+    private void OnEnable()
     {
         RefreshViews();
     }
@@ -74,14 +79,9 @@ public class FacilityController : MonoBehaviour
 
     public string GetCurrentEffect()
     {
-        if (!isPurchased) return "Lv.1 Effect";
+        if (!isPurchased) return GetEffect(0);
 
-        int index = currentLevel - 1;
-
-        if (levelEffects == null || index < 0 || index >= levelEffects.Length)
-            return string.Empty;
-
-        return levelEffects[index];
+        return GetEffect(currentLevel - 1);
     }
 
     public string GetNextEffect()
@@ -103,10 +103,9 @@ public class FacilityController : MonoBehaviour
 
     private void RefreshViews()
     {
-        if (!isPurchased)
-            modelView?.ShowLocked();
-        else
-            modelView?.ShowLevel(currentLevel);
+        if (!isPurchased) modelView?.ShowLocked();
+        
+        else modelView?.ShowLevel(currentLevel);
 
         worldUI?.Refresh(isPurchased, currentLevel, CanUpgrade());
     }
