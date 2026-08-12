@@ -100,4 +100,9 @@ public class CustomerStateManager : MonoBehaviour
         DishType dish = selectedDishes[UnityEngine.Random.Range(0, selectedDishes.Count)];
         order = new DishAmount(dish, 1);
     }
+
+    private void OnDisable()
+    {
+        Destroy(this.gameObject);
+    }
 }

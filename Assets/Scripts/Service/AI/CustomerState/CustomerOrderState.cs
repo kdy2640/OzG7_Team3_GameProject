@@ -29,7 +29,6 @@ public class CustomerOrderState : IState
 
         stateManager.OrderButton.OnClicked += ReceiveOrder;
 
-        stateManager.foodReceived += StartEat;
     }
 
     public void Execute()
@@ -58,14 +57,9 @@ public class CustomerOrderState : IState
     private void ReceiveOrder()
     {
         receiveOrder = true;
+        stateManager.OrderButton.gameObject.SetActive(false);
+        stateManager.ChangeState(new CustomerWaitForFoodState(stateManager));
     }
 
-    private void StartEat()
-    {
-        stateManager.ChangeState(
-                new CustomerEatState(stateManager)
-            );
-
-        return;
-    }
+    
 }

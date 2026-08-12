@@ -68,7 +68,7 @@ public class ServerStateManager : MonoBehaviour
 
         servePoint = customer.CurrentTable.GetServePoint(customer.Seat);
 
-        ChangeState(new ServerMoveToTableState(this, aiMove, servePoint));
+        ChangeState(new ServerMoveToKitchenState(this, aiMove, kitchen));
     }
 
     public void GiveFood()
