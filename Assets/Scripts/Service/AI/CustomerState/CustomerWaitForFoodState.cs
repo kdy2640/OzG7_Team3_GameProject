@@ -15,7 +15,7 @@ public class CustomerWaitForFoodState : IState
     public void Enter()
     {
         stateManager.Renderer.material.color = Color.pink;
-        stateManager.foodReceived += OnFoodReceived;
+        stateManager.foodReceived += StartEat;
     }
 
     public void Execute()
@@ -28,8 +28,14 @@ public class CustomerWaitForFoodState : IState
 
     }
 
-    private void OnFoodReceived()
+    
+
+    private void StartEat()
     {
-        stateManager.ChangeState(new CustomerEatState(stateManager));
+        stateManager.ChangeState(
+                new CustomerEatState(stateManager)
+            );
+
+        return;
     }
 }
