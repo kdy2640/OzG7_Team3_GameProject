@@ -44,6 +44,8 @@ public class AIMove : MonoBehaviour
         {
             graph = FindFirstObjectByType<GraphManager>();
         }
+
+        StopMove();
     }
 
     private void Update()
@@ -75,11 +77,12 @@ public class AIMove : MonoBehaviour
 
     private void MoveToNearWayPoint()
     {
-        if(startWaypoint == null)
+        if(currentPath == null)
         {
-            Debug.Log("startWaypoint = " + startWaypoint);
+            moveState = MoveState.ToDestination;
+            return;
         }
-        
+
         transform.position = Vector3.MoveTowards(
             transform.position,
             startWaypoint.transform.position,
@@ -90,6 +93,7 @@ public class AIMove : MonoBehaviour
         {
             pathIndex = 0;
             moveState = MoveState.FollowingPath;
+            return;
         }
     }
 
@@ -134,14 +138,26 @@ public class AIMove : MonoBehaviour
     public void MoveTo(Transform target)
     {
         destination = target;
+        startWaypoint = graph.GetClosestWaypoint(transform.position);
 
-        
+        if (Vector3.Distance(transform.position, startWaypoint.transform.position)
+            > Vector3.Distance(transform.position, destination.transform.position))
+        {
+            moveState = MoveState.ToDestination;
+            return;
+        }
 
         currentPath = pathManager.GetPath(transform.position, destination.position);
 
         if (currentPath == null)
         {
-            startWaypoint = graph.GetClosestWaypoint(transform.position);
+            Debug.Log("Path not found");
+            return;
+        }
+
+        if (currentPath.Count == 0)
+        {
+            moveState = MoveState.ToDestination;
             return;
         }
 

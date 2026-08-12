@@ -4,25 +4,27 @@ public class ServerMoveToTableState : IState
 {
     private ServerStateManager stateManager;
     private AIMove aiMove;
-    private Transform table;
+    private Transform servePoint;
 
 
     public ServerMoveToTableState(
         ServerStateManager stateManager,
         AIMove aiMove,
-        Transform table)
+        Transform servePoint)
     {
         this.stateManager = stateManager;
         this.aiMove = aiMove;
-        this.table = table;
+        this.servePoint = servePoint;
     }
 
 
     public void Enter()
     {
+        stateManager.IsBusy = true;
+
         aiMove.OnArrived += Arrived;
 
-        aiMove.MoveTo(table);
+        aiMove.MoveTo(servePoint);
     }
 
 

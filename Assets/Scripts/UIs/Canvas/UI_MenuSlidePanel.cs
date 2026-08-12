@@ -70,7 +70,7 @@ public class UI_MenuSlidePanel : MonoBehaviour
             if (card == null || upgradeData == null)
                 continue;
 
-            int level = GameManager.Instance.Upgrade.GetLevel(dishType);
+            int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(dishType);
 
             card.SetData(dishType);
             card.SetStatus(GetStatus(upgradeData, level));

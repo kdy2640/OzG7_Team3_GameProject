@@ -15,6 +15,7 @@ public sealed class HarvestMover : MonoBehaviour
 
     private Transform player;
     private HarvestSpawner spawner;
+    private GridChunkHandler gridChunkHandler;
     private float speed;
     private Vector3 patrolTarget;
     private bool isInitialized;
@@ -22,15 +23,19 @@ public sealed class HarvestMover : MonoBehaviour
     public void Init(
         Transform player,
         float speed,
-        HarvestSpawner spawner)
+        HarvestSpawner spawner,
+        GridChunkHandler gridChunkHandler)
     {
         this.player = player;
         this.speed = Mathf.Max(0f, speed);
         this.spawner = spawner;
+        this.gridChunkHandler = gridChunkHandler;
 
-        if (player == null || spawner == null)
+        if (player == null || spawner == null || gridChunkHandler == null)
         {
-            Debug.LogError("[HarvestMover] Player or HarvestSpawner is not assigned.", this);
+            Debug.LogError(
+                "[HarvestMover] Player, HarvestSpawner, or GridChunkHandler is not assigned.",
+                this);
             enabled = false;
             return;
         }
@@ -118,5 +123,6 @@ public sealed class HarvestMover : MonoBehaviour
 
         transform.position = nextPosition;
         transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
+        gridChunkHandler.UpdateChunk(transform);
     }
 }

@@ -8,7 +8,7 @@ public sealed class TractorController : MonoBehaviour
     [SerializeField] private InputActionAsset inputActions;
     [SerializeField] private string moveActionPath = "Player/Move";
     [SerializeField, Min(0f)] private float moveSpeed = 5f;
-    [SerializeField, Min(0f)] private float rotationLerpSpeed = 10f;
+    [SerializeField, Min(0f)] private float rotationLerpSpeed = 120f;
     [SerializeField] private CropCutter cropCutter;
 
     private Rigidbody body;
@@ -52,9 +52,11 @@ public sealed class TractorController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 direction = new(moveInput.x, 0f, moveInput.y);
+        float throttle = moveInput.y;
+        float steering = moveInput.x;
+        bool isMoving = Mathf.Abs(throttle) > 0.0001f;
 
-        if (direction.sqrMagnitude <= 0.0001f)
+        if (!isMoving && Mathf.Abs(steering) <= 0.0001f)
         {
             return;
         }
@@ -62,18 +64,22 @@ public sealed class TractorController : MonoBehaviour
         float speedMultiplier =
             cropCutter == null ? 1f : cropCutter.MoveSpeedMultiplier;
 
-        if (speedMultiplier > 0f)
+        float steeringAngle =
+            steering
+            * (isMoving ? throttle : 1f)
+            * rotationLerpSpeed
+            * Time.fixedDeltaTime;
+        Quaternion nextRotation =
+            body.rotation * Quaternion.Euler(0f, steeringAngle, 0f);
+        body.MoveRotation(nextRotation);
+
+        if (isMoving && speedMultiplier > 0f)
         {
+            Vector3 forward = nextRotation * Vector3.forward;
             body.MovePosition(
                 body.position
-                + direction * (moveSpeed * speedMultiplier * Time.fixedDeltaTime));
+                + forward
+                * (throttle * moveSpeed * speedMultiplier * Time.fixedDeltaTime));
         }
-
-        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-        Quaternion nextRotation = Quaternion.Lerp(
-            body.rotation,
-            targetRotation,
-            rotationLerpSpeed * Time.fixedDeltaTime);
-        body.MoveRotation(nextRotation);
     }
 }

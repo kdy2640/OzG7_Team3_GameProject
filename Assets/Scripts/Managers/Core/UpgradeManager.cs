@@ -2,12 +2,22 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum UpgradeAvailability
+{
+    Available,
+    InvalidData,
+    MaxLevel,
+    MarketLevelLocked,
+    InsufficientCurrency
+}
+
 public class UpgradeManager : MonoBehaviour
 {
     #region Fields
 
     [SerializeField] private List<UpgradeState> upgradeStates = new();
     [SerializeField] private RuntimeStat runtimeStat;
+    [SerializeField] private RuntimeLevel runtimeLevel = new();
 
     private Dictionary<string, UpgradeState> upgradeStateMap = new();
     private Dictionary<HarvestUpgradeType, UpgradeState> harvestStateMap = new();
@@ -20,6 +30,7 @@ public class UpgradeManager : MonoBehaviour
 
     private Action onUpgradeChanged;
     public RuntimeStat RuntimeStat => runtimeStat;
+    public RuntimeLevel RuntimeLevel => runtimeLevel;
 
     #endregion
 
@@ -29,7 +40,7 @@ public class UpgradeManager : MonoBehaviour
     {
         statCalculator = new StatCalculator();
         BuildUpgradeStateMaps();
-        RecalculateRuntimeStat();
+        RefreshRuntimeData();
     }
 
     private void Start()
@@ -70,50 +81,6 @@ public class UpgradeManager : MonoBehaviour
         return state;
     }
 
-    public int GetLevel(DishType dishType)
-    {
-        int index = (int)dishType;
-        if (index < 0 || index >= (int)DishType.Count)
-            return 0;
-
-        return dishStateMap.TryGetValue(dishType, out UpgradeState state)
-            ? Mathf.Max(0, state.level)
-            : 0;
-    }
-
-    public int GetLevel(HarvestUpgradeType harvestUpgradeType)
-    {
-        int index = (int)harvestUpgradeType;
-        if (index < 0 || index >= (int)HarvestUpgradeType.Count)
-            return 0;
-
-        return harvestStateMap.TryGetValue(harvestUpgradeType, out UpgradeState state)
-            ? Mathf.Max(0, state.level)
-            : 0;
-    }
-
-    public int GetLevel(EmployeeType employeeType)
-    {
-        int index = (int)employeeType;
-        if (index < 0 || index >= (int)EmployeeType.Count)
-            return 0;
-
-        return employeeStateMap.TryGetValue(employeeType, out UpgradeState state)
-            ? Mathf.Max(0, state.level)
-            : 0;
-    }
-
-    public int GetLevel(FacilityType facilityType)
-    {
-        int index = (int)facilityType;
-        if (index < 0 || index >= (int)FacilityType.Count)
-            return 0;
-
-        return facilityStateMap.TryGetValue(facilityType, out UpgradeState state)
-            ? Mathf.Max(0, state.level)
-            : 0;
-    }
-
     public RuntimeStat GetRuntimeStat()
     {
         return runtimeStat;
@@ -123,20 +90,78 @@ public class UpgradeManager : MonoBehaviour
     {
         UpgradeState state = GetState(data);
 
-        if (state == null || IsMaxLevel(state))
+        if (state == null
+            || GetUpgradeAvailability(data, state.level) != UpgradeAvailability.Available)
             return false;
 
         if (!stockManager.TryConsumeCurrency(state.GetCurrentCost()))
             return false;
 
         state.level++;
-        RecalculateRuntimeStat();
+        RefreshRuntimeData();
         return true;
+    }
+
+    public bool CanUpgrade(UpgradeDataSO data)
+    {
+        return GetUpgradeAvailability(data) == UpgradeAvailability.Available;
+    }
+
+    public UpgradeAvailability GetUpgradeAvailability(UpgradeDataSO data)
+    {
+        if (data == null || string.IsNullOrEmpty(data.Id))
+            return UpgradeAvailability.InvalidData;
+
+        int currentUpgradeLevel = 0;
+
+        if (upgradeStateMap.TryGetValue(data.Id, out UpgradeState state))
+        {
+            if (state.data != data)
+                return UpgradeAvailability.InvalidData;
+
+            currentUpgradeLevel = state.level;
+        }
+
+        return GetUpgradeAvailability(data, currentUpgradeLevel);
+    }
+
+    public bool CanUpgradeAtCurrentMarketLevel(UpgradeDataSO data, int currentUpgradeLevel)
+    {
+        if (data == null || GameManager.Instance == null
+            || GameManager.Instance.Market == null)
+        {
+            return false;
+        }
+
+        int targetUpgradeLevel = currentUpgradeLevel + 1;
+        if (!data.TryGetRequiredMarketLevel(targetUpgradeLevel, out int requiredLevel))
+            return false;
+
+        return GameManager.Instance.Market.MarketData.CurrentLevel >= requiredLevel;
     }
 
     public bool IsMaxLevel(UpgradeState state)
     {
         return state != null && state.data != null && state.level >= state.data.MaxLevel;
+    }
+
+    private UpgradeAvailability GetUpgradeAvailability(
+        UpgradeDataSO data,
+        int currentUpgradeLevel)
+    {
+        if (data == null || stockManager == null)
+            return UpgradeAvailability.InvalidData;
+
+        if (currentUpgradeLevel >= data.MaxLevel)
+            return UpgradeAvailability.MaxLevel;
+
+        if (!CanUpgradeAtCurrentMarketLevel(data, currentUpgradeLevel))
+            return UpgradeAvailability.MarketLevelLocked;
+
+        if (!stockManager.CanConsumeCurrency(data.GetCosts(currentUpgradeLevel)))
+            return UpgradeAvailability.InsufficientCurrency;
+
+        return UpgradeAvailability.Available;
     }
 
     public bool HasState(UpgradeDataSO data)
@@ -226,9 +251,35 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    private void RecalculateRuntimeStat()
+    private void RefreshRuntimeData()
     {
         runtimeStat = statCalculator.Calculate(upgradeStates);
+        runtimeLevel = new RuntimeLevel();
+
+        foreach (KeyValuePair<HarvestUpgradeType, UpgradeState> pair in harvestStateMap)
+        {
+            if (pair.Value != null)
+                runtimeLevel.Set(pair.Key, pair.Value.level);
+        }
+
+        foreach (KeyValuePair<DishType, UpgradeState> pair in dishStateMap)
+        {
+            if (pair.Value != null)
+                runtimeLevel.Set(pair.Key, pair.Value.level);
+        }
+
+        foreach (KeyValuePair<EmployeeType, UpgradeState> pair in employeeStateMap)
+        {
+            if (pair.Value != null)
+                runtimeLevel.Set(pair.Key, pair.Value.level);
+        }
+
+        foreach (KeyValuePair<FacilityType, UpgradeState> pair in facilityStateMap)
+        {
+            if (pair.Value != null)
+                runtimeLevel.Set(pair.Key, pair.Value.level);
+        }
+
         onUpgradeChanged?.Invoke();
     }
 
@@ -289,7 +340,7 @@ public class UpgradeManager : MonoBehaviour
         }
 
         BuildUpgradeStateMaps();
-        RecalculateRuntimeStat();
+        RefreshRuntimeData();
     }// 저장된 id로 UpgradeData를 다시 찾고 UpgradeState를 복구한다.
     // 복구 후 런타임 스탯과 스킬 레벨을 다시 반영한다.
 
@@ -299,7 +350,7 @@ public class UpgradeManager : MonoBehaviour
         upgradeStates.Clear();
 
         BuildUpgradeStateMaps();
-        RecalculateRuntimeStat();
+        RefreshRuntimeData();
     }
 
     #endregion

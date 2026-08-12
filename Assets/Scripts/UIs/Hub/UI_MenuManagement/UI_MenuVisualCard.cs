@@ -93,7 +93,7 @@ public class UI_MenuVisualCard : MonoBehaviour
             return;
         }
 
-        int level = GameManager.Instance.Upgrade.GetLevel(dishType);
+        int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(dishType);
 
         menuIcon.sprite = data.Icon;
 

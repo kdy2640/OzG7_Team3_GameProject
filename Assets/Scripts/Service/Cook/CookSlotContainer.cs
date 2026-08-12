@@ -4,6 +4,7 @@ using UnityEngine;
 public class CookSlotContainer : MonoBehaviour
 {
     [SerializeField] private CookSlot CookSlotPrefab;
+    [SerializeField] private KitchenSlotHandler kitchenSlotHandler;
 
     private bool initialized;
 
@@ -20,7 +21,7 @@ public class CookSlotContainer : MonoBehaviour
         foreach (DishType dish in GameManager.Instance.Market.MarketData.SelectedDishes)
         {
             CookSlot slot = Instantiate(CookSlotPrefab, transform);
-            slot.Initialize(dish);
+            slot.Initialize(dish, kitchenSlotHandler);
         }
 
     }
@@ -38,5 +39,10 @@ public class CookSlotContainer : MonoBehaviour
     {
         ClearSlots();
         CreateCookSlot();
+    }
+
+    private void OnDisable()
+    {
+        RefreshSlots();
     }
 }

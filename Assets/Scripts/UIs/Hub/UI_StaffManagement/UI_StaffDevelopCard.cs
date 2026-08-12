@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Ä«µå ÇÑ ÀåÀÇ µ¥ÀÌÅÍ Á¶È¸, UI Ç¥½Ã, Å¬¸¯ Àü´ÞÀ» ´ã´çÇÕ´Ï´Ù.
+// Ä«ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¸, UI Ç¥ï¿½ï¿½, Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 public sealed class UI_StaffDevelopCard : MonoBehaviour
 {
     private enum StaffCardState
@@ -46,8 +46,8 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         onSelected = callback;
     }
 
-    // ListPanelÀÌ È£ÃâÇÕ´Ï´Ù.
-    // EmployeeData°¡ ÀÖÀ¸¸é true, ¾øÀ¸¸é false¸¦ ¹ÝÈ¯ÇÕ´Ï´Ù.
+    // ListPanelï¿½ï¿½ È£ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+    // EmployeeDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ true, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ falseï¿½ï¿½ ï¿½ï¿½È¯ï¿½Õ´Ï´ï¿½.
     public bool Refresh()
     {
         if (!CreateInfoData(out int level, out StaffCardState state))
@@ -57,7 +57,7 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         return true;
     }
 
-    // Ä«µå Ç¥½Ã¿ë ÃÖ¼Ò Á¤º¸¸¸ Á÷Á¢ »ý¼ºÇÕ´Ï´Ù.
+    // Ä«ï¿½ï¿½ Ç¥ï¿½Ã¿ï¿½ ï¿½Ö¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
     private bool CreateInfoData(out int level, out StaffCardState state)
     {
         level = 0;
@@ -68,29 +68,22 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
         if (!EmployeeDataDB.TryGetData(employeeType, out EmployeeDataSO employeeData))
         {
-            Debug.LogWarning($"EmployeeData°¡ ¾ø½À´Ï´Ù: {employeeType}");
+            Debug.LogWarning($"EmployeeDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½: {employeeType}");
             return false;
         }
 
         UpgradeManager upgrade = GameManager.Instance.Upgrade;
-        StockManager stockManager = GameManager.Instance.StockManager;
 
-        level = upgrade.GetLevel(employeeType);
+        level = upgrade.RuntimeLevel.Get(employeeType);
 
         EmployeeUpgradeDataSO upgradeData =
             UpgradeDataDB.GetData(employeeData.Id) as EmployeeUpgradeDataSO;
 
-        bool canPay = false;
-
-        if (upgradeData != null && level < employeeData.MaxLevel)
-        {
-            int cost = upgradeData.GetCosts(level);
-            canPay = stockManager.CanConsumeCurrency(cost);
-        }
+        bool canUpgrade = upgrade.CanUpgrade(upgradeData);
 
         if (level == 0)
         {
-            state = canPay
+            state = canUpgrade
                 ? StaffCardState.CanRecruit : StaffCardState.Locked;
         }
         else if (level >= employeeData.MaxLevel)
@@ -99,7 +92,7 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         }
         else
         {
-            state = canPay
+            state = canUpgrade
                 ? StaffCardState.CanUpgrade : StaffCardState.Normal;
         }
 

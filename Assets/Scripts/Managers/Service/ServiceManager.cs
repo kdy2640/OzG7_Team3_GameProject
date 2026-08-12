@@ -8,10 +8,16 @@ public class ServiceManager : MonoBehaviour
 
     private ServiceEventManager eventManager;
     private Action<float> OnTick;
-    private float timer;
+    [SerializeField] private float timer;
+    [SerializeField] private bool isPause;
     private bool isRunning = false;
 
     public float Timer { get { return timer; } }
+    public bool IsPause
+    {
+        get => isPause;
+        set => isPause = value;
+    }
     public bool IsRunning => isRunning;
     public ServiceEventManager Events => eventManager;
 
@@ -36,7 +42,7 @@ public class ServiceManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isRunning)
+        if (!isRunning || isPause)
             return;
 
         timer -= Time.deltaTime;

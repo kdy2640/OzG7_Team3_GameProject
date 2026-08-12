@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class GameSaveData
@@ -65,12 +66,15 @@ public class StockSaveData
 }
 
 [Serializable]
-public class MarketSaveData
+public class MarketSaveData : ISerializationCallbackReceiver
 {
     public int currentBusinessDay;
+    public MarketPhase currentPhase;
     public int currentLevel;
-    public int currentEXP;
+    public int totalIncome;
     public List<DishType> selectedDishes = new();
+
+    [SerializeField, HideInInspector] private int currentEXP;
 
     public MarketSaveData()
     {
@@ -79,5 +83,15 @@ public class MarketSaveData
     public MarketSaveData(int currentBusinessDay)
     {
         this.currentBusinessDay = currentBusinessDay;
+    }
+
+    void ISerializationCallbackReceiver.OnBeforeSerialize()
+    {
+    }
+
+    void ISerializationCallbackReceiver.OnAfterDeserialize()
+    {
+        if (totalIncome == 0 && currentEXP > 0)
+            totalIncome = currentEXP;
     }
 }

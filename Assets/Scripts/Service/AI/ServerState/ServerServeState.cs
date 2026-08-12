@@ -12,7 +12,8 @@ public class ServerServeState : IState
 
     public void Enter()
     {
-        timer = 5.0f;
+        timer = 3.0f;
+        stateManager.GiveFood();
     }
 
     public void Execute()
