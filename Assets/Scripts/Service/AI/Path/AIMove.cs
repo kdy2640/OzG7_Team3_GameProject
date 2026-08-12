@@ -25,7 +25,8 @@ public class AIMove : MonoBehaviour
     [SerializeField] private GraphManager graph;
 
 
-    
+    private Vector3 direction;
+
     private Transform destination;
 
     private List<Waypoint> currentPath;
@@ -55,6 +56,8 @@ public class AIMove : MonoBehaviour
 
     private void Move()
     {
+        
+
         switch (moveState)
         {
             case MoveState.ToStartWaypoint:
@@ -83,6 +86,8 @@ public class AIMove : MonoBehaviour
             return;
         }
 
+        SetDirection(transform.position, startWaypoint.transform.position);
+
         transform.position = Vector3.MoveTowards(
             transform.position,
             startWaypoint.transform.position,
@@ -107,6 +112,9 @@ public class AIMove : MonoBehaviour
 
         Waypoint target = currentPath[pathIndex];
 
+
+        SetDirection(transform.position, currentPath[pathIndex].transform.position);
+
         transform.position = Vector3.MoveTowards(
             transform.position,
             currentPath[pathIndex].transform.position,
@@ -120,6 +128,8 @@ public class AIMove : MonoBehaviour
     }
     private void MoveToDestination()
     {
+        SetDirection(transform.position, destination.position);
+
         transform.position = Vector3.MoveTowards(
             transform.position,
             destination.position,
@@ -186,6 +196,23 @@ public class AIMove : MonoBehaviour
                 currentPath[i].transform.position,
                 currentPath[i + 1].transform.position
             );
+        }
+    }
+
+    private void SetDirection(Vector3 startPos, Vector3 goalPos)
+    {
+        direction = (goalPos - startPos).normalized;
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+    }
+    public void SetDirection(Vector3 dir)
+    {
+        direction = dir.normalized;
+        if (direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
         }
     }
 }

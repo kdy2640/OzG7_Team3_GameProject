@@ -4,7 +4,6 @@ public class CustomerOrderState : IState
 {
     private CustomerStateManager stateManager;
     private float timer;
-    private bool receiveOrder;
 
     
 
@@ -15,10 +14,14 @@ public class CustomerOrderState : IState
 
     public void Enter()
     {
+        stateManager.AiMove.SetDirection(
+            (stateManager.CurrentTable.transform.position - stateManager.transform.position)
+            .normalized
+            );
+        stateManager.Animator.SetBool("IsTyping", true);
         stateManager.Renderer.material.color = Color.orange;
 
         timer = 5.0f;
-        receiveOrder = false;
 
         stateManager.CreateOrder();
         stateManager.OrderButton.SetOrder(stateManager.Order);
@@ -49,14 +52,13 @@ public class CustomerOrderState : IState
 
     public void Exit()
     {
-        Debug.Log("주문 종료");
+        stateManager.Animator.SetBool("IsTyping", false);
         stateManager.OrderButton.OnClicked -= ReceiveOrder;
         stateManager.OrderButton.gameObject.SetActive(false);
     }
 
     private void ReceiveOrder()
     {
-        receiveOrder = true;
         stateManager.OrderButton.gameObject.SetActive(false);
         stateManager.ChangeState(new CustomerWaitForFoodState(stateManager));
     }

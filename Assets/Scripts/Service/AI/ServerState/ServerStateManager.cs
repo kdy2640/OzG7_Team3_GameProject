@@ -8,6 +8,8 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private Transform kitchen;
     [SerializeField] private Transform waitPoint;
 
+    [SerializeField] public Animator animator;
+
     private DishType dish;
 
     private Renderer renderer;
@@ -21,7 +23,10 @@ public class ServerStateManager : MonoBehaviour
     public Transform ServePoint => servePoint;
     public Transform Kitchen => kitchen;
     public Transform WaitPoint => waitPoint;
+    public CustomerStateManager Customer => customer;
     public DishType Dish => dish;
+    
+
 
     [SerializeField] private IState currentState;
 
@@ -75,6 +80,16 @@ public class ServerStateManager : MonoBehaviour
     {
         customer.foodReceived?.Invoke();
     }
+
+    public void AnimSetIdle()
+    {
+        animator.SetBool("IsWalking", false);
+        animator.SetBool("IsTyping", false);
+        animator.SetBool("IsServing", false);
+        animator.SetBool("IsRunning", false);
+    }
+
+
 
     private void OnDisable()
     {

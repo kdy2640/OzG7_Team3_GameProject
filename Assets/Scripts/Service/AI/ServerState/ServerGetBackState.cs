@@ -13,6 +13,8 @@ public class ServerGetBackState : IState
 
     public void Enter()
     {
+        stateManager.animator.SetBool("IsWalking", true);
+
         stateManager.IsBusy = false;
 
         stateManager.Renderer.material.color = Color.black;
@@ -33,6 +35,7 @@ public class ServerGetBackState : IState
 
     public void Exit()
     {
+        stateManager.animator.SetBool("IsWalking", false);
         stateManager.AiMove.OnArrived -= ArrivedHome;
     }
 

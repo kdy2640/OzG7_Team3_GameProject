@@ -20,6 +20,8 @@ public class CustomerMoveToTableState : IState
 
     public void Enter()
     {
+        stateManager.Animator.SetBool("IsWalking", true);
+
         stateManager.Renderer.material.color = Color.red;
         aiMove.OnArrived += Arrived;
 
@@ -35,6 +37,7 @@ public class CustomerMoveToTableState : IState
 
     public void Exit()
     {
+        stateManager.Animator.SetBool("IsWalking", false);
         aiMove.OnArrived -= Arrived;
     }
 
