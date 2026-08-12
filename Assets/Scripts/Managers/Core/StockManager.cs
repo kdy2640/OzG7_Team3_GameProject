@@ -21,7 +21,7 @@ public class StockManager : MonoBehaviour
     #region Currency
 
     // 재화를 획득했을 때 사용.
-    public void AddCurrency(float amount)
+    public void AddCurrency(int amount)
     {
         if (!IsValidCurrencyAmount(amount))
         {
@@ -29,18 +29,18 @@ public class StockManager : MonoBehaviour
             return;
         }
 
-        float addedCurrency = (float)Math.Min((double)stockData.currency + amount, float.MaxValue);
+        int addedCurrency = (int)Math.Min((long)stockData.currency + amount, int.MaxValue);
         SetCurrency(addedCurrency);
     }
 
     // 비용을 지불할 수 있는지 확인할 때 사용.
-    public bool CanConsumeCurrency(float amount)
+    public bool CanConsumeCurrency(int amount)
     {
         return IsValidCurrencyAmount(amount) && stockData.currency >= amount;
     }
 
     // 비용을 확인하고 실제로 지불할 때 사용.
-    public bool TryConsumeCurrency(float amount)
+    public bool TryConsumeCurrency(int amount)
     {
         if (!CanConsumeCurrency(amount))
             return false;
@@ -49,9 +49,9 @@ public class StockManager : MonoBehaviour
         return true;
     }
 
-    private void SetCurrency(float amount, bool forceNotify = false)
+    private void SetCurrency(int amount, bool forceNotify = false)
     {
-        float clampedAmount = Mathf.Max(0f, amount);
+        int clampedAmount = Mathf.Max(0, amount);
 
         if (!forceNotify && stockData.currency == clampedAmount)
             return;
@@ -60,9 +60,9 @@ public class StockManager : MonoBehaviour
         NotifyStockDataChanged();
     }
 
-    private static bool IsValidCurrencyAmount(float amount)
+    private static bool IsValidCurrencyAmount(int amount)
     {
-        return amount >= 0f && !float.IsNaN(amount) && !float.IsInfinity(amount);
+        return amount >= 0;
     }
 
     #endregion

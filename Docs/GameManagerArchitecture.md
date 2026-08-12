@@ -64,10 +64,10 @@ GameManager
 
 ### 재화 처리
 
-- `AddCurrency`는 0 이상의 유한한 값만 받는다.
+- `AddCurrency`는 0 이상의 정수만 받는다.
 - `CanConsumeCurrency`는 잔액을 변경하지 않고 지불 가능 여부를 검사한다.
 - `TryConsumeCurrency`는 검사에 성공한 경우에만 재화를 차감한다.
-- 재화는 0보다 작아지지 않으며 `float.MaxValue`를 넘지 않는다.
+- 재화는 0보다 작아지지 않으며 `int.MaxValue`를 넘지 않는다.
 
 ### 식재료 처리
 
