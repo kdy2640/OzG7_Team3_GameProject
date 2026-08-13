@@ -32,7 +32,7 @@ public class DishDataSO : ScriptableObject
     [SerializeField, TextArea] private string description;
     [SerializeField] private List<TasteType> tastes = new();
     [SerializeField] private List<GroceryAmount> ingredients = new();
-    [SerializeField, Min(0)] private float cost;
+    [SerializeField, Min(0)] private int cost;
     [SerializeField] private Sprite icon;
 
     public string Id => id;
@@ -41,6 +41,6 @@ public class DishDataSO : ScriptableObject
     public string Description => description;
     public List<TasteType> Tastes => tastes;
     public List<GroceryAmount> Ingredients => ingredients;
-    public float Cost => cost;
+    public int Cost => cost;
     public Sprite Icon => icon;
 }

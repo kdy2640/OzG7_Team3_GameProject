@@ -60,7 +60,7 @@ public class AudioSaveData
 [Serializable]
 public class StockSaveData
 {
-    public float currency;
+    public int currency;
     public List<GroceryAmount> groceries = new();
     public List<DishAmount> dishes = new();
 }

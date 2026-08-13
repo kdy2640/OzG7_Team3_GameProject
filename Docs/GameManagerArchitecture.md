@@ -44,8 +44,8 @@ GameManager
 | `StockManager` | 재화와 재고 |
 | `CookingManager` | 조리 가능 수량 계산과 조리 실행 |
 | `Scene` | 씬 전환 |
-| `Upgrade` | 업그레이드 상태와 런타임 스탯 |
-| `Market` | 영업일과 직원·시설 상태 |
+| `Upgrade` | 업그레이드 상태와 런타임 레벨·스탯 |
+| `Market` | 영업일·단계·시장 레벨·레벨 미션 |
 | `Harvest` | 수확 루프 |
 | `Service` | 영업 루프 |
 | `AudioManager` | BGM과 SFX |
@@ -64,10 +64,10 @@ GameManager
 
 ### 재화 처리
 
-- `AddCurrency`는 0 이상의 유한한 값만 받는다.
+- `AddCurrency`는 0 이상의 정수만 받는다.
 - `CanConsumeCurrency`는 잔액을 변경하지 않고 지불 가능 여부를 검사한다.
 - `TryConsumeCurrency`는 검사에 성공한 경우에만 재화를 차감한다.
-- 재화는 0보다 작아지지 않으며 `float.MaxValue`를 넘지 않는다.
+- 재화는 0보다 작아지지 않으며 `int.MaxValue`를 넘지 않는다.
 
 ### 식재료 처리
 
@@ -79,7 +79,7 @@ GameManager
 
 ### 요리 처리
 
-요리 재고도 식재료와 같은 방식으로 검사하고 소비한다. 요리를 추가하는 메서드는 private이며 `CookingManager`에 델리게이트로 전달된다. 외부 시스템이 완성 요리를 직접 추가하는 경로는 제공하지 않는다.
+요리 재고도 식재료와 같은 방식으로 검사하고 소비한다. `StockManager`에서 요리를 추가하는 메서드는 private이며 `CookingManager`에 델리게이트로 전달된다. 외부에서는 `CookingManager.AddCookedDish`를 통해서만 완성 요리를 추가한다.
 
 ### 변경 알림과 저장
 
@@ -97,19 +97,20 @@ GameManager
 - 같은 식재료가 레시피에 여러 번 있으면 요구 수량을 합산한다.
 - 레시피가 없거나 재료 목록이 비어 있으면 조리 가능 수량은 0이다.
 - `CanCook`는 최대 조리 수량이 1 이상인지 반환한다.
-- `TryCook`는 레시피의 모든 식재료를 소비한 뒤 해당 요리를 1개 추가한다.
+- `TryCook`는 레시피의 모든 식재료를 소비하고 조리 시작 성공 여부만 반환한다.
+- `AddCookedDish`는 조리가 완료된 시점에 해당 요리를 1개 재고에 추가한다.
 
-조리 관련 기능은 `GameManager.Instance.CookingManager`를 통해 호출한다.
+조리 관련 기능은 `GameManager.Instance.CookingManager`를 통해 호출한다. 현재 영업 씬은 `TryCook`로 재료를 먼저 차감하고, 조리 연출이 끝났을 때 `AddCookedDish`를 호출하는 2단계 흐름을 사용한다.
 
 ## UpgradeManager
 
 소스: [`UpgradeManager.cs`](../Assets/Scripts/Managers/Core/UpgradeManager.cs)
 
-`UpgradeManager`는 플레이어가 획득한 업그레이드 레벨과 계산된 `RuntimeStat`을 관리한다.
+`UpgradeManager`는 플레이어가 획득한 업그레이드 레벨, 타입별 런타임 레벨, 계산된 런타임 스탯을 관리한다.
 
 ### 업그레이드 상태
 
-직렬화된 `upgradeStates` 목록은 저장 대상이 되는 상태 원본이다. `upgradeStateMap`은 업그레이드 ID로 상태를 빠르게 찾기 위한 런타임 인덱스다.
+직렬화된 `upgradeStates` 목록은 저장 대상이 되는 상태 원본이다. `upgradeStateMap`은 업그레이드 ID로 상태를 찾고, 타입별 맵은 `HarvestUpgradeType`, `DishType`, `EmployeeType`, `FacilityType`으로 상태를 찾는다.
 
 `Awake`에서 null 데이터, 빈 ID, 중복 ID를 제거한 뒤 맵을 구성한다. `GetState`에 아직 등록되지 않은 데이터가 전달되면 레벨 0 상태를 새로 만든다.
 
@@ -118,24 +119,26 @@ GameManager
 `TryUpgrade`는 다음 순서로 처리한다.
 
 1. 업그레이드 상태를 찾거나 생성한다.
-2. 현재 레벨이 `maxLevel`에 도달했는지 검사한다.
+2. `GetUpgradeAvailability`로 최대 레벨, 시장 레벨 조건, 보유 재화를 검사한다.
 3. `StockManager`에서 현재 비용을 차감한다.
 4. 레벨을 1 올린다.
-5. 전체 `RuntimeStat`을 다시 계산한다.
-6. 런타임 스탯 구독자에게 새 값을 전달한다.
+5. `RuntimeStat`과 `RuntimeLevel`을 다시 계산한다.
+6. `SubscribeUpgradeChanged`로 등록된 구독자에게 변경을 알린다.
 
 비용은 `baseCost * costMultiplier^level`을 반올림한 값이다.
+다음 레벨의 시장 레벨 제한은 `UpgradeDataSO.requiredMarketLevel`의 `targetUpgradeLevel - 1` 인덱스를 사용한다. 조건 목록에 해당 레벨이 없으면 구매할 수 없다.
 
-### RuntimeStat
+`UpgradeAvailability`는 구매 가능 여부를 `Available`, `InvalidData`, `MaxLevel`, `MarketLevelLocked`, `InsufficientCurrency`로 구분한다.
 
-`StatCalculator`는 모든 업그레이드 상태를 순회하며 타입별 `UpgradeDataSO.ApplyTo`를 실행한다.
+### RuntimeStat과 RuntimeLevel
 
-- `HarvestRuntimeStat`은 톱 크기, 톱 성능, 트럭 속도, 트럭 용량을 보관한다.
-- `DishRuntimeStat`은 요리 종류별 레벨을 보관한다.
-- `EmployeeRuntimeStat`은 직원 종류별 레벨을 보관한다.
-- `FacilityRuntimeStat`은 시설 종류별 레벨을 보관한다.
+`StatCalculator`는 모든 업그레이드 상태를 순회해 `RuntimeStat`을 새로 만든다.
 
-`MarketManager`는 런타임 스탯 갱신 이벤트를 구독해 직원과 시설 레벨을 갱신한다.
+- `RuntimeStat.Harvest`는 `HarvestUpgradeDataSO`의 변경치를 누적한다. 현재 항목은 톱 크기·개수·속도·날카로움과 트럭 속도·용량·연료다.
+- `RuntimeStat.Service`는 `FacilityUpgradeDataSO`의 영업 스탯 변경치를 누적한다. 현재 항목은 `CustomerCount`다.
+- 변경치는 `Add`, `Multiply`, `Max` 방식을 사용하고, 설정값에 현재 업그레이드 레벨을 곱해 적용한다.
+
+`RuntimeLevel`은 스탯 계산과 별개로 수확·요리·직원·시설 타입별 현재 업그레이드 레벨을 보관한다. UI와 레벨 미션은 `RuntimeLevel.Get(...)`으로 레벨을 조회한다.
 
 ### 저장
 
@@ -145,20 +148,37 @@ GameManager
 
 소스: [`MarketManager.cs`](../Assets/Scripts/Managers/Core/MarketManager.cs)
 
-`MarketManager`는 현재 영업일과 시장에서 사용하는 직원·시설 목록을 관리한다.
+`MarketManager`는 영업일 진행 상태, 시장 레벨 데이터, 오늘의 맛, 레벨 미션을 관리한다.
 
-`Refresh`는 기존 목록을 비운 뒤 다음 데이터로 다시 구성한다.
+### MarketData
 
-- 직원 기본 정보: `EmployeeDataDB`
-- 직원 현재 레벨: `RuntimeStat.Employee`
-- 시설 기본 정보: `FacilityDataDB`
-- 시설 현재 레벨: `RuntimeStat.Facility`
+실제 진행 상태는 [`MarketData.cs`](../Assets/Scripts/Markets/MarketData.cs)에 보관한다.
 
-직원과 시설 목록은 SO와 업그레이드 상태에서 만든 런타임 데이터다. `EmployeeBase`와 `FacilityBase`에는 ID, 표시 이름, 현재 레벨이 들어간다.
+- `CurrentBusinessDay`: 현재 영업일
+- `CurrentPhase`: `Morning`, `Afternoon`, `Night` 중 현재 단계
+- `CurrentLevel`: 현재 시장 레벨
+- `TotalIncome`: 누적 수입
+- `SelectedDishes`: 다음 영업에서 사용할 선택 메뉴의 읽기 전용 목록
 
-`Start`에서 `UpgradeManager`의 런타임 스탯 갱신 이벤트를 구독하고 목록을 생성한다. 이벤트가 발생하면 기존 객체의 레벨을 갱신한다. `OnDestroy`에서 구독을 해제한다.
+`SelectDish`와 `DeselectDish`가 메뉴 목록을 변경한다. 각 프로퍼티와 메뉴가 실제로 변경되면 `MarketData` 내부 이벤트가 발생하고, `MarketManager`가 이를 `SubscribeMarketDataChanged`의 구독자에게 전달한다.
 
-현재 `MarketSaveData`에는 `currentBusinessDay`만 저장한다. 직원과 시설 레벨은 업그레이드 저장 데이터로 복원한 뒤 `Refresh`에서 다시 가져온다.
+`MoveToNextPhase`는 `Morning → Afternoon → Night → 다음 영업일 Morning`으로 진행한다. `TodayTaste`는 `CurrentBusinessDay % TasteType.Count`로 결정한다.
+
+### 시장 레벨과 미션
+
+`LevelRefresh`는 현재 시장 레벨을 기준으로 다음 데이터를 교체한다.
+
+- `LevelDataDB`: CSV에서 메뉴 선택 제한 `MaxDishLimit`과 목표 수입 `IncomeGoal`을 읽는다.
+- `LevelMissionGroupDB`: 현재 레벨의 `LevelMissionGroupSO`를 읽는다.
+- `LevelMissionChecker.CurrentStage`: 미션을 앞에서부터 검사해 첫 미달성 인덱스를 반환하며, 전부 달성했으면 미션 개수를 반환한다.
+
+현재 미션 조건은 누적 수입과 요리·시설·직원·수확 업그레이드 레벨을 지원한다. 업그레이드 조건은 `UpgradeManager.RuntimeLevel`을 조회한다.
+
+`LevelRefresh`는 `Start`, 시장 저장 데이터 로드, 시장 저장 데이터 리셋 시점에 호출된다. `MarketData.CurrentLevel`을 직접 변경하는 것만으로는 `LevelData`와 미션 그룹이 자동 갱신되지 않는다.
+
+### 저장
+
+`MarketSaveData`는 영업일, 현재 단계, 시장 레벨, 누적 수입, 선택 메뉴를 저장한다. 기존 `currentEXP` 저장값은 `totalIncome`이 0인 경우 누적 수입으로 이관한다.
 
 ## SceneController
 
@@ -191,7 +211,7 @@ GameManager
 - `StartLoop`는 현재 씬이 `Harvest`일 때 루프를 시작하고 `LoopStarted` 이벤트를 발생시킨다.
 - `Update`는 실행 중인 타이머를 감소시키고 매 프레임 남은 시간을 전달한다.
 - 타이머가 0 이하가 되면 `EndLoop`를 호출한다.
-- `EndLoop`는 실행 상태를 해제하고 `LoopEnded` 이벤트를 발생시킨다.
+- `EndLoop`는 실행 상태를 해제하고 `LoopEnded` 이벤트를 발생시킨 뒤 `Hub`로 전환한다.
 - `Restart`는 `SceneController`에 수확 씬 재시작을 요청한다.
 
 시간 표시는 `SubscribeTick`으로 연결한다. 게임 규칙 객체는 `HarvestEventManager`의 이벤트를 구독한다.
@@ -204,10 +224,10 @@ GameManager
 
 `ServiceManager`는 영업 씬의 제한 시간과 루프 상태를 관리한다. 타이머 처리와 공개 API는 `HarvestManager`와 같은 형태다.
 
-- `PrepareReveal`은 타이머를 기본 20초로 초기화한다.
+- `PrepareReveal`은 타이머를 기본 20초로 초기화하고 구독자에게 시간을 전달한다.
 - `StartLoop`는 현재 씬이 `Service`일 때 루프를 시작한다.
 - `Update`는 남은 시간을 갱신한다.
-- `EndLoop`는 루프를 종료하고 `LoopEnded` 이벤트를 발생시킨다.
+- `EndLoop`는 루프를 종료하고 `LoopEnded` 이벤트를 발생시킨 뒤 `Hub`로 전환한다.
 - `Restart`는 영업 씬 재시작을 요청한다.
 
 영업 규칙 객체는 `ServiceEventManager`를 통해 이벤트를 주고받는다. `BeforeLoopStarted`, `Pause`, `UnPause` 이벤트는 현재 발생하지 않는다.
@@ -270,9 +290,9 @@ GameManager
 | 튜토리얼 완료 여부 | `TutorialManager` |
 | 오디오 볼륨 | `AudioManager` |
 | 재화와 재고 | `StockManager` |
-| 현재 영업일 | `MarketManager` |
+| 영업일·단계·시장 레벨·누적 수입·선택 메뉴 | `MarketManager` |
 
-불러오기는 업그레이드, 튜토리얼, 오디오, 재고, 시장 순서로 적용한다. 시장 목록은 먼저 복원된 업그레이드 런타임 스탯을 사용한다.
+불러오기는 업그레이드, 튜토리얼, 오디오, 재고, 시장 순서로 적용한다. 업그레이드 로드 시 `RuntimeStat`과 `RuntimeLevel`이 먼저 재계산되고, 시장 로드 시 현재 시장 레벨의 `LevelData`와 미션 그룹이 갱신된다.
 
 `ResetSave`는 각 매니저를 기본 상태로 초기화한 뒤 저장 파일을 삭제한다. `DeleteSave`는 파일만 삭제하며 현재 메모리 상태는 유지한다.
 
@@ -283,7 +303,8 @@ Unity는 같은 프레임에 실행되는 서로 다른 컴포넌트의 `Awake`�
 ### Awake
 
 - `GameManager`: 싱글턴 등록과 매니저 참조 수집
-- `UpgradeManager`: 상태 맵과 최초 `RuntimeStat` 계산
+- `UpgradeManager`: 상태 맵과 최초 `RuntimeStat`·`RuntimeLevel` 계산
+- `MarketManager`: `MarketData` 이벤트 연결과 레벨 미션 검사기 준비
 - `HarvestManager`, `ServiceManager`: 이벤트 관리자 생성
 - `AudioManager`: 오디오 소스와 클립 딕셔너리 준비
 - `TutorialManager`: 진행 상태 초기화
@@ -292,7 +313,7 @@ Unity는 같은 프레임에 실행되는 서로 다른 컴포넌트의 `Awake`�
 ### Start
 
 - `UpgradeManager`: `StockManager` 참조 확보
-- `MarketManager`: 업그레이드 이벤트 구독과 목록 생성
+- `MarketManager`: 현재 시장 레벨의 `LevelData`와 미션 그룹 로드
 - `SaveManager`: 저장 파일 불러오기
 
 다른 매니저가 준비됐다고 가정하는 로직은 `Start` 이후에 실행한다. 초기화 순서가 반드시 필요한 기능은 Script Execution Order에 기대지 말고 호출 관계를 코드에 드러낸다.
@@ -302,9 +323,10 @@ Unity는 같은 프레임에 실행되는 서로 다른 컴포넌트의 `Awake`�
 - 런타임 매니저는 `GameManager.Instance`에서 가져온다.
 - 재고 조회는 `StockManager.StockData`의 읽기 전용 인터페이스를 사용한다.
 - 재고 변경은 `StockManager`의 공개 메서드로 요청한다.
-- 조리는 `GameManager.Instance.CookingManager`를 사용한다.
+- 조리는 `GameManager.Instance.CookingManager`의 `TryCook`로 재료를 소비하고, 완료 시 `AddCookedDish`로 결과물을 추가한다.
 - 씬 전환은 `SceneController.ChangeScene` 또는 `RestartScene`으로 요청한다.
-- 업그레이드 결과를 사용하는 객체는 `SubscribeRuntimeStatRefresh`를 구독하고 파괴될 때 해제한다.
+- 업그레이드 변경을 표시하는 객체는 `SubscribeUpgradeChanged`를 구독하고 사용이 끝나면 `UnsubscribeUpgradeChanged`로 해제한다.
+- 시장 상태를 표시하는 객체는 `SubscribeMarketDataChanged`를 구독하고 사용이 끝나면 `UnsubscribeMarketDataChanged`로 해제한다.
 - 재고 변경을 표시하는 UI는 재고 변경 이벤트를 구독하고 비활성화 또는 파괴 시점에 해제한다.
 - 수확과 영업 규칙은 각 루프 매니저의 이벤트 관리자를 사용한다.
 
@@ -312,9 +334,12 @@ Unity는 같은 프레임에 실행되는 서로 다른 컴포넌트의 `Awake`�
 
 - `GameManager.Awake`는 필요한 컴포넌트가 프리팹에 존재한다고 가정한다. 특히 `StockManager`가 없으면 `CookingManager` 참조를 가져오는 과정에서 예외가 발생한다.
 - `GetComponentInChildren`은 비활성 자식 오브젝트를 기본적으로 찾지 않는다. Utility, Harvest, Service 매니저 오브젝트는 GameManager 초기화 시 활성 상태여야 한다.
+- `UpgradeManager`의 `stockManager`는 `Start`에서 할당된다. 그보다 먼저 `TryUpgrade`나 구매 가능 검사를 호출하면 `InvalidData`로 처리될 수 있다.
 - 업그레이드 ID는 저장 파일의 키다. ID 중복은 허용되지 않으며 이름 변경 시 마이그레이션 항목이 필요하다.
 - `UpgradeDataDB`는 `Resources/SOs/UpgradeDatas` 아래의 유형별 폴더를 읽는다. 폴더 이동 시 로드 경로를 함께 수정한다.
-- `EmployeeDataDB.Count`와 `FacilityDataDB.Count`는 등록된 SO 개수다. `MarketManager.Refresh`는 enum 값이 0부터 이 개수까지 연속으로 존재한다고 가정한다.
+- `MarketData.CurrentLevel`을 변경하면 시장 변경 알림은 발생하지만 `LevelData`와 `LevelMissionGroup`은 자동 교체되지 않는다. 레벨 변경 흐름에서 `LevelRefresh`를 함께 호출해야 한다.
+- `TodayTaste`는 `TasteType.Count`가 0보다 크다고 가정한다.
+- `TryCook`는 재료를 소비해도 요리 재고를 즉시 추가하지 않는다. 조리 완료 흐름에서 `AddCookedDish`가 누락되면 재료만 소모된다.
 - 새 `SceneType`을 추가하면 `SceneController`의 딕셔너리, `SceneBase` 구현체, Build Settings를 함께 갱신한다.
 - 저장 파일 읽기와 쓰기의 예외 처리는 현재 구현되어 있지 않다. 손상된 JSON이나 파일 시스템 오류가 발생하면 호출이 중단될 수 있다.
 - 자동 저장은 애플리케이션 종료 시점에만 실행된다. 진행 중 저장이 필요한 기능은 `SaveGame`을 직접 호출해야 한다.

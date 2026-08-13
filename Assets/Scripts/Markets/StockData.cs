@@ -41,7 +41,7 @@ public class DishAmount
 public interface IReadableStockData
 {
     // 현재 재화를 표시할 때 사용.
-    float Currency { get; }
+    int Currency { get; }
 
     // 현재 식재료 재고를 표시할 때 사용.
     IReadOnlyList<GroceryAmount> Groceries { get; }
@@ -53,11 +53,11 @@ public interface IReadableStockData
 [Serializable]
 public class StockData : IReadableStockData
 {
-    [Min(0)] public float currency;
+    [Min(0)] public int currency;
     public List<GroceryAmount> groceries = new();
     public List<DishAmount> dishes = new();
 
-    public float Currency => currency;
+    public int Currency => currency;
     public IReadOnlyList<GroceryAmount> Groceries => groceries;
     public IReadOnlyList<DishAmount> Dishes => dishes;
 }
