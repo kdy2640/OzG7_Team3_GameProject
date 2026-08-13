@@ -9,10 +9,12 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private Transform exitPoint;
     [SerializeField] private TableManager tableManager;
     [SerializeField] private OrderButton orderButton;
+    [SerializeField] private Animator animator;
     public Renderer Renderer => gameObject.GetComponent<Renderer>();
     public AIMove AiMove => aiMove;
     public Transform ExitPoint => exitPoint;
     public OrderButton OrderButton => orderButton;
+    public Animator Animator => animator;
 
     private Table currentTable;
     private Transform seat;
@@ -35,7 +37,6 @@ public class CustomerStateManager : MonoBehaviour
         {
             tableManager = FindFirstObjectByType<TableManager>();
         }
-        
     }
 
     private void Start()
@@ -101,8 +102,20 @@ public class CustomerStateManager : MonoBehaviour
         order = new DishAmount(dish, 1);
     }
 
+    public void AnimSetIdle()
+    {
+        animator.SetBool("IsWalking", false);
+        animator.SetBool("IsTyping", false);
+        animator.SetBool("IsRunning", false);
+    }
+
     private void OnDisable()
     {
         Destroy(this.gameObject);
+    }
+
+    public void SetAnimator(Animator animator)
+    {
+        this.animator = animator;
     }
 }

@@ -17,7 +17,7 @@ public class CustomerEatState : IState
 
     public void Enter()
     {
-        
+        stateManager.Animator.SetBool("IsEating", true);
         stateManager.Renderer.material.color = Color.yellow;
         timer = 5.0f;
     }
@@ -49,6 +49,6 @@ public class CustomerEatState : IState
 
     public void Exit()
     {
-
+        stateManager.Animator.SetBool("IsEating", false);
     }
 }

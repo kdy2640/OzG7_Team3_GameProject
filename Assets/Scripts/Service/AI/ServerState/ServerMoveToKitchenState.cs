@@ -20,6 +20,9 @@ public class ServerMoveToKitchenState : IState
 
     public void Enter()
     {
+        stateManager.animator.SetBool("IsRunning", true);
+        Debug.Log($"Animator : {stateManager.animator.name}");
+        Debug.Log($"IsRunning : {stateManager.animator.GetBool("IsRunning")}");
         stateManager.IsBusy = true;
         stateManager.Renderer.material.color = Color.ivory;
         stateManager.IsBusy = true;
@@ -35,6 +38,7 @@ public class ServerMoveToKitchenState : IState
     }
     public void Exit()
     {
+        stateManager.animator.SetBool("IsRunning", false);
         aiMove.OnArrived -= Arrived;
     }
 

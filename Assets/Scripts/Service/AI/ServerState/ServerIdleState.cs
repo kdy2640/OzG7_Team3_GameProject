@@ -12,7 +12,8 @@ public class ServerIdleState : IState
 
     public void Enter()
     {
-
+        stateManager.AiMove.SetDirection(Vector3.back);
+        stateManager.AnimSetIdle();
         stateManager.IsBusy = false;
         stateManager.Renderer.material.color = Color.white;
 

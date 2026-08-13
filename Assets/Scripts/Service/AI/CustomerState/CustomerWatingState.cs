@@ -14,6 +14,7 @@ public class CustomerWatingState : IState
 
     public void Enter()
     {
+        stateManager.AnimSetIdle();
         stateManager.AiMove.StopMove();
         tableManager.AddWaitingCustomer(stateManager);
     }

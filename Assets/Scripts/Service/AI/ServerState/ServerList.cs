@@ -42,18 +42,10 @@ public class ServerList : MonoBehaviour
         return false;
     }
 
-    private void Clear()
-    {
-        foreach (ServerStateManager server in servers)
-        {
-            Destroy(server.gameObject);
-        }
-
-        servers.Clear();
-    }
+    
 
     private void OnDisable()
     {
-        Clear();
+        servers.Clear();
     }
 }

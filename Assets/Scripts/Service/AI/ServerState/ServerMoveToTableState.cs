@@ -20,6 +20,8 @@ public class ServerMoveToTableState : IState
 
     public void Enter()
     {
+        stateManager.animator.SetBool("IsServing", true);
+
         stateManager.IsBusy = true;
 
         aiMove.OnArrived += Arrived;
@@ -36,7 +38,9 @@ public class ServerMoveToTableState : IState
 
     public void Exit()
     {
+        stateManager.animator.SetBool("IsServing", false); 
         aiMove.OnArrived -= Arrived;
+        
     }
 
 

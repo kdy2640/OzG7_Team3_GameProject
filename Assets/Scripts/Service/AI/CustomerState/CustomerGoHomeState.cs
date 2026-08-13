@@ -15,6 +15,8 @@ public class CustomerGoHomeState : IState
 
     public void Enter()
     {
+        stateManager.Animator.SetBool("IsWalking", true);
+
         stateManager.CurrentTable.ReleaseSeat(stateManager);
 
         stateManager.AiMove.OnArrived += ArrivedHome;
@@ -33,14 +35,13 @@ public class CustomerGoHomeState : IState
 
     public void Exit()
     {
+        stateManager.Animator.SetBool("IsWalking", false);
         stateManager.AiMove.OnArrived -= ArrivedHome;
     }
 
 
     private void ArrivedHome()
     {
-        stateManager.ChangeState(
-            new CustomerEndState(stateManager)
-        );
+        GameObject.Destroy(stateManager.gameObject);
     }
 }
