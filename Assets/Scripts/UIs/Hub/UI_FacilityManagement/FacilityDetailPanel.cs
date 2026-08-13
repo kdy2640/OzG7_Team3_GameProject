@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class FacilityDetailPanel : MonoBehaviour
 {
-    [Header("UI References")]
+    [Header("UI")]
     [SerializeField] private TMP_Text facilityNameText;
     [SerializeField] private TMP_Text levelText;
     [SerializeField] private Slider levelSlider;
@@ -18,10 +18,9 @@ public class FacilityDetailPanel : MonoBehaviour
     [SerializeField] private Button nextButton;
     [SerializeField] private Button closeButton;
 
-    [Header("Facilities")]
-    [SerializeField] private FacilityController[] facilities;
+    [Header("Source")]
+    [SerializeField] private FacilityCollection facilityCollection;
 
-    private int currentIndex;
     private FacilityController currentFacility;
 
     private void Awake()
@@ -30,59 +29,63 @@ public class FacilityDetailPanel : MonoBehaviour
         previousButton.onClick.AddListener(OnClickPrevious);
         nextButton.onClick.AddListener(OnClickNext);
 
-        if (closeButton != null)
-            closeButton.onClick.AddListener(ClosePanel);
+        if (closeButton != null) closeButton.onClick.AddListener(ClosePanel);
 
-        // 이 오브젝트는 씬 시작 시 Active 상태여야 합니다.
-        // Awake에서 한 번 초기화한 후 숨깁니다.
         gameObject.SetActive(false);
     }
 
     public void ShowFacility(FacilityController facility)
     {
-        if (facility == null)  return;
+        if (facility == null) return;
 
         UnsubscribeCurrentFacility();
 
         currentFacility = facility;
         currentFacility.StateChanged += OnFacilityStateChanged;
 
-        FindCurrentIndex();
-
         gameObject.SetActive(true);
+
         Refresh();
-    }
-
-    public void OnClickAction()
-    {
-        if (currentFacility == null) return;
-
-        if (!currentFacility.IsPurchased)
-            currentFacility.TryPurchase();
-        else
-            currentFacility.TryUpgrade();
-    }
-
-    public void OnClickPrevious()
-    {
-        if (currentIndex <= 0) return;
-
-        ShowFacility(facilities[currentIndex - 1]);
-    }
-
-    public void OnClickNext()
-    {
-        if (facilities == null || currentIndex >= facilities.Length - 1) return;
-
-        ShowFacility(facilities[currentIndex + 1]);
     }
 
     public void ClosePanel()
     {
         UnsubscribeCurrentFacility();
+
         currentFacility = null;
 
         gameObject.SetActive(false);
+    }
+
+    private void OnClickAction()
+    {
+        if (currentFacility == null) return;
+
+        bool success;
+
+        if (!currentFacility.IsPurchased) success = currentFacility.TryPurchase();
+        
+        else success = currentFacility.TryUpgrade();
+
+        if (success) Refresh();
+    }
+
+    private void OnClickPrevious()
+    {
+        if (currentFacility == null) return;
+
+        FacilityController previous = facilityCollection.GetPrevious(currentFacility);
+
+        if (previous != null) ShowFacility(previous);
+    }
+
+    private void OnClickNext()
+    {
+        if (currentFacility == null) return;
+
+        FacilityController next = facilityCollection.GetNext(currentFacility);
+
+        if (next != null) ShowFacility(next);
     }
 
     private void OnFacilityStateChanged(FacilityController facility)
@@ -96,67 +99,73 @@ public class FacilityDetailPanel : MonoBehaviour
         if (currentFacility == null) return;
 
         facilityNameText.text = currentFacility.FacilityName;
-        levelText.text = 
-            $"Lv.{currentFacility.CurrentLevel} / Lv.{currentFacility.MaxLevel}";
+
+        levelText.text =
+            $"Lv.{currentFacility.CurrentLevel} / " +
+            $"Lv.{currentFacility.MaxLevel}";
 
         levelSlider.maxValue = currentFacility.MaxLevel;
+
         levelSlider.value = currentFacility.CurrentLevel;
 
         currentEffectText.text = currentFacility.GetCurrentEffect();
+
         nextEffectText.text = currentFacility.GetNextEffect();
 
         RefreshActionButton();
-        RefreshNavigationButtons();
+
+        previousButton.gameObject.SetActive(
+            facilityCollection.GetPrevious(currentFacility) != null);
+
+        nextButton.gameObject.SetActive(
+            facilityCollection.GetNext(currentFacility) != null);
     }
 
     private void RefreshActionButton()
     {
+        if (currentFacility == null) return;
+
+        UpgradeAvailability availability = currentFacility.GetUpgradeAvailability();
+
         if (!currentFacility.IsPurchased)
         {
-            actionButtonText.text = "Purchase";
-            actionButton.interactable = true;
+            actionButtonText.text =
+                availability == UpgradeAvailability.Available
+                    ? "Purchase" : GetAvailabilityText(availability);
+
+            actionButton.interactable = availability == UpgradeAvailability.Available;
+
             return;
         }
 
-        if (currentFacility.CanUpgrade())
-        {
-            actionButtonText.text = "Upgrade";
-            actionButton.interactable = true;
-            return;
-        }
+        actionButtonText.text = GetAvailabilityText(availability);
 
-        actionButtonText.text = "Max Level";
-        actionButton.interactable = false;
+        actionButton.interactable = availability == UpgradeAvailability.Available;
     }
 
-    private void RefreshNavigationButtons()
+    private string GetAvailabilityText(UpgradeAvailability availability)
     {
-        bool hasFacilities = facilities != null && facilities.Length > 0;
-
-        previousButton.gameObject.SetActive(hasFacilities && currentIndex > 0);
-
-        nextButton.gameObject.SetActive
-            (hasFacilities && currentIndex < facilities.Length - 1);
-    }
-
-    private void FindCurrentIndex()
-    {
-        currentIndex = 0;
-
-        if (facilities == null) return;
-
-        for (int i = 0; i < facilities.Length; i++)
+        return availability switch
         {
-            if (facilities[i] != currentFacility) continue;
+            UpgradeAvailability.Available =>
+                currentFacility.IsPurchased ? "Upgrade" : "Purchase",
 
-            currentIndex = i;
-            return;
-        }
+            UpgradeAvailability.MaxLevel => "Max Level",
+
+            UpgradeAvailability.MarketLevelLocked => "Market Locked",
+
+            UpgradeAvailability.InsufficientCurrency => "Not Enough Currency",
+
+            UpgradeAvailability.InvalidData => "Data Error",
+            
+            _ => "Unavailable"
+        };
     }
 
     private void UnsubscribeCurrentFacility()
     {
-        if (currentFacility != null)
-            currentFacility.StateChanged -= OnFacilityStateChanged;
+        if (currentFacility == null) return;
+
+        currentFacility.StateChanged -= OnFacilityStateChanged;
     }
 }
