@@ -38,7 +38,9 @@ public class Table : MonoBehaviour
         {
             rightServePoint = transform.Find("ServePoint Right");
         }
-        
+
+        leftSeatPoint.Rotate(0f, 90f, 0f);
+        rightSeatPoint.Rotate(0f, -90f, 0f);
     }
 
     public bool HasEmptySeat()

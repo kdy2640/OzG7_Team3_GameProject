@@ -19,7 +19,7 @@ public class CustomerEatState : IState
     {
         stateManager.Animator.SetBool("IsEating", true);
         stateManager.Renderer.material.color = Color.yellow;
-        timer = 5.0f;
+        timer = 10.0f;
     }
 
     public void Execute()
@@ -35,6 +35,8 @@ public class CustomerEatState : IState
 
     private void FinishEating()
     {
+        stateManager.Animator.SetBool("IsEating", false);
+
         DishDataSO data = DishDataDB.GetData(stateManager.Order.dish);
 
         if(data != null)
@@ -49,6 +51,6 @@ public class CustomerEatState : IState
 
     public void Exit()
     {
-        stateManager.Animator.SetBool("IsEating", false);
+        
     }
 }

@@ -12,6 +12,10 @@ public class ServerList : MonoBehaviour
 
     private void OnEnable()
     {
+        foreach (var spot in serverSpots) 
+        {
+            spot.Rotate(0f, 180f, 0f);
+        }
         CreateServers();
     }
 

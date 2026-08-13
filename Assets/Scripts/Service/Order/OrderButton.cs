@@ -5,6 +5,7 @@ using UnityEngine;
 public class OrderButton : MonoBehaviour
 {
     public event Action OnClicked;
+    public event Action NoFreeServer;
     private DishAmount dishAmount;
 
 
@@ -47,6 +48,7 @@ public class OrderButton : MonoBehaviour
 
         if (!serverList.TryAllocServe(dishAmount.dish, customer))
         {
+            NoFreeServer?.Invoke();
             return;
         }
 

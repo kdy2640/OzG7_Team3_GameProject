@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3769527034480116811}
   - component: {fileID: 6104282498757331798}
   - component: {fileID: 4969299218357799971}
+  - component: {fileID: 6315416167153984394}
   m_Layer: 0
   m_Name: Server
   m_TagString: Untagged
@@ -123,9 +124,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fdcdadcd0294aa449ef050b0d694ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AIMove
-  moveSpeed: 5
-  pathManager: {fileID: 0}
-  graph: {fileID: 0}
+--- !u!195 &6315416167153984394
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4903147832229368121}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.1
+  m_Speed: 4
+  m_Acceleration: 100
+  avoidancePriority: 50
+  m_AngularSpeed: 720
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 0
 --- !u!1001 &4707558073777859972
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -152,7 +172,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7fed8ce7f2473024c96c91adc9e0f182, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7fed8ce7f2473024c96c91adc9e0f182, type: 3}
       propertyPath: m_LocalPosition.z
@@ -194,6 +214,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: b9fbfc55aaadef543959eb5e72e9384e, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 7fed8ce7f2473024c96c91adc9e0f182, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

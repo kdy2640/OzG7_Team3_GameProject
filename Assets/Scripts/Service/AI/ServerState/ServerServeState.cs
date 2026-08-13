@@ -12,11 +12,7 @@ public class ServerServeState : IState
 
     public void Enter()
     {
-        stateManager.AiMove.SetDirection(
-                (
-                    stateManager.Customer.CurrentTable.transform.position - stateManager.transform.position
-                ).normalized
-            );
+        
         stateManager.AnimSetIdle();
         timer = 3.0f;
         stateManager.GiveFood();

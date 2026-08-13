@@ -1,218 +1,57 @@
-
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
 using System;
-
-
+using UnityEngine;
+using UnityEngine.AI;
 
 public class AIMove : MonoBehaviour
 {
+    private NavMeshAgent agent;
+
     public event Action OnArrived;
 
-    private enum MoveState
-    {
-        ToStartWaypoint,
-        FollowingPath,
-        ToDestination,
-        Arrived
-    }
+    private bool isMoving;
+    private bool isRotating;
 
-    private MoveState moveState;
-
-    [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private PathManager pathManager;
-    [SerializeField] private GraphManager graph;
-
-
-    private Vector3 direction;
-
-    private Transform destination;
-
-    private List<Waypoint> currentPath;
-    private int pathIndex;
-
-    private Waypoint startWaypoint;
+    private Transform target;
 
     private void Awake()
     {
-        if(pathManager == null)
-        {
-            pathManager = FindFirstObjectByType<PathManager>();
-        }
-
-        if(graph == null)
-        {
-            graph = FindFirstObjectByType<GraphManager>();
-        }
-
-        StopMove();
-    }
-
-    private void Update()
-    {
-        Move();
-    }
-
-    private void Move()
-    {
-        
-
-        switch (moveState)
-        {
-            case MoveState.ToStartWaypoint:
-                MoveToNearWayPoint();
-                break;
-
-            case MoveState.FollowingPath:
-                FollowPath();
-                break;
-
-            case MoveState.ToDestination:
-                MoveToDestination();
-                break;
-
-            case MoveState.Arrived:
-                break;
-        }
-
-    }
-
-    private void MoveToNearWayPoint()
-    {
-        if(currentPath == null)
-        {
-            moveState = MoveState.ToDestination;
-            return;
-        }
-
-        SetDirection(transform.position, startWaypoint.transform.position);
-
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            startWaypoint.transform.position,
-            moveSpeed * Time.deltaTime
-        );
-
-        if (Vector3.Distance(transform.position, startWaypoint.transform.position) < 0.05f)
-        {
-            pathIndex = 0;
-            moveState = MoveState.FollowingPath;
-            return;
-        }
-    }
-
-    private void FollowPath()
-    {
-        if (currentPath == null || pathIndex >= currentPath.Count)
-        {
-            moveState = MoveState.ToDestination;
-            return;
-        }
-
-        Waypoint target = currentPath[pathIndex];
-
-
-        SetDirection(transform.position, currentPath[pathIndex].transform.position);
-
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            currentPath[pathIndex].transform.position,
-            moveSpeed * Time.deltaTime );
-
-        if (Vector3.Distance(transform.position, target.transform.position) < 0.05f)
-        {
-            pathIndex++;
-        }
-
-    }
-    private void MoveToDestination()
-    {
-        SetDirection(transform.position, destination.position);
-
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            destination.position,
-            moveSpeed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, destination.transform.position) < 0.05f)
-        {
-            moveState = MoveState.Arrived;
-
-            OnArrived?.Invoke();
-
-            return;
-        }
+        agent = GetComponent<NavMeshAgent>();
     }
 
     public void MoveTo(Transform target)
     {
-        destination = target;
-        startWaypoint = graph.GetClosestWaypoint(transform.position);
-
-        if (Vector3.Distance(transform.position, startWaypoint.transform.position)
-            > Vector3.Distance(transform.position, destination.transform.position))
-        {
-            moveState = MoveState.ToDestination;
-            return;
-        }
-
-        currentPath = pathManager.GetPath(transform.position, destination.position);
-
-        if (currentPath == null)
-        {
-            Debug.Log("Path not found");
-            return;
-        }
-
-        if (currentPath.Count == 0)
-        {
-            moveState = MoveState.ToDestination;
-            return;
-        }
-
-        pathIndex = 0;
-
-        startWaypoint = currentPath[0];
-
-        moveState = MoveState.ToStartWaypoint;
+        this.target = target;
+        agent.SetDestination(target.position);
+        isMoving = true;
     }
 
-    public void StopMove()
+    private void Update()
     {
-        moveState = MoveState.Arrived;
-        currentPath = null;
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (currentPath == null)
-            return;
-
-        for (int i = 0; i < currentPath.Count - 1; i++)
+        if (isMoving)
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(
-                currentPath[i].transform.position,
-                currentPath[i + 1].transform.position
+            if (agent.pathPending)
+                return;
+
+            if (agent.remainingDistance <= 0.5f)
+            {
+                isMoving = false;
+                isRotating = true;
+            }
+        }
+
+        if (isRotating)
+        {
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation,
+                target.rotation,
+                360f * Time.deltaTime
             );
-        }
-    }
 
-    private void SetDirection(Vector3 startPos, Vector3 goalPos)
-    {
-        direction = (goalPos - startPos).normalized;
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
-    }
-    public void SetDirection(Vector3 dir)
-    {
-        direction = dir.normalized;
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
+            if (Quaternion.Angle(transform.rotation, target.rotation) < 0.1f)
+            {
+                isRotating = false;
+                OnArrived?.Invoke();
+            }
         }
     }
 }

@@ -14,10 +14,7 @@ public class CustomerOrderState : IState
 
     public void Enter()
     {
-        stateManager.AiMove.SetDirection(
-            (stateManager.CurrentTable.transform.position - stateManager.transform.position)
-            .normalized
-            );
+        
         stateManager.Animator.SetBool("IsOrdering", true);
         stateManager.Renderer.material.color = Color.orange;
 

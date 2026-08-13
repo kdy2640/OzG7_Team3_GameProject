@@ -26,13 +26,14 @@ public class CustomerWaitForFoodState : IState
 
     public void Exit()
     {
-        stateManager.Animator.SetBool("IsSitting", false);
+        
     }
 
     
 
     private void StartEat()
     {
+        stateManager.Animator.SetBool("IsSitting", false);
         stateManager.ChangeState(
                 new CustomerEatState(stateManager)
             );
