@@ -23,10 +23,7 @@ public class MarketManager : MonoBehaviour
     {
         get
         {
-            if (marketData == null
-                || levelData == null
-                || levelMissionChecker == null
-                || marketData.CurrentLevel >= MaxMarketLevel
+            if (marketData.CurrentLevel >= MaxMarketLevel
                 || levelData.IncomeGoal <= 0
                 || marketData.TotalIncome < levelData.IncomeGoal
                 || !levelMissionChecker.AreAllMissionsCompleted)
