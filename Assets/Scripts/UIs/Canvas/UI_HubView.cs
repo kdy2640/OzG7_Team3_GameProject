@@ -5,6 +5,7 @@ public sealed class UI_HubView : UI_Base
 {
     private UI_MareketVisualPanel marketVisualPanel;
     private UI_PhaseButtonPanel phaseButtonPanel;
+    private UI_DayVisual dayVisual;
 
     private enum GameObjects
     {
@@ -29,6 +30,9 @@ public sealed class UI_HubView : UI_Base
 
         phaseButtonPanel = GetComponentInChildren<UI_PhaseButtonPanel>(true);
         phaseButtonPanel?.Init(Owner);
+
+        dayVisual = GetComponentInChildren<UI_DayVisual>(true);
+        dayVisual?.Refresh();
     }
 
     private void Start()
@@ -40,6 +44,7 @@ public sealed class UI_HubView : UI_Base
     {
         marketVisualPanel?.Refresh();
         phaseButtonPanel?.Refresh();
+        dayVisual?.Refresh();
         yield break;
     }
 
