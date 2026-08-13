@@ -24,7 +24,7 @@ public sealed class UI_ServiceSelection : UI_Base
         GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?
             .Init(Owner);
         UI_EventHandler StartServiceButton = GetGameObject((int)GameObjects.UI_StartServiceButton)?.GetComponent<UI_EventHandler>();
-        StartServiceButton?.AddUIEvent(_ => GameManager.Instance.Scene.ChangeScene(SceneType.Service), UI_EventHandler.UIEvent.LClick);
+        StartServiceButton?.AddUIEvent(_ => StartService(), UI_EventHandler.UIEvent.LClick);
 
         selectMenuPanel =
             GetGameObject((int)GameObjects.UI_SelectMenuPanel)?
@@ -34,6 +34,17 @@ public sealed class UI_ServiceSelection : UI_Base
 
         marketVisualPanel = GetComponentInChildren<UI_MareketVisualPanel>(true);
         marketVisualPanel?.Refresh();
+    }
+
+    private void StartService()
+    {
+        if (GameManager.Instance.Market.MarketData.SelectedDishes.Count == 0)
+        {
+            GameManager.Instance.Utility.Toast.Show("메뉴를 선택홰 주세요");
+            return;
+        }
+
+        GameManager.Instance.Scene.ChangeScene(SceneType.Service);
     }
 
     private void Start()
