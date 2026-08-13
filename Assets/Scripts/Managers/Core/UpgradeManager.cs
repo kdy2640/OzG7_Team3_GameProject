@@ -145,9 +145,8 @@ public class UpgradeManager : MonoBehaviour
         return state != null && state.data != null && state.level >= state.data.MaxLevel;
     }
 
-    private UpgradeAvailability GetUpgradeAvailability(
-        UpgradeDataSO data,
-        int currentUpgradeLevel)
+    private UpgradeAvailability GetUpgradeAvailability
+        (UpgradeDataSO data, int currentUpgradeLevel)
     {
         if (data == null || stockManager == null)
             return UpgradeAvailability.InvalidData;
