@@ -19,7 +19,7 @@ public class ServiceScene : SceneBase
 
     public override IEnumerator Exit()
     {
-        GameManager.Instance.Service.EndLoop();
+        GameManager.Instance.Market.MoveToNextPhase(); 
         yield return null;
     }
 }

@@ -11,6 +11,13 @@ public sealed class IncomeMissionCondition : MissionCondition
         if (GameManager.Instance == null || GameManager.Instance.Market == null)
             return false;
 
-        return GameManager.Instance.Market.MarketData.TotalIncome >= targetIncome;
+        return targetIncome > 0
+            && GameManager.Instance.Market.MarketData.TotalIncome >= targetIncome;
+    }
+
+    public override string ToString()
+    {
+        int totalIncome = GameManager.Instance?.Market?.MarketData?.TotalIncome ?? 0;
+        return $"{totalIncome:N0} / {targetIncome:N0}";
     }
 }

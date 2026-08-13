@@ -18,8 +18,8 @@ public class HarvestScene : SceneBase
     }
 
     public override IEnumerator Exit()
-    {
-        GameManager.Instance.Harvest.EndLoop();
+    { 
+        GameManager.Instance.Market.MoveToNextPhase();
         yield return null;
     }
 }

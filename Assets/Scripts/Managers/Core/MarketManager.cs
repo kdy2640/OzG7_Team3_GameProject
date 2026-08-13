@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class MarketManager : MonoBehaviour
 {
+    public const int MaxMarketLevel = 4;
+
     #region Fields & Properties
 
     [SerializeField] private MarketData marketData = new();
@@ -17,6 +19,38 @@ public class MarketManager : MonoBehaviour
     public LevelMissionGroupSO LevelMissionGroup => levelMissionChecker.MissionGroup;
     public int CurrentBusinessDay => marketData.CurrentBusinessDay;
     public TasteType TodayTaste => (TasteType)(CurrentBusinessDay % (int)TasteType.Count);
+    public bool CanPromote
+    {
+        get
+        {
+            if (marketData == null
+                || levelData == null
+                || levelMissionChecker == null
+                || marketData.CurrentLevel >= MaxMarketLevel
+                || levelData.IncomeGoal <= 0
+                || marketData.TotalIncome < levelData.IncomeGoal
+                || !levelMissionChecker.AreAllMissionsCompleted)
+            {
+                return false;
+            }
+
+            int nextLevel = marketData.CurrentLevel + 1;
+
+            if (!LevelDataDB.TryGetData(nextLevel, out _))
+                return false;
+
+            if (nextLevel < MaxMarketLevel
+                && (!LevelMissionGroupDB.TryGetData(nextLevel, out LevelMissionGroupSO nextMissionGroup)
+                    || nextMissionGroup == null
+                    || nextMissionGroup.Missions == null
+                    || nextMissionGroup.Missions.Count == 0))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
 
     #endregion
 
@@ -32,6 +66,7 @@ public class MarketManager : MonoBehaviour
     private void Start()
     {
         LevelRefresh();
+        NotifyMarketDataChanged();
     }
 
     private void OnDestroy()
@@ -55,6 +90,7 @@ public class MarketManager : MonoBehaviour
                 marketData.CurrentPhase = MarketPhase.Night;
                 break;
             case MarketPhase.Night:
+                TryPromote();
                 marketData.CurrentBusinessDay++;
                 marketData.CurrentPhase = MarketPhase.Morning;
                 break;
@@ -64,7 +100,34 @@ public class MarketManager : MonoBehaviour
     public void LevelRefresh()
     {
         levelData = LevelDataDB.GetData(marketData.CurrentLevel) ?? new LevelData();
-        levelMissionChecker.SetMissionGroup(LevelMissionGroupDB.GetData(marketData.CurrentLevel));
+        levelMissionChecker.SetMissionGroup(
+            marketData.CurrentLevel < MaxMarketLevel
+                ? LevelMissionGroupDB.GetData(marketData.CurrentLevel)
+                : null);
+    }
+
+    public bool TryPromote()
+    {
+        if (!CanPromote)
+            return false;
+
+        int nextLevel = marketData.CurrentLevel + 1;
+
+        if (!LevelDataDB.TryGetData(nextLevel, out LevelData nextLevelData))
+            return false;
+
+        LevelMissionGroupSO nextMissionGroup = null;
+
+        if (nextLevel < MaxMarketLevel
+            && !LevelMissionGroupDB.TryGetData(nextLevel, out nextMissionGroup))
+        {
+            return false;
+        }
+
+        levelData = nextLevelData;
+        levelMissionChecker.SetMissionGroup(nextMissionGroup);
+        marketData.CurrentLevel = nextLevel;
+        return true;
     }
 
     #endregion
@@ -93,7 +156,7 @@ public class MarketManager : MonoBehaviour
             : new MarketData(
                 Mathf.Max(0, saveData.currentBusinessDay),
                 saveData.currentPhase,
-                Mathf.Max(0, saveData.currentLevel),
+                Mathf.Clamp(saveData.currentLevel, 0, MaxMarketLevel),
                 Mathf.Max(0, saveData.totalIncome),
                 saveData.selectedDishes);
 

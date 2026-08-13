@@ -12,7 +12,14 @@ public sealed class DishUpgradeMissionCondition : MissionCondition
         if (GameManager.Instance == null || GameManager.Instance.Upgrade == null)
             return false;
 
-        return GameManager.Instance.Upgrade.RuntimeLevel.Get(dishType) >= targetLevel;
+        return targetLevel > 0
+            && GameManager.Instance.Upgrade.RuntimeLevel.Get(dishType) >= targetLevel;
+    }
+
+    public override string ToString()
+    {
+        int currentLevel = GameManager.Instance?.Upgrade?.RuntimeLevel.Get(dishType) ?? 0;
+        return $"{currentLevel} / {targetLevel}";
     }
 }
 
@@ -27,7 +34,14 @@ public sealed class FacilityUpgradeMissionCondition : MissionCondition
         if (GameManager.Instance == null || GameManager.Instance.Upgrade == null)
             return false;
 
-        return GameManager.Instance.Upgrade.RuntimeLevel.Get(facilityType) >= targetLevel;
+        return targetLevel > 0
+            && GameManager.Instance.Upgrade.RuntimeLevel.Get(facilityType) >= targetLevel;
+    }
+
+    public override string ToString()
+    {
+        int currentLevel = GameManager.Instance?.Upgrade?.RuntimeLevel.Get(facilityType) ?? 0;
+        return $"{currentLevel} / {targetLevel}";
     }
 }
 
@@ -42,7 +56,14 @@ public sealed class EmployeeUpgradeMissionCondition : MissionCondition
         if (GameManager.Instance == null || GameManager.Instance.Upgrade == null)
             return false;
 
-        return GameManager.Instance.Upgrade.RuntimeLevel.Get(employeeType) >= targetLevel;
+        return targetLevel > 0
+            && GameManager.Instance.Upgrade.RuntimeLevel.Get(employeeType) >= targetLevel;
+    }
+
+    public override string ToString()
+    {
+        int currentLevel = GameManager.Instance?.Upgrade?.RuntimeLevel.Get(employeeType) ?? 0;
+        return $"{currentLevel} / {targetLevel}";
     }
 }
 
@@ -57,6 +78,13 @@ public sealed class HarvestUpgradeMissionCondition : MissionCondition
         if (GameManager.Instance == null || GameManager.Instance.Upgrade == null)
             return false;
 
-        return GameManager.Instance.Upgrade.RuntimeLevel.Get(harvestUpgradeType) >= targetLevel;
+        return targetLevel > 0
+            && GameManager.Instance.Upgrade.RuntimeLevel.Get(harvestUpgradeType) >= targetLevel;
+    }
+
+    public override string ToString()
+    {
+        int currentLevel = GameManager.Instance?.Upgrade?.RuntimeLevel.Get(harvestUpgradeType) ?? 0;
+        return $"{currentLevel} / {targetLevel}";
     }
 }
