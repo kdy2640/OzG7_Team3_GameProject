@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 /// <summary>
 /// Changes the active Hub canvas view when clicked.
@@ -12,9 +13,15 @@ public sealed class UI_HubStateButton : UI_EventHandler
         HubCanvasController.HubCanvasState.None; 
 
     private HubCanvasController hubController;
+    private Button button;
     private bool isInitialized;
 
     public HubCanvasController.HubCanvasState TargetState => targetState;
+
+    private void Awake()
+    {
+        button = GetComponent<Button>();
+    }
 
     public void Init(HubCanvasController controller)
     {
@@ -43,6 +50,9 @@ public sealed class UI_HubStateButton : UI_EventHandler
 
     private void HandleClick(PointerEventData _)
     {
+        if (button == null || !button.IsInteractable())
+            return;
+
         if (hubController == null)
         {
             Debug.LogError($"[{nameof(UI_HubStateButton)}] The controller has not been injected.", this);

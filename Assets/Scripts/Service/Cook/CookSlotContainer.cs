@@ -43,6 +43,7 @@ public class CookSlotContainer : MonoBehaviour
 
     private void OnDisable()
     {
+        GameManager.Instance.Market.UnsubscribeMarketDataChanged(RefreshSlots);
         RefreshSlots();
     }
 }
