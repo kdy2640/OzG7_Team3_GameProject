@@ -68,8 +68,8 @@ public class SaveManager : MonoBehaviour
     public void ResetSave()
     {
         GameManager.Instance.Upgrade.ResetUpgradeSaveData();
-        GameManager.Instance.Tutorial.ResetTutorialSaveData();
-        GameManager.Instance.AudioManager.ResetAudioSaveData();
+        GameManager.Instance.Utility.Tutorial.ResetTutorialSaveData();
+        GameManager.Instance.Utility.Audio.ResetAudioSaveData();
         GameManager.Instance.StockManager.ResetStockSaveData();
         GameManager.Instance.Market.ResetMarketSaveData();
         DeleteSave();
@@ -84,8 +84,8 @@ public class SaveManager : MonoBehaviour
     {
         GameSaveData saveData = new();
         saveData.upgrades = GameManager.Instance.Upgrade.CreateUpgradeSaveData();
-        saveData.tutorials = GameManager.Instance.Tutorial.CreateTutorialSaveData();
-        saveData.audio = GameManager.Instance.AudioManager.CreateAudioSaveData();
+        saveData.tutorials = GameManager.Instance.Utility.Tutorial.CreateTutorialSaveData();
+        saveData.audio = GameManager.Instance.Utility.Audio.CreateAudioSaveData();
         saveData.stock = GameManager.Instance.StockManager.CreateStockSaveData();
         saveData.market = GameManager.Instance.Market.CreateMarketSaveData();
         return saveData;
@@ -94,8 +94,8 @@ public class SaveManager : MonoBehaviour
     private void ApplySaveData(GameSaveData saveData)
     {
         GameManager.Instance.Upgrade.LoadUpgradeSaveData(saveData.upgrades);
-        GameManager.Instance.Tutorial.LoadTutorialSaveData(saveData.tutorials);
-        GameManager.Instance.AudioManager.LoadAudioSaveData(saveData.audio);
+        GameManager.Instance.Utility.Tutorial.LoadTutorialSaveData(saveData.tutorials);
+        GameManager.Instance.Utility.Audio.LoadAudioSaveData(saveData.audio);
         GameManager.Instance.StockManager.LoadStockSaveData(saveData.stock);
         GameManager.Instance.Market.LoadMarketSaveData(saveData.market);
     }// 불러온 저장 데이터를 실제 게임 상태에 반영한다.
