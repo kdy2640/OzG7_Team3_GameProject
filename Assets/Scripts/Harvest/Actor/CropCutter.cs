@@ -6,6 +6,7 @@ using UnityEngine;
 public sealed class CropCutter : MonoBehaviour
 {
     [SerializeField] private GridChunkHandler gridChunkHandler;
+    [SerializeField] private CutterViewer cutterViewer;
     [SerializeField, Min(0f)] private float cuttingRange = 0.5f;
     [SerializeField, Min(0f)] private float damage = 1f;
     [SerializeField, Min(0.25f)] private float damageDelay = 0.25f;
@@ -17,6 +18,25 @@ public sealed class CropCutter : MonoBehaviour
     public bool IsCutting => Time.time <= cuttingUntilTime;
     public float MoveSpeedMultiplier =>
         IsCutting ? cuttingMoveSpeedMultiplier : 1f;
+
+    private void Awake()
+    {
+        cutterViewer?.SetRange(cuttingRange);
+    }
+
+    private void OnValidate()
+    {
+        cuttingRange = Mathf.Max(0f, cuttingRange);
+        cutterViewer?.SetRange(cuttingRange);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(
+            transform.position,
+            Mathf.Max(0f, cuttingRange));
+    }
 
     private void FixedUpdate()
     {
