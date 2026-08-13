@@ -3,111 +3,195 @@ using UnityEngine;
 
 public class FacilityController : MonoBehaviour
 {
-    [Header("Facility Info")]
-    [SerializeField] private string facilityName;
-    [SerializeField] private int currentLevel;
-    [SerializeField] private int maxLevel = 3;
-    [SerializeField] private bool isPurchased;
-    [SerializeField] private string[] levelEffects;
+    [Header("Facility")]
+    [SerializeField] private FacilityType facilityType = FacilityType.Count;
 
-    [Header("Views")]
+    [Header("View")]
     [SerializeField] private FacilityModelView modelView;
     [SerializeField] private FacilityWorldUI worldUI;
 
-    public string FacilityName => facilityName;
-    public int CurrentLevel => currentLevel;
-    public int MaxLevel => maxLevel;
-    public bool IsPurchased => isPurchased;
+    private UpgradeManager SubscribedUpgradeManager => GameManager.Instance?.Upgrade;
 
-    // 상세 패널이 열려 있는 동안 외부 데이터가 변경되었을 때 갱신용입니다.
+    private FacilityUpgradeDataSO UpgradeData => UpgradeDataDB.GetData(facilityType);
+
+    public FacilityType FacilityType => facilityType;
+
+    public string FacilityName
+    {
+        get
+        {
+            FacilityDataSO data = FacilityDataDB.GetData(facilityType);
+
+            return data != null ? data.DisplayName : facilityType.ToString();
+        }
+    }
+
+    public int CurrentLevel
+    {
+        get
+        {
+            UpgradeManager upgradeManager = SubscribedUpgradeManager;
+
+            if (upgradeManager == null) return 0;
+
+            return upgradeManager.RuntimeLevel.Get(facilityType);
+        }
+    }
+
+    public bool IsPurchased => CurrentLevel > 0;
+
+    public int MaxLevel => UpgradeData != null ? UpgradeData.MaxLevel : 0;
+
     public event Action<FacilityController> StateChanged;
 
-    private void Start()
+    private void OnEnable()
     {
-        RefreshViews();
+        SubscribeUpgradeManager();
+        RefreshFromUpgradeManager();
     }
 
-    // 외부 데이터 담당자가 호출하는 상태 반영 API입니다.
-    public void SetState(bool purchased, int level)
+    private void OnDisable()
     {
-        isPurchased = purchased;
-        currentLevel = purchased
-            ? Mathf.Clamp(level, 1, maxLevel) : 0;
-
-        RefreshViews();
-        StateChanged?.Invoke(this);
+        UnsubscribeUpgradeManager();
     }
 
-    // 현재는 레이아웃/테스트용 로컬 구매 처리입니다.
+    #region Upgrade
+
     public bool TryPurchase()
     {
-        if (isPurchased) return false;
+        if (IsPurchased) return false;
 
-        isPurchased = true;
-        currentLevel = 1;
-
-        RefreshViews();
-        modelView?.PlayUpgradeEffect();
-        StateChanged?.Invoke(this);
-
-        return true;
+        return TryUpgradeInternal();
     }
 
-    // 현재는 레이아웃/테스트용 로컬 강화 처리입니다.
     public bool TryUpgrade()
     {
-        if (!CanUpgrade()) return false;
+        if (!IsPurchased) return false;
 
-        currentLevel++;
-
-        RefreshViews();
-        modelView?.PlayUpgradeEffect();
-        StateChanged?.Invoke(this);
-
-        return true;
+        return TryUpgradeInternal();
     }
 
     public bool CanUpgrade()
     {
-        return isPurchased && currentLevel < maxLevel;
+        return GetUpgradeAvailability() == UpgradeAvailability.Available;
     }
+
+    public UpgradeAvailability GetUpgradeAvailability()
+    {
+        UpgradeManager upgradeManager = SubscribedUpgradeManager;
+
+        if (upgradeManager == null)
+            return UpgradeAvailability.InvalidData;
+
+        if (UpgradeData == null)
+            return UpgradeAvailability.InvalidData;
+
+        return upgradeManager.GetUpgradeAvailability(UpgradeData);
+    }
+
+    private bool TryUpgradeInternal()
+    {
+        UpgradeManager upgradeManager = SubscribedUpgradeManager;
+
+        if (upgradeManager == null)
+        {
+            Debug.LogError(
+                $"[FacilityController] UpgradeManager를 찾을 수 없습니다. " +
+                $"Facility : {facilityType}");
+
+            return false;
+        }
+
+        FacilityUpgradeDataSO data = UpgradeData;
+
+        if (data == null)
+        {
+            Debug.LogError(
+                $"[FacilityController] FacilityUpgradeDataSO를 찾을 수 없습니다. " +
+                $"Facility : {facilityType}");
+
+            return false;
+        }
+
+        UpgradeAvailability availability =
+            upgradeManager.GetUpgradeAvailability(data);
+
+        Debug.Log(
+            $"[FacilityController] " +
+            $"Facility={facilityType}, " +
+            $"UpgradeData={data.Id}, " +
+            $"Availability={availability}, " +
+            $"CurrentLevel={CurrentLevel}, " +
+            $"MaxLevel={data.MaxLevel}");
+
+        if (availability != UpgradeAvailability.Available) return false;
+
+        return upgradeManager.TryUpgrade(data);
+    }
+
+    #endregion
+
+    #region Effect
 
     public string GetCurrentEffect()
     {
-        if (!isPurchased) return "Lv.1 Effect";
+        if (!IsPurchased)
+            return "Not Purchased";
 
-        int index = currentLevel - 1;
-
-        if (levelEffects == null || index < 0 || index >= levelEffects.Length)
-            return string.Empty;
-
-        return levelEffects[index];
+        return $"Lv.{CurrentLevel}";
     }
 
     public string GetNextEffect()
     {
-        if (!isPurchased) return GetEffect(0);
+        if (!IsPurchased)
+            return "Purchase to unlock";
 
-        if (currentLevel >= maxLevel) return "Max Level";
+        if (!CanUpgrade())
+            return "Max Level";
 
-        return GetEffect(currentLevel);
+        return $"Lv.{CurrentLevel + 1}";
     }
 
-    private string GetEffect(int index)
+    #endregion
+
+    #region Refresh
+
+    private void SubscribeUpgradeManager()
     {
-        if (levelEffects == null || index < 0 || index >= levelEffects.Length)
-            return string.Empty;
+        UpgradeManager upgradeManager = SubscribedUpgradeManager;
 
-        return levelEffects[index];
+        if (upgradeManager == null)
+            return;
+
+        upgradeManager.SubscribeUpgradeChanged(
+            RefreshFromUpgradeManager);
     }
 
-    private void RefreshViews()
+    private void UnsubscribeUpgradeManager()
     {
-        if (!isPurchased)
-            modelView?.ShowLocked();
-        else
-            modelView?.ShowLevel(currentLevel);
+        UpgradeManager upgradeManager = SubscribedUpgradeManager;
 
-        worldUI?.Refresh(isPurchased, currentLevel, CanUpgrade());
+        if (upgradeManager == null)
+            return;
+
+        upgradeManager.UnsubscribeUpgradeChanged(
+            RefreshFromUpgradeManager);
     }
+
+    private void RefreshFromUpgradeManager()
+    {
+        int level = CurrentLevel;
+
+        modelView?.ShowLevel(level);
+
+        worldUI?.Refresh(
+            isPurchased: level > 0,
+            currentLevel: level,
+            canUpgrade: CanUpgrade()
+        );
+
+        StateChanged?.Invoke(this);
+    }
+
+    #endregion
 }
