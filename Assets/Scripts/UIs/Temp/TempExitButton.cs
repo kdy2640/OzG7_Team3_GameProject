@@ -3,36 +3,28 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TempSceneChangeButton : MonoBehaviour
-{
-    [SerializeField] private SceneType sceneType;
+public class TempExitButton : MonoBehaviour
+{ 
     [SerializeField] private TextMeshProUGUI text;
     [SerializeField] private Button button;
     public void OnButtonClicked()
-    {
-        GameManager.Instance.Scene.ChangeScene(sceneType);
-    }
-    private void ChangeText()
-    {
-        text.text = "To" + sceneType.ToString();
-    }
-    private void OnValidate()
     { 
-    }
+        Application.Quit();
+    } 
     private void Awake()
     {
-        if(button == null) button = gameObject.GetOrAddComponent<Button>();
+        if (button == null) button = gameObject.GetOrAddComponent<Button>();
         button.onClick.AddListener(OnButtonClicked);
     }
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
