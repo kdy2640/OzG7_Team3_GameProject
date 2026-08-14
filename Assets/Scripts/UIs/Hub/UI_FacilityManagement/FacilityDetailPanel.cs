@@ -18,10 +18,9 @@ public class FacilityDetailPanel : MonoBehaviour
     [SerializeField] private Button nextButton;
     [SerializeField] private Button closeButton;
 
-    [Header("Source")]
-    [SerializeField] private FacilityCollection facilityCollection;
-
-    private FacilityController currentFacility;
+    private FacilityCollection facilityCollection;
+    private FacilityType currentFacilityType = FacilityType.Count;
+    private UpgradeManager subscribedUpgradeManager;
 
     private void Awake()
     {
@@ -34,15 +33,31 @@ public class FacilityDetailPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void ShowFacility(FacilityController facility)
+    private void OnEnable()
     {
-        if (facility == null) return;
+        subscribedUpgradeManager = GameManager.Instance?.Upgrade;
+        subscribedUpgradeManager?.SubscribeUpgradeChanged(Refresh);
+        Refresh();
+    }
 
-        UnsubscribeCurrentFacility();
+    private void OnDisable()
+    {
+        if (subscribedUpgradeManager == null) return;
 
-        currentFacility = facility;
-        currentFacility.StateChanged += OnFacilityStateChanged;
+        subscribedUpgradeManager.UnsubscribeUpgradeChanged(Refresh);
+        subscribedUpgradeManager = null;
+    }
 
+    public void Initialize(FacilityCollection collection)
+    {
+        facilityCollection = collection;
+    }
+
+    public void ShowFacility(FacilityType facilityType)
+    {
+        if (facilityType == FacilityType.Count) return;
+
+        currentFacilityType = facilityType;
         gameObject.SetActive(true);
 
         Refresh();
@@ -50,105 +65,134 @@ public class FacilityDetailPanel : MonoBehaviour
 
     public void ClosePanel()
     {
-        UnsubscribeCurrentFacility();
-
-        currentFacility = null;
-
+        currentFacilityType = FacilityType.Count;
         gameObject.SetActive(false);
     }
 
     private void OnClickAction()
     {
-        if (currentFacility == null) return;
+        if (currentFacilityType == FacilityType.Count) return;
 
-        bool success;
+        UpgradeManager upgradeManager = GameManager.Instance?.Upgrade;
+        FacilityUpgradeDataSO upgradeData =
+            UpgradeDataDB.GetData(currentFacilityType);
 
-        if (!currentFacility.IsPurchased) success = currentFacility.TryPurchase();
-        
-        else success = currentFacility.TryUpgrade();
+        if (upgradeManager == null || upgradeData == null) return;
 
-        if (success) Refresh();
+        upgradeManager.TryUpgrade(upgradeData);
     }
 
     private void OnClickPrevious()
     {
-        if (currentFacility == null) return;
+        if (facilityCollection == null) return;
 
-        FacilityController previous = facilityCollection.GetPrevious(currentFacility);
-
-        if (previous != null) ShowFacility(previous);
+        if (facilityCollection.TryGetPrevious(
+                currentFacilityType,
+                out FacilityType previous))
+        {
+            ShowFacility(previous);
+        }
     }
 
     private void OnClickNext()
     {
-        if (currentFacility == null) return;
+        if (facilityCollection == null) return;
 
-        FacilityController next = facilityCollection.GetNext(currentFacility);
-
-        if (next != null) ShowFacility(next);
-    }
-
-    private void OnFacilityStateChanged(FacilityController facility)
-    {
-        if (facility == currentFacility)
-            Refresh();
+        if (facilityCollection.TryGetNext(
+                currentFacilityType,
+                out FacilityType next))
+        {
+            ShowFacility(next);
+        }
     }
 
     private void Refresh()
     {
-        if (currentFacility == null) return;
+        if (currentFacilityType == FacilityType.Count) return;
 
-        facilityNameText.text = currentFacility.FacilityName;
+        FacilityDataSO facilityData =
+            FacilityDataDB.GetData(currentFacilityType);
+        FacilityUpgradeDataSO upgradeData =
+            UpgradeDataDB.GetData(currentFacilityType);
+        UpgradeManager upgradeManager = GameManager.Instance?.Upgrade;
+
+        int currentLevel = upgradeManager != null
+            ? upgradeManager.RuntimeLevel.Get(currentFacilityType)
+            : 0;
+        int maxLevel = upgradeData != null ? upgradeData.MaxLevel : 0;
+        bool isPurchased = currentLevel > 0;
+
+        UpgradeAvailability availability =
+            upgradeManager != null && upgradeData != null
+                ? upgradeManager.GetUpgradeAvailability(upgradeData)
+                : UpgradeAvailability.InvalidData;
+
+        facilityNameText.text = facilityData != null
+            ? facilityData.DisplayName
+            : currentFacilityType.ToString();
 
         levelText.text =
-            $"Lv.{currentFacility.CurrentLevel} / " +
-            $"Lv.{currentFacility.MaxLevel}";
+            $"Lv.{currentLevel} / " +
+            $"Lv.{maxLevel}";
 
-        levelSlider.maxValue = currentFacility.MaxLevel;
+        levelSlider.maxValue = maxLevel;
+        levelSlider.value = currentLevel;
 
-        levelSlider.value = currentFacility.CurrentLevel;
+        currentEffectText.text = isPurchased
+            ? $"Lv.{currentLevel}"
+            : "Not Purchased";
 
-        currentEffectText.text = currentFacility.GetCurrentEffect();
+        nextEffectText.text = !isPurchased
+            ? "Purchase to unlock"
+            : availability == UpgradeAvailability.Available
+                ? $"Lv.{currentLevel + 1}"
+                : "Max Level";
 
-        nextEffectText.text = currentFacility.GetNextEffect();
-
-        RefreshActionButton();
-
-        previousButton.gameObject.SetActive(
-            facilityCollection.GetPrevious(currentFacility) != null);
-
-        nextButton.gameObject.SetActive(
-            facilityCollection.GetNext(currentFacility) != null);
+        RefreshActionButton(isPurchased, availability);
+        RefreshNavigationButtons();
     }
 
-    private void RefreshActionButton()
+    private void RefreshActionButton(
+        bool isPurchased,
+        UpgradeAvailability availability)
     {
-        if (currentFacility == null) return;
-
-        UpgradeAvailability availability = currentFacility.GetUpgradeAvailability();
-
-        if (!currentFacility.IsPurchased)
+        if (!isPurchased)
         {
             actionButtonText.text =
                 availability == UpgradeAvailability.Available
-                    ? "Purchase" : GetAvailabilityText(availability);
+                    ? "Purchase"
+                    : GetAvailabilityText(availability, false);
 
-            actionButton.interactable = availability == UpgradeAvailability.Available;
+            actionButton.interactable =
+                availability == UpgradeAvailability.Available;
 
             return;
         }
 
-        actionButtonText.text = GetAvailabilityText(availability);
-
-        actionButton.interactable = availability == UpgradeAvailability.Available;
+        actionButtonText.text = GetAvailabilityText(availability, true);
+        actionButton.interactable =
+            availability == UpgradeAvailability.Available;
     }
 
-    private string GetAvailabilityText(UpgradeAvailability availability)
+    private void RefreshNavigationButtons()
+    {
+        bool hasPrevious = facilityCollection != null
+            && facilityCollection.TryGetPrevious(currentFacilityType, out _);
+        bool hasNext = facilityCollection != null
+            && facilityCollection.TryGetNext(currentFacilityType, out _);
+
+        previousButton.gameObject.SetActive(hasPrevious);
+        nextButton.gameObject.SetActive(hasNext);
+    }
+
+    private string GetAvailabilityText(
+        UpgradeAvailability availability,
+        bool isPurchased)
     {
         return availability switch
         {
             UpgradeAvailability.Available =>
-                currentFacility.IsPurchased ? "Upgrade" : "Purchase",
+                isPurchased ? "Upgrade" : "Purchase",
 
             UpgradeAvailability.MaxLevel => "Max Level",
 
@@ -157,15 +201,8 @@ public class FacilityDetailPanel : MonoBehaviour
             UpgradeAvailability.InsufficientCurrency => "Not Enough Currency",
 
             UpgradeAvailability.InvalidData => "Data Error",
-            
+
             _ => "Unavailable"
         };
-    }
-
-    private void UnsubscribeCurrentFacility()
-    {
-        if (currentFacility == null) return;
-
-        currentFacility.StateChanged -= OnFacilityStateChanged;
     }
 }

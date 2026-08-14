@@ -504,7 +504,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -836,6 +836,7 @@ GameObject:
   - component: {fileID: 5991180951990663192}
   - component: {fileID: 5971953031205564747}
   - component: {fileID: 3124407380116089243}
+  - component: {fileID: 227376816920974330}
   m_Layer: 5
   m_Name: UI_FacilityManagement
   m_TagString: Untagged
@@ -891,6 +892,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &227376816920974330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8650502163405609338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9af891a69b93da4294e54b933ef5369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FacilityRaycaster
+  targetCamera: {fileID: 0}
 --- !u!1001 &672362953920725577
 PrefabInstance:
   m_ObjectHideFlags: 0

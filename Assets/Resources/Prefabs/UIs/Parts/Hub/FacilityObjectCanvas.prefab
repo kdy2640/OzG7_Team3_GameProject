@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 2562873708567368361}
   - component: {fileID: 983349522336811156}
   - component: {fileID: 1338711303630752759}
+  - component: {fileID: 6435192614512561988}
   m_Layer: 0
   m_Name: FacilityObjectCanvas
   m_TagString: Untagged
@@ -222,7 +223,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &983349522336811156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,11 +254,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FacilityWorldUI
   targetCamera: {fileID: 0}
-  purchaseStatusRoot: {fileID: 0}
-  purchaseIcon: {fileID: 0}
-  purchasedStatusRoot: {fileID: 0}
-  levelText: {fileID: 0}
-  upgradeArrow: {fileID: 0}
+  purchaseStatusRoot: {fileID: 7071323280460095848}
+  purchaseIcon: {fileID: 4701420191112591599}
+  purchasedStatusRoot: {fileID: 8536555397667263516}
+  levelText: {fileID: 6200391906544872889}
+  upgradeArrow: {fileID: 7358492082745047378}
+--- !u!225 &6435192614512561988
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4074725353170549394}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &4701420191112591599
 GameObject:
   m_ObjectHideFlags: 0

@@ -77,7 +77,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         bool isMaxLevel = level >= employeeData.MaxLevel;
 
         EmployeeUpgradeDataSO upgradeData =
-            UpgradeDataDB.GetData(employeeData.Id) as EmployeeUpgradeDataSO;
+            UpgradeDataDB.GetData(employeeData.EmployeeType);
 
         int cost = 0;
 
