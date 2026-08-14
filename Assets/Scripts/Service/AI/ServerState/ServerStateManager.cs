@@ -8,12 +8,9 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private Transform kitchen;
     [SerializeField] private Transform waitPoint;
 
-    [SerializeField] public Animator animator;
+    private Animator animator;
 
     private DishType dish;
-
-    private Renderer renderer;
-    public Renderer Renderer => renderer;
 
     private CustomerStateManager customer;
 
@@ -23,6 +20,7 @@ public class ServerStateManager : MonoBehaviour
     public Transform ServePoint => servePoint;
     public Transform Kitchen => kitchen;
     public Transform WaitPoint => waitPoint;
+    public Animator Animator => animator;
     public CustomerStateManager Customer => customer;
     public DishType Dish => dish;
     
@@ -32,15 +30,12 @@ public class ServerStateManager : MonoBehaviour
 
     private void Awake()
     {
-        renderer = gameObject.GetComponent<Renderer>();
         kitchen = FindFirstObjectByType<Kitchen>().transform;
         aiMove = gameObject.GetComponent<AIMove>();
+        animator = gameObject.GetComponentInChildren<Animator>();
         animator.applyRootMotion = false;
     }
 
-    private void OnEnable()
-    {
-    }
     private void Start()
     {
         ChangeState(new ServerGetBackState(this));
@@ -89,9 +84,6 @@ public class ServerStateManager : MonoBehaviour
         animator.SetBool("IsServing", false);
         animator.SetBool("IsRunning", false);
     }
-
-
-
     private void OnDisable()
     {
         Destroy(this.gameObject);

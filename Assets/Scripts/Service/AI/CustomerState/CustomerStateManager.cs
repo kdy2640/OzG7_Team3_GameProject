@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CustomerStateManager : MonoBehaviour
 {
+    [SerializeField] private float speed = 2f;
     [SerializeField] private AIMove aiMove;
     [SerializeField] private Transform exitPoint;
     [SerializeField] private TipBox tipBox;
@@ -37,6 +38,7 @@ public class CustomerStateManager : MonoBehaviour
         this.exitPoint = exitPoint;
         this.tableManager = tableManager;
         this.tipBox = tipBox;
+        AiMove.SetSpeed(speed);
     }
 
     private void Start()
