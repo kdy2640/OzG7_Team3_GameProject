@@ -1,0 +1,53 @@
+using UnityEngine;
+
+public class TipBox : MonoBehaviour
+{
+    [SerializeField] private int tipAmount;
+    private TipButton tipButton;
+
+    private void OnEnable()
+    {
+        tipAmount = 0;
+        tipButton = GetComponentInChildren<TipButton>();
+        tipButton.OnClicked += ApplyTip;
+        tipButton.gameObject.SetActive(false);
+    }
+
+    public void AddTip(int tip)
+    {
+        tipAmount += tip;
+        UpdateUI();
+    }
+    public void ApplyTip()
+    {
+        GameManager.Instance.StockManager.AddCurrency(tipAmount);
+        tipAmount = 0;
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
+        if(tipAmount <= 0)
+        {
+            tipButton.gameObject.SetActive(false);
+            return;
+        }
+        else
+        {
+            if(!tipButton.gameObject.activeSelf)
+                tipButton.gameObject.SetActive(true);
+
+            tipButton.SetAmountText(tipAmount);
+
+        }
+    }
+
+    private void OnDisable()
+    {
+        if(tipAmount > 0)
+        {
+            ApplyTip();
+        }
+        tipButton.OnClicked -= ApplyTip;
+    }
+}

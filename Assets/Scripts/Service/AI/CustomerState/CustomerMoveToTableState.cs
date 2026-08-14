@@ -22,7 +22,6 @@ public class CustomerMoveToTableState : IState
     {
         stateManager.Animator.SetBool("IsWalking", true);
 
-        stateManager.Renderer.material.color = Color.red;
         aiMove.OnArrived += Arrived;
 
         aiMove.MoveTo(seat);

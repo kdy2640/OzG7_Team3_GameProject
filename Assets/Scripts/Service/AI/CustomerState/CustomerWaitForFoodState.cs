@@ -15,7 +15,6 @@ public class CustomerWaitForFoodState : IState
     public void Enter()
     {
         stateManager.Animator.SetBool("IsSitting", true);
-        stateManager.Renderer.material.color = Color.pink;
         stateManager.foodReceived += StartEat;
     }
 
