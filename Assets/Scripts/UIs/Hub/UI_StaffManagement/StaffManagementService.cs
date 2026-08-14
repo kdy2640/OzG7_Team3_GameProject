@@ -7,21 +7,32 @@ public sealed class StaffManagementService
 
     public bool TryRecruitOrUpgrade(EmployeeType type)
     {
-        if (!EmployeeDataDB.TryGetData(type, out EmployeeDataSO employeeData))
+        Debug.Log($"[Staff] 레벨업 요청: {type}");
+
+        if (!EmployeeDataDB.TryGetData(type,out EmployeeDataSO employeeData))
         {
-            Debug.LogWarning($"EmployeeData가 없습니다: {type}");
+            Debug.LogWarning($"[Staff] EmployeeData가 없습니다: {type}");
+
             return false;
         }
 
-        EmployeeUpgradeDataSO upgradeData =
-            UpgradeDataDB.GetData(employeeData.Id) as EmployeeUpgradeDataSO;
+        Debug.Log($"[Staff] EmployeeData 찾음: {employeeData.Id}");
+
+        EmployeeUpgradeDataSO upgradeData = UpgradeDataDB.GetData(type);
 
         if (upgradeData == null)
         {
-            Debug.LogWarning($"EmployeeUpgradeData가 없습니다: {type}");
+            Debug.LogWarning($"[Staff] EmployeeUpgradeData가 없습니다: {type}");
+
             return false;
         }
 
-        return Upgrade.TryUpgrade(upgradeData);
+        Debug.Log($"[Staff] EmployeeUpgradeData 찾음: {upgradeData.Id}");
+
+        bool result = Upgrade.TryUpgrade(upgradeData);
+
+        Debug.Log($"[Staff] TryUpgrade 결과: {result}");
+
+        return result;
     }
 }
