@@ -36,6 +36,7 @@ Transform:
   - {fileID: 1000000000000000008}
   - {fileID: 1000000000000000010}
   - {fileID: 1000000000000000012}
+  - {fileID: 1000000000000000016}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8124230192942103269
@@ -105,6 +106,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1000000000000000008}
+  - component: {fileID: 8907271820301697778}
   m_Layer: 0
   m_Name: UtilityManager
   m_TagString: Untagged
@@ -127,10 +129,22 @@ Transform:
   m_Children:
   - {fileID: 7641996177521211967}
   - {fileID: 5977394629948249348}
-  - {fileID: 1000000000000000016}
   - {fileID: 1000000000000000018}
+  - {fileID: 2237573103642872928}
   m_Father: {fileID: 8680931657586737302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8907271820301697778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000000000000009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a967c26fc37690546b0b8b9ec1528926, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::UtilityManager
 --- !u!1 &1000000000000000017
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +313,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1000000000000000008}
+  m_Father: {fileID: 8680931657586737302}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5467591422465135007
 MonoBehaviour:
@@ -401,3 +415,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a622c36bac5647bc9b21435922c1771e, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::ServiceManager
+--- !u!1 &8817051623003642063
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2237573103642872928}
+  - component: {fileID: 7562236993444279307}
+  m_Layer: 0
+  m_Name: ToastManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2237573103642872928
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8817051623003642063}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1000000000000000008}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7562236993444279307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8817051623003642063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bf53ca75e290ef4fbfc355768fdfb17, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ToastManager
+  toastCanvasPrefab: {fileID: 8874055340018722691, guid: 0786420154244f8478bb014f8df76de5, type: 3}
+  displayDuration: 2

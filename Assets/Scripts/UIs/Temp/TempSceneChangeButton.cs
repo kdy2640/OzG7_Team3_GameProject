@@ -17,8 +17,7 @@ public class TempSceneChangeButton : MonoBehaviour
         text.text = "To" + sceneType.ToString();
     }
     private void OnValidate()
-    {
-        ChangeText();
+    { 
     }
     private void Awake()
     {

@@ -8,7 +8,8 @@ public enum UpgradeAvailability
     InvalidData,
     MaxLevel,
     MarketLevelLocked,
-    InsufficientCurrency
+    InsufficientCurrency,
+    InsufficientIngredients
 }
 
 public class UpgradeManager : MonoBehaviour
@@ -94,8 +95,18 @@ public class UpgradeManager : MonoBehaviour
             || GetUpgradeAvailability(data, state.level) != UpgradeAvailability.Available)
             return false;
 
-        if (!stockManager.TryConsumeCurrency(state.GetCurrentCost()))
+        if (data is DishUpgradeDataSO dishUpgradeData)
+        {
+            List<GroceryAmount> requiredIngredients =
+                GetDishUpgradeIngredients(dishUpgradeData, state.level);
+
+            if (!stockManager.TryConsumeGrocery(requiredIngredients))
+                return false;
+        }
+        else if (!stockManager.TryConsumeCurrency(state.GetCurrentCost()))
+        {
             return false;
+        }
 
         state.level++;
         RefreshRuntimeData();
@@ -157,10 +168,39 @@ public class UpgradeManager : MonoBehaviour
         if (!CanUpgradeAtCurrentMarketLevel(data, currentUpgradeLevel))
             return UpgradeAvailability.MarketLevelLocked;
 
+        if (data is DishUpgradeDataSO dishUpgradeData)
+        {
+            List<GroceryAmount> requiredIngredients =
+                GetDishUpgradeIngredients(dishUpgradeData, currentUpgradeLevel);
+
+            if (!stockManager.CanConsumeGrocery(requiredIngredients))
+                return UpgradeAvailability.InsufficientIngredients;
+
+            return UpgradeAvailability.Available;
+        }
+
         if (!stockManager.CanConsumeCurrency(data.GetCosts(currentUpgradeLevel)))
             return UpgradeAvailability.InsufficientCurrency;
 
         return UpgradeAvailability.Available;
+    }
+
+    private List<GroceryAmount> GetDishUpgradeIngredients(
+        DishUpgradeDataSO upgradeData,
+        int currentUpgradeLevel)
+    {
+        DishDataSO dishData = DishDataDB.GetData(upgradeData.TargetDish);
+        List<GroceryAmount> requiredIngredients = new List<GroceryAmount>();
+        float multiplier = Mathf.Pow(upgradeData.CostMultiplier, currentUpgradeLevel);
+
+        foreach (GroceryAmount ingredient in dishData.Ingredients)
+        {
+            requiredIngredients.Add(new GroceryAmount(
+                ingredient.grocery,
+                Mathf.RoundToInt(ingredient.amount * multiplier)));
+        }
+
+        return requiredIngredients;
     }
 
     public bool HasState(UpgradeDataSO data)

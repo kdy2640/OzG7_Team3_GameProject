@@ -27,6 +27,26 @@ public sealed class LevelMissionChecker
         }
     }
 
+    public LevelMissionInfo CurrentMission
+    {
+        get
+        {
+            if (missionGroup == null || missionGroup.Missions == null)
+                return null;
+
+            int currentStage = CurrentStage;
+            return currentStage < missionGroup.Missions.Count
+                ? missionGroup.Missions[currentStage]
+                : null;
+        }
+    }
+
+    public bool AreAllMissionsCompleted =>
+        missionGroup != null
+        && missionGroup.Missions != null
+        && missionGroup.Missions.Count > 0
+        && CurrentStage >= missionGroup.Missions.Count;
+
     public void SetMissionGroup(LevelMissionGroupSO missionGroup)
     {
         this.missionGroup = missionGroup;

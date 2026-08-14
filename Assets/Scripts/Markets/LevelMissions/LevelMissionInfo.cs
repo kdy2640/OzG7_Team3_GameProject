@@ -16,8 +16,12 @@ public sealed class LevelMissionInfo
 
     [SerializeField] private MissionConditionType conditionType;
     [SerializeReference] private MissionCondition condition;
+    [SerializeField] private string title;
+    [SerializeField, TextArea] private string description;
 
     public MissionCondition Condition => condition;
+    public string Title => title;
+    public string Description => description;
 
     internal void SyncCondition()
     {
