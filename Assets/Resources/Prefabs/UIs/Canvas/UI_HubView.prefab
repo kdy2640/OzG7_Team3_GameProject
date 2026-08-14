@@ -394,8 +394,9 @@ GameObject:
   - component: {fileID: 5789255436433230716}
   - component: {fileID: 8994347868439031634}
   - component: {fileID: 5526322593688991399}
+  - component: {fileID: 8872833074092737104}
   m_Layer: 0
-  m_Name: UI_ToStoreButton
+  m_Name: UI_ToHarvestUpgradeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -533,6 +534,20 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
+--- !u!114 &8872833074092737104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071178924033198186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7dd6fb31c7d43b2a435f2ae13d44ac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_HubStateButton
+  holdThreshold: 0.5
+  targetState: 3
 --- !u!1 &2077401934994352657
 GameObject:
   m_ObjectHideFlags: 0
@@ -1179,7 +1194,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Store
+  m_text: HarvestUpgrade
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1962,8 +1977,9 @@ GameObject:
   - component: {fileID: 4567140695683499223}
   - component: {fileID: 3978089984019313552}
   - component: {fileID: 5522408978731133002}
+  - component: {fileID: 8973512468206417354}
   m_Layer: 0
-  m_Name: LeftMenu
+  m_Name: UI_HubMenuPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2030,6 +2046,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8973512468206417354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5757192427899003005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebb8f5e22e3f48f59f9faf0ca4a2ac24, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::UI_HubMenuPanel
 --- !u!1 &5934311940443748579
 GameObject:
   m_ObjectHideFlags: 0
