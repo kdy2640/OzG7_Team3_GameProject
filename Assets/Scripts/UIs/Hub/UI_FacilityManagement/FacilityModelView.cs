@@ -14,22 +14,7 @@ public class FacilityModelView : MonoBehaviour
 
     private void OnEnable()
     {
-        if (facility == null) return;
-
-        facility.StateChanged += OnFacilityStateChanged;
         Refresh();
-    }
-
-    private void OnDisable()
-    {
-        if (facility != null)
-            facility.StateChanged -= OnFacilityStateChanged;
-    }
-
-    private void OnFacilityStateChanged(FacilityController changedFacility)
-    {
-        if (changedFacility == facility)
-            Refresh();
     }
 
     private void Refresh()
@@ -46,26 +31,39 @@ public class FacilityModelView : MonoBehaviour
     // Lv.0 = 미구매 모델, Lv.1 이상 = 해당 레벨 모델
     public void ShowLevel(int level)
     {
-        if (facility == null || facilityModelRoot == null) return;
-
+        if (facility == null)
+        {
+            Debug.LogWarning($"{name}: FacilityController가 할당되지 않았습니다.",this);
+            return;
+        }
+        if(facilityModelRoot == null)
+        {
+            Debug.LogWarning
+                ($"[FacilityModelView] FacilityModelRoot가 없습니다: {name}",this);
+            return;
+        }
         FacilityDataSO facilityData =
             FacilityDataDB.GetData(facility.FacilityType);
 
-        if (facilityData == null) return;
-
-        if (shownLevel == level && currentModelInstance != null) return;
-
-        GameObject modelPrefab =
-            facilityData.GetSolidPrefabForLevel(level);
-
-        ClearCurrentModel();
+        if (facilityData == null)
+        {
+            Debug.LogWarning
+                ($"[FacilityModelView] FacilityData가 없습니다: {facility.FacilityType}",
+                this);
+            return;
+        }
+        GameObject modelPrefab = facilityData.GetSolidPrefabForLevel(level);
 
         if (modelPrefab == null)
         {
-            Debug.LogWarning
-                ($"{name}: {facilityData.DisplayName}의 Lv.{level} 모델이 없습니다.");
+            Debug.LogWarning(
+                $"[FacilityModelView] " +
+                $"{facilityData.DisplayName} Lv.{level} 모델이 없습니다.");
             return;
         }
+        if (shownLevel == level && currentModelInstance != null) return;
+
+        ClearCurrentModel();
 
         currentModelInstance = Instantiate(modelPrefab, facilityModelRoot);
         currentModelInstance.transform.localPosition = Vector3.zero;
@@ -73,6 +71,11 @@ public class FacilityModelView : MonoBehaviour
         currentModelInstance.transform.localScale = Vector3.one;
 
         shownLevel = level;
+
+        Debug.Log(
+            $"[FacilityModelView] {facility.FacilityType} " +
+            $"→ Lv.{level} 모델 생성: {modelPrefab.name}",
+            this);
     }
 
     public void PlayUpgradeEffect()

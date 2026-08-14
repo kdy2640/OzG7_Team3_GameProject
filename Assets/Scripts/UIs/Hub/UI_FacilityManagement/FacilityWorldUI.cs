@@ -15,22 +15,39 @@ public class FacilityWorldUI : MonoBehaviour
     [SerializeField] private TMP_Text levelText;
     [SerializeField] private GameObject upgradeArrow;
 
-    private void Awake()
+    private void OnEnable()
     {
-        if (targetCamera == null)
-            targetCamera = Camera.main;
+        RefreshCamera();
     }
+
     private void LateUpdate()
     {
+        RefreshCamera();
+    }
+
+    private void RefreshCamera()
+    {
+        if (targetCamera == null) targetCamera = Camera.main;
+
         if (targetCamera == null)
             return;
 
-        // 월드 UI가 항상 카메라 정면을 향하도록 처리
         transform.rotation = targetCamera.transform.rotation;
     }
 
-    public void Refresh(bool isPurchased, int currentLevel, bool canUpgrade)
+    public void Refresh(
+        bool isPurchased,
+        int currentLevel,
+        bool canUpgrade)
     {
+        Debug.Log(
+            $"[FacilityWorldUI] " +
+            $"{gameObject.name} / " +
+            $"Purchased={isPurchased} / " +
+            $"Level={currentLevel} / " +
+            $"CanUpgrade={canUpgrade}",
+            this);
+
         if (purchaseStatusRoot != null)
             purchaseStatusRoot.SetActive(!isPurchased);
 

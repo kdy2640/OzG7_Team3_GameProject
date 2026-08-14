@@ -4,11 +4,14 @@ using UnityEngine;
 public class FacilityController : MonoBehaviour
 {
     [Header("Facility")]
-    [SerializeField] private FacilityType facilityType = FacilityType.Count;
+    [SerializeField]
+    private FacilityType facilityType = FacilityType.Count;
 
     [Header("View")]
     [SerializeField] private FacilityModelView modelView;
     [SerializeField] private FacilityWorldUI worldUI;
+
+    private bool isUpgradeManagerSubscribed;
 
     private UpgradeManager SubscribedUpgradeManager => GameManager.Instance?.Upgrade;
 
@@ -22,7 +25,8 @@ public class FacilityController : MonoBehaviour
         {
             FacilityDataSO data = FacilityDataDB.GetData(facilityType);
 
-            return data != null ? data.DisplayName : facilityType.ToString();
+            return data != null
+                ? data.DisplayName : facilityType.ToString();
         }
     }
 
@@ -44,9 +48,20 @@ public class FacilityController : MonoBehaviour
 
     public event Action<FacilityController> StateChanged;
 
+    #region Unity Lifecycle
+
     private void OnEnable()
     {
-        SubscribeUpgradeManager();
+        TrySubscribeUpgradeManager();
+        RefreshFromUpgradeManager();
+    }
+
+    private void Start()
+    {
+        // UI 프리팹이 런타임에 생성되는 구조에서는
+        // OnEnable 시점보다 UpgradeManager가 늦게 준비될 수 있으므로
+        // 한 번 더 확인합니다.
+        TrySubscribeUpgradeManager();
         RefreshFromUpgradeManager();
     }
 
@@ -54,6 +69,8 @@ public class FacilityController : MonoBehaviour
     {
         UnsubscribeUpgradeManager();
     }
+
+    #endregion
 
     #region Upgrade
 
@@ -78,7 +95,8 @@ public class FacilityController : MonoBehaviour
 
     public UpgradeAvailability GetUpgradeAvailability()
     {
-        UpgradeManager upgradeManager = SubscribedUpgradeManager;
+        UpgradeManager upgradeManager =
+            SubscribedUpgradeManager;
 
         if (upgradeManager == null)
             return UpgradeAvailability.InvalidData;
@@ -86,29 +104,34 @@ public class FacilityController : MonoBehaviour
         if (UpgradeData == null)
             return UpgradeAvailability.InvalidData;
 
-        return upgradeManager.GetUpgradeAvailability(UpgradeData);
+        return upgradeManager.GetUpgradeAvailability(
+            UpgradeData);
     }
 
     private bool TryUpgradeInternal()
     {
-        UpgradeManager upgradeManager = SubscribedUpgradeManager;
+        UpgradeManager upgradeManager =
+            SubscribedUpgradeManager;
 
         if (upgradeManager == null)
         {
             Debug.LogError(
                 $"[FacilityController] UpgradeManager를 찾을 수 없습니다. " +
-                $"Facility : {facilityType}");
+                $"Facility : {facilityType}",
+                this);
 
             return false;
         }
 
-        FacilityUpgradeDataSO data = UpgradeData;
+        FacilityUpgradeDataSO data =
+            UpgradeData;
 
         if (data == null)
         {
             Debug.LogError(
                 $"[FacilityController] FacilityUpgradeDataSO를 찾을 수 없습니다. " +
-                $"Facility : {facilityType}");
+                $"Facility : {facilityType}",
+                this);
 
             return false;
         }
@@ -122,9 +145,11 @@ public class FacilityController : MonoBehaviour
             $"UpgradeData={data.Id}, " +
             $"Availability={availability}, " +
             $"CurrentLevel={CurrentLevel}, " +
-            $"MaxLevel={data.MaxLevel}");
+            $"MaxLevel={data.MaxLevel}",
+            this);
 
-        if (availability != UpgradeAvailability.Available) return false;
+        if (availability != UpgradeAvailability.Available)
+            return false;
 
         return upgradeManager.TryUpgrade(data);
     }
@@ -154,33 +179,68 @@ public class FacilityController : MonoBehaviour
 
     #endregion
 
-    #region Refresh
+    #region Upgrade Event
 
-    private void SubscribeUpgradeManager()
+    private void TrySubscribeUpgradeManager()
     {
-        UpgradeManager upgradeManager = SubscribedUpgradeManager;
+        if (isUpgradeManagerSubscribed)
+            return;
+
+        UpgradeManager upgradeManager =
+            GameManager.Instance?.Upgrade;
 
         if (upgradeManager == null)
+        {
+            Debug.LogWarning(
+                $"[FacilityController] UpgradeManager가 아직 준비되지 않았습니다. " +
+                $"Facility={facilityType}",
+                this);
+
             return;
+        }
 
         upgradeManager.SubscribeUpgradeChanged(
             RefreshFromUpgradeManager);
+
+        isUpgradeManagerSubscribed = true;
+
+        Debug.Log(
+            $"[FacilityController] UpgradeChanged 구독 완료: {facilityType}",
+            this);
     }
 
     private void UnsubscribeUpgradeManager()
     {
-        UpgradeManager upgradeManager = SubscribedUpgradeManager;
-
-        if (upgradeManager == null)
+        if (!isUpgradeManagerSubscribed)
             return;
 
-        upgradeManager.UnsubscribeUpgradeChanged(
-            RefreshFromUpgradeManager);
+        UpgradeManager upgradeManager =
+            GameManager.Instance?.Upgrade;
+
+        if (upgradeManager != null)
+        {
+            upgradeManager.UnsubscribeUpgradeChanged(
+                RefreshFromUpgradeManager);
+        }
+
+        isUpgradeManagerSubscribed = false;
     }
+
+    #endregion
+
+    #region Refresh
 
     private void RefreshFromUpgradeManager()
     {
         int level = CurrentLevel;
+
+        Debug.Log(
+            $"[FacilityController] UI 갱신: " +
+            $"Facility={facilityType}, " +
+            $"Level={level}, " +
+            $"ModelView={(modelView != null)}, " +
+            $"WorldUI={(worldUI != null)}",
+            this);
 
         modelView?.ShowLevel(level);
 
