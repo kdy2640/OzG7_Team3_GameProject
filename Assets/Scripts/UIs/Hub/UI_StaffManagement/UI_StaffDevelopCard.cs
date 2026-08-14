@@ -3,18 +3,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ī�� �� ���� ������ ��ȸ, UI ǥ��, Ŭ�� ������ ����մϴ�.
 public sealed class UI_StaffDevelopCard : MonoBehaviour
 {
     private enum StaffCardState
     {
         Locked,
         Normal,
-        CanRecruit,
         CanUpgrade
     }
 
-    [SerializeField] private EmployeeType employeeType = EmployeeType.Count;
+    [SerializeField]
+    private EmployeeType employeeType =
+        EmployeeType.Count;
 
     [Header("UI")]
     [SerializeField] private Image outlineImage;
@@ -24,41 +24,56 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
     [SerializeField] private GameObject lockOverlay;
 
     [Header("Color")]
-    [SerializeField] private Color normalColor = new(1f, 1f, 1f, 0f);
-    [SerializeField] private Color availableColor = new(1f, .78f, .1f, 1f);
-    [SerializeField] private Color lockedColor = new(.35f, .35f, .35f, .85f);
+    [SerializeField]
+    private Color normalColor =
+        new(1f, 1f, 1f, 0f);
+
+    [SerializeField]
+    private Color availableColor = new(1f, .78f, .1f, 1f);
+
+    [SerializeField]
+    private Color lockedColor = new(.35f, .35f, .35f, .85f);
 
     public EmployeeType EmployeeType => employeeType;
 
     private Action<EmployeeType> onSelected;
-    private Button button;
+
+    [SerializeField] private Button button;
 
     private void Awake()
     {
-        button = GetComponent<Button>();
+        if (button == null)
+        {
+            Debug.LogError($"[StaffCard] Button이 연결되지 않았습니다: {gameObject.name}");
 
-        if (button != null)
-            button.onClick.AddListener(OnClick);
+            return;
+        }
+
+        button.onClick.AddListener(OnClick);
+    }
+
+    private void OnEnable()
+    {
+        Refresh();
     }
 
     public void Initialize(Action<EmployeeType> callback)
     {
         onSelected = callback;
+        Refresh();
     }
 
-    // ListPanel�� ȣ���մϴ�.
-    // EmployeeData�� ������ true, ������ false�� ��ȯ�մϴ�.
-    public bool Refresh()
+    public void Refresh()
     {
         if (!CreateInfoData(out int level, out StaffCardState state))
-            return false;
+        {
+            return;
+        }
 
         ApplyView(level, state);
-        return true;
     }
 
-    // ī�� ǥ�ÿ� �ּ� ������ ���� �����մϴ�.
-    private bool CreateInfoData(out int level, out StaffCardState state)
+    private bool CreateInfoData(out int level,out StaffCardState state)
     {
         level = 0;
         state = StaffCardState.Locked;
@@ -66,9 +81,10 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         if (employeeType == EmployeeType.Count)
             return false;
 
-        if (!EmployeeDataDB.TryGetData(employeeType, out EmployeeDataSO employeeData))
+        if (!EmployeeDataDB.TryGetData(employeeType,out EmployeeDataSO employeeData))
         {
-            Debug.LogWarning($"EmployeeData�� �����ϴ�: {employeeType}");
+            Debug.LogWarning($"EmployeeData가 없습니다: {employeeType}");
+
             return false;
         }
 
@@ -76,39 +92,64 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
         level = upgrade.RuntimeLevel.Get(employeeType);
 
-        EmployeeUpgradeDataSO upgradeData =
-            UpgradeDataDB.GetData(employeeData.Id) as EmployeeUpgradeDataSO;
-
-        bool canUpgrade = upgrade.CanUpgrade(upgradeData);
-
-        if (level == 0)
+        // 구매 전
+        if (level <= 0)
         {
-            state = canUpgrade
-                ? StaffCardState.CanRecruit : StaffCardState.Locked;
+            state = StaffCardState.Locked;
+            return true;
         }
-        else if (level >= employeeData.MaxLevel)
+
+        // 최대 레벨
+        EmployeeUpgradeDataSO upgradeData = UpgradeDataDB.GetData(employeeType);
+
+        if (upgradeData == null)
+        {
+            Debug.LogWarning($"[StaffCard] {employeeType} UpgradeData가 없습니다.");
+
+            state = StaffCardState.Normal;
+            return true;
+        }
+
+        // 최대 레벨
+        if (level >= upgradeData.MaxLevel)
         {
             state = StaffCardState.Normal;
+            return true;
         }
-        else
-        {
-            state = canUpgrade
-                ? StaffCardState.CanUpgrade : StaffCardState.Normal;
-        }
+
+        UpgradeAvailability availability = upgrade.GetUpgradeAvailability(upgradeData);
+
+        bool canUpgrade = availability == UpgradeAvailability.Available;
+
+        Debug.Log(
+            $"[StaffCard] {employeeType} " +
+            $"Lv={level} " +
+            $"MaxLv={upgradeData.MaxLevel} " +
+            $"Availability={availability} " +
+            $"Cost={upgradeData.GetCosts(level)}"
+        );
+
+        state = canUpgrade
+            ? StaffCardState.CanUpgrade : StaffCardState.Normal;
 
         return true;
     }
 
     private void ApplyView(int level, StaffCardState state)
     {
-        bool canRecruit = state == StaffCardState.CanRecruit;
-        bool canUpgrade = state == StaffCardState.CanUpgrade;
-        bool isLocked = state == StaffCardState.Locked;
+        bool canUpgrade =
+            state == StaffCardState.CanUpgrade;
 
-        levelText.text = $"Lv.{level}";
-        levelText.gameObject.SetActive(!canRecruit);
+        bool isLocked =
+            state == StaffCardState.Locked;
 
-        if (recruitReadyText != null) recruitReadyText.SetActive(canRecruit);
+        if (levelText != null)
+        {
+            levelText.text = $"Lv.{level}";
+            levelText.gameObject.SetActive(!isLocked);
+        }
+
+        if (recruitReadyText != null) recruitReadyText.SetActive(isLocked);
 
         if (upgradeArrow != null) upgradeArrow.SetActive(canUpgrade);
 
@@ -116,8 +157,9 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
         if (outlineImage != null)
         {
-            outlineImage.color = canRecruit || canUpgrade
-                ? availableColor : isLocked ? lockedColor : normalColor;
+            outlineImage.color =
+                canUpgrade ? availableColor : 
+                isLocked ? lockedColor : normalColor;
         }
     }
 

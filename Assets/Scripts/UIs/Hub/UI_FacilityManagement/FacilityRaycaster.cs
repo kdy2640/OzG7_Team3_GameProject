@@ -5,38 +5,50 @@ using UnityEngine.EventSystems;
 public class FacilityRaycaster : MonoBehaviour
 {
     [SerializeField] private Camera targetCamera;
+    [SerializeField] private LayerMask clickableLayer; // 클릭할 레이어를 Inspector에서 지정하세요.
+    [SerializeField] private float maxDistance = 1000f;
 
     private void Awake()
     {
-        if (targetCamera == null)
-        {
-            targetCamera = Camera.main;
-        }
+        EnsureCamera();
     }
 
     private void Update()
     {
-        if (Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame) return;
+        // 마우스 또는 터치 포인터 검사
+        if (Pointer.current == null || !Pointer.current.press.wasPressedThisFrame) return;
 
-        // UI 버튼을 클릭한 경우 월드 클릭 처리하지 않음
-        if (EventSystem.current != null &&
-            EventSystem.current.IsPointerOverGameObject())
+        // UI 클릭 여부 체크 (New Input System 대응)
+        if (IsPointerOverUI()) return;
+
+        EnsureCamera();
+        if (targetCamera == null) return;
+
+        // ScreenPointToRay 생성
+        Vector2 mousePos = Pointer.current.position.ReadValue();
+        Ray ray = targetCamera.ScreenPointToRay(mousePos);
+
+        // LayerMask와 MaxDistance를 적용하여 Raycast
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, clickableLayer))
         {
-            return;
+            FacilityClickTarget target = hit.collider.GetComponentInParent<FacilityClickTarget>();
+            target?.OnClicked();
         }
+    }
 
-        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+    private bool IsPointerOverUI()
+    {
+        if (EventSystem.current == null) return false;
+
+        // 마우스/포인터 ID를 명시적으로 전달
+        return EventSystem.current.IsPointerOverGameObject();
+    }
+
+    private void EnsureCamera()
+    {
+        if (targetCamera == null || !targetCamera.gameObject.activeInHierarchy)
         {
-            return;
+            targetCamera = Camera.main;
         }
-        
-        Ray ray = targetCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-        if (!Physics.Raycast(ray, out RaycastHit hit)) return;
-
-        FacilityClickTarget target =
-            hit.collider.GetComponentInParent<FacilityClickTarget>();
-
-        target?.OnClicked();
     }
 }
