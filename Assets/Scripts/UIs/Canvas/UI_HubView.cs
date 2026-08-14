@@ -3,35 +3,37 @@ using UnityEngine;
 
 public sealed class UI_HubView : UI_Base
 {
+    private UI_HubMenuPanel hubMenuPanel;
     private UI_MareketVisualPanel marketVisualPanel;
     private UI_PhaseButtonPanel phaseButtonPanel;
     private UI_DayVisual dayVisual;
 
     private enum GameObjects
     {
-        UI_ToFacilityManagementButton,
-        UI_ToMenuManagementButton,
-        UI_ToStoreButton,
-        UI_ToLogButton
+        UI_HubMenuPanel,
+        UI_MareketVisualPanel,
+        UI_PhasePanel,
+        UI_DayVisual
     }
 
     protected override void OnInit()
     {
         Bind<GameObject>(typeof(GameObjects));
-        GetGameObject((int)GameObjects.UI_ToFacilityManagementButton)?
-            .GetComponent<UI_HubStateButton>()?
-            .Init(Owner);
-        GetGameObject((int)GameObjects.UI_ToMenuManagementButton)?
-            .GetComponent<UI_HubStateButton>()?
-            .Init(Owner);
 
-        marketVisualPanel = GetComponentInChildren<UI_MareketVisualPanel>(true);
+        hubMenuPanel = GetGameObject((int)GameObjects.UI_HubMenuPanel)?
+            .GetComponent<UI_HubMenuPanel>();
+        hubMenuPanel?.Init(Owner);
+
+        marketVisualPanel = GetGameObject((int)GameObjects.UI_MareketVisualPanel)?
+            .GetComponent<UI_MareketVisualPanel>();
         marketVisualPanel?.Refresh();
 
-        phaseButtonPanel = GetComponentInChildren<UI_PhaseButtonPanel>(true);
+        phaseButtonPanel = GetGameObject((int)GameObjects.UI_PhasePanel)?
+            .GetComponent<UI_PhaseButtonPanel>();
         phaseButtonPanel?.Init(Owner);
 
-        dayVisual = GetComponentInChildren<UI_DayVisual>(true);
+        dayVisual = GetGameObject((int)GameObjects.UI_DayVisual)?
+            .GetComponent<UI_DayVisual>();
         dayVisual?.Refresh();
     }
 

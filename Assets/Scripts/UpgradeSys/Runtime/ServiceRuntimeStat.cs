@@ -5,6 +5,8 @@ using UnityEngine;
 public enum ServiceStatType
 {
     CustomerCount,
+    ExtraTime,
+    TipMultiplier,
     Count
 }
 

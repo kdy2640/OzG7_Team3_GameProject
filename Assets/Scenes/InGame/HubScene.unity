@@ -119,6 +119,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &103380500
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 103380501}
+  m_Layer: 0
+  m_Name: TractorAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &103380501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103380500}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.06162843, y: 0.70441604, z: -0.18301277, w: 0.6830127}
+  m_LocalPosition: {x: 0, y: 0.3, z: -7.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &195802779
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,18 +294,32 @@ MonoBehaviour:
   views:
   - state: 0
     prefab: {fileID: 6851621412088424318, guid: 0b0ea43de063afe4a86c13f8f5a82188, type: 3}
+    worldVisualPrefab: {fileID: 0}
+    worldVisualAnchor: {fileID: 0}
   - state: 1
     prefab: {fileID: 5971953031205564747, guid: c6ac4dbd434a14d4d889b87008f26196, type: 3}
+    worldVisualPrefab: {fileID: 0}
+    worldVisualAnchor: {fileID: 0}
   - state: 2
     prefab: {fileID: 560746267624209656, guid: f33bd4850e15c1e4fa2dcb2e8e4abea6, type: 3}
+    worldVisualPrefab: {fileID: 0}
+    worldVisualAnchor: {fileID: 0}
   - state: 3
     prefab: {fileID: 3475072999758830976, guid: 645ffb3fc6fcb574ba15c208e7e010f1, type: 3}
+    worldVisualPrefab: {fileID: 1198899574354213836, guid: 0c73e84de52701e489fa7d4110fcb63a, type: 3}
+    worldVisualAnchor: {fileID: 103380501}
   - state: 4
     prefab: {fileID: 566290857952950772, guid: 26dec4cc295fd0b4982d4c0930eea9e7, type: 3}
+    worldVisualPrefab: {fileID: 0}
+    worldVisualAnchor: {fileID: 0}
   - state: 5
     prefab: {fileID: 5346201553909444262, guid: fe2ea41a1b913564eb4b9991ec3bab6b, type: 3}
+    worldVisualPrefab: {fileID: 0}
+    worldVisualAnchor: {fileID: 0}
   - state: 6
     prefab: {fileID: 5971953031205564747, guid: a2811349bb81573448426891bcd252df, type: 3}
+    worldVisualPrefab: {fileID: 0}
+    worldVisualAnchor: {fileID: 0}
 --- !u!1 &645394395
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,3 +636,4 @@ SceneRoots:
   - {fileID: 645394397}
   - {fileID: 870606397}
   - {fileID: 1602574520}
+  - {fileID: 103380501}
