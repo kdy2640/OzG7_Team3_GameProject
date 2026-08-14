@@ -25,10 +25,16 @@ public sealed class HubCanvasController : MonoBehaviour
     [Serializable]
     private sealed class ViewEntry
     {
+        [Header("UI")]
         [SerializeField] private HubCanvasState state;
         [SerializeField] private UI_Base prefab;
 
+        [Header("World Visual")]
+        [SerializeField] private GameObject worldVisualPrefab;
+        [SerializeField] private Transform worldVisualAnchor;
+
         [NonSerialized] private UI_Base instance;
+        [NonSerialized] private GameObject worldVisualInstance;
 
         public HubCanvasState State => state;
         public UI_Base Prefab => prefab;
@@ -45,6 +51,49 @@ public sealed class HubCanvasController : MonoBehaviour
             instance.name = prefab.name;
             instance.gameObject.SetActive(false);
             instance.Init(owner);
+
+            InitializeWorldVisual(owner);
+        }
+
+        public void ShowWorldVisual()
+        {
+            if (worldVisualInstance != null)
+            {
+                worldVisualInstance.SetActive(true);
+            }
+        }
+
+        public void HideWorldVisual()
+        {
+            if (worldVisualInstance != null)
+            {
+                worldVisualInstance.SetActive(false);
+            }
+        }
+
+        private void InitializeWorldVisual(HubCanvasController owner)
+        {
+            if (worldVisualPrefab == null && worldVisualAnchor == null)
+            {
+                return;
+            }
+
+            if (worldVisualPrefab == null || worldVisualAnchor == null)
+            {
+                Debug.LogWarning(
+                    $"[HubCanvasController] {state} requires both a world visual prefab and anchor.",
+                    owner);
+                return;
+            }
+
+            worldVisualInstance = Instantiate(worldVisualPrefab, worldVisualAnchor, false);
+            worldVisualInstance.name = worldVisualPrefab.name;
+
+            Transform visualTransform = worldVisualInstance.transform;
+            visualTransform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            visualTransform.localScale = Vector3.one;
+
+            worldVisualInstance.SetActive(false);
         }
     }
 
@@ -53,7 +102,7 @@ public sealed class HubCanvasController : MonoBehaviour
 
     private readonly Dictionary<HubCanvasState, ViewEntry> viewByState = new();
 
-    private UI_Base currentView;
+    private ViewEntry currentEntry;
     private Coroutine transitionCoroutine;
     private HubCanvasState? pendingState;
 
@@ -113,7 +162,7 @@ public sealed class HubCanvasController : MonoBehaviour
 
     private IEnumerator ChangeState(HubCanvasState nextState)
     {
-        UI_Base nextView = null;
+        ViewEntry nextEntry = null;
 
         if (nextState != HubCanvasState.None)
         {
@@ -123,20 +172,22 @@ public sealed class HubCanvasController : MonoBehaviour
                 yield break;
             }
 
-            nextView = entry.Instance;
+            nextEntry = entry;
         }
 
-        if (currentView != null)
+        if (currentEntry != null)
         {
-            yield return currentView.Hide();
+            yield return currentEntry.Instance.Hide();
+            currentEntry.HideWorldVisual();
         }
 
-        currentView = nextView;
+        currentEntry = nextEntry;
         CurrentState = nextState;
 
-        if (currentView != null)
+        if (currentEntry != null)
         {
-            yield return currentView.Show();
+            currentEntry.ShowWorldVisual();
+            yield return currentEntry.Instance.Show();
         }
     }
 
