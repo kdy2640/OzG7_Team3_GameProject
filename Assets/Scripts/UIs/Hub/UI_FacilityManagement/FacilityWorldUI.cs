@@ -15,55 +15,56 @@ public class FacilityWorldUI : MonoBehaviour
     [SerializeField] private TMP_Text levelText;
     [SerializeField] private GameObject upgradeArrow;
 
-    private void OnEnable()
+    private void Start()
     {
-        RefreshCamera();
+        if (targetCamera == null)
+        {
+            targetCamera = Camera.main;
+        }
     }
 
     private void LateUpdate()
     {
-        RefreshCamera();
-    }
-
-    private void RefreshCamera()
-    {
-        if (targetCamera == null) targetCamera = Camera.main;
-
         if (targetCamera == null)
-            return;
+        {
+            targetCamera = Camera.main;
+
+            if (targetCamera == null) return;
+        }
 
         transform.rotation = targetCamera.transform.rotation;
     }
 
-    public void Refresh(
-        bool isPurchased,
-        int currentLevel,
-        bool canUpgrade)
+    public void Refresh( bool isPurchased, int currentLevel, bool canUpgrade)
     {
-        Debug.Log(
-            $"[FacilityWorldUI] " +
-            $"{gameObject.name} / " +
-            $"Purchased={isPurchased} / " +
-            $"Level={currentLevel} / " +
-            $"CanUpgrade={canUpgrade}",
-            this);
-
         if (purchaseStatusRoot != null)
+        {
             purchaseStatusRoot.SetActive(!isPurchased);
+        }
 
         if (purchaseIcon != null)
+        {
             purchaseIcon.SetActive(!isPurchased);
+        }
 
         if (purchasedStatusRoot != null)
+        {
             purchasedStatusRoot.SetActive(isPurchased);
+        }
 
         if (!isPurchased)
+        {
             return;
+        }
 
         if (levelText != null)
+        {
             levelText.text = $"Lv.{currentLevel}";
+        }
 
         if (upgradeArrow != null)
+        {
             upgradeArrow.SetActive(canUpgrade);
+        }
     }
 }
