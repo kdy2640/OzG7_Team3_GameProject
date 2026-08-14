@@ -1,49 +1,67 @@
+using System;
 using UnityEngine;
 
 public class FacilityCollection : MonoBehaviour
 {
-    [SerializeField] private FacilityDetailPanel detailPanel;
-
     private FacilityController[] facilities;
+
+    public event Action<FacilityType> FacilitySelected;
 
     private void Awake()
     {
         facilities = GetComponentsInChildren<FacilityController>(true);
     }
 
-    public void ShowDetail(FacilityController facility)
+    public void ShowDetail(FacilityType facilityType)
     {
-        if (detailPanel != null) detailPanel.ShowFacility(facility);
+        if (facilityType == FacilityType.Count) return;
+
+        FacilitySelected?.Invoke(facilityType);
     }
 
-    public FacilityController GetPrevious(FacilityController current)
+    public bool TryGetPrevious(FacilityType current, out FacilityType previous)
     {
         int index = FindIndex(current);
 
         for (int i = index - 1; i >= 0; i--)
         {
-            if (facilities[i] != null) return facilities[i];
+            if (facilities[i] == null) continue;
+
+            previous = facilities[i].FacilityType;
+            return true;
         }
-        return null;
+
+        previous = FacilityType.Count;
+        return false;
     }
 
-    public FacilityController GetNext(FacilityController current)
+    public bool TryGetNext(FacilityType current, out FacilityType next)
     {
         int index = FindIndex(current);
 
         for (int i = index + 1; i < facilities.Length; i++)
         {
-            if (facilities[i] != null) return facilities[i];
+            if (facilities[i] == null) continue;
+
+            next = facilities[i].FacilityType;
+            return true;
         }
-        return null;
+
+        next = FacilityType.Count;
+        return false;
     }
 
-    private int FindIndex(FacilityController facility)
+    private int FindIndex(FacilityType facilityType)
     {
         for (int i = 0; i < facilities.Length; i++)
         {
-            if (facilities[i] == facility) return i;
+            if (facilities[i] != null
+                && facilities[i].FacilityType == facilityType)
+            {
+                return i;
+            }
         }
+
         return -1;
     }
 }

@@ -17,6 +17,6 @@ public class FacilityClickTarget : MonoBehaviour
     {
         if (facility == null || collection == null) return;
 
-        collection.ShowDetail(facility);
+        collection.ShowDetail(facility.FacilityType);
     }
 }

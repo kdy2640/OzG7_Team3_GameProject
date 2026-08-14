@@ -6,7 +6,7 @@ public sealed class UI_HarvestUpgrade : UI_Base
 {
     private enum GameObjects
     {
-        To_HubView
+        ExitButton
     }
     private enum Texts
     {
@@ -18,7 +18,7 @@ public sealed class UI_HarvestUpgrade : UI_Base
         Bind<GameObject>(typeof(GameObjects));
         Bind<TextMeshProUGUI>(typeof(Texts));
 
-        GetGameObject((int)GameObjects.To_HubView)?
+        GetGameObject((int)GameObjects.ExitButton)?
             .GetComponent<UI_HubStateButton>()?
             .Init(Owner);
         GetUI<TextMeshProUGUI>((int)Texts.UI_TempText).text = "임시";

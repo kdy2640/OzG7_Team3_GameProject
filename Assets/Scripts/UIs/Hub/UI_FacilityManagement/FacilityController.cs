@@ -26,18 +26,7 @@ public class FacilityController : MonoBehaviour
         }
     }
 
-    public int CurrentLevel
-    {
-        get
-        {
-            UpgradeManager upgradeManager = SubscribedUpgradeManager;
-
-            if (upgradeManager == null) return 0;
-
-            return upgradeManager.RuntimeLevel.Get(facilityType);
-        }
-    }
-
+    public int CurrentLevel => SubscribedUpgradeManager.RuntimeLevel.Get(facilityType); 
     public bool IsPurchased => CurrentLevel > 0;
 
     public int MaxLevel => UpgradeData != null ? UpgradeData.MaxLevel : 0;
@@ -46,30 +35,17 @@ public class FacilityController : MonoBehaviour
 
     private void OnEnable()
     {
-        SubscribeUpgradeManager();
-        RefreshFromUpgradeManager();
+        SubscribedUpgradeManager.SubscribeUpgradeChanged(Refresh);
+        Refresh();
     }
 
     private void OnDisable()
     {
-        UnsubscribeUpgradeManager();
+        SubscribedUpgradeManager.UnsubscribeUpgradeChanged(Refresh);
     }
 
     #region Upgrade
-
-    public bool TryPurchase()
-    {
-        if (IsPurchased) return false;
-
-        return TryUpgradeInternal();
-    }
-
-    public bool TryUpgrade()
-    {
-        if (!IsPurchased) return false;
-
-        return TryUpgradeInternal();
-    }
+      
 
     public bool CanUpgrade()
     {
@@ -77,108 +53,22 @@ public class FacilityController : MonoBehaviour
     }
 
     public UpgradeAvailability GetUpgradeAvailability()
-    {
-        UpgradeManager upgradeManager = SubscribedUpgradeManager;
+    { 
 
-        if (upgradeManager == null)
+        if (SubscribedUpgradeManager == null)
             return UpgradeAvailability.InvalidData;
 
         if (UpgradeData == null)
             return UpgradeAvailability.InvalidData;
 
-        return upgradeManager.GetUpgradeAvailability(UpgradeData);
+        return SubscribedUpgradeManager.GetUpgradeAvailability(UpgradeData);
     }
-
-    private bool TryUpgradeInternal()
-    {
-        UpgradeManager upgradeManager = SubscribedUpgradeManager;
-
-        if (upgradeManager == null)
-        {
-            Debug.LogError(
-                $"[FacilityController] UpgradeManager를 찾을 수 없습니다. " +
-                $"Facility : {facilityType}");
-
-            return false;
-        }
-
-        FacilityUpgradeDataSO data = UpgradeData;
-
-        if (data == null)
-        {
-            Debug.LogError(
-                $"[FacilityController] FacilityUpgradeDataSO를 찾을 수 없습니다. " +
-                $"Facility : {facilityType}");
-
-            return false;
-        }
-
-        UpgradeAvailability availability =
-            upgradeManager.GetUpgradeAvailability(data);
-
-        Debug.Log(
-            $"[FacilityController] " +
-            $"Facility={facilityType}, " +
-            $"UpgradeData={data.Id}, " +
-            $"Availability={availability}, " +
-            $"CurrentLevel={CurrentLevel}, " +
-            $"MaxLevel={data.MaxLevel}");
-
-        if (availability != UpgradeAvailability.Available) return false;
-
-        return upgradeManager.TryUpgrade(data);
-    }
-
+     
     #endregion
+     
+     
 
-    #region Effect
-
-    public string GetCurrentEffect()
-    {
-        if (!IsPurchased)
-            return "Not Purchased";
-
-        return $"Lv.{CurrentLevel}";
-    }
-
-    public string GetNextEffect()
-    {
-        if (!IsPurchased)
-            return "Purchase to unlock";
-
-        if (!CanUpgrade())
-            return "Max Level";
-
-        return $"Lv.{CurrentLevel + 1}";
-    }
-
-    #endregion
-
-    #region Refresh
-
-    private void SubscribeUpgradeManager()
-    {
-        UpgradeManager upgradeManager = SubscribedUpgradeManager;
-
-        if (upgradeManager == null)
-            return;
-
-        upgradeManager.SubscribeUpgradeChanged(
-            RefreshFromUpgradeManager);
-    }
-
-    private void UnsubscribeUpgradeManager()
-    {
-        UpgradeManager upgradeManager = SubscribedUpgradeManager;
-
-        if (upgradeManager == null)
-            return;
-
-        upgradeManager.UnsubscribeUpgradeChanged(
-            RefreshFromUpgradeManager);
-    }
-
-    private void RefreshFromUpgradeManager()
+    private void Refresh()
     {
         int level = CurrentLevel;
 
@@ -192,6 +82,5 @@ public class FacilityController : MonoBehaviour
 
         StateChanged?.Invoke(this);
     }
-
-    #endregion
+     
 }

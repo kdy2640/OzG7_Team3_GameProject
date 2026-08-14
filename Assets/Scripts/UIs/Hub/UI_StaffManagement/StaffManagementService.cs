@@ -14,7 +14,7 @@ public sealed class StaffManagementService
         }
 
         EmployeeUpgradeDataSO upgradeData =
-            UpgradeDataDB.GetData(employeeData.Id) as EmployeeUpgradeDataSO;
+            UpgradeDataDB.GetData(employeeData.EmployeeType);
 
         if (upgradeData == null)
         {

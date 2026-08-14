@@ -29,9 +29,7 @@ public sealed class UI_StaffListPanel : MonoBehaviour
 
             // 비활성 상태에서도 Refresh를 호출할 수 있도록 우선 활성화합니다.
             card.gameObject.SetActive(true);
-
-            bool hasEmployeeData = card.Refresh();
-            card.gameObject.SetActive(hasEmployeeData);
+            card.Refresh();
         }
     }
 
