@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -107,7 +107,7 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
             ? "Ingredients for Develop"
             : "Ingredients for Cooking";
 
-        UpdateTasteCards(data.Tastes);
+        UpdateTasteCards(new List<TasteType> { data.Tastes }); //0814 장은수 임시로 리스트로 바꿈
         UpdateIngredientCards(data.Ingredients);
         UpdateStatusPanels(level, upgradeData);
         UpdateSelectionButtons();
