@@ -222,7 +222,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &983349522336811156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,12 +252,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e3c9bb9662c8e849b6d6ef652410cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FacilityWorldUI
+  targetCamera: {fileID: 0}
   purchaseStatusRoot: {fileID: 0}
+  purchaseIcon: {fileID: 0}
   purchasedStatusRoot: {fileID: 0}
   levelText: {fileID: 0}
-  upgradeIcon: {fileID: 0}
-  upgradeAvailableSprite: {fileID: 0}
-  upgradeUnavailableSprite: {fileID: 0}
+  upgradeArrow: {fileID: 0}
 --- !u!1 &4701420191112591599
 GameObject:
   m_ObjectHideFlags: 0
