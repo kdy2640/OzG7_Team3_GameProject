@@ -3,18 +3,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// ī�� �� ���� ������ ��ȸ, UI ǥ��, Ŭ�� ������ ����մϴ�.
 public sealed class UI_StaffDevelopCard : MonoBehaviour
 {
     private enum StaffCardState
     {
         Locked,
         Normal,
+        CanRecruit,
         CanUpgrade
     }
 
-    [SerializeField]
-    private EmployeeType employeeType =
-        EmployeeType.Count;
+    [SerializeField] private EmployeeType employeeType = EmployeeType.Count;
 
     [Header("UI")]
     [SerializeField] private Image outlineImage;
@@ -24,56 +24,41 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
     [SerializeField] private GameObject lockOverlay;
 
     [Header("Color")]
-    [SerializeField]
-    private Color normalColor =
-        new(1f, 1f, 1f, 0f);
-
-    [SerializeField]
-    private Color availableColor = new(1f, .78f, .1f, 1f);
-
-    [SerializeField]
-    private Color lockedColor = new(.35f, .35f, .35f, .85f);
+    [SerializeField] private Color normalColor = new(1f, 1f, 1f, 0f);
+    [SerializeField] private Color availableColor = new(1f, .78f, .1f, 1f);
+    [SerializeField] private Color lockedColor = new(.35f, .35f, .35f, .85f);
 
     public EmployeeType EmployeeType => employeeType;
 
     private Action<EmployeeType> onSelected;
-
-    [SerializeField] private Button button;
+    private Button button;
 
     private void Awake()
     {
-        if (button == null)
-        {
-            Debug.LogError($"[StaffCard] Button이 연결되지 않았습니다: {gameObject.name}");
+        button = GetComponent<Button>();
 
-            return;
-        }
-
-        button.onClick.AddListener(OnClick);
-    }
-
-    private void OnEnable()
-    {
-        Refresh();
+        if (button != null)
+            button.onClick.AddListener(OnClick);
     }
 
     public void Initialize(Action<EmployeeType> callback)
     {
         onSelected = callback;
-        Refresh();
     }
 
-    public void Refresh()
+    // ListPanel�� ȣ���մϴ�.
+    // EmployeeData�� ������ true, ������ false�� ��ȯ�մϴ�.
+    public bool Refresh()
     {
         if (!CreateInfoData(out int level, out StaffCardState state))
-        {
-            return;
-        }
+            return false;
 
         ApplyView(level, state);
+        return true;
     }
 
-    private bool CreateInfoData(out int level,out StaffCardState state)
+    // ī�� ǥ�ÿ� �ּ� ������ ���� �����մϴ�.
+    private bool CreateInfoData(out int level, out StaffCardState state)
     {
         level = 0;
         state = StaffCardState.Locked;
@@ -81,10 +66,9 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         if (employeeType == EmployeeType.Count)
             return false;
 
-        if (!EmployeeDataDB.TryGetData(employeeType,out EmployeeDataSO employeeData))
+        if (!EmployeeDataDB.TryGetData(employeeType, out EmployeeDataSO employeeData))
         {
-            Debug.LogWarning($"EmployeeData가 없습니다: {employeeType}");
-
+            Debug.LogWarning($"EmployeeData�� �����ϴ�: {employeeType}");
             return false;
         }
 
@@ -92,64 +76,38 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
         level = upgrade.RuntimeLevel.Get(employeeType);
 
-        // 구매 전
-        if (level <= 0)
-        {
-            state = StaffCardState.Locked;
-            return true;
-        }
-
-        // 최대 레벨
         EmployeeUpgradeDataSO upgradeData = UpgradeDataDB.GetData(employeeType);
 
-        if (upgradeData == null)
+        bool canUpgrade = upgrade.CanUpgrade(upgradeData);
+
+        if (level == 0)
         {
-            Debug.LogWarning($"[StaffCard] {employeeType} UpgradeData가 없습니다.");
-
-            state = StaffCardState.Normal;
-            return true;
+            state = canUpgrade
+                ? StaffCardState.CanRecruit : StaffCardState.Locked;
         }
-
-        // 최대 레벨
-        if (level >= upgradeData.MaxLevel)
+        else if (level >= employeeData.MaxLevel)
         {
             state = StaffCardState.Normal;
-            return true;
         }
-
-        UpgradeAvailability availability = upgrade.GetUpgradeAvailability(upgradeData);
-
-        bool canUpgrade = availability == UpgradeAvailability.Available;
-
-        Debug.Log(
-            $"[StaffCard] {employeeType} " +
-            $"Lv={level} " +
-            $"MaxLv={upgradeData.MaxLevel} " +
-            $"Availability={availability} " +
-            $"Cost={upgradeData.GetCosts(level)}"
-        );
-
-        state = canUpgrade
-            ? StaffCardState.CanUpgrade : StaffCardState.Normal;
+        else
+        {
+            state = canUpgrade
+                ? StaffCardState.CanUpgrade : StaffCardState.Normal;
+        }
 
         return true;
     }
 
     private void ApplyView(int level, StaffCardState state)
     {
-        bool canUpgrade =
-            state == StaffCardState.CanUpgrade;
+        bool canRecruit = state == StaffCardState.CanRecruit;
+        bool canUpgrade = state == StaffCardState.CanUpgrade;
+        bool isLocked = state == StaffCardState.Locked;
 
-        bool isLocked =
-            state == StaffCardState.Locked;
+        levelText.text = $"Lv.{level}";
+        levelText.gameObject.SetActive(!canRecruit);
 
-        if (levelText != null)
-        {
-            levelText.text = $"Lv.{level}";
-            levelText.gameObject.SetActive(!isLocked);
-        }
-
-        if (recruitReadyText != null) recruitReadyText.SetActive(isLocked);
+        if (recruitReadyText != null) recruitReadyText.SetActive(canRecruit);
 
         if (upgradeArrow != null) upgradeArrow.SetActive(canUpgrade);
 
@@ -157,9 +115,8 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
         if (outlineImage != null)
         {
-            outlineImage.color =
-                canUpgrade ? availableColor : 
-                isLocked ? lockedColor : normalColor;
+            outlineImage.color = canRecruit || canUpgrade
+                ? availableColor : isLocked ? lockedColor : normalColor;
         }
     }
 
