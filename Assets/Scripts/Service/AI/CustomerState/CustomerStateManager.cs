@@ -37,6 +37,7 @@ public class CustomerStateManager : MonoBehaviour
         {
             tableManager = FindFirstObjectByType<TableManager>();
         }
+        
     }
 
     private void Start()
@@ -117,5 +118,6 @@ public class CustomerStateManager : MonoBehaviour
     public void SetAnimator(Animator animator)
     {
         this.animator = animator;
+        animator.applyRootMotion = false;
     }
 }
