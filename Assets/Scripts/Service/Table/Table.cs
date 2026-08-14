@@ -66,6 +66,11 @@ public class Table : MonoBehaviour
 
     public void ReleaseSeat(CustomerStateManager customer)
     {
+        if(customer.CurrentTable == null)
+        {
+            return;
+        }
+
         if (leftCustomer == customer)
         {
             leftCustomer = null;

@@ -3,10 +3,7 @@ using UnityEngine;
 
 public class CustomerEatState : IState
 {
-    
-
     private CustomerStateManager stateManager;
-
     private float timer;
 
     public CustomerEatState(CustomerStateManager stateManager)
@@ -18,7 +15,6 @@ public class CustomerEatState : IState
     public void Enter()
     {
         stateManager.Animator.SetBool("IsEating", true);
-        stateManager.Renderer.material.color = Color.yellow;
         timer = 5.0f;
     }
 
@@ -36,7 +32,6 @@ public class CustomerEatState : IState
     private void FinishEating()
     {
         DishDataSO data = DishDataDB.GetData(stateManager.Order.dish);
-
         if(data != null)
         {
             // 돈 획득
@@ -44,8 +39,16 @@ public class CustomerEatState : IState
             GameManager.Instance.Market.MarketData.TotalIncome += data.Cost;
         }
 
+        stateManager.CurrentTable.ReleaseSeat(stateManager);
+
+        if (stateManager.IsTip())
+        {
+            stateManager.ChangeState(new CustomerGoToTipState(stateManager));
+            return;
+        }
 
         stateManager.ChangeState(new CustomerGoHomeState(stateManager));
+
     }
 
     public void Exit()

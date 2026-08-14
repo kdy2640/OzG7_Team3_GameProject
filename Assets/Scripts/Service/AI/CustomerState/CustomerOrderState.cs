@@ -19,7 +19,6 @@ public class CustomerOrderState : IState
             .normalized
             );
         stateManager.Animator.SetBool("IsOrdering", true);
-        stateManager.Renderer.material.color = Color.orange;
 
         timer = 5.0f;
 
