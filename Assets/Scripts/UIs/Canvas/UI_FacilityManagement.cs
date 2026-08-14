@@ -10,6 +10,9 @@ public sealed class UI_FacilityManagement : UI_Base
         StaffManagerButton
     }
 
+    private FacilityCollection facilityCollection;
+    private FacilityDetailPanel detailPanel;
+
     protected override void OnInit()
     {
         Bind<UI_HubStateButton>(typeof(HubStateButtons));
@@ -19,22 +22,36 @@ public sealed class UI_FacilityManagement : UI_Base
             .Init(Owner);
         GetUI<UI_HubStateButton>((int)HubStateButtons.StaffManagerButton)?
             .Init(Owner);
-    }
 
-    private void Start()
-    {
-        // 다른 객체의 Awake 완료 후 필요한 초기 작업을 작성합니다.
+        detailPanel = GetComponentInChildren<FacilityDetailPanel>(true);
     }
 
     protected override IEnumerator OnShow()
     {
-        // 화면을 표시할 때 갱신할 값과 등장 연출을 작성합니다.
+        facilityCollection = FindFirstObjectByType<FacilityCollection>();
+
+        if (facilityCollection == null || detailPanel == null)
+        {
+            Debug.LogError(
+                "[UI_FacilityManagement] FacilityCollection 또는 " +
+                "FacilityDetailPanel을 찾을 수 없습니다.",
+                this);
+            yield break;
+        }
+
+        detailPanel.Initialize(facilityCollection);
+        facilityCollection.FacilitySelected += detailPanel.ShowFacility;
+
         yield break;
     }
 
     protected override IEnumerator OnHide()
     {
-        // 화면을 숨기기 전 정리할 값과 퇴장 연출을 작성합니다.
+        if (facilityCollection != null && detailPanel != null)
+        {
+            facilityCollection.FacilitySelected -= detailPanel.ShowFacility;
+        }
+
         yield break;
     }
 }

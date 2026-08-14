@@ -3,20 +3,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// ���õ� ������ �� ���� ��ȸ, ǥ��, ��ư Ŭ�� ������ ����մϴ�.
 public sealed class UI_StaffInfoPanel : MonoBehaviour
 {
     [SerializeField] private Image roleIcon;
     [SerializeField] private TMP_Text staffNameText;
     [SerializeField] private TMP_Text levelText;
 
-    [SerializeField]
-    private Image[] levelSlots = new Image[5];
-
-    [SerializeField]
-    private Color filledSlotColor = new(1f, .78f, .2f);
-
-    [SerializeField]
-    private Color emptySlotColor = new(.3f, .3f, .3f);
+    [SerializeField] private Image[] levelSlots = new Image[5];
+    [SerializeField] private Color filledSlotColor = new(1f, .78f, .2f);
+    [SerializeField] private Color emptySlotColor = new(.3f, .3f, .3f);
 
     [SerializeField] private TMP_Text skill1Name;
     [SerializeField] private TMP_Text skill1Description;
@@ -40,13 +36,11 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
     [SerializeField] private TMP_Text actionText;
 
     private Action<EmployeeType> onAction;
-    private EmployeeType selectedType =
-        EmployeeType.Count;
+    private EmployeeType selectedType = EmployeeType.Count;
 
     private void Awake()
     {
         actionButton.onClick.AddListener(OnClickAction);
-
         gameObject.SetActive(false);
     }
 
@@ -68,54 +62,42 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    // �� �г��� �ʿ��� ������ ���� ��ȸ�� UI�� �ݿ��մϴ�.
     private bool CreateInfoData()
     {
-        if (!EmployeeDataDB.TryGetData(selectedType,out EmployeeDataSO employeeData))
+        if (!EmployeeDataDB.TryGetData(selectedType, out EmployeeDataSO employeeData))
         {
-            Debug.LogWarning($"EmployeeData가 없습니다: {selectedType}");
-
+            Debug.LogWarning($"EmployeeData�� �����ϴ�: {selectedType}");
             return false;
         }
 
         UpgradeManager upgrade = GameManager.Instance.Upgrade;
 
-        EmployeeUpgradeDataSO upgradeData = UpgradeDataDB.GetData(selectedType);
-
-        if (upgradeData == null)
-        {
-            Debug.LogWarning($"EmployeeUpgradeData가 없습니다: {selectedType}");
-
-            return false;
-        }
-
         int level = upgrade.RuntimeLevel.Get(selectedType);
+        bool isMaxLevel = level >= employeeData.MaxLevel;
 
-        // 최대 레벨은 UpgradeData 기준
-        bool isMaxLevel = level >= upgradeData.MaxLevel;
+        EmployeeUpgradeDataSO upgradeData =
+            UpgradeDataDB.GetData(employeeData.EmployeeType);
+
         int cost = 0;
 
-        if (!isMaxLevel) cost = upgradeData.GetCosts(level);
+        if (!isMaxLevel && upgradeData != null)
+            cost = upgradeData.GetCosts(level);
 
-        // 현재 레벨에서 업그레이드 가능 여부
-        bool canUpgrade =
-            level > 0 && upgrade.CanUpgrade(upgradeData);
+        bool canAction = upgrade.CanUpgrade(upgradeData);
 
         roleIcon.sprite = employeeData.RoleIcon;
-
         staffNameText.text = employeeData.DisplayName;
-
         levelText.text = $"Lv.{level}";
 
         for (int i = 0; i < levelSlots.Length; i++)
         {
             if (levelSlots[i] != null)
-            {
-                levelSlots[i].color =
-                    i < level ? filledSlotColor : emptySlotColor;
-            }
+                levelSlots[i].color = i < level
+                    ? filledSlotColor : emptySlotColor;
         }
 
-        SetSkill1(level,employeeData.GetSkill(1));
+        SetSkill1(level, employeeData.GetSkill(1));
 
         SetLockedSkill(
             level,
@@ -137,38 +119,31 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
             skill5Description
         );
 
-        nextLevelText.text = isMaxLevel
-                ? "Max Level" : $"Next Level: Lv.{level + 1}";
+        nextLevelText.text = isMaxLevel ? "Max Level" : $"Next Level: Lv.{level + 1}";
 
         nextLevelEffect.text = isMaxLevel
             ? string.Empty : employeeData.GetLevelEffect(level + 1);
 
-        costText.text = isMaxLevel
-                ? "-" : cost.ToString("N0");
+        costText.text = isMaxLevel ? "-" : cost.ToString("N0");
 
         actionText.text = isMaxLevel
-                ? "MAX"
-                : level == 0
-                    ? "Recruit" : $"Lv.{level + 1} Upgrade";
+            ? "MAX" : level == 0 ? "Recruit" : $"Lv.{level + 1} Upgrade";
 
-        actionButton.interactable =
-            level == 0
-                ? upgrade.CanUpgrade(upgradeData) : canUpgrade;
+        actionButton.interactable = canAction;
 
         return true;
     }
 
-    private void SetSkill1(int level,EmployeeSkillInfo skill)
+    private void SetSkill1(int level, EmployeeSkillInfo skill)
     {
         bool unlocked = level >= 1;
 
         skill1Name.text = skill.Name;
-
         skill1Description.text = unlocked
-                ? skill.Description : "Unlock after Recruit";
+            ? skill.Description : "Unlock after Recruit";
 
         skill1Effect.text = unlocked
-                ? skill.Effect : string.Empty;
+            ? skill.Effect : string.Empty;
     }
 
     private void SetLockedSkill(
@@ -180,21 +155,20 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         TMP_Text label,
         TMP_Text description)
     {
-        bool unlocked =
-            level >= unlockLevel;
+        bool unlocked = level >= unlockLevel;
 
-        icon.color = unlocked 
-            ? Color.white : new Color(1f,1f,1f,.35f);
+        icon.color = unlocked
+            ? Color.white
+            : new Color(1f, 1f, 1f, .35f);
 
         name.text = skill.Name;
-
         label.text = unlocked
-                ? $"Lv.{unlockLevel} Unlocked"
-                : $"Lv.{unlockLevel} Locked";
+            ? $"Lv.{unlockLevel} Unlocked"
+            : $"Lv.{unlockLevel} Locked";
 
         description.text = unlocked
-                ? $"{skill.Description}\n{skill.Effect}"
-                : $"Unlocks at Lv.{unlockLevel}.";
+            ? $"{skill.Description}\n{skill.Effect}"
+            : $"Unlocks at Lv.{unlockLevel}.";
     }
 
     private void OnClickAction()
