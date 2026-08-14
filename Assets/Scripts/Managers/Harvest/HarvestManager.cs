@@ -13,6 +13,7 @@ public class HarvestManager : MonoBehaviour
     private bool isRunning = false;
 
     public float Timer { get { return timer; } }
+    public float LoopDuration => loopDuration;
     public bool IsPause
     {
         get => isPause;

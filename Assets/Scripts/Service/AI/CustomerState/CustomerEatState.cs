@@ -41,6 +41,7 @@ public class CustomerEatState : IState
         {
             // 돈 획득
             GameManager.Instance.StockManager.AddCurrency(data.Cost);
+            GameManager.Instance.Market.MarketData.TotalIncome += data.Cost;
         }
 
 

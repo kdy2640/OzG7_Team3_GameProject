@@ -35,6 +35,7 @@ public class ServerStateManager : MonoBehaviour
         renderer = gameObject.GetComponent<Renderer>();
         kitchen = FindFirstObjectByType<Kitchen>().transform;
         aiMove = gameObject.GetComponent<AIMove>();
+        animator.applyRootMotion = false;
     }
 
     private void OnEnable()

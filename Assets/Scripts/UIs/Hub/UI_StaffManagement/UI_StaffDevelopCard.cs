@@ -76,8 +76,7 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
         level = upgrade.RuntimeLevel.Get(employeeType);
 
-        EmployeeUpgradeDataSO upgradeData =
-            UpgradeDataDB.GetData(employeeData.Id) as EmployeeUpgradeDataSO;
+        EmployeeUpgradeDataSO upgradeData = UpgradeDataDB.GetData(employeeType);
 
         bool canUpgrade = upgrade.CanUpgrade(upgradeData);
 

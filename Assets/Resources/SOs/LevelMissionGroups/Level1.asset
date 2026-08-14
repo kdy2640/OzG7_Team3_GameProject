@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd3aa091fb09abd439acfe1d328d7618, type: 3}
+  m_Name: Level1
+  m_EditorClassIdentifier: Assembly-CSharp::LevelMissionGroupSO
+  level: 1
+  missions:
+  - conditionType: 2
+    condition:
+      rid: 4385386984373485638
+    title: 
+    description: 
+  - conditionType: 2
+    condition:
+      rid: 4385387030248423688
+    title: 
+    description: 
+  - conditionType: 2
+    condition:
+      rid: 4385387030248423689
+    title: 
+    description: 
+  - conditionType: 2
+    condition:
+      rid: 4385387030248423689
+    title: 320
+    description: 
+  - conditionType: 2
+    condition:
+      rid: 4385387030248423689
+    title: 
+    description: 
+  references:
+    version: 2
+    RefIds:
+    - rid: 4385386984373485638
+      type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        targetIncome: 220
+    - rid: 4385387030248423688
+      type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        targetIncome: 240
+    - rid: 4385387030248423689
+      type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        targetIncome: 380

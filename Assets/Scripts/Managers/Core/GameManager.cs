@@ -14,9 +14,7 @@ public class GameManager : MonoBehaviour
     public MarketManager Market { get; private set; }
     public HarvestManager Harvest { get; private set; }
     public ServiceManager Service { get; private set; }
-    public AudioManager AudioManager { get; private set; }
-    public TutorialManager Tutorial { get; private set; }
-    public SaveManager Save { get; private set; }
+    public UtilityManager Utility { get; private set; }
 
     private void Awake()
     {
@@ -36,8 +34,6 @@ public class GameManager : MonoBehaviour
         Market = GetComponent<MarketManager>();
         Harvest = GetComponentInChildren<HarvestManager>();
         Service = GetComponentInChildren<ServiceManager>();
-        AudioManager = GetComponentInChildren<AudioManager>();
-        Tutorial = GetComponentInChildren<TutorialManager>();
-        Save = GetComponentInChildren<SaveManager>();
+        Utility = GetComponentInChildren<UtilityManager>();
     }
 }
