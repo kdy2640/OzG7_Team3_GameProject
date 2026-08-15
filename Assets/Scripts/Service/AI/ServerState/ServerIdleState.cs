@@ -15,8 +15,6 @@ public class ServerIdleState : IState
         stateManager.AiMove.SetDirection(Vector3.back);
         stateManager.AnimSetIdle();
         stateManager.IsBusy = false;
-        stateManager.Renderer.material.color = Color.white;
-
     }
 
     public void Execute()
