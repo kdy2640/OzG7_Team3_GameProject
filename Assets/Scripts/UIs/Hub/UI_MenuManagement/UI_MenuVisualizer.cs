@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -122,7 +122,7 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
                 out displayedIngredients);
         }
 
-        UpdateTasteCards(data.Tastes);
+        UpdateTasteCards(new List<TasteType> { data.Tastes });
         UpdateIngredientCards(displayedIngredients);
         UpdateStatusPanels(level, upgradeData);
         UpdateSelectionButtons();

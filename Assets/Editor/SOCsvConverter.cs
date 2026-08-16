@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using System;
 using System.Collections.Generic;
@@ -180,7 +180,15 @@ public static class SOCsvConverter
         // 숫자는 현재 PC의 언어 설정과 상관없이 항상 . 을 소수점으로 사용합니다.
         if (IsNumberType(valueType)) return Convert.ToString(value, CultureInfo.InvariantCulture);
 
-        throw new NotSupportedException("지원하지 않는 타입입니다: " + valueType.Name);
+        // 0814 장은수 리스트나 커스텀 클래스는 Json으로 변환하여 출력
+        try
+        {
+            return JsonUtility.ToJson(value);
+        }
+        catch
+        {
+            throw new NotSupportedException("지원하지 않는 타입입니다: " + valueType.Name);
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -360,6 +368,13 @@ public static class SOCsvConverter
 
             if (IsNumberType(type))
                 return Convert.ChangeType(text, type, CultureInfo.InvariantCulture);
+
+            if (!string.IsNullOrWhiteSpace(text) && (text.StartsWith("[") || text.StartsWith("{")))
+            {
+                object jsonObject = JsonUtility.FromJson(text, type);
+                if (jsonObject != null) return jsonObject;
+            } // 0814 장은수 JsonUtility를 이용한 리스트/커스텀 클래스 변환
+
         }
         catch (Exception e) when (e is FormatException || e is OverflowException || e is ArgumentException)
         {
@@ -439,8 +454,11 @@ public static class SOCsvConverter
     private static bool IsSupportedType(Type type)
     {
         return type == typeof(string) || type == typeof(char) || type == typeof(bool) ||
-               type.IsEnum || IsNumberType(type);
-    }
+               type.IsEnum || IsNumberType(type)
+               // 리스트/커스텀 클래스도 허용 타입에 넣음 0814 장은수
+               || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+               || Attribute.IsDefined(type, typeof(SerializableAttribute));
+    } 
 
     private static bool IsNumberType(Type type)
     {
