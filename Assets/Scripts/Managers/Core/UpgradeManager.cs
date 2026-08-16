@@ -97,13 +97,15 @@ public class UpgradeManager : MonoBehaviour
 
         if (data is DishUpgradeDataSO dishUpgradeData)
         {
-            List<GroceryAmount> requiredIngredients =
-                GetDishUpgradeIngredients(dishUpgradeData, state.level);
-
-            if (!stockManager.TryConsumeGrocery(requiredIngredients))
+            int targetUpgradeLevel = state.level + 1;
+            if (!dishUpgradeData.TryGetRequiredIngredients(
+                    targetUpgradeLevel,
+                    out List<GroceryAmount> requiredIngredients)
+                || !stockManager.TryConsumeGrocery(requiredIngredients))
                 return false;
         }
-        else if (!stockManager.TryConsumeCurrency(state.GetCurrentCost()))
+        else if (!state.TryGetCurrentCost(out int requiredCost)
+            || !stockManager.TryConsumeCurrency(requiredCost))
         {
             return false;
         }
@@ -170,8 +172,11 @@ public class UpgradeManager : MonoBehaviour
 
         if (data is DishUpgradeDataSO dishUpgradeData)
         {
-            List<GroceryAmount> requiredIngredients =
-                GetDishUpgradeIngredients(dishUpgradeData, currentUpgradeLevel);
+            int dishTargetUpgradeLevel = currentUpgradeLevel + 1;
+            if (!dishUpgradeData.TryGetRequiredIngredients(
+                    dishTargetUpgradeLevel,
+                    out List<GroceryAmount> requiredIngredients))
+                return UpgradeAvailability.InvalidData;
 
             if (!stockManager.CanConsumeGrocery(requiredIngredients))
                 return UpgradeAvailability.InsufficientIngredients;
@@ -179,28 +184,14 @@ public class UpgradeManager : MonoBehaviour
             return UpgradeAvailability.Available;
         }
 
-        if (!stockManager.CanConsumeCurrency(data.GetCosts(currentUpgradeLevel)))
+        int targetUpgradeLevel = currentUpgradeLevel + 1;
+        if (!data.TryGetRequiredCost(targetUpgradeLevel, out int requiredCost))
+            return UpgradeAvailability.InvalidData;
+
+        if (!stockManager.CanConsumeCurrency(requiredCost))
             return UpgradeAvailability.InsufficientCurrency;
 
         return UpgradeAvailability.Available;
-    }
-
-    private List<GroceryAmount> GetDishUpgradeIngredients(
-        DishUpgradeDataSO upgradeData,
-        int currentUpgradeLevel)
-    {
-        DishDataSO dishData = DishDataDB.GetData(upgradeData.TargetDish);
-        List<GroceryAmount> requiredIngredients = new List<GroceryAmount>();
-        float multiplier = Mathf.Pow(upgradeData.CostMultiplier, currentUpgradeLevel);
-
-        foreach (GroceryAmount ingredient in dishData.Ingredients)
-        {
-            requiredIngredients.Add(new GroceryAmount(
-                ingredient.grocery,
-                Mathf.RoundToInt(ingredient.amount * multiplier)));
-        }
-
-        return requiredIngredients;
     }
 
     public bool HasState(UpgradeDataSO data)

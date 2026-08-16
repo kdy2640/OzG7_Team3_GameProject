@@ -12,6 +12,12 @@ public static class SOCsvConverter
 {
     private const string ObjectNameHeader = "ObjectName";
 
+    [Serializable]
+    private sealed class JsonValueWrapper<T>
+    {
+        public T value;
+    }
+
     // 검사가 끝났지만 아직 SO에는 적용하지 않은 CSV 한 행입니다.
     // 먼저 이 목록을 모두 만들고, 성공했을 때만 실제 SO를 수정합니다.
     private class PendingRow
@@ -180,9 +186,17 @@ public static class SOCsvConverter
         // 숫자는 현재 PC의 언어 설정과 상관없이 항상 . 을 소수점으로 사용합니다.
         if (IsNumberType(valueType)) return Convert.ToString(value, CultureInfo.InvariantCulture);
 
-        // 0814 장은수 리스트나 커스텀 클래스는 Json으로 변환하여 출력
+        // JsonUtility는 루트 List<T>를 직렬화할 수 없으므로 객체로 감쌉니다.
         try
         {
+            if (IsListType(valueType))
+            {
+                Type wrapperType = typeof(JsonValueWrapper<>).MakeGenericType(valueType);
+                object wrapper = Activator.CreateInstance(wrapperType);
+                wrapperType.GetField("value").SetValue(wrapper, value);
+                return JsonUtility.ToJson(wrapper);
+            }
+
             return JsonUtility.ToJson(value);
         }
         catch
@@ -369,11 +383,25 @@ public static class SOCsvConverter
             if (IsNumberType(type))
                 return Convert.ChangeType(text, type, CultureInfo.InvariantCulture);
 
-            if (!string.IsNullOrWhiteSpace(text) && (text.StartsWith("[") || text.StartsWith("{")))
+            if (IsListType(type))
+            {
+                if (string.IsNullOrWhiteSpace(text))
+                    return Activator.CreateInstance(type);
+
+                Type wrapperType = typeof(JsonValueWrapper<>).MakeGenericType(type);
+                object wrapper = JsonUtility.FromJson(text, wrapperType);
+                if (wrapper == null)
+                    throw new FormatException("리스트 JSON을 읽을 수 없습니다.");
+
+                object list = wrapperType.GetField("value").GetValue(wrapper);
+                return list ?? Activator.CreateInstance(type);
+            }
+
+            if (!string.IsNullOrWhiteSpace(text) && text.StartsWith("{"))
             {
                 object jsonObject = JsonUtility.FromJson(text, type);
                 if (jsonObject != null) return jsonObject;
-            } // 0814 장은수 JsonUtility를 이용한 리스트/커스텀 클래스 변환
+            }
 
         }
         catch (Exception e) when (e is FormatException || e is OverflowException || e is ArgumentException)
@@ -456,9 +484,14 @@ public static class SOCsvConverter
         return type == typeof(string) || type == typeof(char) || type == typeof(bool) ||
                type.IsEnum || IsNumberType(type)
                // 리스트/커스텀 클래스도 허용 타입에 넣음 0814 장은수
-               || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+               || IsListType(type)
                || Attribute.IsDefined(type, typeof(SerializableAttribute));
-    } 
+    }
+
+    private static bool IsListType(Type type)
+    {
+        return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
+    }
 
     private static bool IsNumberType(Type type)
     {

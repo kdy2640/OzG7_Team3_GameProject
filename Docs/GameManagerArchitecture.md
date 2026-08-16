@@ -119,16 +119,18 @@ GameManager
 `TryUpgrade`는 다음 순서로 처리한다.
 
 1. 업그레이드 상태를 찾거나 생성한다.
-2. `GetUpgradeAvailability`로 최대 레벨, 시장 레벨 조건, 보유 재화를 검사한다.
-3. `StockManager`에서 현재 비용을 차감한다.
+2. `GetUpgradeAvailability`로 최대 레벨, 시장 레벨 조건, 보유 재화 또는 요리 강화 재료를 검사한다.
+3. `StockManager`에서 현재 비용 또는 요리 강화 재료를 차감한다.
 4. 레벨을 1 올린다.
 5. `RuntimeStat`과 `RuntimeLevel`을 다시 계산한다.
 6. `SubscribeUpgradeChanged`로 등록된 구독자에게 변경을 알린다.
 
-비용은 `baseCost * costMultiplier^level`을 반올림한 값이다.
+다음 레벨의 비용은 `UpgradeDataSO.requiredCosts`의 `targetUpgradeLevel - 1` 인덱스를 사용한다. 비용 목록에 해당 레벨이 없으면 데이터 오류로 처리하고 구매할 수 없다.
 다음 레벨의 시장 레벨 제한은 `UpgradeDataSO.requiredMarketLevel`의 `targetUpgradeLevel - 1` 인덱스를 사용한다. 조건 목록에 해당 레벨이 없으면 구매할 수 없다.
 
-`UpgradeAvailability`는 구매 가능 여부를 `Available`, `InvalidData`, `MaxLevel`, `MarketLevelLocked`, `InsufficientCurrency`로 구분한다.
+요리 강화 재료는 `DishUpgradeDataSO.requiredIngredients`의 `targetUpgradeLevel - 1` 인덱스를 사용한다. Unity의 중첩 리스트 직렬화 제한 때문에 각 레벨의 `List<GroceryAmount>`는 `GroceryRequirement`가 감싼다. 해당 레벨의 데이터가 없으면 데이터 오류로 처리하고 강화할 수 없다.
+
+`UpgradeAvailability`는 구매 가능 여부를 `Available`, `InvalidData`, `MaxLevel`, `MarketLevelLocked`, `InsufficientCurrency`, `InsufficientIngredients`로 구분한다.
 
 ### RuntimeStat과 RuntimeLevel
 

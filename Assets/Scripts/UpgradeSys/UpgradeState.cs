@@ -7,8 +7,14 @@ public class UpgradeState
     public UpgradeDataSO data;
     public int level;
 
-    public int GetCurrentCost()
+    public bool TryGetCurrentCost(out int requiredCost)
     {
-        return data.GetCosts(level);
+        if (data == null)
+        {
+            requiredCost = 0;
+            return false;
+        }
+
+        return data.TryGetRequiredCost(level + 1, out requiredCost);
     }
 }

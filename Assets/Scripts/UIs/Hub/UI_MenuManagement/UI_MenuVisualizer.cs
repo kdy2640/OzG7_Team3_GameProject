@@ -103,12 +103,27 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
         cookValueText.text = $"C {GameManager.Instance.CookingManager.CalculateCookableAmount(dishType):N0}";
         descriptionText.text = data.Description;
 
-        ingredientTitleText.text = level <= 0
-            ? "Ingredients for Develop"
-            : "Ingredients for Cooking";
+        bool isMaxLevel = upgradeData != null && level >= upgradeData.MaxLevel;
+        List<GroceryAmount> displayedIngredients = null;
 
-        UpdateTasteCards(new List<TasteType> { data.Tastes }); //0814 장은수 임시로 리스트로 바꿈
-        UpdateIngredientCards(data.Ingredients);
+        if (isMaxLevel)
+        {
+            ingredientTitleText.text = "Ingredients for Cooking";
+            displayedIngredients = data.Ingredients;
+        }
+        else
+        {
+            ingredientTitleText.text = level <= 0
+                ? "Ingredients for Develop"
+                : "Ingredients for Upgrade";
+
+            upgradeData?.TryGetRequiredIngredients(
+                level + 1,
+                out displayedIngredients);
+        }
+
+        UpdateTasteCards(new List<TasteType> { data.Tastes });
+        UpdateIngredientCards(displayedIngredients);
         UpdateStatusPanels(level, upgradeData);
         UpdateSelectionButtons();
     }
