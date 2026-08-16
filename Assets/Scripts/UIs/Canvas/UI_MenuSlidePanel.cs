@@ -99,7 +99,8 @@ public class UI_MenuSlidePanel : MonoBehaviour
         if (level > 0)
             return MenuVisualStatus.Opened;
 
-        return GameManager.Instance.StockManager.CanConsumeCurrency(upgradeData.GetCosts(0))
+        return GameManager.Instance.Upgrade.GetUpgradeAvailability(upgradeData)
+            == UpgradeAvailability.Available
             ? MenuVisualStatus.CanOpen
             : MenuVisualStatus.Locked;
     }

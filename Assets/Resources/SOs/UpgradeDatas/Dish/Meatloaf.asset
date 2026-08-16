@@ -15,8 +15,33 @@ MonoBehaviour:
   id: dish_meatloaf
   displayName: "\uBBF8\uD2B8\uB85C\uD504"
   displayIcon: {fileID: 0}
-  baseCost: 0
-  costMultiplier: 1.2
+  requiredCosts: 0000000000000000000000000000000000000000
   maxLevel: 5
   requiredMarketLevel: 0000000000000000000000000000000000000000
   targetDish: 3
+  requiredIngredients:
+  - requiredGroceries:
+    - grocery: 3
+      amount: 1
+    - grocery: 5
+      amount: 1
+  - requiredGroceries:
+    - grocery: 3
+      amount: 1
+    - grocery: 5
+      amount: 1
+  - requiredGroceries:
+    - grocery: 3
+      amount: 1
+    - grocery: 5
+      amount: 1
+  - requiredGroceries:
+    - grocery: 3
+      amount: 2
+    - grocery: 5
+      amount: 2
+  - requiredGroceries:
+    - grocery: 3
+      amount: 2
+    - grocery: 5
+      amount: 2

@@ -15,8 +15,33 @@ MonoBehaviour:
   id: dish_steak
   displayName: "\uC2A4\uD14C\uC774\uD06C"
   displayIcon: {fileID: 0}
-  baseCost: 0
-  costMultiplier: 1.2
+  requiredCosts: 0000000000000000000000000000000000000000
   maxLevel: 5
   requiredMarketLevel: 0000000000000000000000000000000000000000
   targetDish: 2
+  requiredIngredients:
+  - requiredGroceries:
+    - grocery: 4
+      amount: 1
+    - grocery: 5
+      amount: 1
+  - requiredGroceries:
+    - grocery: 4
+      amount: 1
+    - grocery: 5
+      amount: 1
+  - requiredGroceries:
+    - grocery: 4
+      amount: 1
+    - grocery: 5
+      amount: 1
+  - requiredGroceries:
+    - grocery: 4
+      amount: 2
+    - grocery: 5
+      amount: 2
+  - requiredGroceries:
+    - grocery: 4
+      amount: 2
+    - grocery: 5
+      amount: 2

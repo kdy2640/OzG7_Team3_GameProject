@@ -15,8 +15,33 @@ MonoBehaviour:
   id: dish_onion_bagel
   displayName: "\uC591\uD30C \uBCA0\uC774\uAE00"
   displayIcon: {fileID: 0}
-  baseCost: 0
-  costMultiplier: 1.2
+  requiredCosts: 0000000000000000000000000000000000000000
   maxLevel: 5
   requiredMarketLevel: 0000000000000000000000000000000000000000
   targetDish: 4
+  requiredIngredients:
+  - requiredGroceries:
+    - grocery: 4
+      amount: 1
+    - grocery: 3
+      amount: 1
+  - requiredGroceries:
+    - grocery: 4
+      amount: 1
+    - grocery: 3
+      amount: 1
+  - requiredGroceries:
+    - grocery: 4
+      amount: 1
+    - grocery: 3
+      amount: 1
+  - requiredGroceries:
+    - grocery: 4
+      amount: 2
+    - grocery: 3
+      amount: 2
+  - requiredGroceries:
+    - grocery: 4
+      amount: 2
+    - grocery: 3
+      amount: 2

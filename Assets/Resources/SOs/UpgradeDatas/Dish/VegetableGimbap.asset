@@ -15,8 +15,33 @@ MonoBehaviour:
   id: dish_vegetable_gimbap
   displayName: "\uC57C\uCC44\uAE40\uBC25"
   displayIcon: {fileID: 0}
-  baseCost: 0
-  costMultiplier: 1.2
+  requiredCosts: 0000000000000000000000000000000000000000
   maxLevel: 5
   requiredMarketLevel: 0000000000000000000000000000000000000000
   targetDish: 1
+  requiredIngredients:
+  - requiredGroceries:
+    - grocery: 0
+      amount: 1
+    - grocery: 1
+      amount: 1
+  - requiredGroceries:
+    - grocery: 0
+      amount: 1
+    - grocery: 1
+      amount: 1
+  - requiredGroceries:
+    - grocery: 0
+      amount: 1
+    - grocery: 1
+      amount: 1
+  - requiredGroceries:
+    - grocery: 0
+      amount: 2
+    - grocery: 1
+      amount: 2
+  - requiredGroceries:
+    - grocery: 0
+      amount: 2
+    - grocery: 1
+      amount: 2
