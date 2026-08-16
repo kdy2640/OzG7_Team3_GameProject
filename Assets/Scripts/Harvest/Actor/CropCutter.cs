@@ -57,7 +57,9 @@ public sealed class CropCutter : MonoBehaviour
         }
 
         List<Transform> nearbyTransforms =
-            gridChunkHandler.GetNearbyTransforms(transform.position, cuttingRange);
+            gridChunkHandler.Registry.GetNearbyTransforms(
+                transform.position,
+                cuttingRange);
 
         foreach (Transform target in nearbyTransforms)
         {

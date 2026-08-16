@@ -7,6 +7,7 @@ public sealed class UI_PhaseButtonPanel : MonoBehaviour
     private const string ServiceSelectionButtonName = "UI_ToServiceSelectionButton";
     private const string NextDayButtonName = "UI_NextDayButton";
 
+    private HubCanvasController owner;
     private Button harvestButton;
     private Button serviceSelectionButton;
     private Button nextDayButton;
@@ -16,7 +17,7 @@ public sealed class UI_PhaseButtonPanel : MonoBehaviour
     {
         if (isInitialized)
             return;
-
+        this.owner = owner;
         BindButtons();
 
         if (harvestButton == null || serviceSelectionButton == null || nextDayButton == null)
@@ -90,5 +91,6 @@ public sealed class UI_PhaseButtonPanel : MonoBehaviour
             return;
 
         GameManager.Instance.Market.MoveToNextPhase();
+        owner.RequestStateChange(HubCanvasController.HubCanvasState.DayStart);
     }
 }

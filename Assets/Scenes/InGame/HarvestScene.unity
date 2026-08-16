@@ -786,9 +786,6 @@ MonoBehaviour:
   cropPrefab: {fileID: 3303071145808237000, guid: f6b587d21ac801f4197f744e48c2c840, type: 3}
   player: {fileID: 2029958123}
   stageType: 0
-  spawnArea: {x: 250, y: 250}
-  xDiff: 2
-  yDiff: 2
   spawnHeight: 0
   spawnedCrops: []
 --- !u!114 &1720089969
@@ -803,7 +800,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b210dede951d8c347b0337fc349fb38b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridChunkHandler
-  chunkSize: 5
+  geometry:
+    areaSize: {x: 250, y: 250}
+    chunkSize: 5
+    xSpacing: 2
+    zSpacing: 2
+  streamer:
+    loadRadius: 6
+    unloadRadius: 6
+    maxChunkLoadsPerFrame: 4
   showGridGizmos: 1
 --- !u!1 &1764439312
 GameObject:

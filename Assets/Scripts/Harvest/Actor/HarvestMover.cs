@@ -14,8 +14,9 @@ public sealed class HarvestMover : MonoBehaviour
     [SerializeField] private HarvestMoveState state;
 
     private Transform player;
-    private HarvestSpawner spawner;
-    private GridChunkHandler gridChunkHandler;
+    private GridGeometry geometry;
+    private ChunkRegistry registry;
+    private ChunkStreamer streamer;
     private float speed;
     private Vector3 patrolTarget;
     private bool isInitialized;
@@ -23,25 +24,25 @@ public sealed class HarvestMover : MonoBehaviour
     public void Init(
         Transform player,
         float speed,
-        HarvestSpawner spawner,
         GridChunkHandler gridChunkHandler)
     {
         this.player = player;
         this.speed = Mathf.Max(0f, speed);
-        this.spawner = spawner;
-        this.gridChunkHandler = gridChunkHandler;
 
-        if (player == null || spawner == null || gridChunkHandler == null)
+        if (player == null || gridChunkHandler == null)
         {
             Debug.LogError(
-                "[HarvestMover] Player, HarvestSpawner, or GridChunkHandler is not assigned.",
+                "[HarvestMover] Player or GridChunkHandler is not assigned.",
                 this);
             enabled = false;
             return;
         }
 
+        geometry = gridChunkHandler.Geometry;
+        registry = gridChunkHandler.Registry;
+        streamer = gridChunkHandler.Streamer;
         state = HarvestMoveState.Patrol;
-        patrolTarget = spawner.GetRandomPosition();
+        patrolTarget = geometry.GetRandomPosition(transform.position);
         isInitialized = true;
         enabled = true;
     }
@@ -80,7 +81,7 @@ public sealed class HarvestMover : MonoBehaviour
         state = nextState;
 
         if (state == HarvestMoveState.Patrol)
-            patrolTarget = spawner.GetRandomPosition();
+            patrolTarget = geometry.GetRandomPosition(transform.position);
     }
 
     private void Patrol()
@@ -90,7 +91,7 @@ public sealed class HarvestMover : MonoBehaviour
 
         if (targetOffset.sqrMagnitude <= arrivalDistance * arrivalDistance)
         {
-            patrolTarget = spawner.GetRandomPosition();
+            patrolTarget = geometry.GetRandomPosition(transform.position);
             targetOffset = patrolTarget - transform.position;
             targetOffset.y = 0f;
         }
@@ -113,7 +114,7 @@ public sealed class HarvestMover : MonoBehaviour
         Vector3 currentPosition = transform.position;
         Vector3 nextPosition = currentPosition
             + direction.normalized * (speed * Time.fixedDeltaTime);
-        nextPosition = spawner.ClampToArea(nextPosition);
+        nextPosition = geometry.ClampToArea(nextPosition);
 
         Vector3 movement = nextPosition - currentPosition;
         movement.y = 0f;
@@ -123,6 +124,10 @@ public sealed class HarvestMover : MonoBehaviour
 
         transform.position = nextPosition;
         transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
-        gridChunkHandler.UpdateChunk(transform);
+
+        if (registry.TryUpdateChunk(transform, out Vector2Int coordinate))
+        {
+            streamer.MoveActorToChunk(transform, coordinate);
+        }
     }
 }

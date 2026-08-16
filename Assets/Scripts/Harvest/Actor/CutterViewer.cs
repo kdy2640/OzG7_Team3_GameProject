@@ -17,9 +17,9 @@ public sealed class CutterViewer : MonoBehaviour
     private void Update()
     {
         cutterVisuals.transform.Rotate(
-            Vector3.up,
+            Vector3.left,
             rotationDegreesPerSecond * Time.deltaTime,
-            Space.World);
+            Space.Self);
     }
 
     private void OnValidate()
