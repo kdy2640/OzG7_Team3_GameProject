@@ -33,7 +33,9 @@ if (data == null)
     return;
 
 int currentLevel = upgrade.RuntimeLevel.Get(data.TargetEmployee);
-int nextCost = data.GetCosts(currentLevel);
+if (!data.TryGetRequiredCost(currentLevel + 1, out int nextCost))
+    return;
+
 UpgradeAvailability availability =
     upgrade.GetUpgradeAvailability(data);
 ```

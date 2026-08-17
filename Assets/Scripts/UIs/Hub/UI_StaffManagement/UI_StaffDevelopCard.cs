@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ī�� �� ���� ������ ��ȸ, UI ǥ��, Ŭ�� ������ ����մϴ�.
+
 public sealed class UI_StaffDevelopCard : MonoBehaviour
 {
     private enum StaffCardState
@@ -22,6 +22,7 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
     [SerializeField] private GameObject recruitReadyText;
     [SerializeField] private GameObject upgradeArrow;
     [SerializeField] private GameObject lockOverlay;
+    [SerializeField] private Button button;
 
     [Header("Color")]
     [SerializeField] private Color normalColor = new(1f, 1f, 1f, 0f);
@@ -31,14 +32,16 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
     public EmployeeType EmployeeType => employeeType;
 
     private Action<EmployeeType> onSelected;
-    private Button button;
+    
 
     private void Awake()
     {
-        button = GetComponent<Button>();
-
-        if (button != null)
-            button.onClick.AddListener(OnClick);
+        if (button == null)
+        {
+            Debug.LogError($"[StaffCard] Button이 연결되지 않았습니다: {gameObject.name}",this);
+            return;
+        }
+        button.onClick.AddListener(OnClick);
     }
 
     public void Initialize(Action<EmployeeType> callback)
@@ -46,8 +49,7 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         onSelected = callback;
     }
 
-    // ListPanel�� ȣ���մϴ�.
-    // EmployeeData�� ������ true, ������ false�� ��ȯ�մϴ�.
+
     public bool Refresh()
     {
         if (!CreateInfoData(out int level, out StaffCardState state))
@@ -57,7 +59,7 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         return true;
     }
 
-    // ī�� ǥ�ÿ� �ּ� ������ ���� �����մϴ�.
+
     private bool CreateInfoData(out int level, out StaffCardState state)
     {
         level = 0;
@@ -82,10 +84,10 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
         if (level == 0)
         {
-            state = canUpgrade
-                ? StaffCardState.CanRecruit : StaffCardState.Locked;
+            // 구매 전에는 재화가 충분해도 항상 Locked 상태
+            state = StaffCardState.Locked;
         }
-        else if (level >= employeeData.MaxLevel)
+        else if (level >= upgradeData.MaxLevel)
         {
             state = StaffCardState.Normal;
         }
@@ -100,12 +102,18 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
     private void ApplyView(int level, StaffCardState state)
     {
+        bool isPurchased = level > 0;
         bool canRecruit = state == StaffCardState.CanRecruit;
         bool canUpgrade = state == StaffCardState.CanUpgrade;
-        bool isLocked = state == StaffCardState.Locked;
 
-        levelText.text = $"Lv.{level}";
-        levelText.gameObject.SetActive(!canRecruit);
+        // 구매 전이면 무조건 잠금 이미지 표시
+        bool isLocked = !isPurchased;
+
+        if (levelText != null)
+        {
+            levelText.text = $"Lv.{level}";
+            levelText.gameObject.SetActive(isPurchased);
+        }
 
         if (recruitReadyText != null) recruitReadyText.SetActive(canRecruit);
 
@@ -115,8 +123,9 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
         if (outlineImage != null)
         {
-            outlineImage.color = canRecruit || canUpgrade
-                ? availableColor : isLocked ? lockedColor : normalColor;
+            outlineImage.color =
+                canRecruit || canUpgrade ? availableColor
+                    : isLocked ? lockedColor : normalColor;
         }
     }
 

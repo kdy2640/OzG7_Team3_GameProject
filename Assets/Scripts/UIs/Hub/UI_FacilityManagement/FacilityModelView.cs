@@ -6,36 +6,28 @@ public class FacilityModelView : MonoBehaviour
     [SerializeField] private FacilityController facility;
 
     [Header("Model")]
-    [Tooltip("런타임에 현재 레벨 모델 프리팹이 생성될 빈 오브젝트 컨테이너")]
+    [Tooltip("현재 레벨 모델이 생성될 위치")]
     [SerializeField] private Transform facilityModelRoot;
 
     private GameObject currentModelInstance;
     private int shownLevel = -1;
 
-    private void OnEnable()
+    private void Start()
     {
-        if (facility == null) return;
-
-        facility.StateChanged += OnFacilityStateChanged;
         Refresh();
-    }
-
-    private void OnDisable()
-    {
-        if (facility != null)
-            facility.StateChanged -= OnFacilityStateChanged;
-    }
-
-    private void OnFacilityStateChanged(FacilityController changedFacility)
-    {
-        if (changedFacility == facility)
-            Refresh();
     }
 
     private void Refresh()
     {
-        if (facility != null)
-            ShowLevel(facility.CurrentLevel);
+        if (facility == null)
+        {
+            Debug.LogWarning(
+                $"[FacilityModelView] FacilityController가 연결되지 않았습니다: {name}",
+                this );
+            return;
+        }
+
+        ShowLevel(facility.CurrentLevel);
     }
 
     public void ShowLocked()
@@ -43,47 +35,86 @@ public class FacilityModelView : MonoBehaviour
         ShowLevel(0);
     }
 
-    // Lv.0 = 미구매 모델, Lv.1 이상 = 해당 레벨 모델
     public void ShowLevel(int level)
     {
-        if (facility == null || facilityModelRoot == null) return;
-
-        FacilityDataSO facilityData =
-            FacilityDataDB.GetData(facility.FacilityType);
-
-        if (facilityData == null) return;
-
-        if (shownLevel == level && currentModelInstance != null) return;
-
-        GameObject modelPrefab =
-            facilityData.GetSolidPrefabForLevel(level);
-
-        ClearCurrentModel();
-
-        if (modelPrefab == null)
+        if (facility == null)
         {
-            Debug.LogWarning
-                ($"{name}: {facilityData.DisplayName}의 Lv.{level} 모델이 없습니다.");
+            Debug.LogWarning(
+                $"[FacilityModelView] FacilityController가 연결되지 않았습니다: {name}",
+                this );
             return;
         }
 
-        currentModelInstance = Instantiate(modelPrefab, facilityModelRoot);
+        if (facilityModelRoot == null)
+        {
+            Debug.LogWarning(
+                $"[FacilityModelView] FacilityModelRoot가 연결되지 않았습니다: {name}",
+                this );
+            return;
+        }
+
+        FacilityDataSO facilityData = FacilityDataDB.GetData(facility.FacilityType);
+
+        if (facilityData == null)
+        {
+            Debug.LogWarning(
+                $"[FacilityModelView] FacilityData가 없습니다: {facility.FacilityType}",
+                this );
+            return;
+        }
+
+        // 같은 레벨의 모델이 이미 존재하면 다시 생성하지 않음
+        if (shownLevel == level && currentModelInstance != null)
+        {
+            return;
+        }
+
+        GameObject modelPrefab = facilityData.GetSolidPrefabForLevel(level);
+
+        if (modelPrefab == null)
+        {
+            Debug.LogWarning(
+                $"[FacilityModelView] " +
+                $"{facilityData.DisplayName}의 Lv.{level} 모델이 없습니다.",
+                this
+            );
+            return;
+        }
+
+        ClearCurrentModel();
+
+        currentModelInstance =
+            Instantiate( modelPrefab, facilityModelRoot, false );
+
         currentModelInstance.transform.localPosition = Vector3.zero;
+
         currentModelInstance.transform.localRotation = Quaternion.identity;
+
         currentModelInstance.transform.localScale = Vector3.one;
 
         shownLevel = level;
+
+        Debug.Log(
+            $"[FacilityModelView] " +
+            $"{facility.FacilityType} → Lv.{level} 모델 생성",
+            this
+        );
     }
 
     public void PlayUpgradeEffect()
     {
-        // 나중에 파티클/애니메이션을 추가할 위치입니다.
-        if (facility != null) ShowLevel(facility.CurrentLevel);
+        if (facility != null)
+        {
+            ShowLevel(facility.CurrentLevel);
+        }
     }
 
     private void ClearCurrentModel()
     {
-        if (currentModelInstance != null) Destroy(currentModelInstance);
+        if (currentModelInstance != null)
+        {
+            Destroy(currentModelInstance);
+        }
 
         currentModelInstance = null;
         shownLevel = -1;
