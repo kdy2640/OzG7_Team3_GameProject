@@ -6,6 +6,7 @@ public enum StageType
     Stage_1,
     Stage_2,
     Stage_3,
+    Stage_4,
     Count
 }
 
@@ -14,6 +15,7 @@ public sealed class StageDataSO : ScriptableObject
 {
     [SerializeField] private string id;
     [SerializeField] private StageType stageType = StageType.Count;
+    [SerializeField] private float zStart;
     [SerializeField] private string displayName;
     [SerializeField, TextArea] private string description;
     [SerializeField] private List<GroceryType> rewardList = new();
@@ -22,6 +24,7 @@ public sealed class StageDataSO : ScriptableObject
 
     public string Id => id;
     public StageType StageType => stageType;
+    public float ZStart => zStart;
     public string DisplayName => displayName;
     public string Description => description;
     public List<GroceryType> RewardList => rewardList;

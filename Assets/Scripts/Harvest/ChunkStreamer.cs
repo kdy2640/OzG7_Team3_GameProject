@@ -15,6 +15,7 @@ public sealed class ChunkStreamer
 
     private Transform root;
     private GridGeometry geometry;
+    private StageResolver stageResolver;
     private HarvestSpawner spawner;
     private Transform cropContainer;
     private Transform loadingTarget;
@@ -33,10 +34,14 @@ public sealed class ChunkStreamer
     }
 
     // 스트리밍에 필요한 루트와 Geometry를 연결한다.
-    public void Initialize(Transform streamRoot, GridGeometry gridGeometry)
+    public void Initialize(
+        Transform streamRoot,
+        GridGeometry gridGeometry,
+        StageResolver resolver)
     {
         root = streamRoot;
         geometry = gridGeometry;
+        stageResolver = resolver;
     }
 
     // 로딩 타깃과 스포너를 설정하고 최초 청크 로딩을 시작한다.
@@ -162,20 +167,31 @@ public sealed class ChunkStreamer
     // Geometry가 계산한 위치에 정적·이동 작물을 생성한다.
     private void GenerateChunk(Vector2Int coordinate, ChunkRuntime runtime)
     {
-        if (spawner.HasStaticTypes)
+        foreach (Vector2 localPosition in
+                 geometry.GetCellPositions(coordinate))
         {
-            foreach (Vector2 localPosition in
-                     geometry.GetCellPositions(coordinate))
+            if (stageResolver.TryGetStaticType(
+                    localPosition.y,
+                    out HarvestType staticType))
             {
-                spawner.SpawnStaticCrop(localPosition, runtime.Root);
+                spawner.SpawnCrop(
+                    staticType,
+                    localPosition,
+                    runtime.Root);
             }
         }
 
-        if (spawner.HasMovableTypes)
+        Vector2 movablePosition = geometry.GetRandomPositionInChunk(
+            coordinate);
+
+        if (stageResolver.TryGetMovableType(
+                movablePosition.y,
+                out HarvestType movableType))
         {
-            Vector2 localPosition = geometry.GetRandomPositionInChunk(
-                coordinate);
-            spawner.SpawnMovableCrop(localPosition, runtime.Root);
+            spawner.SpawnCrop(
+                movableType,
+                movablePosition,
+                runtime.Root);
         }
     }
 

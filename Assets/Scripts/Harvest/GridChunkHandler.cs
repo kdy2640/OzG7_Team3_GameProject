@@ -8,6 +8,7 @@ public sealed class GridChunkHandler : MonoBehaviour
     [SerializeField] private bool showGridGizmos = true;
 
     private readonly ChunkRegistry registry = new();
+    private readonly StageResolver stageResolver = new();
 
     public GridGeometry Geometry => geometry;
     public ChunkStreamer Streamer => streamer;
@@ -17,7 +18,8 @@ public sealed class GridChunkHandler : MonoBehaviour
     private void Awake()
     {
         geometry.Initialize(transform);
-        streamer.Initialize(transform, geometry);
+        stageResolver.Initialize();
+        streamer.Initialize(transform, geometry, stageResolver);
         registry.Initialize(geometry);
     }
 

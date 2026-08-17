@@ -12,6 +12,9 @@ public enum HarvestType
     Potato,
     Cabbage,
     Sheep,
+    Corn,
+    Tomato,
+    Grape,
     Count
 }
 
