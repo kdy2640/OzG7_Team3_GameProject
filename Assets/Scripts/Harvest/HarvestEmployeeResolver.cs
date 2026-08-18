@@ -11,7 +11,6 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
     private const float ChargeDuration = 1.5f;
     private const float ChargeDamageMultiplier = 100f;
 
-    [SerializeField] private GridChunkHandler gridChunkHandler;
     [SerializeField] private GameObject harvester1Sidecar;
     [SerializeField] private GameObject harvester2Sidecar;
 
@@ -59,6 +58,7 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
         {
             harvester2OriginalRange = harvester2Cutter.Range;
         }
+
     }
 
     private void Update()
@@ -181,8 +181,9 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
         CropCutter cutter = sidecar.GetComponentInChildren<CropCutter>(true);
          
 
-        cutter.Initialize(gridChunkHandler);
-        gridChunkHandler.Streamer.AddLoadingTarget(sidecar.transform);
+        cutter.Initialize(tractorController.GridChunkHandler);
+        tractorController.GridChunkHandler.Streamer.AddLoadingTarget(
+            sidecar.transform);
 
         return cutter;
     }

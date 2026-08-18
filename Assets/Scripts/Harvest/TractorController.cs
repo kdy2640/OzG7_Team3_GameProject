@@ -5,20 +5,25 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public sealed class TractorController : MonoBehaviour
 {
+    private const float StageBoundaryBuffer = 5f;
+
     [SerializeField] private InputActionAsset inputActions;
     [SerializeField] private string moveActionPath = "Player/Move";
     [SerializeField, Min(0f)] private float moveSpeed = 5f;
     [SerializeField, Min(0f)] private float rotationLerpSpeed = 120f;
     [SerializeField, Min(0f)] private float chargeSpeedMultiplier = 3f;
     [SerializeField] private CropCutter cropCutter;
+    [SerializeField] private GridChunkHandler gridChunkHandler;
 
     private Rigidbody body;
     private InputAction moveAction;
     private Vector2 moveInput;
     private bool isCharging;
+    private bool isStageBoundaryBlocked;
 
     public CropCutter Cutter =>
         cropCutter ??= GetComponentInChildren<CropCutter>(true);
+    public GridChunkHandler GridChunkHandler => gridChunkHandler;
 
     private void Awake()
     {
@@ -85,15 +90,68 @@ public sealed class TractorController : MonoBehaviour
         if (isMoving && speedMultiplier > 0f)
         {
             Vector3 forward = nextRotation * Vector3.forward;
-            body.MovePosition(
+            Vector3 nextPosition =
                 body.position
                 + forward
-                * (throttle * moveSpeed * speedMultiplier * Time.fixedDeltaTime));
+                * (throttle * moveSpeed * speedMultiplier * Time.fixedDeltaTime);
+
+            nextPosition = ClampToStageBoundary(nextPosition);
+
+            body.MovePosition(
+                nextPosition);
         }
     }
 
     public void SetCharging(bool value)
     {
         isCharging = value;
+    }
+
+    private Vector3 ClampToStageBoundary(Vector3 worldPosition)
+    {
+        if (gridChunkHandler == null)
+        {
+            return worldPosition;
+        }
+
+        int stageLevel = GameManager.Instance.Upgrade.RuntimeLevel.Get(
+            HarvestUpgradeType.StageLevel);
+        int nextStageIndex = stageLevel;
+
+        if (nextStageIndex >= (int)StageType.Count)
+        {
+            isStageBoundaryBlocked = false;
+            return worldPosition;
+        }
+
+        if (!StageDataDB.TryGetData(
+                (StageType)nextStageIndex,
+                out StageDataSO nextStageData))
+        {
+            isStageBoundaryBlocked = false;
+            return worldPosition;
+        }
+
+        float boundaryLocalZ =
+            nextStageData.ZStart - StageBoundaryBuffer;
+        Vector3 localPosition =
+            gridChunkHandler.transform.InverseTransformPoint(worldPosition);
+        bool isBlocked = localPosition.z > boundaryLocalZ;
+
+        if (isBlocked)
+        {
+            localPosition.z = boundaryLocalZ;
+            worldPosition =
+                gridChunkHandler.transform.TransformPoint(localPosition);
+
+            if (!isStageBoundaryBlocked)
+            {
+                GameManager.Instance?.Utility?.Toast?.Show(
+                    "아직 해금되지 않은 구역입니다.");
+            }
+        }
+
+        isStageBoundaryBlocked = isBlocked;
+        return worldPosition;
     }
 }
