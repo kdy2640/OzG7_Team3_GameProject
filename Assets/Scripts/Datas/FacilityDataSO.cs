@@ -1,4 +1,4 @@
-
+ï»¿
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -34,8 +34,12 @@ public sealed class FacilityDataSO : ScriptableObject
     [SerializeField] private string displayName;
     [SerializeField] private FacilityType facilityType = FacilityType.Count;
     [SerializeField] private FacilityCategory facilityCategory = FacilityCategory.Count;
-    [SerializeField, Min(0)] private int cost;
-    [SerializeField, Min(0f)] private float upgradeMultiplier = 1f;
+    [SerializeField] private int maxLevel;
+    [SerializeField, TextArea] private string level1Skill;
+    [SerializeField, TextArea] private string level2Skill;
+    [SerializeField, TextArea] private string level3Skill;
+    [SerializeField, TextArea] private string level4Skill;
+    [SerializeField, TextArea] private string level5Skill;
 
     [SerializeField] private List<GameObject> solidPrefabs = new();
 
@@ -45,18 +49,22 @@ public sealed class FacilityDataSO : ScriptableObject
     public string DisplayName => displayName;
     public FacilityType FacilityType => facilityType;
     public FacilityCategory FacilityCategory => facilityCategory;
-    public int Cost => cost;
-    public float UpgradeMultiplier => upgradeMultiplier;
+    public int MaxLevel => maxLevel;
+    public string Level1Skill => level1Skill;
+    public string Level2Skill => level2Skill;
+    public string Level3Skill => level3Skill;
+    public string Level4Skill => level4Skill;
+    public string Level5Skill => level5Skill;
 
-    // µî·ÏµÈ ¸ğµ¨ ¼ö = Ç¥Çö °¡´ÉÇÑ ÃÖ´ë ·¹º§
+    // ë“±ë¡ëœ ëª¨ë¸ ìˆ˜ = í‘œí˜„ ê°€ëŠ¥í•œ ìµœëŒ€ ë ˆë²¨
     public int MaxVisualLevel => 
         solidPrefabs == null ? 0 : Mathf.Max(0, solidPrefabs.Count - 1);
-    //visualLevel : 0 = ¹Ì±¸¸Å/Àá±İ »óÅÂ, 1 = Lv.1 ¸ğµ¨, 2 = Lv.2 ¸ğµ¨ ...
+    //visualLevel : 0 = ë¯¸êµ¬ë§¤/ì ê¸ˆ ìƒíƒœ, 1 = Lv.1 ëª¨ë¸, 2 = Lv.2 ëª¨ë¸ ...
     public GameObject GetSolidPrefabForLevel(int visualLevel)
     {
         if (solidPrefabs == null || visualLevel<0 || solidPrefabs.Count <= visualLevel)
             return null;
-        //Lv.0Àº [0], Lv.1Àº [1], Lv.2´Â [2]...
+        //Lv.0ì€ [0], Lv.1ì€ [1], Lv.2ëŠ” [2]...
         return solidPrefabs[visualLevel];
     }
 
