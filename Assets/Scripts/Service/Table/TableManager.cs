@@ -9,6 +9,23 @@ public class TableManager : MonoBehaviour
 
     public IReadOnlyList<Table> Tables => tables;
 
+    private void Start()
+    {
+        SetTable();
+    }
+
+    private void SetTable()
+    {
+        for (int i = 0; i < tables.Count; i++)
+        {
+            FacilityType table = (FacilityType)i;
+            if (GameManager.Instance.Upgrade.RuntimeLevel.Get(table) > 2)
+            {
+                tables[i].OpenLeftSeat();
+            }
+        }
+    }
+
     public Table FindEmptyTable()
     {
         foreach (Table table in tables)
