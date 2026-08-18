@@ -6,6 +6,9 @@ public class StatCalculator
     {
         RuntimeStat calculatedStat = new RuntimeStat();
 
+        calculatedStat.Harvest.Initialize();
+        calculatedStat.Service.Initialize();
+
         ApplyStates(calculatedStat, upgradeStates);
 
         return calculatedStat;

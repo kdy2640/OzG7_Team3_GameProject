@@ -5,7 +5,7 @@ using UnityEngine;
 public enum ServiceStatType
 {
     CustomerCount,
-    ExtraTime,
+    ServiceTime,
     TipMultiplier,
     Count
 }
@@ -45,6 +45,15 @@ public sealed class ServiceRuntimeStat
     public ServiceRuntimeStat()
     {
         EnsureCapacity();
+    }
+
+    internal void Initialize()
+    {
+        EnsureCapacity();
+
+        values[(int)ServiceStatType.CustomerCount].SetValue(15f);
+        values[(int)ServiceStatType.ServiceTime].SetValue(20f);
+        values[(int)ServiceStatType.TipMultiplier].SetValue(1f);
     }
 
     public float Get(ServiceStatType statType)
