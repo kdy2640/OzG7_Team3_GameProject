@@ -1,57 +1,155 @@
 using TMPro;
 using UnityEngine;
+using static MarketSalesViewData;
 
 public class UI_DailySalesPanel : MonoBehaviour
 {
-    [Header("Daily Sales")]
+    [Header("Today's Performance")]
     [SerializeField] private TMP_Text todaySalesText;
-
-    [Header("Customer")]
     [SerializeField] private TMP_Text customerCountText;
 
-    [Header("Graph")]
-    [SerializeField] private DailySalesGraphManager graphManager;
+    [Header("Sales Difference")]
+    [SerializeField] private TMP_Text salesDifferenceText;
+    [SerializeField] private GameObject increaseIcon;
+    [SerializeField] private GameObject decreaseIcon;
 
-    [Header("Data")]
-    [SerializeField] private DailySalesManagement dailySalesManagement;
+    [Header("Menu Sales")]
+    [SerializeField] private Transform menuSalesContent;
+    [SerializeField] private UI_MenuSalesRow menuSalesRowPrefab;
+
+    [Header("Tip")]
+    [SerializeField] private TMP_Text tipSalesText;
+
+    private DailySalesManagement dailySalesManagement;
 
     private void OnEnable()
     {
-        if (dailySalesManagement == null) return;
+        dailySalesManagement =
+            FindFirstObjectByType<DailySalesManagement>();
+
+        if (dailySalesManagement == null)
+            return;
 
         dailySalesManagement.OnDailySalesChanged += Refresh;
 
         Refresh();
     }
+
     private void OnDisable()
     {
-        if (dailySalesManagement == null) return;
+        if (dailySalesManagement != null)
+        {
+            dailySalesManagement.OnDailySalesChanged -= Refresh;
+        }
 
-        dailySalesManagement.OnDailySalesChanged -= Refresh;
+        dailySalesManagement = null;
     }
+
     private void Refresh()
     {
         if (dailySalesManagement == null)
             return;
 
-        // 오늘 매출
+        MarketSalesViewData data =
+            dailySalesManagement.GetData();
+
+        if (data == null)
+            return;
+
+        RefreshTodaySales(data);
+        RefreshSalesDifference(data);
+        RefreshMenuSales(data);
+        RefreshTipSales(data);
+    }
+
+    private void RefreshTodaySales(
+        MarketSalesViewData data)
+    {
         if (todaySalesText != null)
         {
-            todaySalesText.text = $"G{dailySalesManagement.TodaySales:N0}";
+            todaySalesText.text =
+                $"{data.todaySales:N0}코인";
         }
 
-        // 응대한 손님 / 방문한 손님
         if (customerCountText != null)
         {
             customerCountText.text =
-                $"{dailySalesManagement.TodayServedCustomerCount} / " +
-                $"{dailySalesManagement.TodayVisitorCount}";
+                $"{data.servedCustomerCount:N0}명";
+        }
+    }
+
+    private void RefreshSalesDifference(
+        MarketSalesViewData data)
+    {
+        int difference =
+            data.todaySales - data.yesterdaySales;
+
+        if (salesDifferenceText != null)
+        {
+            if (difference > 0)
+            {
+                salesDifferenceText.text =
+                    $"+{difference:N0}코인";
+            }
+            else
+            {
+                salesDifferenceText.text =
+                    $"{difference:N0}코인";
+            }
         }
 
-        // 그래프
-        if (graphManager != null)
+        if (increaseIcon != null)
         {
-            graphManager.UpdateGraph( dailySalesManagement.GetGraphData());
+            increaseIcon.SetActive(
+                difference > 0);
         }
+
+        if (decreaseIcon != null)
+        {
+            decreaseIcon.SetActive(
+                difference < 0);
+        }
+    }
+
+    private void RefreshMenuSales(
+        MarketSalesViewData data)
+    {
+        if (menuSalesContent == null ||
+            menuSalesRowPrefab == null)
+        {
+            return;
+        }
+
+        for (int i = menuSalesContent.childCount - 1;
+             i >= 0;
+             i--)
+        {
+            Destroy(
+                menuSalesContent.GetChild(i).gameObject);
+        }
+
+        if (data.menuSales == null)
+            return;
+
+        foreach (MenuSalesViewData menuData
+                 in data.menuSales)
+        {
+            UI_MenuSalesRow row =
+                Instantiate(
+                    menuSalesRowPrefab,
+                    menuSalesContent);
+
+            row.SetData(menuData);
+        }
+    }
+
+    private void RefreshTipSales(
+        MarketSalesViewData data)
+    {
+        if (tipSalesText == null)
+            return;
+
+        tipSalesText.text =
+            $"{data.tipSales:N0}코인";
     }
 }

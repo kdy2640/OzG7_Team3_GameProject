@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-//기존 MarketManager를 읽기만 하고 값을 변경하지 않음
 public class DailySalesManagement : MonoBehaviour
 {
-    public const int MaxHistoryCount = 5;
-
     [Serializable]
     public class DailyCustomerData
     {
@@ -25,44 +21,52 @@ public class DailySalesManagement : MonoBehaviour
     // 현재 영업일
     private int currentBusinessDay = -1;
 
-    // 영업일 시작 시점의 누적 매출
+    // 현재 영업일 시작 시점의 누적 매출
     private int dayStartTotalIncome;
 
+    // 직전 영업일 매출
+    private int yesterdaySales;
+
     // 오늘 손님 데이터
-    private DailyCustomerData todayCustomerData = new DailyCustomerData();
+    private DailyCustomerData todayCustomerData =
+        new DailyCustomerData();
 
-    // 최근 5일 매출 기록
-    private readonly List<DailySalesData> salesHistory =
-        new List<DailySalesData>();
+    public int TodayVisitorCount =>
+        todayCustomerData.visitorCount;
 
-    public int TodayVisitorCount => todayCustomerData.visitorCount;
-
-    public int TodayServedCustomerCount => todayCustomerData.servedCustomerCount;
+    public int TodayServedCustomerCount =>
+        todayCustomerData.servedCustomerCount;
 
     public int TodaySales
     {
         get
         {
-            if (marketManager == null) return 0;
+            if (marketManager == null)
+                return 0;
 
-            return Mathf.Max
-                (0, marketManager.MarketData.TotalIncome - dayStartTotalIncome);
+            return Mathf.Max(
+                0,
+                marketManager.MarketData.TotalIncome
+                    - dayStartTotalIncome);
         }
     }
 
-    public IReadOnlyList<DailySalesData> SalesHistory => salesHistory;
+    public int YesterdaySales => yesterdaySales;
 
     public event Action OnDailySalesChanged;
 
     private void OnEnable()
     {
-        if (GameManager.Instance == null) return;
+        if (GameManager.Instance == null)
+            return;
 
         marketManager = GameManager.Instance.Market;
 
-        if (marketManager == null) return;
+        if (marketManager == null)
+            return;
 
-        marketManager.SubscribeMarketDataChanged(OnMarketDataChanged);
+        marketManager.SubscribeMarketDataChanged(
+            OnMarketDataChanged);
 
         Initialize();
     }
@@ -71,8 +75,10 @@ public class DailySalesManagement : MonoBehaviour
     {
         if (marketManager != null)
         {
-            marketManager.UnsubscribeMarketDataChanged(OnMarketDataChanged);
+            marketManager.UnsubscribeMarketDataChanged(
+                OnMarketDataChanged);
         }
+
         marketManager = null;
     }
 
@@ -80,64 +86,64 @@ public class DailySalesManagement : MonoBehaviour
     {
         MarketData marketData = marketManager.MarketData;
 
-        currentBusinessDay = marketData.CurrentBusinessDay;
+        currentBusinessDay =
+            marketData.CurrentBusinessDay;
 
-        dayStartTotalIncome = marketData.TotalIncome;
+        dayStartTotalIncome =
+            marketData.TotalIncome;
 
-        todayCustomerData = new DailyCustomerData();
+        yesterdaySales = 0;
+
+        todayCustomerData =
+            new DailyCustomerData();
 
         NotifyChanged();
     }
 
     private void OnMarketDataChanged()
     {
-        if (marketManager == null) return;
+        if (marketManager == null)
+            return;
 
-        MarketData marketData = marketManager.MarketData;
+        MarketData marketData =
+            marketManager.MarketData;
 
         CheckBusinessDayChanged(marketData);
 
         NotifyChanged();
     }
 
-    private void CheckBusinessDayChanged(MarketData marketData)
+    private void CheckBusinessDayChanged(
+        MarketData marketData)
     {
-        if (marketData.CurrentBusinessDay == currentBusinessDay)
+        if (marketData.CurrentBusinessDay ==
+            currentBusinessDay)
         {
             return;
         }
 
-        // 이전 영업일 기록
         if (currentBusinessDay >= 0)
         {
             SavePreviousDay(marketData);
         }
 
-        // 새로운 영업일 시작
-        currentBusinessDay = marketData.CurrentBusinessDay;
+        currentBusinessDay =
+            marketData.CurrentBusinessDay;
 
-        dayStartTotalIncome = marketData.TotalIncome;
+        dayStartTotalIncome =
+            marketData.TotalIncome;
 
-        todayCustomerData = new DailyCustomerData();
+        todayCustomerData =
+            new DailyCustomerData();
     }
 
-    private void SavePreviousDay(MarketData marketData)
+    private void SavePreviousDay(
+        MarketData marketData)
     {
-        int previousDaySales = Mathf.Max
-            (0, marketData.TotalIncome - dayStartTotalIncome);
-
-        salesHistory.Add
-            (new DailySalesData
-            {
-                dateLabel = $"{currentBusinessDay}일차",
-
-                salesAmount = previousDaySales
-            });
-
-        while (salesHistory.Count > MaxHistoryCount)
-        {
-            salesHistory.RemoveAt(0);
-        }
+        yesterdaySales = Mathf.Max(
+            0,
+            marketData.TotalIncome
+                - dayStartTotalIncome);
     }
 
     public void RecordVisitor()
@@ -154,24 +160,26 @@ public class DailySalesManagement : MonoBehaviour
         NotifyChanged();
     }
 
-    public List<DailySalesData> GetGraphData()
+    public MarketSalesViewData GetData()
     {
-        List<DailySalesData> result = new List<DailySalesData>(salesHistory);
+        MarketSalesViewData data =
+            new MarketSalesViewData();
 
-        // 오늘 데이터 추가
-        result.Add(new DailySalesData
-            {
-                dateLabel = $"{currentBusinessDay}일차",
+        data.todaySales = TodaySales;
+        data.yesterdaySales = YesterdaySales;
+        data.servedCustomerCount =
+            TodayServedCustomerCount;
 
-                salesAmount = TodaySales
-            });
+        // 메뉴 / 팁 데이터는 여기에서
+        // SaleResultData를 읽어 조합한다.
+        //
+        // 현재 SaleResultData의 실제 구조가
+        // 아직 제공되지 않았으므로 이 부분은
+        // 실제 필드명에 맞춰 연결한다.
 
-        while (result.Count > MaxHistoryCount)
-        {
-            result.RemoveAt(0);
-        }
+        data.tipSales = 0;
 
-        return result;
+        return data;
     }
 
     private void NotifyChanged()
