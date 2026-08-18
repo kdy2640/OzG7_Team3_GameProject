@@ -1,43 +1,56 @@
 using System.Collections;
-using TMPro;
-using UnityEngine;
 
 public sealed class UI_HarvestUpgrade : UI_Base
 {
-    private enum GameObjects
+    private enum HubStateButtons
     {
         ExitButton
     }
-    private enum Texts
-    {
-        UI_TempText
-    }
+
+    private HarvestUpgradeListPanel upgradeListPanel;
+    private HarvestUpgradePreviewPanel previewPanel;
+    private HarvestUpgradeDetailPanel detailPanel;
 
     protected override void OnInit()
     {
-        Bind<GameObject>(typeof(GameObjects));
-        Bind<TextMeshProUGUI>(typeof(Texts));
+        Bind<UI_HubStateButton>(typeof(HubStateButtons));
+        GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?.Init(Owner);
 
-        GetGameObject((int)GameObjects.ExitButton)?
-            .GetComponent<UI_HubStateButton>()?
-            .Init(Owner);
-        GetUI<TextMeshProUGUI>((int)Texts.UI_TempText).text = "임시";
-    }
+        upgradeListPanel = GetComponentInChildren<HarvestUpgradeListPanel>(true);
+        previewPanel = GetComponentInChildren<HarvestUpgradePreviewPanel>(true);
+        detailPanel = GetComponentInChildren<HarvestUpgradeDetailPanel>(true);
 
-    private void Start()
-    {
-        // 다른 객체의 Awake 완료 후 필요한 초기 작업을 작성합니다.
+        if (upgradeListPanel != null)
+        {
+            upgradeListPanel.OnSelected += ShowDetail;
+            previewPanel?.Initialize(upgradeListPanel);
+        }
     }
 
     protected override IEnumerator OnShow()
     {
-        // 화면을 표시할 때 갱신할 값과 등장 연출을 작성합니다.
+        upgradeListPanel?.ClearSelection();
+        previewPanel?.ClearHighlight();
+        detailPanel?.ClosePanel();
         yield break;
     }
 
     protected override IEnumerator OnHide()
     {
-        // 화면을 숨기기 전 정리할 값과 퇴장 연출을 작성합니다.
+        upgradeListPanel?.ClearSelection();
+        previewPanel?.ClearHighlight();
+        detailPanel?.ClosePanel();
         yield break;
+    }
+
+    private void OnDestroy()
+    {
+        if (upgradeListPanel != null)
+            upgradeListPanel.OnSelected -= ShowDetail;
+    }
+
+    private void ShowDetail(HarvestUpgradeType upgradeType)
+    {
+        detailPanel?.ShowUpgrade(upgradeType);
     }
 }

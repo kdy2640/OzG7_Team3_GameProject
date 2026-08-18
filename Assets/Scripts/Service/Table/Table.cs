@@ -15,6 +15,10 @@ public class Table : MonoBehaviour
     private CustomerStateManager leftCustomer;
     private CustomerStateManager rightCustomer;
 
+    [SerializeField]private bool leftSeatClosed;
+
+    public bool LeftSeatClosed  => leftSeatClosed;
+
     private void Awake()
     {
         if (tableManager == null)
@@ -38,26 +42,44 @@ public class Table : MonoBehaviour
         {
             rightServePoint = transform.Find("ServePoint Right");
         }
-        
+
+        leftSeatClosed = true;
     }
+
+    
 
     public bool HasEmptySeat()
     {
+        if(leftSeatClosed)
+        {
+            return rightCustomer == null ? true : false;
+        }
         return (leftCustomer == null) || (rightCustomer == null);
+    }
+
+
+    public void OpenLeftSeat()
+    {
+        leftSeatClosed = false;
     }
 
     public Transform ReserveSeat(CustomerStateManager customer)
     {
-        if (leftCustomer == null)
-        {
-            leftCustomer = customer;
-            return leftSeatPoint;
-        }
-
         if (rightCustomer == null)
         {
             rightCustomer = customer;
             return rightSeatPoint;
+        }
+
+        if (leftSeatClosed)
+        {
+            return null;
+        }
+
+        if (leftCustomer == null)
+        {
+            leftCustomer = customer;
+            return leftSeatPoint;
         }
 
         Debug.Log("자리 예약 오류");
@@ -70,15 +92,15 @@ public class Table : MonoBehaviour
         {
             return;
         }
-
+        if (rightCustomer == customer)
+        {
+            rightCustomer = null;
+        }
         if (leftCustomer == customer)
         {
             leftCustomer = null;
         }
-        else if (rightCustomer == customer)
-        {
-            rightCustomer = null;
-        }
+
 
         if(tableManager.IsThereAnyWaiting())
         {

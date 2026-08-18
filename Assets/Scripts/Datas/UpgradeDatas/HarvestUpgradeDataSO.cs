@@ -3,13 +3,13 @@ using UnityEngine;
 
 public enum HarvestUpgradeType
 {
-    SawSize,
-    SawCount,
+    SawSize, 
     SawSpeed,
     SawSharpness,
     TruckSpeed,
     TruckCapacity,
     TruckFuel,
+    StageLevel,
     Count
 }
 

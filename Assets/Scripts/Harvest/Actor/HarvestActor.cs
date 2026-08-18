@@ -10,16 +10,16 @@ public sealed class HarvestActor : MonoBehaviour
     [SerializeField] private HarvestMover mover;
 
     private HarvestDataSO harvestDataSO;
-    private GridChunkHandler gridChunkHandler;
+    private ChunkRegistry registry;
+    private bool isInitialized;
 
 
     public void Init(
         HarvestType type,
         Transform player,
-        HarvestSpawner spawner,
         GridChunkHandler gridChunkHandler)
     {
-        this.gridChunkHandler = gridChunkHandler;
+        registry = gridChunkHandler.Registry;
         harvestDataSO = HarvestDataDB.GetData(type);
 
         if (hpHandler == null)
@@ -37,6 +37,7 @@ public sealed class HarvestActor : MonoBehaviour
 
         GameObject solid = Instantiate(harvestDataSO.SolidPrefab, transform);
         presenter.Init(solid);
+        isInitialized = true;
 
         if (harvestDataSO.IsMove)
         {
@@ -49,11 +50,24 @@ public sealed class HarvestActor : MonoBehaviour
                 return;
             }
 
-            mover.Init(player, harvestDataSO.Speed, spawner, gridChunkHandler);
+            mover.Init(player, harvestDataSO.Speed, gridChunkHandler);
         }
         else if (mover != null)
         {
             mover.enabled = false;
+        }
+
+        if (gameObject.activeInHierarchy)
+        {
+            registry.Register(transform);
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (isInitialized && registry != null)
+        {
+            registry.Register(transform);
         }
     }
 
@@ -67,9 +81,9 @@ public sealed class HarvestActor : MonoBehaviour
 
     private void OnDisable()
     {
-        if (gridChunkHandler != null)
+        if (registry != null)
         {
-            gridChunkHandler.Unregister(transform);
+            registry.Unregister(transform);
         }
     }
 
