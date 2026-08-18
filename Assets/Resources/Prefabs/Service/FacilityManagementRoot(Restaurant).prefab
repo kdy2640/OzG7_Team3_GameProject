@@ -122,6 +122,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4754700881644632238}
+  - component: {fileID: 6481475604309128920}
   m_Layer: 0
   m_Name: FacilityManagementRoot(Restaurant)
   m_TagString: Untagged
@@ -146,6 +147,23 @@ Transform:
   - {fileID: 8234158726469231344}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -45, y: 0, z: 0}
+--- !u!114 &6481475604309128920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2271702468298101434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9af891a69b93da4294e54b933ef5369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FacilityRaycaster
+  targetCamera: {fileID: 0}
+  clickableLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  maxDistance: 1000
 --- !u!1 &3187698444407828459
 GameObject:
   m_ObjectHideFlags: 0

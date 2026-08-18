@@ -21,6 +21,12 @@ public static class StageDataDB
         return stageDataMap.TryGetValue(stageType, out data);
     }
 
+    public static IEnumerable<StageDataSO> GetAllData()
+    {
+        Initialize();
+        return stageDataMap.Values;
+    }
+
     private static void Initialize()
     {
         if (stageDataMap != null)

@@ -28,16 +28,7 @@ public sealed class UI_FacilityManagement : UI_Base
 
     protected override IEnumerator OnShow()
     {
-        facilityCollection = FindFirstObjectByType<FacilityCollection>();
-
-        if (facilityCollection == null || detailPanel == null)
-        {
-            Debug.LogError(
-                "[UI_FacilityManagement] FacilityCollection 또는 " +
-                "FacilityDetailPanel을 찾을 수 없습니다.",
-                this);
-            yield break;
-        }
+        facilityCollection = FindFirstObjectByType<FacilityCollection>(); 
 
         detailPanel.Initialize(facilityCollection);
         facilityCollection.FacilitySelected += detailPanel.ShowFacility;
@@ -47,10 +38,7 @@ public sealed class UI_FacilityManagement : UI_Base
 
     protected override IEnumerator OnHide()
     {
-        if (facilityCollection != null && detailPanel != null)
-        {
-            facilityCollection.FacilitySelected -= detailPanel.ShowFacility;
-        }
+        facilityCollection.FacilitySelected -= detailPanel.ShowFacility;
 
         yield break;
     }

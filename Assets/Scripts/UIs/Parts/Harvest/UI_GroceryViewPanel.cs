@@ -9,6 +9,7 @@ public class UI_GroceryViewPanel : MonoBehaviour
 
     private readonly List<UI_GroceryView> groceryViews = new();
     private StockManager stockManager;
+    private bool isReady;
 
     private void Start()
     {
@@ -20,11 +21,10 @@ public class UI_GroceryViewPanel : MonoBehaviour
             return;
         }
 
-        CreateGroceryViews();
-
         stockManager = GameManager.Instance?.StockManager;
         stockManager?.SubscribeStockDataChange(Refresh);
-        Refresh();
+        isReady = true;
+        RefreshGroceryViews();
     }
 
     private void OnDestroy()
@@ -35,19 +35,52 @@ public class UI_GroceryViewPanel : MonoBehaviour
     public void Refresh()
     {
         for (int i = 0; i < groceryViews.Count; i++)
-            groceryViews[i].Refresh();
+        {
+            if (groceryViews[i].gameObject.activeSelf)
+            {
+                groceryViews[i].Refresh();
+            }
+        }
     }
 
-    private void CreateGroceryViews()
+    public void Initialize(IReadOnlyList<GroceryType> types)
     {
-        if (groceryTypes == null)
-            return;
+        groceryTypes.Clear();
 
-        for (int i = 0; i < groceryTypes.Count; i++)
+        if (types != null)
         {
-            UI_GroceryView groceryView = Instantiate(groceryViewPrefab, viewContainer);
-            groceryView.Initialize(groceryTypes[i]);
+            for (int i = 0; i < types.Count; i++)
+            {
+                groceryTypes.Add(types[i]);
+            }
+        }
+
+        if (isReady)
+        {
+            RefreshGroceryViews();
+        }
+    }
+
+    private void RefreshGroceryViews()
+    {
+        for (int i = groceryViews.Count; i < groceryTypes.Count; i++)
+        {
+            UI_GroceryView groceryView = Instantiate(
+                groceryViewPrefab,
+                viewContainer);
             groceryViews.Add(groceryView);
+        }
+
+        for (int i = 0; i < groceryViews.Count; i++)
+        {
+            UI_GroceryView groceryView = groceryViews[i];
+            bool isVisible = i < groceryTypes.Count;
+            groceryView.gameObject.SetActive(isVisible);
+
+            if (isVisible)
+            {
+                groceryView.Initialize(groceryTypes[i]);
+            }
         }
     }
 }

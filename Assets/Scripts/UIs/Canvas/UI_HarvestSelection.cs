@@ -3,32 +3,64 @@ using UnityEngine;
 
 public sealed class UI_HarvestSelection : UI_Base
 {
+    private enum GameObjects
+    {
+        UI_HarvestStageListPanel,
+        UI_HarvestStageDetailPanel
+    }
+
     private enum HubStateButtons
     {
         ExitButton
     }
 
+    private UI_HarvestStageListPanel stageListPanel;
+    private UI_HarvestStageDetailPanel stageDetailPanel;
+
     protected override void OnInit()
     {
+        Bind<GameObject>(typeof(GameObjects));
         Bind<UI_HubStateButton>(typeof(HubStateButtons));
+
         GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?
             .Init(Owner);
-    }
 
-    private void Start()
-    {
-        // 다른 객체의 Awake 완료 후 필요한 초기 작업을 작성합니다.
+        stageListPanel =
+            GetGameObject((int)GameObjects.UI_HarvestStageListPanel)?
+                .GetComponent<UI_HarvestStageListPanel>();
+        stageDetailPanel =
+            GetGameObject((int)GameObjects.UI_HarvestStageDetailPanel)?
+                .GetComponent<UI_HarvestStageDetailPanel>();
+
+        stageListPanel?.Initialize();
+        stageDetailPanel?.Initialize();
+
+        if (stageListPanel != null)
+        {
+            stageListPanel.OnSelected += ShowStage;
+            stageListPanel.Select(StageType.Stage_1);
+        }
     }
 
     protected override IEnumerator OnShow()
     {
-        // 화면을 표시할 때 갱신할 값과 등장 연출을 작성합니다.
+        stageDetailPanel?.Refresh();
         yield break;
     }
 
     protected override IEnumerator OnHide()
     {
-        // 화면을 숨기기 전 정리할 값과 퇴장 연출을 작성합니다.
         yield break;
+    }
+
+    private void OnDestroy()
+    {
+        if (stageListPanel != null)
+            stageListPanel.OnSelected -= ShowStage;
+    }
+
+    private void ShowStage(StageType stageType)
+    {
+        stageDetailPanel?.Show(stageType);
     }
 }
