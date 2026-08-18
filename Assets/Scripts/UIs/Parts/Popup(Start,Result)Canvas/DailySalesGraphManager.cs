@@ -4,12 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-[System.Serializable]
-public struct DailySalesData
-{
-    public string dateLabel;  // 예: "1일차", "8/18"
-    public float salesAmount; // 매출액
-}
 
 [System.Serializable]
 public class BarSlot
@@ -18,39 +12,47 @@ public class BarSlot
     public RectTransform barFillRect;      // BarFill의 RectTransform
     public TextMeshProUGUI dateText;       // DateText
     public TextMeshProUGUI amountText;     // AmountText
-
+    public RectTransform amountTextRect;
     public Vector3 SetData(string dateStr, float currentAmount, float maxAmount, float maxBarHeight)
     {
         if (slotObject != null) slotObject.SetActive(true);
 
         if (dateText != null) dateText.text = dateStr;
-        if (amountText != null) amountText.text = currentAmount > 0 ? $"G{currentAmount:N0}" : "0";
+
+        if (amountText != null) amountText.text = 
+                currentAmount > 0 ? $"G{currentAmount:N0}" : "0";
 
         float ratio = maxAmount > 0 ? Mathf.Clamp01(currentAmount / maxAmount) : 0f;
         float targetHeight = ratio * maxBarHeight;
 
+        if(barFillRect == null) return Vector3.zero;
+        
+        //실제 막대 그래프 높이 변경
         if (barFillRect != null)
         {
             barFillRect.sizeDelta = new Vector2(barFillRect.sizeDelta.x, targetHeight);
         }
+        // AmountText 위치 조정
+        if (amountTextRect != null)
+        {
+            amountTextRect.anchoredPosition = new Vector2(0, targetHeight + 10f);
+        }
 
         Vector3 localTop = new Vector3(0, targetHeight, 0);
         return barFillRect.TransformPoint(localTop);
+
+        
     }
 
     public void SetEmpty()
     {
-        if (slotObject != null)
-            slotObject.SetActive(true);
+        if (slotObject != null) slotObject.SetActive(true);
 
-        if (dateText != null)
-            dateText.text = "";
+        if (dateText != null) dateText.text = "";
 
-        if (amountText != null)
-            amountText.text = "";
+        if (amountText != null) amountText.text = "";
 
-        if (barFillRect != null)
-            barFillRect.sizeDelta = new Vector2(barFillRect.sizeDelta.x, 0);
+        if (barFillRect != null) barFillRect.sizeDelta = new Vector2(barFillRect.sizeDelta.x, 0);
     }
 }
 
