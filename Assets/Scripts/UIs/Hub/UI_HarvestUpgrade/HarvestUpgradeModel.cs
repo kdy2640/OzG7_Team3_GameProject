@@ -21,8 +21,7 @@ public sealed class HarvestUpgradeModel : MonoBehaviour
 
         GameObject target = upgradeType switch
         {
-            HarvestUpgradeType.SawSize => sawSizeHighlight,
-            HarvestUpgradeType.SawCount => sawCountHighlight,
+            HarvestUpgradeType.SawSize => sawSizeHighlight, 
             HarvestUpgradeType.SawSpeed => sawSpeedHighlight,
             HarvestUpgradeType.SawSharpness => sawSharpnessHighlight,
             HarvestUpgradeType.TruckSpeed => truckSpeedHighlight,

@@ -10,14 +10,18 @@ public sealed class CropCutter : MonoBehaviour
     [SerializeField] private GridChunkHandler gridChunkHandler;
     [SerializeField] private CutterViewer cutterViewer;
     [SerializeField, Min(0f)] private float cuttingRange = 0.5f;
+    [SerializeField, Min(0f)] private float rangeLerpSpeed = 8f;
     [SerializeField, Min(0f)] private float damage = 1f;
     [SerializeField, Min(0.25f)] private float damageDelay = 0.25f;
     [SerializeField, Range(0f, 1f)] private float cuttingMoveSpeedMultiplier = 0.35f;
 
     private readonly Dictionary<int, float> nextDamageTimes = new();
     private float cuttingUntilTime;
+    private float damageMultiplier = 1f;
 
     public bool IsCutting => Time.time <= cuttingUntilTime;
+    public float Range => cuttingRange;
+    public float TargetRange { get; private set; }
     public float MoveSpeedMultiplier =>
         IsCutting ? cuttingMoveSpeedMultiplier : 1f;
 
@@ -28,16 +32,52 @@ public sealed class CropCutter : MonoBehaviour
 
     private void Awake()
     {
-        Vector3 localPosition = transform.localPosition;
-        localPosition.z = CutterOffset + cuttingRange;
-        transform.localPosition = localPosition;
+        TargetRange = cuttingRange;
+        ApplyRange(cuttingRange);
+    }
 
-        cutterViewer?.SetRange(cuttingRange);
+    private void Update()
+    {
+        if (Mathf.Approximately(cuttingRange, TargetRange))
+        {
+            return;
+        }
+
+        float nextRange = Mathf.Lerp(
+            cuttingRange,
+            TargetRange,
+            rangeLerpSpeed * Time.deltaTime);
+
+        if (Mathf.Abs(nextRange - TargetRange) < 0.001f)
+        {
+            nextRange = TargetRange;
+        }
+
+        ApplyRange(nextRange);
     }
 
     private void OnValidate()
     {
         cuttingRange = Mathf.Max(0f, cuttingRange);
+        rangeLerpSpeed = Mathf.Max(0f, rangeLerpSpeed);
+        TargetRange = cuttingRange;
+
+        ApplyRange(cuttingRange);
+    }
+
+    public void SetTargetRange(float range)
+    {
+        TargetRange = Mathf.Max(0f, range);
+    }
+
+    public void SetDamageMultiplier(float multiplier)
+    {
+        damageMultiplier = Mathf.Max(0f, multiplier);
+    }
+
+    private void ApplyRange(float range)
+    {
+        cuttingRange = Mathf.Max(0f, range);
 
         Vector3 localPosition = transform.localPosition;
         localPosition.z = CutterOffset + cuttingRange;
@@ -90,7 +130,7 @@ public sealed class CropCutter : MonoBehaviour
                 continue;
             }
 
-            crop.TakeDamage(damage);
+            crop.TakeDamage(damage * damageMultiplier);
             nextDamageTimes[cropId] =
                 Time.time + Mathf.Max(0.25f, damageDelay);
         }

@@ -9,11 +9,16 @@ public sealed class TractorController : MonoBehaviour
     [SerializeField] private string moveActionPath = "Player/Move";
     [SerializeField, Min(0f)] private float moveSpeed = 5f;
     [SerializeField, Min(0f)] private float rotationLerpSpeed = 120f;
+    [SerializeField, Min(0f)] private float chargeSpeedMultiplier = 3f;
     [SerializeField] private CropCutter cropCutter;
 
     private Rigidbody body;
     private InputAction moveAction;
     private Vector2 moveInput;
+    private bool isCharging;
+
+    public CropCutter Cutter =>
+        cropCutter ??= GetComponentInChildren<CropCutter>(true);
 
     private void Awake()
     {
@@ -52,8 +57,8 @@ public sealed class TractorController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float throttle = moveInput.y;
-        float steering = moveInput.x;
+        float throttle = isCharging ? 1f : moveInput.y;
+        float steering = isCharging ? 0f : moveInput.x;
         bool isMoving = Mathf.Abs(throttle) > 0.0001f;
 
         if (!isMoving && Mathf.Abs(steering) <= 0.0001f)
@@ -62,7 +67,11 @@ public sealed class TractorController : MonoBehaviour
         }
 
         float speedMultiplier =
-            cropCutter == null ? 1f : cropCutter.MoveSpeedMultiplier;
+            isCharging
+                ? chargeSpeedMultiplier
+                : cropCutter == null
+                    ? 1f
+                    : cropCutter.MoveSpeedMultiplier;
 
         float steeringAngle =
             steering
@@ -81,5 +90,10 @@ public sealed class TractorController : MonoBehaviour
                 + forward
                 * (throttle * moveSpeed * speedMultiplier * Time.fixedDeltaTime));
         }
+    }
+
+    public void SetCharging(bool value)
+    {
+        isCharging = value;
     }
 }
