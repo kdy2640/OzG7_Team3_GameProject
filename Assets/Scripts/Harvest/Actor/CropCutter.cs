@@ -21,6 +21,11 @@ public sealed class CropCutter : MonoBehaviour
     public float MoveSpeedMultiplier =>
         IsCutting ? cuttingMoveSpeedMultiplier : 1f;
 
+    public void Initialize(GridChunkHandler handler)
+    {
+        gridChunkHandler = handler;
+    }
+
     private void Awake()
     {
         Vector3 localPosition = transform.localPosition;

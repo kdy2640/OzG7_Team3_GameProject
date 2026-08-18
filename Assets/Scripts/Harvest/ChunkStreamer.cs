@@ -11,15 +11,16 @@ public sealed class ChunkStreamer
 
     private readonly Dictionary<Vector2Int, ChunkRuntime> chunkRuntimes = new();
     private readonly HashSet<Vector2Int> loadedCoordinates = new();
+    private readonly HashSet<Vector2Int> pendingCoordinates = new();
     private readonly Queue<Vector2Int> pendingLoads = new();
+    private readonly List<Transform> loadingTargets = new();
+    private readonly List<Vector2Int> loadingTargetCoordinates = new();
 
     private Transform root;
     private GridGeometry geometry;
     private StageResolver stageResolver;
     private HarvestSpawner spawner;
     private Transform cropContainer;
-    private Transform loadingTarget;
-    private Vector2Int loadingTargetCoordinate;
 
     private sealed class ChunkRuntime
     {
@@ -49,10 +50,7 @@ public sealed class ChunkStreamer
     {
         Reset();
 
-        loadingTarget = target;
         spawner = harvestSpawner;
-        loadingTargetCoordinate = geometry.GetChunkCoordinate(
-            loadingTarget.position);
         cropContainer = root.Find("Crops");
 
         if (cropContainer == null)
@@ -61,9 +59,40 @@ public sealed class ChunkStreamer
             cropContainer.SetParent(root, false);
         }
 
-        if (LoadChunk(loadingTargetCoordinate))
+        AddLoadingTarget(target);
+
+        for (int i = 0; i < loadingTargetCoordinates.Count; i++)
         {
-            loadedCoordinates.Add(loadingTargetCoordinate);
+            Vector2Int coordinate = loadingTargetCoordinates[i];
+
+            if (LoadChunk(coordinate))
+            {
+                loadedCoordinates.Add(coordinate);
+            }
+        }
+
+        RefreshLoadingCoordinates();
+    }
+
+    public void AddLoadingTarget(Transform target)
+    {
+        if (target == null || loadingTargets.Contains(target))
+        {
+            return;
+        }
+
+        Vector2Int coordinate = geometry.GetChunkCoordinate(target.position);
+        loadingTargets.Add(target);
+        loadingTargetCoordinates.Add(coordinate);
+
+        if (spawner == null || cropContainer == null)
+        {
+            return;
+        }
+
+        if (LoadChunk(coordinate))
+        {
+            loadedCoordinates.Add(coordinate);
         }
 
         RefreshLoadingCoordinates();
@@ -72,22 +101,48 @@ public sealed class ChunkStreamer
     // 타깃 청크 변경과 프레임당 청크 로드를 처리한다.
     public void Tick()
     {
-        Vector2Int nextCoordinate = geometry.GetChunkCoordinate(
-            loadingTarget.position);
+        bool targetCoordinateChanged = false;
 
-        if (loadingTargetCoordinate != nextCoordinate)
+        for (int i = loadingTargets.Count - 1; i >= 0; i--)
         {
-            loadingTargetCoordinate = nextCoordinate;
+            Transform target = loadingTargets[i];
+
+            if (target == null)
+            {
+                loadingTargets.RemoveAt(i);
+                loadingTargetCoordinates.RemoveAt(i);
+                targetCoordinateChanged = true;
+                continue;
+            }
+
+            Vector2Int nextCoordinate = geometry.GetChunkCoordinate(
+                target.position);
+
+            if (loadingTargetCoordinates[i] == nextCoordinate)
+            {
+                continue;
+            }
+
+            loadingTargetCoordinates[i] = nextCoordinate;
+            targetCoordinateChanged = true;
+        }
+
+        if (targetCoordinateChanged)
+        {
             RefreshLoadingCoordinates();
         }
 
-        ProcessPendingLoads();
+        if (spawner != null)
+        {
+            ProcessPendingLoads();
+        }
     }
 
     // 로딩 상태와 생성된 모든 청크 루트를 초기화한다.
     public void Reset()
     {
         loadedCoordinates.Clear();
+        pendingCoordinates.Clear();
         pendingLoads.Clear();
 
         foreach (ChunkRuntime runtime in chunkRuntimes.Values)
@@ -202,9 +257,7 @@ public sealed class ChunkStreamer
 
         foreach (Vector2Int coordinate in loadedCoordinates)
         {
-            if (geometry.GetChunkDistance(
-                    coordinate,
-                    loadingTargetCoordinate) > unloadRadius)
+            if (!IsWithinRangeOfAnyTarget(coordinate, unloadRadius))
             {
                 coordinatesToUnload.Add(coordinate);
             }
@@ -217,13 +270,19 @@ public sealed class ChunkStreamer
         }
 
         pendingLoads.Clear();
+        pendingCoordinates.Clear();
 
-        foreach (Vector2Int coordinate in
-                 geometry.GetChunksInRange(loadingTargetCoordinate, loadRadius))
+        for (int i = 0; i < loadingTargetCoordinates.Count; i++)
         {
-            if (!loadedCoordinates.Contains(coordinate))
+            foreach (Vector2Int coordinate in geometry.GetChunksInRange(
+                         loadingTargetCoordinates[i],
+                         loadRadius))
             {
-                pendingLoads.Enqueue(coordinate);
+                if (!loadedCoordinates.Contains(coordinate)
+                    && pendingCoordinates.Add(coordinate))
+                {
+                    pendingLoads.Enqueue(coordinate);
+                }
             }
         }
     }
@@ -236,10 +295,9 @@ public sealed class ChunkStreamer
         for (int i = 0; i < loadCount; i++)
         {
             Vector2Int coordinate = pendingLoads.Dequeue();
+            pendingCoordinates.Remove(coordinate);
 
-            if (geometry.GetChunkDistance(
-                    coordinate,
-                    loadingTargetCoordinate) > loadRadius
+            if (!IsWithinRangeOfAnyTarget(coordinate, loadRadius)
                 || loadedCoordinates.Contains(coordinate))
             {
                 continue;
@@ -250,5 +308,20 @@ public sealed class ChunkStreamer
                 loadedCoordinates.Add(coordinate);
             }
         }
+    }
+
+    private bool IsWithinRangeOfAnyTarget(Vector2Int coordinate, int radius)
+    {
+        for (int i = 0; i < loadingTargetCoordinates.Count; i++)
+        {
+            if (geometry.GetChunkDistance(
+                    coordinate,
+                    loadingTargetCoordinates[i]) <= radius)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
