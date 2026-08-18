@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ���õ� ������ �� ���� ��ȸ, ǥ��, ��ư Ŭ�� ������ ����մϴ�.
+
 public sealed class UI_StaffInfoPanel : MonoBehaviour
 {
     [SerializeField] private Image roleIcon;
@@ -62,7 +62,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    // �� �г��� �ʿ��� ������ ���� ��ȸ�� UI�� �ݿ��մϴ�.
+ 
     private bool CreateInfoData()
     {
         if (!EmployeeDataDB.TryGetData(selectedType, out EmployeeDataSO employeeData))
