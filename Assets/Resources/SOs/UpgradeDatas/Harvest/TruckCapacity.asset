@@ -9,14 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee81734cb2fc4ce7920b0910113af05c, type: 3}
-  m_Name: Meatloaf
-  m_EditorClassIdentifier: Assembly-CSharp::DishUpgradeDataSO
-  id: dish_meatloaf
-  displayName: "\uBBF8\uD2B8\uB85C\uD504"
+  m_Script: {fileID: 11500000, guid: d087e9cf2c3f456280ce1395e25e243e, type: 3}
+  m_Name: TruckCapacity
+  m_EditorClassIdentifier: Assembly-CSharp::HarvestUpgradeDataSO
+  id: harvest_truck_capacity
+  displayName: TruckCapacity
   displayIcon: {fileID: 0}
-  baseCost: 0
-  costMultiplier: 1.2
+  requiredCosts: 0000000000000000000000000000000000000000
   maxLevel: 5
   requiredMarketLevel: 0000000000000000000000000000000000000000
-  targetDish: 3
+  targetUpgrade: 4
+  statModifiers:
+  - statType: 4
+    modifierType: 0
+    value: 0
