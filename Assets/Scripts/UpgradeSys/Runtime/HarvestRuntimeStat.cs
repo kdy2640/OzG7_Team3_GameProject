@@ -5,7 +5,6 @@ using UnityEngine;
 public enum HarvestStatType
 {
     SawSize,
-    SawCount,
     SawSpeed,
     SawSharpness,
     TruckSpeed,
