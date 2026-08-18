@@ -20,7 +20,7 @@ public class AIMove : MonoBehaviour
 
     private MoveState moveState;
 
-    [SerializeField] private float moveSpeed = 2f;
+    [SerializeField]private float moveSpeed;
     [SerializeField] private PathManager pathManager;
     [SerializeField] private GraphManager graph;
 
@@ -214,5 +214,20 @@ public class AIMove : MonoBehaviour
         {
             transform.rotation = Quaternion.LookRotation(direction);
         }
+    }
+
+    public void SetSpeed(float speed)
+    {
+        moveSpeed = speed;
+    }
+
+    public void Acceleration()
+    {
+        moveSpeed *= 2;
+    }
+
+    public void Deceleration()
+    {
+        moveSpeed -= 2;
     }
 }

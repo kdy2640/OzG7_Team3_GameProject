@@ -7,6 +7,7 @@ public class CustomerSpawner : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private TableManager tableManager;
     [SerializeField] private Transform exitPoint;
+    [SerializeField] private TipBox tipBox;
     [SerializeField] private float spawnInterval = 2f;
     [SerializeField] private RuntimeAnimatorController controller;
 
@@ -16,7 +17,17 @@ public class CustomerSpawner : MonoBehaviour
     [SerializeField] float animalSize;
 
     private float timer;
-
+    private void Awake()
+    {
+        if (exitPoint == null)
+        {
+            exitPoint = transform;
+        }
+        if (tableManager == null)
+        {
+            tableManager = FindFirstObjectByType<TableManager>();
+        }
+    }
     private void Update()
     {
         timer += Time.deltaTime;
@@ -32,8 +43,11 @@ public class CustomerSpawner : MonoBehaviour
     {
         CustomerStateManager customer =
             Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
+
         GameObject animal =
             Instantiate(animalPrefabs[Random.Range(0, animalPrefabs.Count)], customer.transform);
+
+        customer.Initialize(exitPoint, tableManager, tipBox);
         animal.transform.localScale = Vector3.one * animalSize;
         animal.transform.localPosition += Vector3.down * (1 - animalSize) * 2;
         

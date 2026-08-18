@@ -12,11 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee81734cb2fc4ce7920b0910113af05c, type: 3}
   m_Name: VegetableGimbap
   m_EditorClassIdentifier: Assembly-CSharp::DishUpgradeDataSO
-  id: dish_vegetable_gimbap
-  displayName: "\uC57C\uCC44\uAE40\uBC25"
+  id: vegetable_gimbap
+  displayName: "\uC57C\uCC44 \uAE40\uBC25"
   displayIcon: {fileID: 0}
-  baseCost: 0
-  costMultiplier: 1.2
+  requiredCosts: 0400000008000000100000002000000040000000
   maxLevel: 5
-  requiredMarketLevel: 0000000000000000000000000000000000000000
-  targetDish: 1
+  requiredMarketLevel: 0000000002000000020000000300000003000000
+  targetDish: 13
+  requiredIngredients:
+  - requiredGroceries:
+    - grocery: 0
+      amount: 2
+    - grocery: 1
+      amount: 1
+  - requiredGroceries:
+    - grocery: 0
+      amount: 4
+    - grocery: 1
+      amount: 2
+  - requiredGroceries:
+    - grocery: 0
+      amount: 8
+    - grocery: 1
+      amount: 4
+  - requiredGroceries:
+    - grocery: 0
+      amount: 16
+    - grocery: 1
+      amount: 8
+  - requiredGroceries:
+    - grocery: 0
+      amount: 32
+    - grocery: 1
+      amount: 16

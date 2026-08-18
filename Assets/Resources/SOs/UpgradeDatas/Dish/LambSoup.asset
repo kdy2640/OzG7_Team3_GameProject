@@ -12,11 +12,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee81734cb2fc4ce7920b0910113af05c, type: 3}
   m_Name: LambSoup
   m_EditorClassIdentifier: Assembly-CSharp::DishUpgradeDataSO
-  id: dish_lamb_soup
+  id: lamb_soup
   displayName: "\uC591\uACE0\uAE30 \uC2A4\uD504"
   displayIcon: {fileID: 0}
-  baseCost: 0
-  costMultiplier: 1.2
+  requiredCosts: 0400000008000000100000002000000040000000
   maxLevel: 5
-  requiredMarketLevel: 0000000000000000000000000000000000000000
-  targetDish: 7
+  requiredMarketLevel: 0300000003000000030000000300000003000000
+  targetDish: 5
+  requiredIngredients:
+  - requiredGroceries:
+    - grocery: 4
+      amount: 1
+    - grocery: 6
+      amount: 1
+    - grocery: 7
+      amount: 1
+    - grocery: 8
+      amount: 1
+  - requiredGroceries:
+    - grocery: 4
+      amount: 2
+    - grocery: 6
+      amount: 2
+    - grocery: 7
+      amount: 2
+    - grocery: 8
+      amount: 2
+  - requiredGroceries:
+    - grocery: 4
+      amount: 4
+    - grocery: 6
+      amount: 4
+    - grocery: 7
+      amount: 4
+    - grocery: 8
+      amount: 4
+  - requiredGroceries:
+    - grocery: 4
+      amount: 8
+    - grocery: 6
+      amount: 8
+    - grocery: 7
+      amount: 8
+    - grocery: 8
+      amount: 8
+  - requiredGroceries:
+    - grocery: 4
+      amount: 16
+    - grocery: 6
+      amount: 16
+    - grocery: 7
+      amount: 16
+    - grocery: 8
+      amount: 16

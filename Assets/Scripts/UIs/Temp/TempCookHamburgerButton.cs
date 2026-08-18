@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
@@ -19,6 +19,6 @@ public sealed class TempCookHamburgerButton : MonoBehaviour
 
     private void OnButtonClicked()
     {
-        GameManager.Instance.CookingManager.TryCook(DishType.MeatOnigiri);
+        GameManager.Instance.CookingManager.TryCook(DishType.CarrotSalad);
     }
 }

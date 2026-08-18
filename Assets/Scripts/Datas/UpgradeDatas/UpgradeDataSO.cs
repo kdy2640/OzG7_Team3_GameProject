@@ -10,16 +10,14 @@ public abstract class UpgradeDataSO : ScriptableObject
     [SerializeField] private string displayName;
     [SerializeField] private Sprite displayIcon;
 
-    [SerializeField] private int baseCost;
-    [SerializeField] private float costMultiplier = 1.2f;
+    [SerializeField] private List<int> requiredCosts = new() { 0, 0, 0, 0, 0 };
     [SerializeField] private int maxLevel = 1;
     [SerializeField] private List<int> requiredMarketLevel = new() { 0, 0, 0, 0, 0 };
 
     public string Id => id;
     public string DisplayName => displayName;
     public Sprite DisplayIcon => displayIcon;
-    public int BaseCost => baseCost;
-    public float CostMultiplier => costMultiplier;
+    public IReadOnlyList<int> RequiredCosts => requiredCosts;
     public int MaxLevel => maxLevel;
     public IReadOnlyList<int> RequiredMarketLevel => requiredMarketLevel;
 
@@ -38,11 +36,19 @@ public abstract class UpgradeDataSO : ScriptableObject
     }
 
     /// <summary>
-    /// 다음 레벨에 필요한 재화량을 계산합니다.
+    /// 목표 업그레이드 레벨에 필요한 재화량을 조회합니다.
     /// </summary>
-    public int GetCosts(int level)
+    public bool TryGetRequiredCost(int targetUpgradeLevel, out int requiredCost)
     {
-        return Mathf.RoundToInt(
-            baseCost * Mathf.Pow(costMultiplier, level));
+        int index = targetUpgradeLevel - 1;
+
+        if (index < 0 || index >= requiredCosts.Count)
+        {
+            requiredCost = 0;
+            return false;
+        }
+
+        requiredCost = Mathf.Max(0, requiredCosts[index]);
+        return true;
     }
 }

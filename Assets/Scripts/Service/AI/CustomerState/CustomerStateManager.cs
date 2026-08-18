@@ -1,43 +1,44 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CustomerStateManager : MonoBehaviour
 {
+    [SerializeField] private float speed = 2f;
     [SerializeField] private AIMove aiMove;
     [SerializeField] private Transform exitPoint;
+    [SerializeField] private TipBox tipBox;
     [SerializeField] private TableManager tableManager;
     [SerializeField] private OrderButton orderButton;
     [SerializeField] private Animator animator;
-    public Renderer Renderer => gameObject.GetComponent<Renderer>();
-    public AIMove AiMove => aiMove;
-    public Transform ExitPoint => exitPoint;
-    public OrderButton OrderButton => orderButton;
-    public Animator Animator => animator;
 
+    
     private Table currentTable;
     private Transform seat;
     private DishAmount order;
     public Action foodReceived;
+    private float tipChance = 0.1f;
+
+    public AIMove AiMove => aiMove;
+    public Transform ExitPoint => exitPoint;
+    public TipBox TipBox => tipBox;
+    public OrderButton OrderButton => orderButton;
+    public Animator Animator => animator;
+
+    
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
     public DishAmount Order => order;
     
+    [SerializeField]private IState currentState;
 
-    private IState currentState;
 
-    private void Awake()
+    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox)
     {
-        if(exitPoint == null)
-        {
-            exitPoint = FindFirstObjectByType<CustomerSpawner>().transform;
-        }
-        if(tableManager  == null)
-        {
-            tableManager = FindFirstObjectByType<TableManager>();
-        }
-        
+        this.exitPoint = exitPoint;
+        this.tableManager = tableManager;
+        this.tipBox = tipBox;
+        AiMove.SetSpeed(speed);
     }
 
     private void Start()
@@ -64,8 +65,6 @@ public class CustomerStateManager : MonoBehaviour
                 ChangeState(new CustomerMoveToTableState(this, aiMove, seat));
             }
         }
-
-        
     }
 
     private void Update()
@@ -119,5 +118,10 @@ public class CustomerStateManager : MonoBehaviour
     {
         this.animator = animator;
         animator.applyRootMotion = false;
+    }
+
+    public bool IsTip()
+    {
+        return UnityEngine.Random.value < tipChance;
     }
 }

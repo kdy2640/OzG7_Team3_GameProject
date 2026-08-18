@@ -82,7 +82,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         int cost = 0;
 
         if (!isMaxLevel && upgradeData != null)
-            cost = upgradeData.GetCosts(level);
+            upgradeData.TryGetRequiredCost(level + 1, out cost);
 
         bool canAction = upgrade.CanUpgrade(upgradeData);
 
