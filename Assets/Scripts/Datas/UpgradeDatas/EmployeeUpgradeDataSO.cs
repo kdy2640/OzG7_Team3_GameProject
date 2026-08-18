@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Upgrade/Employee")]
 public sealed class EmployeeUpgradeDataSO : UpgradeDataSO
