@@ -23,6 +23,7 @@ Material:
   disabledShaderPasses:
   - MOTIONVECTORS
   - SHADOWCASTER
+  - DepthOnly
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -45,7 +46,7 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DstBlend: 10
-    - _DstBlendAlpha: 0
+    - _DstBlendAlpha: 10
     - _QueueOffset: 0
     - _SampleGI: 0
     - _SrcBlend: 5
@@ -54,8 +55,8 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.1, g: 0.75, b: 1, a: 0.35}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 1, g: 0, b: 0.09465357, a: 0.5529412}
+    - _Color: {r: 1, g: 0, b: 0.09465354, a: 0.5529412}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &1022407001866421933

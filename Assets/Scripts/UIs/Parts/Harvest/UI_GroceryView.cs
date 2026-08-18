@@ -11,6 +11,7 @@ public class UI_GroceryView : MonoBehaviour
     public void Initialize(GroceryType type)
     {
         groceryType = type;
+        Refresh();
     }
 
     public void Refresh()
