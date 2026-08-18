@@ -1,9 +1,11 @@
 using TMPro;
 using UnityEngine;
-using static MarketSalesViewData;
 
 public class UI_DailySalesPanel : MonoBehaviour
 {
+    [Header("Data")]
+    [SerializeField] private DailySalesManagement dailySalesManagement;
+
     [Header("Today's Performance")]
     [SerializeField] private TMP_Text todaySalesText;
     [SerializeField] private TMP_Text customerCountText;
@@ -14,142 +16,106 @@ public class UI_DailySalesPanel : MonoBehaviour
     [SerializeField] private GameObject decreaseIcon;
 
     [Header("Menu Sales")]
-    [SerializeField] private Transform menuSalesContent;
-    [SerializeField] private UI_MenuSalesRow menuSalesRowPrefab;
+    [SerializeField] private UI_MenuSalesRow[] menuSalesRows = new UI_MenuSalesRow[3];
 
     [Header("Tip")]
     [SerializeField] private TMP_Text tipSalesText;
 
-    private DailySalesManagement dailySalesManagement;
+    private bool isSubscribed;
+
+    private void Start()
+    {
+        Subscribe();
+        Refresh();
+    }
 
     private void OnEnable()
     {
-        dailySalesManagement =
-            FindFirstObjectByType<DailySalesManagement>();
-
-        if (dailySalesManagement == null)
-            return;
-
-        dailySalesManagement.OnDailySalesChanged += Refresh;
-
-        Refresh();
+        // Start 이전에 활성화될 경우를 대비해서
+        if (Application.isPlaying) Subscribe();
     }
 
     private void OnDisable()
     {
-        if (dailySalesManagement != null)
+        Unsubscribe();
+    }
+
+    private void Subscribe()
+    {
+        if (isSubscribed) return;
+
+        if (dailySalesManagement == null)
         {
-            dailySalesManagement.OnDailySalesChanged -= Refresh;
+            Debug.LogError("UI_DailySalesPanel: DailySalesManagement 참조가 없습니다.", this);
+            return;
         }
 
-        dailySalesManagement = null;
+        dailySalesManagement.OnDailySalesChanged += Refresh;
+        isSubscribed = true;
+    }
+
+    private void Unsubscribe()
+    {
+        if (!isSubscribed) return;
+
+        if (dailySalesManagement != null) dailySalesManagement.OnDailySalesChanged -= Refresh;
+
+        isSubscribed = false;
     }
 
     private void Refresh()
     {
-        if (dailySalesManagement == null)
-            return;
+        if (dailySalesManagement == null) return;
 
         MarketSalesViewData data =
             dailySalesManagement.GetData();
 
-        if (data == null)
-            return;
+        if (data == null) return;
 
-        RefreshTodaySales(data);
-        RefreshSalesDifference(data);
-        RefreshMenuSales(data);
-        RefreshTipSales(data);
-    }
-
-    private void RefreshTodaySales(
-        MarketSalesViewData data)
-    {
         if (todaySalesText != null)
-        {
-            todaySalesText.text =
-                $"{data.todaySales:N0}코인";
-        }
+            todaySalesText.text = $"{data.todaySales:N0}코인";
 
         if (customerCountText != null)
-        {
-            customerCountText.text =
-                $"{data.servedCustomerCount:N0}명";
-        }
-    }
+            customerCountText.text = 
+                $"{data.servedCustomerCount:N0} / {data.totalCustomerCount:N0}명";
 
-    private void RefreshSalesDifference(
-        MarketSalesViewData data)
-    {
-        int difference =
-            data.todaySales - data.yesterdaySales;
+        int difference = data.todaySales - data.yesterdaySales;
 
         if (salesDifferenceText != null)
         {
-            if (difference > 0)
+            salesDifferenceText.text =
+                difference > 0 ? $"+{difference:N0}코인" : $"{difference:N0}코인";
+        }
+
+        if (increaseIcon != null) increaseIcon.SetActive(difference > 0);
+
+        if (decreaseIcon != null) decreaseIcon.SetActive(difference < 0);
+
+        RefreshMenuSales(data);
+
+        if (tipSalesText != null)
+            tipSalesText.text =
+                $"{data.tipSales:N0}코인";
+    }
+
+    private void RefreshMenuSales(MarketSalesViewData data)
+    {
+        for (int i = 0; i < menuSalesRows.Length; i++)
+        {
+            UI_MenuSalesRow row = menuSalesRows[i];
+
+            if (row == null)
+                continue;
+
+            if (data.menuSales != null &&
+                i < data.menuSales.Count)
             {
-                salesDifferenceText.text =
-                    $"+{difference:N0}코인";
+                row.SetData(data.menuSales[i]);
             }
             else
             {
-                salesDifferenceText.text =
-                    $"{difference:N0}코인";
+                row.Clear();
             }
         }
-
-        if (increaseIcon != null)
-        {
-            increaseIcon.SetActive(
-                difference > 0);
-        }
-
-        if (decreaseIcon != null)
-        {
-            decreaseIcon.SetActive(
-                difference < 0);
-        }
-    }
-
-    private void RefreshMenuSales(
-        MarketSalesViewData data)
-    {
-        if (menuSalesContent == null ||
-            menuSalesRowPrefab == null)
-        {
-            return;
-        }
-
-        for (int i = menuSalesContent.childCount - 1;
-             i >= 0;
-             i--)
-        {
-            Destroy(
-                menuSalesContent.GetChild(i).gameObject);
-        }
-
-        if (data.menuSales == null)
-            return;
-
-        foreach (MenuSalesViewData menuData
-                 in data.menuSales)
-        {
-            UI_MenuSalesRow row =
-                Instantiate(
-                    menuSalesRowPrefab,
-                    menuSalesContent);
-
-            row.SetData(menuData);
-        }
-    }
-
-    private void RefreshTipSales(
-        MarketSalesViewData data)
-    {
-        if (tipSalesText == null)
-            return;
-
-        tipSalesText.text =
-            $"{data.tipSales:N0}코인";
     }
 }
