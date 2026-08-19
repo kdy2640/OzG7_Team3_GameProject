@@ -187,6 +187,7 @@ public class MarketManager : MonoBehaviour
             currentPhase = marketData.CurrentPhase,
             currentLevel = marketData.CurrentLevel,
             totalIncome = marketData.TotalIncome,
+            yesterdaySales = marketData.YesterdaySales,
             claimedMissionCount = levelMissionProgress.ClaimedMissionCount,
             festivalStateVersion = 1,
             latestFestivalTaste = festivalCalendar.LatestTaste,
@@ -209,6 +210,7 @@ public class MarketManager : MonoBehaviour
                 saveData.currentPhase,
                 Mathf.Clamp(saveData.currentLevel, 0, MaxMarketLevel),
                 Mathf.Max(0, saveData.totalIncome),
+                Mathf.Max(0, saveData.yesterdaySales),
                 saveData.selectedDishes);
 
         ReplaceMarketData(loadedData);

@@ -72,6 +72,7 @@ public class MarketSaveData : ISerializationCallbackReceiver
     public MarketPhase currentPhase;
     public int currentLevel;
     public int totalIncome;
+    public int yesterdaySales;
     public int claimedMissionCount;
     public int festivalStateVersion;
     public TasteType latestFestivalTaste;
