@@ -49,6 +49,9 @@ public sealed class HarvestMover : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameManager.Instance?.Harvest?.IsRunning != true)
+            return;
+
         if (!isInitialized)
             return;
 

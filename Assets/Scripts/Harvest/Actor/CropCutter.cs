@@ -110,6 +110,9 @@ public sealed class CropCutter : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameManager.Instance?.Harvest?.IsRunning != true)
+            return;
+
         if (gridChunkHandler == null)
         {
             return;

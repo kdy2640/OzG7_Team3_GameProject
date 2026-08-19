@@ -69,6 +69,12 @@ public sealed class TractorController : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance?.Harvest?.IsRunning != true)
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
+
         if (moveAction == null)
         {
             return;
@@ -79,6 +85,9 @@ public sealed class TractorController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameManager.Instance?.Harvest?.IsRunning != true)
+            return;
+
         float throttle = isCharging ? 1f : moveInput.y;
         float steering = isCharging ? 0f : moveInput.x;
         bool isMoving = Mathf.Abs(throttle) > 0.0001f;
