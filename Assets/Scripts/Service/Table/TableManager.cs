@@ -53,7 +53,6 @@ public class TableManager : MonoBehaviour
     public void AddWaitingCustomer(CustomerStateManager customer)
     {
         waitingQueue.Enqueue(customer);
-        Debug.Log("현재 대기 수 : " + waitingQueue.Count);
     }
 
     public void GetSeatForWaitingCustomer()
