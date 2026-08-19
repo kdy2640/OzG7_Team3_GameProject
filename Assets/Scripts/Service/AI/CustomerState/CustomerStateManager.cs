@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CustomerStateManager : MonoBehaviour
 {
-    [SerializeField] private float speed = 2f;
+    [SerializeField] private float speed = 4f;
     [SerializeField] private AIMove aiMove;
     [SerializeField] private Transform exitPoint;
     [SerializeField] private TipBox tipBox;
@@ -18,7 +18,7 @@ public class CustomerStateManager : MonoBehaviour
     private DishAmount order;
     public Action foodReceived;
     private float tipChance = 0.1f;
-
+    private float eatTime = 5f;
     public AIMove AiMove => aiMove;
     public Transform ExitPoint => exitPoint;
     public TipBox TipBox => tipBox;
@@ -29,7 +29,9 @@ public class CustomerStateManager : MonoBehaviour
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
     public DishAmount Order => order;
-    
+    public float EatTime => eatTime;
+
+
     [SerializeField]private IState currentState;
 
 
@@ -105,7 +107,6 @@ public class CustomerStateManager : MonoBehaviour
     public void AnimSetIdle()
     {
         animator.SetBool("IsWalking", false);
-        animator.SetBool("IsTyping", false);
         animator.SetBool("IsRunning", false);
     }
 
@@ -123,5 +124,14 @@ public class CustomerStateManager : MonoBehaviour
     public bool IsTip()
     {
         return UnityEngine.Random.value < tipChance;
+    }
+
+    public void EatSpeedUp()
+    {
+        eatTime /= 2;
+    }
+    public void TipChanceUp()
+    {
+        tipChance *= 2;
     }
 }

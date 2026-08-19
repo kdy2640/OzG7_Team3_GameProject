@@ -18,7 +18,7 @@ public class ServerServeState : IState
                 ).normalized
             );
         stateManager.AnimSetIdle();
-        timer = 3.0f;
+        timer = stateManager.ServeTime;
         stateManager.GiveFood();
     }
 

@@ -21,8 +21,6 @@ public class ServerMoveToKitchenState : IState
     public void Enter()
     {
         stateManager.Animator.SetBool("IsRunning", true);
-        Debug.Log($"Animator : {stateManager.Animator.name}");
-        Debug.Log($"IsRunning : {stateManager.Animator.GetBool("IsRunning")}");
         stateManager.IsBusy = true;
         stateManager.IsBusy = true;
 
@@ -43,8 +41,6 @@ public class ServerMoveToKitchenState : IState
 
     private void Arrived()
     {
-        stateManager.ChangeState(
-            new ServerMoveToTableState(stateManager, stateManager.AiMove, stateManager.ServePoint)
-            );
+        stateManager.ChangeState(new ServerReceiveFoodState(stateManager));
     }
 }

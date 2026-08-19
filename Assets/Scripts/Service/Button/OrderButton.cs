@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -33,8 +34,6 @@ public class OrderButton : MonoBehaviour
         //dishIcon.sprite = data.Icon;
         dishName.text = data.DisplayName;
         amountText.text = order.amount.ToString();
-
-        
     }
 
     public void OnClick()
