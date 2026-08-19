@@ -17,31 +17,48 @@ MonoBehaviour:
   - conditionType: 2
     condition:
       rid: 4385386984373485638
+    rewardType: 0
+    reward:
+      rid: -2
     title: 
     description: 
   - conditionType: 2
     condition:
       rid: 4385387030248423688
+    rewardType: 0
+    reward:
+      rid: -2
     title: 
     description: 
   - conditionType: 2
     condition:
       rid: 4385387030248423689
+    rewardType: 2
+    reward:
+      rid: 4385387165214310468
     title: 
     description: 
   - conditionType: 2
     condition:
       rid: 4385387030248423689
+    rewardType: 0
+    reward:
+      rid: -2
     title: 120
     description: 
   - conditionType: 2
     condition:
       rid: 4385387030248423689
+    rewardType: 0
+    reward:
+      rid: -2
     title: 
     description: 
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 4385386984373485638
       type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
       data:
@@ -54,3 +71,9 @@ MonoBehaviour:
       type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
       data:
         targetIncome: 80
+    - rid: 4385387165214310468
+      type: {class: MissionGroceryReward, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 0
+          amount: 0

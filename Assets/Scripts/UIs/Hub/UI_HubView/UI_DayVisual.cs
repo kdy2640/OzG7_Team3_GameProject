@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class UI_DayVisual : MonoBehaviour
 {
+    private static readonly TasteType[] NoTastes = new TasteType[0];
+
     [SerializeField] private TMP_Text dayText;
     [SerializeField] private Transform tasteCardContainer;
     [SerializeField] private UI_TasteCard tasteCardPrefab;
@@ -34,10 +36,19 @@ public class UI_DayVisual : MonoBehaviour
             return;
 
         MarketManager market = GameManager.Instance.Market;
+        int currentBusinessDay = market.MarketData.CurrentBusinessDay;
 
-        dayText.text = $"Day {market.CurrentBusinessDay:D2}";
+        dayText.text = $"Day {currentBusinessDay:D2}";
 
-        currentTastes[0] = market.TodayTaste;
+        TasteType nowTaste = market.FestivalCalendar.GetNowTaste(currentBusinessDay);
+
+        if (nowTaste == TasteType.Count)
+        {
+            RefreshTasteCards(NoTastes);
+            return;
+        }
+
+        currentTastes[0] = nowTaste;
         RefreshTasteCards(currentTastes);
     }
 

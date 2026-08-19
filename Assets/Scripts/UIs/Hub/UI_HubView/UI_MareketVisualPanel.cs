@@ -93,7 +93,7 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
         if (salesAmountText != null)
             salesAmountText.text = $"{totalIncome:N0} / {incomeGoal:N0}";
 
-        LevelMissionGroupSO missionGroup = market.LevelMissionGroup;
+        LevelMissionGroupSO missionGroup = market.LevelMissionProgress.MissionGroup;
         int questSlotCount = questSlots?.Length ?? 0;
         int missionCount = Mathf.Clamp(
             missionGroup == null || missionGroup.Missions == null
