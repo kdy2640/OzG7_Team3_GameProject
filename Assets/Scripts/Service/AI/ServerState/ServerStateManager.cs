@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -8,6 +10,11 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private Transform kitchen;
     [SerializeField] private Transform waitPoint;
 
+    [SerializeField] private float baseSpeed = 2;
+    [SerializeField] private float speed;
+    [SerializeField] private int level;
+    [SerializeField] private float serveTime = 3f;
+    [SerializeField] private float receiveFoodTime = 3f;
     private Animator animator;
 
     private DishType dish;
@@ -16,6 +23,9 @@ public class ServerStateManager : MonoBehaviour
 
     public bool IsBusy = false;
 
+    public event Action customerChanged;
+
+
     public AIMove AiMove => aiMove;
     public Transform ServePoint => servePoint;
     public Transform Kitchen => kitchen;
@@ -23,10 +33,13 @@ public class ServerStateManager : MonoBehaviour
     public Animator Animator => animator;
     public CustomerStateManager Customer => customer;
     public DishType Dish => dish;
-    
-
+    public int Level => level; 
+    public float ServeTime => serveTime;
+    public float ReceiveFoodTime => receiveFoodTime;
 
     [SerializeField] private IState currentState;
+
+
 
     private void Awake()
     {
@@ -34,6 +47,8 @@ public class ServerStateManager : MonoBehaviour
         aiMove = gameObject.GetComponent<AIMove>();
         animator = gameObject.GetComponentInChildren<Animator>();
         animator.applyRootMotion = false;
+        speed = baseSpeed;
+        UpdateStatus();
     }
 
     private void Start()
@@ -64,6 +79,7 @@ public class ServerStateManager : MonoBehaviour
     public void SetServerDish(DishType dish, CustomerStateManager customer)
     {
         this.customer = customer;
+        customerChanged?.Invoke();
 
         this.dish = dish;
 
@@ -83,8 +99,74 @@ public class ServerStateManager : MonoBehaviour
         animator.SetBool("IsServing", false);
         animator.SetBool("IsRunning", false);
     }
+
+    public void SetLevel(EmployeeType employee)
+    {
+        level = GameManager.Instance.Upgrade.RuntimeLevel.Get(employee);
+    }
+    #region 스킬 관련
+    public void UpdateStatus()
+    {
+        speed = baseSpeed;
+        for (int i = 0; i < level - 1; i++)
+        {
+            UpgradeSpeed();
+        }
+        aiMove.SetSpeed(speed);
+    }
+
+    private void UpgradeSpeed()
+    {
+        speed *= 1.1f;
+    }
+    public void UpgradeBaseSpeed()
+    {
+        baseSpeed *= 2;
+        UpdateStatus();
+    }
+    public void WorkSpeedUp()
+    {
+        serveTime /= 2;
+        receiveFoodTime /= 2;
+    }
+
+    public void CustomerEatSpeedUp()
+    {
+        customer.EatSpeedUp();
+    }
+
+    public void CustomerTipChanceUp()
+    {
+        customer.TipChanceUp();
+    }
+
+    private IEnumerator AutoServeCo()
+    {
+        while(true)
+        {
+            if (!IsBusy)
+            {
+                OrderButton orderButton = FindFirstObjectByType<OrderButton>();
+                if (orderButton != null)
+                {
+                    orderButton.OnClick();
+                }
+            }
+            yield return new WaitForSeconds(0.2f);
+        }
+    }
+
+    public void AutoServe()
+    {
+        StartCoroutine(AutoServeCo());
+    }
+
+    #endregion
+
     private void OnDisable()
     {
         Destroy(this.gameObject);
+        customerChanged -= CustomerEatSpeedUp;
+        customerChanged -= CustomerTipChanceUp;
     }
 }

@@ -7,9 +7,9 @@ public class ServerList : MonoBehaviour
     [SerializeField] private int serverCount = 4;
     [SerializeField] private ServerStateManager serverPrefab;
     [SerializeField] private List<Transform> serverSpots = new();
-    [SerializeField] private float serverSpeed = 2;
     [SerializeField] private AccelerationButton accelerationButton;
     [SerializeField] private float accelDuration;
+    private ServerSkillManager skillManager = new();
 
     private List<ServerStateManager> servers = new();
     private float timer;
@@ -42,10 +42,15 @@ public class ServerList : MonoBehaviour
         {
             ServerStateManager server = Instantiate(serverPrefab, transform.position, Quaternion.identity);
             server.SetServerSpot(serverSpots[i]);
-            server.AiMove.SetSpeed(serverSpeed);
+            server.SetLevel((EmployeeType)i);
             servers.Add(server);
         }
+
+        skillManager.SkillUpdate(servers);
     }
+
+    
+
 
     public bool TryAllocServe(DishType dish, CustomerStateManager customer)
     {
