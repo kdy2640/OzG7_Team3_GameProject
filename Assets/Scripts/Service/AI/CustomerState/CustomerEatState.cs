@@ -5,7 +5,6 @@ public class CustomerEatState : IState
 {
     private CustomerStateManager stateManager;
     private float timer;
-
     public CustomerEatState(CustomerStateManager stateManager)
     {
         this.stateManager = stateManager;
@@ -15,7 +14,7 @@ public class CustomerEatState : IState
     public void Enter()
     {
         stateManager.Animator.SetBool("IsEating", true);
-        timer = 5.0f;
+        timer = stateManager.EatTime;
     }
 
     public void Execute()
@@ -28,6 +27,8 @@ public class CustomerEatState : IState
             return;
         }
     }
+
+    
 
     private void FinishEating()
     {
