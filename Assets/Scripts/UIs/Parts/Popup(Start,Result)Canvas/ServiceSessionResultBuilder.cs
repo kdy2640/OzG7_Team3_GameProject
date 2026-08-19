@@ -23,6 +23,7 @@ public sealed class ServiceSessionResultBuilder
                 result.menuSales.Add(new MenuSalesResultData
                 {
                     dishType = menuResult.dishType,
+                    menuName = menuResult.menuName,
                     menuIcon = menuResult.menuIcon,
                     salesAmount = Mathf.Max(0, menuResult.salesAmount)
                 });

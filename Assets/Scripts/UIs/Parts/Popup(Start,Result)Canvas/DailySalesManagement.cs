@@ -43,10 +43,10 @@ public class DailySalesManagement : MonoBehaviour
 
     public event Action OnDailySalesChanged;
 
-    //private void Start()
-    //{
-    //    TestSalesUI();
-    //}
+    private void Start()
+    {
+        TestSalesUI();
+    }
 
     private void OnEnable()
     {
@@ -240,39 +240,39 @@ public class DailySalesManagement : MonoBehaviour
         OnDailySalesChanged?.Invoke();
     }
 
-    //public void TestSalesUI()
-    //{
-    //    ServiceResultData result = new ServiceResultData
-    //    {
-    //        customerReceived = 42,
-    //        customerMax = 50,
-    //        tipResult = 3500
-    //    };
+    public void TestSalesUI()
+    {
+        ServiceResultData result = new ServiceResultData
+        {
+            customerReceived = 42,
+            customerMax = 50,
+            tipResult = 3500
+        };
 
-    //    result.menuSales.Add(new MenuSalesResultData
-    //    {
-    //        dishType = (DishType)0,
-    //        menuName = "MENU A",
-    //        menuIcon = null,
-    //        salesAmount = 60000
-    //    });
+        result.menuSales.Add(new MenuSalesResultData
+        {
+            dishType = (DishType)0,
+            menuName = "MENU A",
+            menuIcon = null,
+            salesAmount = 60000
+        });
 
-    //    result.menuSales.Add(new MenuSalesResultData
-    //    {
-    //        dishType = (DishType)1,
-    //        menuName = "MENU B",
-    //        menuIcon = null,
-    //        salesAmount = 40000
-    //    });
+        result.menuSales.Add(new MenuSalesResultData
+        {
+            dishType = (DishType)1,
+            menuName = "MENU B",
+            menuIcon = null,
+            salesAmount = 40000
+        });
 
-    //    result.menuSales.Add(new MenuSalesResultData
-    //    {
-    //        dishType = (DishType)2,
-    //        menuName = "MENU C",
-    //        menuIcon = null,
-    //        salesAmount = 25000
-    //    });
+        result.menuSales.Add(new MenuSalesResultData
+        {
+            dishType = (DishType)2,
+            menuName = "MENU C",
+            menuIcon = null,
+            salesAmount = 25000
+        });
 
-    //    ApplyServiceResult(125000, result);
-    //}
+        ApplyServiceResult(125000, result);
+    }
 }
