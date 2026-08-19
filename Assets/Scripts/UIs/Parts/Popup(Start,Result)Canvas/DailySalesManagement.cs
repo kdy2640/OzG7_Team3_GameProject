@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-//기존 MarketManager를 읽기만 하고 값을 변경하지 않음
 public class DailySalesManagement : MonoBehaviour
 {
-    public const int MaxHistoryCount = 5;
-
     [Serializable]
     public class DailyCustomerData
     {
@@ -25,34 +21,32 @@ public class DailySalesManagement : MonoBehaviour
     // 현재 영업일
     private int currentBusinessDay = -1;
 
-    // 영업일 시작 시점의 누적 매출
-    private int dayStartTotalIncome;
+    // 오늘 누적 매출
+    private int todaySales;
+
+    // 전날 매출
+    private int yesterdaySales;
+
+    // 오늘 누적 서비스 결과
+    private ServiceResultData todayServiceResult;
 
     // 오늘 손님 데이터
     private DailyCustomerData todayCustomerData = new DailyCustomerData();
 
-    // 최근 5일 매출 기록
-    private readonly List<DailySalesData> salesHistory =
-        new List<DailySalesData>();
+    public int TodaySales => todaySales;
+
+    public int YesterdaySales => yesterdaySales;
 
     public int TodayVisitorCount => todayCustomerData.visitorCount;
 
     public int TodayServedCustomerCount => todayCustomerData.servedCustomerCount;
 
-    public int TodaySales
-    {
-        get
-        {
-            if (marketManager == null) return 0;
-
-            return Mathf.Max
-                (0, marketManager.MarketData.TotalIncome - dayStartTotalIncome);
-        }
-    }
-
-    public IReadOnlyList<DailySalesData> SalesHistory => salesHistory;
-
     public event Action OnDailySalesChanged;
+
+    private void Start()
+    {
+        TestSalesUI();
+    }
 
     private void OnEnable()
     {
@@ -73,16 +67,18 @@ public class DailySalesManagement : MonoBehaviour
         {
             marketManager.UnsubscribeMarketDataChanged(OnMarketDataChanged);
         }
+
         marketManager = null;
     }
 
     private void Initialize()
     {
-        MarketData marketData = marketManager.MarketData;
+        currentBusinessDay = marketManager.CurrentBusinessDay;
 
-        currentBusinessDay = marketData.CurrentBusinessDay;
+        todaySales = 0;
+        yesterdaySales = 0;
 
-        dayStartTotalIncome = marketData.TotalIncome;
+        todayServiceResult = new ServiceResultData();
 
         todayCustomerData = new DailyCustomerData();
 
@@ -93,51 +89,97 @@ public class DailySalesManagement : MonoBehaviour
     {
         if (marketManager == null) return;
 
-        MarketData marketData = marketManager.MarketData;
+        int businessDay = marketManager.CurrentBusinessDay;
 
-        CheckBusinessDayChanged(marketData);
+        if (businessDay != currentBusinessDay)
+        {
+            StartNewBusinessDay(businessDay);
+            return;
+        }
 
         NotifyChanged();
     }
 
-    private void CheckBusinessDayChanged(MarketData marketData)
+    private void StartNewBusinessDay(int newBusinessDay)
     {
-        if (marketData.CurrentBusinessDay == currentBusinessDay)
+        // 오늘 매출을 전날 매출로 이동
+        yesterdaySales = todaySales;
+
+        // 새 영업일 초기화
+        todaySales = 0;
+
+        todayServiceResult = new ServiceResultData();
+
+        todayCustomerData = new DailyCustomerData();
+
+        currentBusinessDay = newBusinessDay;
+
+        NotifyChanged();
+    }
+
+    /// <summary>
+    /// 세션 완료 후 결과를 하루 데이터에 누적한다.
+    /// todayTotalSales는 해당 시점의 '오늘 누적 매출'이다.
+    /// </summary>
+    public void ApplyServiceResult(int todayTotalSales,ServiceResultData result)
+    {
+        if (result == null) return;
+
+        // 오늘 누적 매출은 외부 시스템에서 전달받는다.
+        todaySales = Mathf.Max(0, todayTotalSales);
+
+        if (todayServiceResult == null)
+            todayServiceResult = new ServiceResultData();
+
+        // 손님 수 누적
+        todayServiceResult.customerReceived += Mathf.Max(0, result.customerReceived);
+
+        todayServiceResult.customerMax += Mathf.Max(0, result.customerMax);
+
+        // 팁 누적
+        todayServiceResult.tipResult += Mathf.Max(0, result.tipResult);
+
+        // 메뉴별 매출 누적
+        if (result.menuSales != null)
         {
+            foreach (MenuSalesResultData resultMenu in result.menuSales)
+            {
+                if (resultMenu == null) continue;
+
+                AddOrAccumulateMenuSales(resultMenu);
+            }
+        }
+
+        todayCustomerData.servedCustomerCount = todayServiceResult.customerReceived;
+
+        NotifyChanged();
+    }
+
+    private void AddOrAccumulateMenuSales(MenuSalesResultData resultMenu)
+    {
+        MenuSalesResultData existingMenu =
+            todayServiceResult.menuSales.Find(menu => menu != null && menu.dishType == resultMenu.dishType);
+
+        if (existingMenu == null)
+        {
+            todayServiceResult.menuSales.Add(new MenuSalesResultData
+                {
+                    dishType = resultMenu.dishType,
+                    menuName = resultMenu.menuName,
+                    menuIcon = resultMenu.menuIcon,
+                    salesAmount = Mathf.Max(0, resultMenu.salesAmount)
+                });
+
             return;
         }
 
-        // 이전 영업일 기록
-        if (currentBusinessDay >= 0)
-        {
-            SavePreviousDay(marketData);
-        }
+        existingMenu.salesAmount +=
+            Mathf.Max(0, resultMenu.salesAmount);
 
-        // 새로운 영업일 시작
-        currentBusinessDay = marketData.CurrentBusinessDay;
+        if (string.IsNullOrEmpty(existingMenu.menuName)) existingMenu.menuName = resultMenu.menuName;
 
-        dayStartTotalIncome = marketData.TotalIncome;
-
-        todayCustomerData = new DailyCustomerData();
-    }
-
-    private void SavePreviousDay(MarketData marketData)
-    {
-        int previousDaySales = Mathf.Max
-            (0, marketData.TotalIncome - dayStartTotalIncome);
-
-        salesHistory.Add
-            (new DailySalesData
-            {
-                dateLabel = $"{currentBusinessDay}일차",
-
-                salesAmount = previousDaySales
-            });
-
-        while (salesHistory.Count > MaxHistoryCount)
-        {
-            salesHistory.RemoveAt(0);
-        }
+        // 기존 아이콘이 비어 있고 새 결과에 아이콘이 있다면 보완
+        if (existingMenu.menuIcon == null) existingMenu.menuIcon = resultMenu.menuIcon;
     }
 
     public void RecordVisitor()
@@ -154,28 +196,83 @@ public class DailySalesManagement : MonoBehaviour
         NotifyChanged();
     }
 
-    public List<DailySalesData> GetGraphData()
+    public MarketSalesViewData GetData()
     {
-        List<DailySalesData> result = new List<DailySalesData>(salesHistory);
-
-        // 오늘 데이터 추가
-        result.Add(new DailySalesData
+        MarketSalesViewData data = new MarketSalesViewData
             {
-                dateLabel = $"{currentBusinessDay}일차",
+                todaySales = todaySales,
+                yesterdaySales = yesterdaySales,
+                servedCustomerCount = 0,
+                totalCustomerCount = 0,
+                tipSales = 0
+        };
 
-                salesAmount = TodaySales
-            });
+        if (todayServiceResult == null)return data;
 
-        while (result.Count > MaxHistoryCount)
+        data.servedCustomerCount = Mathf.Max(0,todayServiceResult.customerReceived);
+
+        data.totalCustomerCount = Mathf.Max(0, todayServiceResult.customerMax);
+
+        data.tipSales = Mathf.Max(0,todayServiceResult.tipResult);
+
+        if (todayServiceResult.menuSales != null)
         {
-            result.RemoveAt(0);
+            foreach (MenuSalesResultData menuResult
+                     in todayServiceResult.menuSales)
+            {
+                if (menuResult == null)
+                    continue;
+
+                data.menuSales.Add(new MenuSalesViewData
+                    {
+                        dishType = menuResult.dishType,
+                        menuName = menuResult.menuName,
+                        menuIcon = menuResult.menuIcon,
+                        salesAmount =Mathf.Max(0,menuResult.salesAmount)});
+            }
         }
 
-        return result;
+        return data;
     }
 
     private void NotifyChanged()
     {
         OnDailySalesChanged?.Invoke();
+    }
+
+    public void TestSalesUI()
+    {
+        ServiceResultData result = new ServiceResultData
+        {
+            customerReceived = 42,
+            customerMax = 50,
+            tipResult = 3500
+        };
+
+        result.menuSales.Add(new MenuSalesResultData
+        {
+            dishType = (DishType)0,
+            menuName = "MENU A",
+            menuIcon = null,
+            salesAmount = 60000
+        });
+
+        result.menuSales.Add(new MenuSalesResultData
+        {
+            dishType = (DishType)1,
+            menuName = "MENU B",
+            menuIcon = null,
+            salesAmount = 40000
+        });
+
+        result.menuSales.Add(new MenuSalesResultData
+        {
+            dishType = (DishType)2,
+            menuName = "MENU C",
+            menuIcon = null,
+            salesAmount = 25000
+        });
+
+        ApplyServiceResult(125000, result);
     }
 }
