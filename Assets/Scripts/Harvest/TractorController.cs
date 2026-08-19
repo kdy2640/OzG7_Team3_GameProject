@@ -44,6 +44,23 @@ public sealed class TractorController : MonoBehaviour
         moveAction?.Enable();
     }
 
+    private void Start()
+    {
+        HarvestRuntimeStat harvestStat =
+            GameManager.Instance?.Upgrade?.RuntimeStat?.Harvest;
+
+        if (harvestStat == null)
+        {
+            return;
+        }
+
+        moveSpeed = harvestStat.Get(HarvestStatType.TruckSpeed);
+        cropCutter?.ApplyUpgradeStats(
+            harvestStat.Get(HarvestStatType.SawSize),
+            harvestStat.Get(HarvestStatType.SawSpeed),
+            harvestStat.Get(HarvestStatType.SawSharpness));
+    }
+
     private void OnDisable()
     {
         moveAction?.Disable();

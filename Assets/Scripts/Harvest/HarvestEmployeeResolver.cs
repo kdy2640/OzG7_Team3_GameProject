@@ -179,7 +179,17 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
         }
 
         CropCutter cutter = sidecar.GetComponentInChildren<CropCutter>(true);
-         
+
+        HarvestRuntimeStat harvestStat =
+            GameManager.Instance?.Upgrade?.RuntimeStat?.Harvest;
+
+        if (harvestStat != null)
+        {
+            cutter.ApplyUpgradeStats(
+                harvestStat.Get(HarvestStatType.SawSize),
+                harvestStat.Get(HarvestStatType.SawSpeed),
+                harvestStat.Get(HarvestStatType.SawSharpness));
+        }
 
         cutter.Initialize(tractorController.GridChunkHandler);
         tractorController.GridChunkHandler.Streamer.AddLoadingTarget(

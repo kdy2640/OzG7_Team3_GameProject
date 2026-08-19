@@ -29,7 +29,15 @@ public class HarvestManager : MonoBehaviour
     }
     public void PrepareReveal()
     {
-        timer = loopDuration;  // + GameManager.Instance.Upgrade.GetRuntimeStat().ExtraDuration;
+        HarvestRuntimeStat harvestStat =
+            GameManager.Instance?.Upgrade?.RuntimeStat?.Harvest;
+
+        if (harvestStat != null)
+        {
+            loopDuration = harvestStat.Get(HarvestStatType.TruckFuel);
+        }
+
+        timer = loopDuration;
         OnTick?.Invoke(Timer);
     }
     public void StartLoop()

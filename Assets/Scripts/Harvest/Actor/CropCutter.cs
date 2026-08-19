@@ -12,7 +12,7 @@ public sealed class CropCutter : MonoBehaviour
     [SerializeField, Min(0f)] private float cuttingRange = 0.5f;
     [SerializeField, Min(0f)] private float rangeLerpSpeed = 8f;
     [SerializeField, Min(0f)] private float damage = 1f;
-    [SerializeField, Min(0.25f)] private float damageDelay = 0.25f;
+    [SerializeField, Min(0f)] private float damageDelay = 0.25f;
     [SerializeField, Range(0f, 1f)] private float cuttingMoveSpeedMultiplier = 0.35f;
 
     private readonly Dictionary<int, float> nextDamageTimes = new();
@@ -28,6 +28,20 @@ public sealed class CropCutter : MonoBehaviour
     public void Initialize(GridChunkHandler handler)
     {
         gridChunkHandler = handler;
+    }
+
+    public void ApplyUpgradeStats(
+        float range,
+        float attacksPerSecond,
+        float baseDamage)
+    {
+        TargetRange = Mathf.Max(0f, range);
+        ApplyRange(TargetRange);
+
+        damageDelay = attacksPerSecond > 0f
+            ? 1f / attacksPerSecond
+            : float.MaxValue;
+        damage = Mathf.Max(0f, baseDamage);
     }
 
     private void Awake()
@@ -132,7 +146,7 @@ public sealed class CropCutter : MonoBehaviour
 
             crop.TakeDamage(damage * damageMultiplier);
             nextDamageTimes[cropId] =
-                Time.time + Mathf.Max(0.25f, damageDelay);
+                Time.time + Mathf.Max(0f, damageDelay);
         }
     }
 }
