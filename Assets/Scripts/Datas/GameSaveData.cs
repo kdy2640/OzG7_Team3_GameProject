@@ -72,6 +72,7 @@ public class MarketSaveData : ISerializationCallbackReceiver
     public MarketPhase currentPhase;
     public int currentLevel;
     public int totalIncome;
+    public int claimedMissionCount;
     public List<DishType> selectedDishes = new();
 
     [SerializeField, HideInInspector] private int currentEXP;

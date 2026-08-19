@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MarketManager : MonoBehaviour
 {
@@ -9,14 +10,15 @@ public class MarketManager : MonoBehaviour
 
     [SerializeField] private MarketData marketData = new();
     [SerializeField] private LevelData levelData = new();
-    [SerializeField] private LevelMissionChecker levelMissionChecker = new();
+    [FormerlySerializedAs("levelMissionChecker")]
+    [SerializeField] private LevelMissionProgress levelMissionProgress = new();
 
     private Action onMarketDataChanged;
 
     public MarketData MarketData => marketData;
     public LevelData LevelData => levelData;
-    public LevelMissionChecker LevelMissionChecker => levelMissionChecker;
-    public LevelMissionGroupSO LevelMissionGroup => levelMissionChecker.MissionGroup;
+    public LevelMissionProgress LevelMissionProgress => levelMissionProgress;
+    public LevelMissionGroupSO LevelMissionGroup => levelMissionProgress.MissionGroup;
     public int CurrentBusinessDay => marketData.CurrentBusinessDay;
     public TasteType TodayTaste => (TasteType)(CurrentBusinessDay % (int)TasteType.Count);
     public bool CanPromote
@@ -26,7 +28,7 @@ public class MarketManager : MonoBehaviour
             if (marketData.CurrentLevel >= MaxMarketLevel
                 || levelData.IncomeGoal <= 0
                 || marketData.TotalIncome < levelData.IncomeGoal
-                || !levelMissionChecker.AreAllMissionsCompleted)
+                || !levelMissionProgress.AreAllMissionsClaimed)
             {
                 return false;
             }
@@ -56,7 +58,7 @@ public class MarketManager : MonoBehaviour
     private void Awake()
     {
         marketData ??= new MarketData();
-        levelMissionChecker ??= new LevelMissionChecker();
+        levelMissionProgress ??= new LevelMissionProgress();
         SubscribeMarketData();
     }
 
@@ -97,10 +99,19 @@ public class MarketManager : MonoBehaviour
     public void LevelRefresh()
     {
         levelData = LevelDataDB.GetData(marketData.CurrentLevel) ?? new LevelData();
-        levelMissionChecker.SetMissionGroup(
+        levelMissionProgress.SetMissionGroup(
             marketData.CurrentLevel < MaxMarketLevel
                 ? LevelMissionGroupDB.GetData(marketData.CurrentLevel)
                 : null);
+    }
+
+    public bool TryClaimCurrentMissionReward()
+    {
+        if (!levelMissionProgress.TryClaimCurrentReward())
+            return false;
+
+        NotifyMarketDataChanged();
+        return true;
     }
 
     public bool TryPromote()
@@ -122,7 +133,8 @@ public class MarketManager : MonoBehaviour
         }
 
         levelData = nextLevelData;
-        levelMissionChecker.SetMissionGroup(nextMissionGroup);
+        levelMissionProgress.SetMissionGroup(nextMissionGroup);
+        levelMissionProgress.LoadClaimedMissionCount(0);
         marketData.CurrentLevel = nextLevel;
         return true;
     }
@@ -138,7 +150,8 @@ public class MarketManager : MonoBehaviour
             currentBusinessDay = marketData.CurrentBusinessDay,
             currentPhase = marketData.CurrentPhase,
             currentLevel = marketData.CurrentLevel,
-            totalIncome = marketData.TotalIncome
+            totalIncome = marketData.TotalIncome,
+            claimedMissionCount = levelMissionProgress.ClaimedMissionCount
         };
 
         saveData.selectedDishes.AddRange(marketData.SelectedDishes);
@@ -159,6 +172,8 @@ public class MarketManager : MonoBehaviour
 
         ReplaceMarketData(loadedData);
         LevelRefresh();
+        levelMissionProgress.LoadClaimedMissionCount(
+            saveData == null ? 0 : saveData.claimedMissionCount);
         NotifyMarketDataChanged();
     }
 
@@ -166,6 +181,7 @@ public class MarketManager : MonoBehaviour
     {
         ReplaceMarketData(new MarketData());
         LevelRefresh();
+        levelMissionProgress.LoadClaimedMissionCount(0);
         NotifyMarketDataChanged();
     }
 

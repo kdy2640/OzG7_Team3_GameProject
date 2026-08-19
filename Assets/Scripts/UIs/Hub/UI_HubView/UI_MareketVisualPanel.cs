@@ -102,7 +102,7 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
             0,
             questSlotCount);
         int currentStage = Mathf.Clamp(
-            market.LevelMissionChecker.CurrentStage,
+            market.LevelMissionProgress.CurrentStage,
             0,
             missionCount);
 
@@ -117,7 +117,7 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
             SetSlotColor(questSlot, i < currentStage);
         }
 
-        LevelMissionInfo currentMission = market.LevelMissionChecker.CurrentMission;
+        LevelMissionInfo currentMission = market.LevelMissionProgress.CurrentMission;
 
         if (currentMission != null)
         {
@@ -135,7 +135,7 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
             return;
         }
 
-        bool areAllMissionsCompleted = market.LevelMissionChecker.AreAllMissionsCompleted;
+        bool areAllMissionsCompleted = market.LevelMissionProgress.AreAllMissionsClaimed;
         bool incomeGoalReached = levelData.IncomeGoal > 0
             && marketData.TotalIncome >= levelData.IncomeGoal;
         bool canPromote = market.CanPromote;
@@ -158,6 +158,11 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
                 ? "Reach the sales goal."
                 : string.Empty;
         }
+    }
+
+    public void ClaimCurrentMissionReward()
+    {
+        marketManager?.TryClaimCurrentMissionReward();
     }
 
     private void SetSlotColor(Image slot, bool isActive)
