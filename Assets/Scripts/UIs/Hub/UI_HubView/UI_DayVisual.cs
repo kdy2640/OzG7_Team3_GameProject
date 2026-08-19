@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class UI_DayVisual : MonoBehaviour
 {
-    private static readonly TasteType[] NoTastes = new TasteType[0];
-
     [SerializeField] private TMP_Text dayText;
-    [SerializeField] private Transform tasteCardContainer;
-    [SerializeField] private UI_TasteCard tasteCardPrefab;
+    [SerializeField] private Transform festivalCardContainer;
+    [SerializeField] private UI_FestivalCard festivalCardPrefab;
 
-    private readonly List<UI_TasteCard> tasteCards = new();
-    private readonly TasteType[] currentTastes = new TasteType[1];
+    private readonly List<UI_FestivalCard> festivalCards = new();
     private MarketManager marketManager;
 
     private void OnEnable()
@@ -40,33 +37,51 @@ public class UI_DayVisual : MonoBehaviour
 
         dayText.text = $"Day {currentBusinessDay:D2}";
 
-        TasteType nowTaste = market.FestivalCalendar.GetNowTaste(currentBusinessDay);
+        FestivalCalendar festivalCalendar = market.FestivalCalendar;
+        int festivalCount = 0;
+        TasteType nowTaste = festivalCalendar.GetNowTaste(currentBusinessDay);
 
-        if (nowTaste == TasteType.Count)
+        if (nowTaste != TasteType.Count)
         {
-            RefreshTasteCards(NoTastes);
-            return;
+            while (festivalCards.Count <= festivalCount)
+            {
+                UI_FestivalCard festivalCard = Instantiate(
+                    festivalCardPrefab,
+                    festivalCardContainer);
+                festivalCards.Add(festivalCard);
+            }
+
+            int daysLeft = festivalCalendar.TasteEndBusinessDay
+                - currentBusinessDay
+                + 1;
+            UI_FestivalCard tasteFestivalCard = festivalCards[festivalCount++];
+            tasteFestivalCard.gameObject.SetActive(true);
+            tasteFestivalCard.SetData($"{nowTaste} Festival", daysLeft);
         }
 
-        currentTastes[0] = nowTaste;
-        RefreshTasteCards(currentTastes);
-    }
+        CategoryType nowCategory = festivalCalendar.GetNowCategory(currentBusinessDay);
 
-    private void RefreshTasteCards(IReadOnlyList<TasteType> tastes)
-    {
-        while (tasteCards.Count < tastes.Count)
+        if (nowCategory != CategoryType.Count)
         {
-            UI_TasteCard tasteCard = Instantiate(tasteCardPrefab, tasteCardContainer);
-            tasteCards.Add(tasteCard);
+            while (festivalCards.Count <= festivalCount)
+            {
+                UI_FestivalCard festivalCard = Instantiate(
+                    festivalCardPrefab,
+                    festivalCardContainer);
+                festivalCards.Add(festivalCard);
+            }
+
+            int daysLeft = festivalCalendar.CategoryEndBusinessDay
+                - currentBusinessDay
+                + 1;
+            UI_FestivalCard categoryFestivalCard = festivalCards[festivalCount++];
+            categoryFestivalCard.gameObject.SetActive(true);
+            categoryFestivalCard.SetData($"{nowCategory} Festival", daysLeft);
         }
 
-        for (int i = 0; i < tasteCards.Count; i++)
+        for (int i = festivalCount; i < festivalCards.Count; i++)
         {
-            bool isActive = i < tastes.Count;
-            tasteCards[i].gameObject.SetActive(isActive);
-
-            if (isActive)
-                tasteCards[i].SetData(tastes[i]);
+            festivalCards[i].gameObject.SetActive(false);
         }
     }
 }

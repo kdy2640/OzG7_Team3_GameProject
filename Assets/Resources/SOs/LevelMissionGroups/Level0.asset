@@ -17,48 +17,46 @@ MonoBehaviour:
   - conditionType: 2
     condition:
       rid: 4385386984373485638
-    rewardType: 0
+    rewardType: 1
     reward:
-      rid: -2
+      rid: 4385387165214310473
     title: 
-    description: 
+    description: "20\uC6D0\uC744 \uBC84\uC138\uC694."
   - conditionType: 2
     condition:
       rid: 4385387030248423688
-    rewardType: 0
+    rewardType: 1
     reward:
-      rid: -2
+      rid: 4385387165214310474
     title: 
-    description: 
+    description: "40\uC6D0\uC744 \uBC84\uC138\uC694."
   - conditionType: 2
     condition:
       rid: 4385387030248423689
-    rewardType: 2
+    rewardType: 1
     reward:
-      rid: 4385387165214310468
+      rid: 4385387165214310475
     title: 
-    description: 
+    description: "80\uC6D0\uC744 \uBC84\uC138\uC694."
   - conditionType: 2
     condition:
       rid: 4385387030248423689
-    rewardType: 0
+    rewardType: 1
     reward:
-      rid: -2
+      rid: 4385387165214310476
     title: 120
-    description: 
+    description: "120\uC6D0\uC744 \uBC84\uC138\uC694."
   - conditionType: 2
     condition:
       rid: 4385387030248423689
-    rewardType: 0
+    rewardType: 1
     reward:
-      rid: -2
+      rid: 4385387165214310477
     title: 
-    description: 
+    description: "160\uC6D0\uC744 \uBC84\uC138\uC694."
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 4385386984373485638
       type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
       data:
@@ -71,9 +69,23 @@ MonoBehaviour:
       type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
       data:
         targetIncome: 80
-    - rid: 4385387165214310468
-      type: {class: MissionGroceryReward, ns: , asm: Assembly-CSharp}
+    - rid: 4385387165214310473
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
       data:
-        groceryAmount:
-          grocery: 0
-          amount: 0
+        amount: 100
+    - rid: 4385387165214310474
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 200
+    - rid: 4385387165214310475
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 300
+    - rid: 4385387165214310476
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 400
+    - rid: 4385387165214310477
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 500

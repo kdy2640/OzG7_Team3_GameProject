@@ -7,6 +7,7 @@ public sealed class UI_MenuManagement : UI_Base
     private UI_MenuSlidePanel menuSlidePanel;
     private UI_MenuVisualizer menuVisualizer;
     private UI_MenuUpgradePanel menuUpgradePanel;
+    private UI_DayVisual dayVisual;
 
     private enum GameObjects
     {
@@ -14,7 +15,8 @@ public sealed class UI_MenuManagement : UI_Base
         UI_SelectMenuPanel,
         UI_MenuSlidePanel,
         UI_MenuVisualizer,
-        UI_MenuUpgradePanel
+        UI_MenuUpgradePanel,
+        UI_DayVisual
     }
 
     protected override void OnInit()
@@ -31,6 +33,8 @@ public sealed class UI_MenuManagement : UI_Base
             .GetComponent<UI_MenuVisualizer>();
         menuUpgradePanel = GetUI<GameObject>((int)GameObjects.UI_MenuUpgradePanel)?
             .GetComponent<UI_MenuUpgradePanel>();
+        dayVisual = GetUI<GameObject>((int)GameObjects.UI_DayVisual)?
+            .GetComponent<UI_DayVisual>();
 
         selectMenuPanel?.SetCanDeselect(true);
         selectMenuPanel?.Init(Owner);
@@ -46,6 +50,7 @@ public sealed class UI_MenuManagement : UI_Base
         menuSlidePanel?.Refresh();
         menuVisualizer?.SetData(DishType.None);
         menuUpgradePanel?.Hide();
+        dayVisual?.Refresh();
 
         yield break;
     }
