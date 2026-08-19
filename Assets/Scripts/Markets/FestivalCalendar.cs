@@ -6,8 +6,8 @@ public sealed class FestivalCalendar
 {
     #region Fields & Properties
 
-    public const int TasteFestivalDuration = 3;
-    public const int CategoryFestivalDuration = 4;
+    public const int TasteFestivalDuration = 4;
+    public const int CategoryFestivalDuration = 3;
 
     [SerializeField] private TasteType latestTaste = TasteType.Count;
     [SerializeField, Min(-1)] private int tasteStartBusinessDay = -1;
