@@ -19,7 +19,8 @@ public sealed class HubCanvasController : MonoBehaviour
         HarvestSelection,
         ServiceSelection,
         StaffManagement,
-        DayStart
+        DayStart,
+        RankUpPanel
     }
 
 

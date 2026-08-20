@@ -4,14 +4,14 @@ using UnityEngine;
 public sealed class UI_HubView : UI_Base
 {
     private UI_HubMenuPanel hubMenuPanel;
-    private UI_MareketVisualPanel marketVisualPanel;
+    private UI_MarketVisualPanel marketVisualPanel;
     private UI_PhaseButtonPanel phaseButtonPanel;
     private UI_DayVisual dayVisual;
 
     private enum GameObjects
     {
         UI_HubMenuPanel,
-        UI_MareketVisualPanel,
+        UI_MarketVisualPanel,
         UI_PhasePanel,
         UI_DayVisual
     }
@@ -22,19 +22,20 @@ public sealed class UI_HubView : UI_Base
 
         hubMenuPanel = GetGameObject((int)GameObjects.UI_HubMenuPanel)?
             .GetComponent<UI_HubMenuPanel>();
-        hubMenuPanel?.Init(Owner);
+        hubMenuPanel.Init(Owner);
 
-        marketVisualPanel = GetGameObject((int)GameObjects.UI_MareketVisualPanel)?
-            .GetComponent<UI_MareketVisualPanel>();
-        marketVisualPanel?.Refresh();
+        marketVisualPanel = GetGameObject((int)GameObjects.UI_MarketVisualPanel)?
+            .GetComponent<UI_MarketVisualPanel>();
+        marketVisualPanel.Init(Owner);
+        marketVisualPanel.Refresh();
 
         phaseButtonPanel = GetGameObject((int)GameObjects.UI_PhasePanel)?
             .GetComponent<UI_PhaseButtonPanel>();
-        phaseButtonPanel?.Init(Owner);
+        phaseButtonPanel.Init(Owner);
 
         dayVisual = GetGameObject((int)GameObjects.UI_DayVisual)?
             .GetComponent<UI_DayVisual>();
-        dayVisual?.Refresh();
+        dayVisual.Refresh();
     }
 
     private void Start()

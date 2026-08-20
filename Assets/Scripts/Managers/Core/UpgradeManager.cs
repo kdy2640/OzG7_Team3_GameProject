@@ -281,7 +281,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    private void RefreshRuntimeData()
+    internal void RefreshRuntimeData()
     {
         runtimeStat = statCalculator.Calculate(upgradeStates);
         runtimeLevel = new RuntimeLevel();

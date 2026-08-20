@@ -51,7 +51,10 @@ public sealed class ServiceRuntimeStat
     {
         EnsureCapacity();
 
-        values[(int)ServiceStatType.CustomerCount].SetValue(15f);
+        int baseCustomerCount =
+            GameManager.Instance?.Market?.LevelData?.BaseCustomerCount ?? 0;
+
+        values[(int)ServiceStatType.CustomerCount].SetValue(baseCustomerCount);
         values[(int)ServiceStatType.ServiceTime].SetValue(20f);
         values[(int)ServiceStatType.TipMultiplier].SetValue(1f);
     }
