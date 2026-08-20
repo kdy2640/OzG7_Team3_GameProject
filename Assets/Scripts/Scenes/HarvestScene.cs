@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEngine;
 
 public class HarvestScene : SceneBase
 {
@@ -13,8 +14,16 @@ public class HarvestScene : SceneBase
 
     public override IEnumerator Enter()
     {
+        HarvestPreStart preStart = Object.FindFirstObjectByType<HarvestPreStart>();
+
+        if (preStart == null)
+        {
+            Debug.LogError("HarvestPreStart가 씬에 없습니다.");
+            yield break;
+        }
+
+        yield return preStart.Run();
         GameManager.Instance.Harvest.StartLoop();
-        yield return null;
     }
 
     public override IEnumerator Exit()

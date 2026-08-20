@@ -50,6 +50,18 @@ public sealed class HarvestRuntimeStat
         EnsureCapacity();
     }
 
+    internal void Initialize()
+    {
+        EnsureCapacity();
+
+        values[(int)HarvestStatType.SawSize].SetValue(1f);
+        values[(int)HarvestStatType.SawSpeed].SetValue(4f);
+        values[(int)HarvestStatType.SawSharpness].SetValue(1f);
+        values[(int)HarvestStatType.TruckSpeed].SetValue(5f);
+        values[(int)HarvestStatType.TruckCapacity].SetValue(10f);
+        values[(int)HarvestStatType.TruckFuel].SetValue(20f);
+    }
+
     public float Get(HarvestStatType statType)
     {
         int index = (int)statType;

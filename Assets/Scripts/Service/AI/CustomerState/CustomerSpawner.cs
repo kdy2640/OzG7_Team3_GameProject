@@ -55,5 +55,6 @@ public class CustomerSpawner : MonoBehaviour
         animator.runtimeAnimatorController = controller;
 
         customer.SetAnimator(animator);
+        GameManager.Instance.Service.ResultBuilder.RecordCustomer();
     }
 }

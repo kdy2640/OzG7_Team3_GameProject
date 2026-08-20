@@ -16,6 +16,7 @@ public class TipBox : MonoBehaviour
     public void AddTip(int tip)
     {
         tipAmount += tip;
+        GameManager.Instance.Service.ResultBuilder.RecordTip(tip);
         UpdateUI();
     }
     public void ApplyTip()

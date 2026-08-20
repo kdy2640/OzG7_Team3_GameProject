@@ -18,6 +18,7 @@ public sealed class MarketData
     [SerializeField, Min(0)] private int currentLevel;
     [FormerlySerializedAs("currentEXP")]
     [SerializeField, Min(0)] private int totalIncome;
+    [SerializeField, Min(0)] private int yesterdaySales;
     [SerializeField] private List<DishType> selectedDishes = new();
 
     internal event Action OnMarketDataChanged;
@@ -80,6 +81,21 @@ public sealed class MarketData
         }
     }
 
+    public int YesterdaySales
+    {
+        get => yesterdaySales;
+        set
+        {
+            int nextYesterdaySales = Mathf.Max(0, value);
+
+            if (yesterdaySales == nextYesterdaySales)
+                return;
+
+            yesterdaySales = nextYesterdaySales;
+            NotifyMarketDataChanged();
+        }
+    }
+
     public IReadOnlyList<DishType> SelectedDishes => selectedDishes;
 
     public MarketData()
@@ -91,12 +107,14 @@ public sealed class MarketData
         MarketPhase currentPhase,
         int currentLevel,
         int totalIncome,
+        int yesterdaySales,
         List<DishType> selectedDishes)
     {
         this.currentBusinessDay = currentBusinessDay;
         this.currentPhase = currentPhase;
         this.currentLevel = currentLevel;
         this.totalIncome = totalIncome;
+        this.yesterdaySales = yesterdaySales;
         this.selectedDishes = selectedDishes == null
             ? new List<DishType>()
             : new List<DishType>(selectedDishes);

@@ -1,11 +1,11 @@
+using System.Collections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_DailySalesPanel : MonoBehaviour
 {
-    [Header("Data")]
-    [SerializeField] private DailySalesManagement dailySalesManagement;
-
     [Header("Today's Performance")]
     [SerializeField] private TMP_Text todaySalesText;
     [SerializeField] private TMP_Text customerCountText;
@@ -21,84 +21,124 @@ public class UI_DailySalesPanel : MonoBehaviour
     [Header("Tip")]
     [SerializeField] private TMP_Text tipSalesText;
 
-    private bool isSubscribed;
+    [Header("Exit")]
+    [SerializeField] private Button exitButton;
 
-    private void Start()
+    [Header("Fade")]
+    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField, Min(0f)] private float fadeDuration = 0.25f;
+
+    private SalesResultData data;
+
+    public bool IsExitRequested { get; private set; }
+
+    private void Awake()
     {
-        Subscribe();
-        Refresh();
-    }
-
-    private void OnEnable()
-    {
-        // Start ÀÌÀü¿¡ È°¼ºÈ­µÉ °æ¿ì¸¦ ´ëºñÇØ¼­
-        if (Application.isPlaying) Subscribe();
-    }
-
-    private void OnDisable()
-    {
-        Unsubscribe();
-    }
-
-    private void Subscribe()
-    {
-        if (isSubscribed) return;
-
-        if (dailySalesManagement == null)
+        if (canvasGroup == null)
         {
-            Debug.LogError("UI_DailySalesPanel: DailySalesManagement ÂüÁ¶°¡ ¾ø½À´Ï´Ù.", this);
+            Debug.LogError("[UI_DailySalesPanel] CanvasGroupì´ ì—°ê²°ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.", this);
             return;
         }
 
-        dailySalesManagement.OnDailySalesChanged += Refresh;
-        isSubscribed = true;
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+        gameObject.SetActive(false);
     }
 
-    private void Unsubscribe()
+    public void SetData(SalesResultData data)
     {
-        if (!isSubscribed) return;
+        if (data == null)
+            return;
 
-        if (dailySalesManagement != null) dailySalesManagement.OnDailySalesChanged -= Refresh;
-
-        isSubscribed = false;
+        this.data = data;
+        Refresh();
     }
 
-    private void Refresh()
+    public void Refresh()
     {
-        if (dailySalesManagement == null) return;
-
-        MarketSalesViewData data =
-            dailySalesManagement.GetData();
-
-        if (data == null) return;
+        if (data == null)
+            return;
 
         if (todaySalesText != null)
-            todaySalesText.text = $"{data.todaySales:N0}ÄÚÀÎ";
+            todaySalesText.text = $"{data.todaySales:N0}ì½”ì¸";
 
         if (customerCountText != null)
-            customerCountText.text = 
-                $"{data.servedCustomerCount:N0} / {data.totalCustomerCount:N0}¸í";
+        {
+            customerCountText.text =
+                $"{data.customerReceived:N0} / {data.customerMax:N0}ëª…";
+        }
 
         int difference = data.todaySales - data.yesterdaySales;
 
         if (salesDifferenceText != null)
         {
             salesDifferenceText.text =
-                difference > 0 ? $"+{difference:N0}ÄÚÀÎ" : $"{difference:N0}ÄÚÀÎ";
+                difference > 0 ? $"+{difference:N0}ì½”ì¸" : $"{difference:N0}ì½”ì¸";
         }
 
-        if (increaseIcon != null) increaseIcon.SetActive(difference > 0);
+        if (increaseIcon != null)
+            increaseIcon.SetActive(difference > 0);
 
-        if (decreaseIcon != null) decreaseIcon.SetActive(difference < 0);
+        if (decreaseIcon != null)
+            decreaseIcon.SetActive(difference < 0);
 
-        RefreshMenuSales(data);
+        RefreshMenuSales();
 
         if (tipSalesText != null)
-            tipSalesText.text =
-                $"{data.tipSales:N0}ÄÚÀÎ";
+            tipSalesText.text = $"{data.tipSales:N0}ì½”ì¸";
     }
 
-    private void RefreshMenuSales(MarketSalesViewData data)
+    public IEnumerator Show()
+    {
+        if (canvasGroup == null)
+            yield break;
+
+        IsExitRequested = false;
+        gameObject.SetActive(true);
+        Refresh();
+
+        if (exitButton != null)
+            exitButton.interactable = true;
+
+        canvasGroup.DOKill();
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+
+        yield return canvasGroup
+            .DOFade(1f, fadeDuration)
+            .WaitForCompletion();
+    }
+
+    public IEnumerator Hide()
+    {
+        if (canvasGroup == null || !gameObject.activeSelf)
+            yield break;
+
+        if (exitButton != null)
+            exitButton.interactable = false;
+
+        canvasGroup.DOKill();
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+
+        yield return canvasGroup
+            .DOFade(0f, fadeDuration)
+            .WaitForCompletion();
+
+        gameObject.SetActive(false);
+    }
+
+    public void RequestExit()
+    {
+        IsExitRequested = true;
+
+        if (exitButton != null)
+            exitButton.interactable = false;
+    }
+
+    private void RefreshMenuSales()
     {
         for (int i = 0; i < menuSalesRows.Length; i++)
         {
@@ -107,8 +147,7 @@ public class UI_DailySalesPanel : MonoBehaviour
             if (row == null)
                 continue;
 
-            if (data.menuSales != null &&
-                i < data.menuSales.Count)
+            if (data.menuSales != null && i < data.menuSales.Count)
             {
                 row.SetData(data.menuSales[i]);
             }

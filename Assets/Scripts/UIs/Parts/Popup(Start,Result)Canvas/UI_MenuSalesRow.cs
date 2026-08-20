@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static MarketSalesViewData;
 
 public sealed class UI_MenuSalesRow : MonoBehaviour
 {
@@ -9,18 +8,23 @@ public sealed class UI_MenuSalesRow : MonoBehaviour
     [SerializeField] private Image menuIcon;
     [SerializeField] private TMP_Text salesText;
 
-    public void SetData(
-        MenuSalesViewData data)
+    public void SetData(SalesResultData.MenuSalesData data)
     {
         if (data == null) return;
 
-        if (menuNameText != null) menuNameText.text = data.menuName;
+        if (!DishDataDB.TryGetData(data.dishType, out DishDataSO dishData))
+        {
+            Clear();
+            return;
+        }
 
-        if (menuIcon != null) menuIcon.sprite = data.menuIcon;
+        if (menuNameText != null) menuNameText.text = dishData.DisplayName;
+
+        if (menuIcon != null) menuIcon.sprite = dishData.Icon;
 
         if (salesText != null)
         {
-            salesText.text = $"{data.salesAmount:N0}ƒ⁄¿Œ";
+            salesText.text = $"{data.salesAmount:N0}ÏΩîÏù∏";
         }
     }
     public void Clear()
@@ -29,6 +33,6 @@ public sealed class UI_MenuSalesRow : MonoBehaviour
 
         if (menuIcon != null) menuIcon.sprite = null;
 
-        if (salesText != null) salesText.text = "0ƒ⁄¿Œ";
+        if (salesText != null) salesText.text = "0ÏΩîÏù∏";
     }
 }

@@ -7,6 +7,7 @@ public class ServiceManager : MonoBehaviour
     private float loopDuration = 20f;
 
     private ServiceEventManager eventManager;
+    private SalesResultBuilder resultBuilder;
     private Action<float> OnTick;
     [SerializeField] private float timer;
     [SerializeField] private bool isPause;
@@ -21,15 +22,20 @@ public class ServiceManager : MonoBehaviour
     }
     public bool IsRunning => isRunning;
     public ServiceEventManager Events => eventManager;
+    public SalesResultBuilder ResultBuilder => resultBuilder;
+    public SalesResultData LastSalesResult { get; private set; }
 
     private void Awake()
     {
         eventManager = new ServiceEventManager();
+        resultBuilder = new SalesResultBuilder();
     }
 
     public void PrepareReveal()
     {
         timer = loopDuration;
+        LastSalesResult = null;
+        resultBuilder.Reset(GameManager.Instance.Market.MarketData.YesterdaySales);
         OnTick?.Invoke(Timer);
     }
 
@@ -58,6 +64,14 @@ public class ServiceManager : MonoBehaviour
         if (!isRunning) return;
         if (!IsServiceScene) return;
         isRunning = false;
+
+        LastSalesResult = resultBuilder.Build();
+        if (LastSalesResult != null)
+        {
+            GameManager.Instance.Market.MarketData.YesterdaySales =
+                LastSalesResult.todaySales;
+        }
+
         eventManager.Invoke(ServiceEventType.LoopEnded);
         GameManager.Instance.Scene.ChangeScene(SceneType.Hub);
     }

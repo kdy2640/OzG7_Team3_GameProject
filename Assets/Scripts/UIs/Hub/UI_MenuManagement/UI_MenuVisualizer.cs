@@ -37,6 +37,8 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
 
     private DishType currentDishType = DishType.None;
     private bool isMarketSubscribed;
+    private bool isUpgradeSubscribed;
+    private UI_MenuUpgradePanel menuUpgradePanel;
 
     private void Awake()
     {
@@ -61,6 +63,8 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
 
         GameManager.Instance.Market.SubscribeMarketDataChanged(OnMarketDataChanged);
         isMarketSubscribed = true;
+        GameManager.Instance.Upgrade.SubscribeUpgradeChanged(OnUpgradeChanged);
+        isUpgradeSubscribed = true;
         UpdateSelectionButtons();
     }
 
@@ -76,6 +80,14 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
 
         if (isMarketSubscribed && GameManager.Instance != null)
             GameManager.Instance.Market?.UnsubscribeMarketDataChanged(OnMarketDataChanged);
+
+        if (isUpgradeSubscribed && GameManager.Instance != null)
+            GameManager.Instance.Upgrade?.UnsubscribeUpgradeChanged(OnUpgradeChanged);
+    }
+
+    public void SetUpgradePanel(UI_MenuUpgradePanel upgradePanel)
+    {
+        menuUpgradePanel = upgradePanel;
     }
 
     public void SetData(DishType dishType)
@@ -202,15 +214,10 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
 
     private void OnUpgradeButtonClicked()
     {
-        if (currentDishType == DishType.None)
+        if (currentDishType == DishType.None || menuUpgradePanel == null)
             return;
 
-        DishUpgradeDataSO upgradeData = UpgradeDataDB.GetData(currentDishType);
-        if (upgradeData == null)
-            return;
-
-        if (GameManager.Instance.Upgrade.TryUpgrade(upgradeData))
-            SetData(currentDishType);
+        menuUpgradePanel.Show(currentDishType);
     }
 
     private void OnSelectionButtonClicked()
@@ -238,6 +245,12 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
     private void OnMarketDataChanged()
     {
         UpdateSelectionButtons();
+    }
+
+    private void OnUpgradeChanged()
+    {
+        if (currentDishType != DishType.None)
+            SetData(currentDishType);
     }
 
     private void UpdateSelectionButtons()
