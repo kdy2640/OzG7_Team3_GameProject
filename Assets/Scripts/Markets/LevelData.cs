@@ -9,6 +9,7 @@ public sealed class LevelData
     [SerializeField, Min(0)] private int maxDishLimit;
     [FormerlySerializedAs("maxEXPLimit")]
     [SerializeField, Min(0)] private int incomeGoal;
+    [SerializeField, Min(0)] private int baseCustomerCount;
 
     public int Level
     {
@@ -26,5 +27,11 @@ public sealed class LevelData
     {
         get => incomeGoal;
         set => incomeGoal = Mathf.Max(0, value);
+    }
+
+    public int BaseCustomerCount
+    {
+        get => baseCustomerCount;
+        set => baseCustomerCount = Mathf.Max(0, value);
     }
 }

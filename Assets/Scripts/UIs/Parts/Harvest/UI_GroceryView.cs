@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_GroceryView : MonoBehaviour
 {
     [SerializeField] private TMP_Text amountText;
-
+    [SerializeField] private Image iconImage;
     private GroceryType groceryType = GroceryType.Count;
 
     public void Initialize(GroceryType type)
@@ -36,5 +37,7 @@ public class UI_GroceryView : MonoBehaviour
         }
 
         amountText.text = amount.ToString();
+
+        iconImage.sprite = GroceryDataDB.GetData(groceryType).Icon;
     }
 }

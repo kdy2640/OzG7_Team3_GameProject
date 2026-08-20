@@ -4,7 +4,7 @@ using UnityEngine;
 public sealed class UI_ServiceSelection : UI_Base
 {
     private UI_SelectMenuPanel selectMenuPanel;
-    private UI_MareketVisualPanel marketVisualPanel;
+    private UI_MarketVisualPanel marketVisualPanel;
 
     private enum GameObjects
     {
@@ -32,7 +32,7 @@ public sealed class UI_ServiceSelection : UI_Base
         selectMenuPanel?.SetCanDeselect(false);
         selectMenuPanel?.Init(Owner);
 
-        marketVisualPanel = GetComponentInChildren<UI_MareketVisualPanel>(true);
+        marketVisualPanel = GetComponentInChildren<UI_MarketVisualPanel>(true);
         marketVisualPanel?.Refresh();
     }
 

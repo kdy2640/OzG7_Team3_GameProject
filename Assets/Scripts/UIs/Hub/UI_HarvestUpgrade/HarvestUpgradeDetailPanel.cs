@@ -9,7 +9,12 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
     [SerializeField] private TMP_Text upgradeNameText;
     [SerializeField] private TMP_Text levelText;
     [SerializeField] private Slider levelSlider;
+    [SerializeField] private Image[] levelSlots = new Image[5];
+    [SerializeField] private Color filledSlotColor = new(1f, .78f, .2f);
+    [SerializeField] private Color emptySlotColor = new(.3f, .3f, .3f);
+    [SerializeField] private TMP_Text currentEffectStateText;
     [SerializeField] private TMP_Text currentEffectText;
+    [SerializeField] private GameObject nextEffect;
     [SerializeField] private TMP_Text nextEffectText;
     [SerializeField] private TMP_Text costText;
     [SerializeField] private Button actionButton;
@@ -111,6 +116,16 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
             levelSlider.maxValue = Mathf.Max(1, data.MaxLevel);
             levelSlider.value = currentLevel;
         }
+
+        for (int i = 0; i < levelSlots.Length; i++)
+        {
+            levelSlots[i].color = i < currentLevel
+                ? filledSlotColor
+                : emptySlotColor;
+        }
+
+        currentEffectStateText.text = isMaxLevel ? "만렙" : "현재 효과";
+        nextEffect.SetActive(!isMaxLevel);
 
         if (currentEffectText != null)
             currentEffectText.text = BuildEffectText(data, currentLevel);

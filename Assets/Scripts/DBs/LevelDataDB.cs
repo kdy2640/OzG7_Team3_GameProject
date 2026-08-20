@@ -43,7 +43,8 @@ public static class LevelDataDB
             {
                 Level = level,
                 MaxDishLimit = GetInt(row, "MaxDishLimit"),
-                IncomeGoal = GetInt(row, "IncomeGoal")
+                IncomeGoal = GetInt(row, "IncomeGoal"),
+                BaseCustomerCount = GetInt(row, "BasicCustNum")
             };
 
             levelDataMap.Add(level, data);
