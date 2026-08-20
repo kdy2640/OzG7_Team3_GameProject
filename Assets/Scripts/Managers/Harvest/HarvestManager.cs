@@ -29,7 +29,15 @@ public class HarvestManager : MonoBehaviour
     }
     public void PrepareReveal()
     {
-        timer = loopDuration;  // + GameManager.Instance.Upgrade.GetRuntimeStat().ExtraDuration;
+        HarvestRuntimeStat harvestStat =
+            GameManager.Instance?.Upgrade?.RuntimeStat?.Harvest;
+
+        if (harvestStat != null)
+        {
+            loopDuration = harvestStat.Get(HarvestStatType.TruckFuel);
+        }
+
+        timer = loopDuration;
         OnTick?.Invoke(Timer);
     }
     public void StartLoop()
@@ -58,7 +66,6 @@ public class HarvestManager : MonoBehaviour
         if (!IsGameLoopScene) return;
         isRunning = false;
         eventManager.Invoke(HarvestEventType.LoopEnded);
-        GameManager.Instance.Scene.ChangeScene(SceneType.Hub);
     }
 
     public void SubscribeTick(Action<float> ev)

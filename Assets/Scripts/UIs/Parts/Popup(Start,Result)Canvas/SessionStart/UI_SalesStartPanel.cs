@@ -1,3 +1,5 @@
+using System.Collections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,123 +13,106 @@ public class UI_SalesStartPanel : MonoBehaviour
     [SerializeField] private Color activeColor = Color.green;
     [SerializeField] private Color inactiveColor = Color.gray;
 
-    [Header("Mission UI")]
-    [SerializeField] private TMP_Text[] missionTitleTexts;
-    [SerializeField] private TMP_Text[] missionDescriptionTexts;
+    [Header("Sales Goal")]
+    [SerializeField] private TMP_Text salesGoalText;
 
-    private const int MinLevel = 1; 
-    private const int MaxLevel = 4;
+    [Header("Fade")]
+    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField, Min(0f)] private float fadeDuration = 0.25f;
 
-    private MarketData marketData;
+    private const int MinLevel = 1;
 
-    public void Initialize(MarketData data)
+    private void Awake()
     {
-        if (data == null)
+        if (canvasGroup == null)
         {
-            Debug.LogError("[UI_MarketLevelDisplay] MarketData�� �����ϴ�.");
+            Debug.LogError("[UI_SalesStartPanel] CanvasGroup이 연결되지 않았습니다.", this);
             return;
         }
 
-        if (marketData != null)
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+        gameObject.SetActive(false);
+    }
+
+    public void Refresh()
+    {
+        if (GameManager.Instance == null
+            || GameManager.Instance.Market == null
+            || GameManager.Instance.Upgrade == null)
         {
-            marketData.OnMarketDataChanged -= HandleMarketDataChanged;
+            Debug.LogError("[UI_SalesStartPanel] 표시 데이터를 가져올 수 없습니다.", this);
+            return;
         }
 
-        marketData = data;
-        marketData.OnMarketDataChanged += HandleMarketDataChanged;
+        MarketData marketData = GameManager.Instance.Market.MarketData;
 
-        Refresh();
-    }
+        if (marketData == null)
+            return;
 
-    private void HandleMarketDataChanged()
-    {
-        Refresh();
-    }
-    private void Refresh()
-    {
-        if(marketData == null) return;
+        int currentLevel = Mathf.Clamp(
+            marketData.CurrentLevel,
+            MinLevel,
+            levelSlots.Length);
 
-        int currentLevel = Mathf.Clamp(marketData.CurrentLevel, MinLevel, MaxLevel);
+        int customerCount = Mathf.RoundToInt(
+            GameManager.Instance.Upgrade.RuntimeStat.Service
+                .Get(ServiceStatType.CustomerCount));
 
         RefreshLevelSlots(currentLevel);
-        RefreshMissionTexts(currentLevel);
+
+        if (salesGoalText != null)
+        {
+            salesGoalText.text =
+                $"오늘의 영업 목표 : 손님 {customerCount:N0}명 응대";
+        }
+    }
+
+    public IEnumerator Show()
+    {
+        if (canvasGroup == null)
+            yield break;
+
+        gameObject.SetActive(true);
+        Refresh();
+
+        canvasGroup.DOKill();
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
+
+        yield return canvasGroup
+            .DOFade(1f, fadeDuration)
+            .WaitForCompletion();
+    }
+
+    public IEnumerator Hide()
+    {
+        if (canvasGroup == null || !gameObject.activeSelf)
+            yield break;
+
+        canvasGroup.DOKill();
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
+
+        yield return canvasGroup
+            .DOFade(0f, fadeDuration)
+            .WaitForCompletion();
+
+        gameObject.SetActive(false);
     }
 
     private void RefreshLevelSlots(int currentLevel)
     {
-        if (marketData == null) return;
-
         for (int i = 0; i < levelSlots.Length; i++)
         {
-            if (levelSlots[i] == null) continue;
+            if (levelSlots[i] == null)
+                continue;
 
             int slotLevel = i + 1;
-
             levelSlots[i].color =
                 slotLevel <= currentLevel ? activeColor : inactiveColor;
-        }
-    }
-    private void RefreshMissionTexts(int currentLevel)
-    {
-        LevelMissionGroupSO missionGroupSO = LevelMissionGroupDB.GetData(currentLevel);
-
-        if (missionGroupSO == null)
-        {
-            ClearMissionTexts();
-            return;
-        }
-        for (int i = 0; i < missionTitleTexts.Length; i++)
-        {
-            if (missionDescriptionTexts[i] == null) continue;
-
-            if (i < missionGroupSO.Missions.Count)
-            {
-                LevelMissionInfo mission = missionGroupSO.Missions[i];
-
-                missionTitleTexts[i].text = 
-                    mission != null ? mission.Title : string.Empty;
-            }
-            else
-            {
-                missionTitleTexts[i].text = string.Empty;
-            }
-        }
-        for (int i = 0; i < missionDescriptionTexts.Length; i++) 
-        { 
-            if (missionDescriptionTexts[i] == null) continue; 
-
-            if (i < missionGroupSO.Missions.Count) 
-            { LevelMissionInfo mission = missionGroupSO.Missions[i]; 
-
-                missionDescriptionTexts[i].text = 
-                    mission != null ? mission.Description : string.Empty; 
-            } 
-
-            else 
-            { 
-                missionDescriptionTexts[i].text = string.Empty; 
-            } 
-        }
-    }
-    private void ClearMissionTexts()
-    {
-        for(int i = 0; i < missionTitleTexts.Length; i++)
-        {
-            if (missionTitleTexts[i] != null)
-                missionTitleTexts[i].text = string.Empty;
-        }
-        for(int i = 0; i < missionDescriptionTexts.Length; i++)
-        {
-            if (missionDescriptionTexts[i] != null)
-                missionDescriptionTexts[i].text = string.Empty;
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (marketData != null)
-        {
-            marketData.OnMarketDataChanged -= HandleMarketDataChanged;
         }
     }
 }

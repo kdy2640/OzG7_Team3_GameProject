@@ -10,8 +10,17 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
     [SerializeField] private TMP_Text salesAmountText;
     [SerializeField] private GameObject missionSlotContainer;
     [SerializeField] private Image[] questSlots;
+    [SerializeField] private Sprite completedMissionSprite;
+    [SerializeField] private Sprite currentMissionSprite;
+    [SerializeField] private Sprite remainingMissionSprite;
+    [SerializeField] private RectTransform currentMissionIndicator;
+    [SerializeField] private float currentMissionSlotOffsetY = 15f;
     [SerializeField] private TMP_Text missionTitleText;
     [SerializeField] private TMP_Text missionDescriptionText;
+    [SerializeField] private Slider missionSlider;
+    [SerializeField] private TMP_Text missionAmountText;
+    [SerializeField] private Button rewardButton;
+    [SerializeField] private Button promoteButton;
     [SerializeField] private Color inactiveColor = Color.gray;
     [SerializeField] private Color activeColor = Color.green;
 
@@ -20,6 +29,9 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
 
     private void OnEnable()
     {
+        rewardButton?.onClick.AddListener(ClaimCurrentMissionReward);
+        promoteButton?.onClick.AddListener(Promote);
+
         if (GameManager.Instance == null)
             return;
 
@@ -33,6 +45,9 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
 
     private void OnDisable()
     {
+        rewardButton?.onClick.RemoveListener(ClaimCurrentMissionReward);
+        promoteButton?.onClick.RemoveListener(Promote);
+
         marketManager?.UnsubscribeMarketDataChanged(Refresh);
         upgradeManager?.UnsubscribeUpgradeChanged(Refresh);
 
@@ -56,6 +71,19 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
             SetSlotColor(levelSlots[i], i < activeLevelCount);
 
         bool isMaxLevel = marketData.CurrentLevel >= MarketManager.MaxMarketLevel;
+        bool canPromote = !isMaxLevel && market.CanPromote;
+
+        if (rewardButton != null)
+        {
+            rewardButton.gameObject.SetActive(!isMaxLevel && !canPromote);
+            rewardButton.interactable = market.LevelMissionProgress.CanClaimCurrentReward;
+        }
+
+        if (promoteButton != null)
+        {
+            promoteButton.gameObject.SetActive(canPromote);
+            promoteButton.interactable = canPromote;
+        }
 
         if (salesProgressPanel != null)
             salesProgressPanel.SetActive(!isMaxLevel);
@@ -70,6 +98,15 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
                 if (questSlots[i] != null)
                     questSlots[i].gameObject.SetActive(false);
             }
+
+            if (currentMissionIndicator != null)
+                currentMissionIndicator.gameObject.SetActive(false);
+
+            if (missionAmountText != null)
+                missionAmountText.text = string.Empty;
+
+            if (missionSlider != null)
+                missionSlider.interactable = false;
 
             if (missionTitleText != null)
                 missionTitleText.text = "Max Level";
@@ -93,7 +130,7 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
         if (salesAmountText != null)
             salesAmountText.text = $"{totalIncome:N0} / {incomeGoal:N0}";
 
-        LevelMissionGroupSO missionGroup = market.LevelMissionGroup;
+        LevelMissionGroupSO missionGroup = market.LevelMissionProgress.MissionGroup;
         int questSlotCount = questSlots?.Length ?? 0;
         int missionCount = Mathf.Clamp(
             missionGroup == null || missionGroup.Missions == null
@@ -102,7 +139,7 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
             0,
             questSlotCount);
         int currentStage = Mathf.Clamp(
-            market.LevelMissionChecker.CurrentStage,
+            market.LevelMissionProgress.CurrentStage,
             0,
             missionCount);
 
@@ -113,33 +150,96 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
             if (questSlot == null)
                 continue;
 
-            questSlot.gameObject.SetActive(i < missionCount);
-            SetSlotColor(questSlot, i < currentStage);
+            bool isVisible = i < missionCount;
+            questSlot.gameObject.SetActive(isVisible);
+
+            if (!isVisible)
+                continue;
+
+            if (i < currentStage && completedMissionSprite != null)
+                questSlot.sprite = completedMissionSprite;
+            else if (i == currentStage && currentMissionSprite != null)
+                questSlot.sprite = currentMissionSprite;
+            else if (remainingMissionSprite != null)
+                questSlot.sprite = remainingMissionSprite;
+
+            questSlot.color = Color.white;
+
+            Vector2 slotPosition = questSlot.rectTransform.anchoredPosition;
+            slotPosition.y = i == currentStage ? currentMissionSlotOffsetY : 0f;
+            questSlot.rectTransform.anchoredPosition = slotPosition;
         }
 
-        LevelMissionInfo currentMission = market.LevelMissionChecker.CurrentMission;
+        bool hasCurrentMissionSlot = currentStage < missionCount;
+
+        if (currentMissionIndicator != null)
+        {
+            currentMissionIndicator.gameObject.SetActive(hasCurrentMissionSlot);
+
+            if (hasCurrentMissionSlot && questSlots[currentStage] != null)
+            {
+                RectTransform currentSlot = questSlots[currentStage].rectTransform;
+                Vector3 indicatorPosition = currentMissionIndicator.position;
+                indicatorPosition.x = currentSlot.TransformPoint(currentSlot.rect.center).x;
+                currentMissionIndicator.position = indicatorPosition;
+            }
+        }
+
+        LevelMissionInfo currentMission = market.LevelMissionProgress.CurrentMission;
 
         if (currentMission != null)
         {
+            string progress = currentMission.Condition?.ToString() ?? string.Empty;
+
             if (missionTitleText != null)
                 missionTitleText.text = currentMission.Title;
 
             if (missionDescriptionText != null)
+                missionDescriptionText.text = currentMission.Description;
+
+            if (missionAmountText != null)
+                missionAmountText.text = progress;
+
+            if (missionSlider != null)
             {
-                string progress = currentMission.Condition?.ToString() ?? string.Empty;
-                missionDescriptionText.text = string.IsNullOrEmpty(progress)
-                    ? currentMission.Description
-                    : $"{currentMission.Description}\n{progress}";
+                int currentValue = 0;
+                int targetValue = 1;
+                string[] progressValues = progress.Split('/');
+
+                if (progressValues.Length == 2
+                    && int.TryParse(progressValues[0].Replace(",", string.Empty).Trim(), out int parsedCurrentValue)
+                    && int.TryParse(progressValues[1].Replace(",", string.Empty).Trim(), out int parsedTargetValue)
+                    && parsedTargetValue > 0)
+                {
+                    currentValue = parsedCurrentValue;
+                    targetValue = parsedTargetValue;
+                }
+
+                missionSlider.minValue = 0f;
+                missionSlider.maxValue = targetValue;
+                missionSlider.value = Mathf.Clamp(currentValue, 0, targetValue);
+                missionSlider.wholeNumbers = true;
+                missionSlider.interactable = false;
             }
 
             return;
         }
 
-        bool areAllMissionsCompleted = market.LevelMissionChecker.AreAllMissionsCompleted;
+        if (missionSlider != null)
+        {
+            missionSlider.minValue = 0f;
+            missionSlider.maxValue = 1f;
+            missionSlider.value = 1f;
+            missionSlider.wholeNumbers = true;
+            missionSlider.interactable = false;
+        }
+
+        if (missionAmountText != null)
+            missionAmountText.text = string.Empty;
+
+        bool areAllMissionsCompleted = market.LevelMissionProgress.AreAllMissionsClaimed;
         bool incomeGoalReached = levelData.IncomeGoal > 0
             && marketData.TotalIncome >= levelData.IncomeGoal;
-        bool canPromote = market.CanPromote;
-
         if (missionTitleText != null)
         {
             if (!areAllMissionsCompleted)
@@ -158,6 +258,16 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
                 ? "Reach the sales goal."
                 : string.Empty;
         }
+    }
+
+    public void ClaimCurrentMissionReward()
+    {
+        marketManager?.TryClaimCurrentMissionReward();
+    }
+
+    public void Promote()
+    {
+        marketManager?.TryPromote();
     }
 
     private void SetSlotColor(Image slot, bool isActive)

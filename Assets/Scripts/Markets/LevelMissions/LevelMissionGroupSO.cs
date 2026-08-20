@@ -16,6 +16,9 @@ public sealed class LevelMissionGroupSO : ScriptableObject
             return;
 
         for (int i = 0; i < missions.Count; i++)
+        {
             missions[i]?.SyncCondition();
+            missions[i]?.SyncReward();
+        }
     }
 }

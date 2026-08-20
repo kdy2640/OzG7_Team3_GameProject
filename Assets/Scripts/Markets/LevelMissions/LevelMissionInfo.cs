@@ -14,12 +14,22 @@ public sealed class LevelMissionInfo
         HarvestUpgrade = 5
     }
 
+    private enum MissionRewardType
+    {
+        None = 0,
+        Currency = 1,
+        Grocery = 2
+    }
+
     [SerializeField] private MissionConditionType conditionType;
     [SerializeReference] private MissionCondition condition;
+    [SerializeField] private MissionRewardType rewardType;
+    [SerializeReference] private MissionReward reward;
     [SerializeField] private string title;
     [SerializeField, TextArea] private string description;
 
     public MissionCondition Condition => condition;
+    public MissionReward Reward => reward;
     public string Title => title;
     public string Description => description;
 
@@ -54,6 +64,26 @@ public sealed class LevelMissionInfo
             case MissionConditionType.HarvestUpgrade:
                 if (condition is not HarvestUpgradeMissionCondition)
                     condition = new HarvestUpgradeMissionCondition();
+                break;
+        }
+    }
+
+    internal void SyncReward()
+    {
+        switch (rewardType)
+        {
+            case MissionRewardType.None:
+                reward = null;
+                break;
+
+            case MissionRewardType.Currency:
+                if (reward is not MissionCurrencyReward)
+                    reward = new MissionCurrencyReward();
+                break;
+
+            case MissionRewardType.Grocery:
+                if (reward is not MissionGroceryReward)
+                    reward = new MissionGroceryReward();
                 break;
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class MarketManager : MonoBehaviour
 {
@@ -9,16 +10,16 @@ public class MarketManager : MonoBehaviour
 
     [SerializeField] private MarketData marketData = new();
     [SerializeField] private LevelData levelData = new();
-    [SerializeField] private LevelMissionChecker levelMissionChecker = new();
+    [SerializeField] private FestivalCalendar festivalCalendar = new();
+    [FormerlySerializedAs("levelMissionChecker")]
+    [SerializeField] private LevelMissionProgress levelMissionProgress = new();
 
     private Action onMarketDataChanged;
 
     public MarketData MarketData => marketData;
     public LevelData LevelData => levelData;
-    public LevelMissionChecker LevelMissionChecker => levelMissionChecker;
-    public LevelMissionGroupSO LevelMissionGroup => levelMissionChecker.MissionGroup;
-    public int CurrentBusinessDay => marketData.CurrentBusinessDay;
-    public TasteType TodayTaste => (TasteType)(CurrentBusinessDay % (int)TasteType.Count);
+    public FestivalCalendar FestivalCalendar => festivalCalendar;
+    public LevelMissionProgress LevelMissionProgress => levelMissionProgress;
     public bool CanPromote
     {
         get
@@ -26,7 +27,7 @@ public class MarketManager : MonoBehaviour
             if (marketData.CurrentLevel >= MaxMarketLevel
                 || levelData.IncomeGoal <= 0
                 || marketData.TotalIncome < levelData.IncomeGoal
-                || !levelMissionChecker.AreAllMissionsCompleted)
+                || !levelMissionProgress.AreAllMissionsClaimed)
             {
                 return false;
             }
@@ -56,7 +57,8 @@ public class MarketManager : MonoBehaviour
     private void Awake()
     {
         marketData ??= new MarketData();
-        levelMissionChecker ??= new LevelMissionChecker();
+        festivalCalendar ??= new FestivalCalendar();
+        levelMissionProgress ??= new LevelMissionProgress();
         SubscribeMarketData();
     }
 
@@ -97,10 +99,55 @@ public class MarketManager : MonoBehaviour
     public void LevelRefresh()
     {
         levelData = LevelDataDB.GetData(marketData.CurrentLevel) ?? new LevelData();
-        levelMissionChecker.SetMissionGroup(
+        levelMissionProgress.SetMissionGroup(
             marketData.CurrentLevel < MaxMarketLevel
                 ? LevelMissionGroupDB.GetData(marketData.CurrentLevel)
                 : null);
+    }
+
+    public bool CanStartTasteFestival(TasteType taste)
+    {
+        return festivalCalendar.CanStartTasteFestival(
+            taste,
+            marketData.CurrentBusinessDay);
+    }
+
+    public bool TryStartTasteFestival(TasteType taste)
+    {
+        if (!festivalCalendar.TryStartTasteFestival(
+                taste,
+                marketData.CurrentBusinessDay))
+            return false;
+
+        NotifyMarketDataChanged();
+        return true;
+    }
+
+    public bool CanStartCategoryFestival(CategoryType category)
+    {
+        return festivalCalendar.CanStartCategoryFestival(
+            category,
+            marketData.CurrentBusinessDay);
+    }
+
+    public bool TryStartCategoryFestival(CategoryType category)
+    {
+        if (!festivalCalendar.TryStartCategoryFestival(
+                category,
+                marketData.CurrentBusinessDay))
+            return false;
+
+        NotifyMarketDataChanged();
+        return true;
+    }
+
+    public bool TryClaimCurrentMissionReward()
+    {
+        if (!levelMissionProgress.TryClaimCurrentReward())
+            return false;
+
+        NotifyMarketDataChanged();
+        return true;
     }
 
     public bool TryPromote()
@@ -122,7 +169,8 @@ public class MarketManager : MonoBehaviour
         }
 
         levelData = nextLevelData;
-        levelMissionChecker.SetMissionGroup(nextMissionGroup);
+        levelMissionProgress.SetMissionGroup(nextMissionGroup);
+        levelMissionProgress.LoadClaimedMissionCount(0);
         marketData.CurrentLevel = nextLevel;
         return true;
     }
@@ -138,7 +186,14 @@ public class MarketManager : MonoBehaviour
             currentBusinessDay = marketData.CurrentBusinessDay,
             currentPhase = marketData.CurrentPhase,
             currentLevel = marketData.CurrentLevel,
-            totalIncome = marketData.TotalIncome
+            totalIncome = marketData.TotalIncome,
+            yesterdaySales = marketData.YesterdaySales,
+            claimedMissionCount = levelMissionProgress.ClaimedMissionCount,
+            festivalStateVersion = 1,
+            latestFestivalTaste = festivalCalendar.LatestTaste,
+            tasteFestivalStartBusinessDay = festivalCalendar.TasteStartBusinessDay,
+            latestFestivalCategory = festivalCalendar.LatestCategory,
+            categoryFestivalStartBusinessDay = festivalCalendar.CategoryStartBusinessDay
         };
 
         saveData.selectedDishes.AddRange(marketData.SelectedDishes);
@@ -155,10 +210,27 @@ public class MarketManager : MonoBehaviour
                 saveData.currentPhase,
                 Mathf.Clamp(saveData.currentLevel, 0, MaxMarketLevel),
                 Mathf.Max(0, saveData.totalIncome),
+                Mathf.Max(0, saveData.yesterdaySales),
                 saveData.selectedDishes);
 
         ReplaceMarketData(loadedData);
         LevelRefresh();
+        levelMissionProgress.LoadClaimedMissionCount(
+            saveData == null ? 0 : saveData.claimedMissionCount);
+
+        if (saveData != null && saveData.festivalStateVersion > 0)
+        {
+            festivalCalendar.Load(
+                saveData.latestFestivalTaste,
+                saveData.tasteFestivalStartBusinessDay,
+                saveData.latestFestivalCategory,
+                saveData.categoryFestivalStartBusinessDay);
+        }
+        else
+        {
+            festivalCalendar.Reset();
+        }
+
         NotifyMarketDataChanged();
     }
 
@@ -166,6 +238,8 @@ public class MarketManager : MonoBehaviour
     {
         ReplaceMarketData(new MarketData());
         LevelRefresh();
+        levelMissionProgress.LoadClaimedMissionCount(0);
+        festivalCalendar.Reset();
         NotifyMarketDataChanged();
     }
 
