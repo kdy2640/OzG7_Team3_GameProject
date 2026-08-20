@@ -4,9 +4,6 @@ using UnityEngine;
 public class CustomerGoHomeState : IState
 {
     private CustomerStateManager stateManager;
-    private AIMove aiMove;
-    private Transform exitPoint;
-    private bool isTipable = false;
 
     public CustomerGoHomeState(CustomerStateManager stateManager)
     {

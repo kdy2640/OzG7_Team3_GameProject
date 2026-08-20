@@ -11,20 +11,22 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private TableManager tableManager;
     [SerializeField] private OrderButton orderButton;
     [SerializeField] private Animator animator;
+    [SerializeField] private DishRequestQueue requestQueue;
 
-    
     private Table currentTable;
     private Transform seat;
     private DishAmount order;
     public Action foodReceived;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
+    
+
     public AIMove AiMove => aiMove;
     public Transform ExitPoint => exitPoint;
     public TipBox TipBox => tipBox;
     public OrderButton OrderButton => orderButton;
     public Animator Animator => animator;
-
+    public DishRequestQueue RequestQueue => requestQueue;   
     
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
@@ -35,11 +37,12 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField]private IState currentState;
 
 
-    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox)
+    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue)
     {
         this.exitPoint = exitPoint;
         this.tableManager = tableManager;
         this.tipBox = tipBox;
+        this.requestQueue = queue;
         AiMove.SetSpeed(speed);
     }
 
