@@ -77,11 +77,13 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
             SetSlotColor(levelSlots[i], i < activeLevelCount);
 
         bool isMaxLevel = marketData.CurrentLevel >= MarketManager.MaxMarketLevel;
+        bool areAllMissionsCompleted = market.LevelMissionProgress.AreAllMissionsClaimed;
+        bool isFinalLevelComplete = isMaxLevel && areAllMissionsCompleted;
         bool canPromote = !isMaxLevel && market.CanPromote;
 
         if (rewardButton != null)
         {
-            rewardButton.gameObject.SetActive(!isMaxLevel && !canPromote);
+            rewardButton.gameObject.SetActive(!isFinalLevelComplete && !canPromote);
             rewardButton.interactable = market.LevelMissionProgress.CanClaimCurrentReward;
         }
 
@@ -92,12 +94,12 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
         }
 
         if (salesProgressPanel != null)
-            salesProgressPanel.SetActive(!isMaxLevel);
+            salesProgressPanel.SetActive(!isFinalLevelComplete);
 
         if (missionSlotContainer != null)
-            missionSlotContainer.SetActive(!isMaxLevel);
+            missionSlotContainer.SetActive(!isFinalLevelComplete);
 
-        if (isMaxLevel)
+        if (isFinalLevelComplete)
         {
             for (int i = 0; i < (questSlots?.Length ?? 0); i++)
             {
@@ -243,7 +245,6 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
         if (missionAmountText != null)
             missionAmountText.text = string.Empty;
 
-        bool areAllMissionsCompleted = market.LevelMissionProgress.AreAllMissionsClaimed;
         bool incomeGoalReached = levelData.IncomeGoal > 0
             && marketData.TotalIncome >= levelData.IncomeGoal;
         if (missionTitleText != null)

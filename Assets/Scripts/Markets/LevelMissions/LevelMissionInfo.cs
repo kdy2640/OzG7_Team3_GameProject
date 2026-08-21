@@ -7,11 +7,10 @@ public sealed class LevelMissionInfo
     private enum MissionConditionType
     {
         None = 0,
-        DishUpgrade = 1,
+        Upgrade = 1,
         Income = 2,
-        FacilityUpgrade = 3,
-        EmployeeUpgrade = 4,
-        HarvestUpgrade = 5
+        GroceryDelivery = 6,
+        Festival = 7
     }
 
     private enum MissionRewardType
@@ -41,9 +40,11 @@ public sealed class LevelMissionInfo
                 condition = null;
                 break;
 
-            case MissionConditionType.DishUpgrade:
-                if (condition is not DishUpgradeMissionCondition)
-                    condition = new DishUpgradeMissionCondition();
+            case MissionConditionType.Upgrade:
+                if (condition is not UpgradeMissionCondition)
+                    condition = new UpgradeMissionCondition();
+
+                ((UpgradeMissionCondition)condition).SyncSubConditions();
                 break;
 
             case MissionConditionType.Income:
@@ -51,19 +52,14 @@ public sealed class LevelMissionInfo
                     condition = new IncomeMissionCondition();
                 break;
 
-            case MissionConditionType.FacilityUpgrade:
-                if (condition is not FacilityUpgradeMissionCondition)
-                    condition = new FacilityUpgradeMissionCondition();
+            case MissionConditionType.GroceryDelivery:
+                if (condition is not GroceryDeliveryMissionCondition)
+                    condition = new GroceryDeliveryMissionCondition();
                 break;
 
-            case MissionConditionType.EmployeeUpgrade:
-                if (condition is not EmployeeUpgradeMissionCondition)
-                    condition = new EmployeeUpgradeMissionCondition();
-                break;
-
-            case MissionConditionType.HarvestUpgrade:
-                if (condition is not HarvestUpgradeMissionCondition)
-                    condition = new HarvestUpgradeMissionCondition();
+            case MissionConditionType.Festival:
+                if (condition is not FestivalMissionCondition)
+                    condition = new FestivalMissionCondition();
                 break;
         }
     }
