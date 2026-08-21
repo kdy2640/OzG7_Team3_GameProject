@@ -1,20 +1,23 @@
-
 using UnityEngine;
 
-public class CustomerGoHomeState : IState
+public class CustomerAngryGoState : IState
 {
     private CustomerStateManager stateManager;
 
-    public CustomerGoHomeState(CustomerStateManager stateManager)
+    public CustomerAngryGoState(CustomerStateManager stateManager)
     {
         this.stateManager = stateManager;
     }
 
     public void Enter()
     {
+
+
+        stateManager.OrderButton.gameObject.SetActive(false);
+
         stateManager.CurrentTable.ReleaseSeat(stateManager);
 
-        stateManager.Animator.SetBool("IsWalking", true);
+        stateManager.Animator.SetBool("IsAngryWalking", true);
 
         stateManager.AiMove.OnArrived += ArrivedHome;
 
@@ -30,7 +33,7 @@ public class CustomerGoHomeState : IState
 
     public void Exit()
     {
-        stateManager.Animator.SetBool("IsWalking", false);
+        stateManager.Animator.SetBool("IsAngryWalking", false);
 
         stateManager.AiMove.OnArrived -= ArrivedHome;
     }
