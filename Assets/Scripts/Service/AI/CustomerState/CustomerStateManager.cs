@@ -33,6 +33,7 @@ public class CustomerStateManager : MonoBehaviour
     public DishAmount Order => order;
     public float EatTime => eatTime;
 
+    private float eatSpeedUpPercentage;
 
     [SerializeField]private IState currentState;
 
@@ -129,10 +130,16 @@ public class CustomerStateManager : MonoBehaviour
         return UnityEngine.Random.value < tipChance;
     }
 
-    public void EatSpeedUp()
+    public void EatSpeedUp(float percentage)
     {
-        eatTime /= 2;
+        eatSpeedUpPercentage += percentage;
     }
+
+    public void EatSpeedApply()
+    {
+        eatTime = eatTime / (1 + (eatSpeedUpPercentage / 100));
+    }
+
     public void TipChanceUp()
     {
         tipChance *= 2;

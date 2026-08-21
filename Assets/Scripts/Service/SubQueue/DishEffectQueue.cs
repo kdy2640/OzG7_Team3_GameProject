@@ -1,8 +1,13 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DishEffectQueue : MonoBehaviour
 {
-    private Queue<DishType> queue = new();
-    public Queue<DishType> Queue => queue;
+    private Queue<DishType> tipChanceUpQueue = new();
+    private Queue<DishType> eatSpeedUpQueue = new();
+    public Queue<DishType> TipChanceUpQueue => tipChanceUpQueue;
+    public Queue<DishType> EatSpeedUpQueue => eatSpeedUpQueue;
+
+    
 }

@@ -10,11 +10,16 @@ public class Cooker : MonoBehaviour
     private KitchenSlotViewer viewer;
     private KitchenSlotViewer viewerPrefab;
     private bool isBusy = false;
+    private bool eatSpeedApply = false;
+    private bool tipChanceApply = false;
     private int level;
     private DishRequestQueue requestQueue;
+    private DishEffectQueue effectQueue;
     public KitchenSlotData Data => data;
     public KitchenSlotViewer Viewer => viewer;
 
+
+    
     public bool IsBusy => isBusy;
 
 
@@ -35,10 +40,11 @@ public class Cooker : MonoBehaviour
         }
     }
 
-    public void Initialize(int level, DishRequestQueue queue, KitchenSlotViewer prefab)
+    public void Initialize(int level, DishRequestQueue requestQueue, DishEffectQueue effectQueue,KitchenSlotViewer prefab)
     {
         this.level = level;
-        this.requestQueue = queue;
+        this.requestQueue = requestQueue;
+        this.effectQueue = effectQueue;
         this.viewerPrefab = prefab;
     }
 
@@ -52,6 +58,13 @@ public class Cooker : MonoBehaviour
     public void FinishCooking()
     {
         GameManager.Instance.CookingManager.AddCookedDish(data.DishType);
+
+        if(tipChanceApply)
+            CustomerTipChanceUpApply(data.DishType);
+
+        if(eatSpeedApply)
+            CustomerEatSpeedUpApply(data.DishType);
+
         isBusy = false;
     }
 
@@ -103,5 +116,27 @@ public class Cooker : MonoBehaviour
     public void AutoCook()
     {
         StartCoroutine(AutoCookCo());
+    }
+
+    private void CustomerTipChanceUpApply(DishType dish)
+    {
+        if(UnityEngine.Random.Range(0, 2) == 0) 
+            effectQueue.TipChanceUpQueue.Enqueue(dish);
+    }
+
+    private void CustomerEatSpeedUpApply(DishType dish)
+    {
+        if (UnityEngine.Random.Range(0, 2) == 0)
+            effectQueue.EatSpeedUpQueue.Enqueue(dish);
+    }
+
+    public void TipChanceUp()
+    {
+        tipChanceApply = true;
+    }
+
+    public void EatSpeedUp()
+    {
+        eatSpeedApply = true;
     }
 }

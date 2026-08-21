@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 
 public class CookSkillManager
 {
@@ -22,29 +21,29 @@ public class CookSkillManager
                 }
                 if (GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)serchIndex) >= 5)
                 {
-                    //TipChanceUp();
+                    CustomerTipChanceUp(cookers[index]);
                 }
                 return;
             case 1:
                 AutoCook(cookers[index]);
                 if (GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)serchIndex) >= 3)
                 {
-                    //CustomerEatSpeedUp();
+                    CustomerEatSpeedUp(cookers[index]);
                 }
                 if (GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)serchIndex) >= 5)
                 {
-                    //TipChanceUp();
+                    CustomerTipChanceUp(cookers[index]);
                 }
                 return;
             case 2:
-                //CustomerEatSpeedUp();
+                CustomerEatSpeedUp(cookers[index]);
                 if (GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)serchIndex) >= 3)
                 {
                     AutoCook(cookers[index]);
                 }
                 if (GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)serchIndex) >= 5)
                 {
-                    //TipChanceUp();
+                    CustomerTipChanceUp(cookers[index]);
                 }
                 return;
             default: return;
@@ -54,5 +53,15 @@ public class CookSkillManager
     private void AutoCook(Cooker cooker)
     {
         cooker.AutoCook();
+    }
+
+    private void CustomerTipChanceUp(Cooker cooker)
+    {
+        cooker.TipChanceUp();
+    }
+
+    private void CustomerEatSpeedUp(Cooker cooker)
+    {
+        cooker.EatSpeedUp();
     }
 }

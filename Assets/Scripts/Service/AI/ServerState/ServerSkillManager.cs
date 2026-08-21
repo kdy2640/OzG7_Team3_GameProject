@@ -70,6 +70,7 @@ public class ServerSkillManager
         if (server.Level >= 5)
         {
             server.customerChanged += server.CustomerTipChanceUp;
+            Debug.Log("서버 팁찬스 업 ");
         }
     }
     private void Server4Update(ServerStateManager server)
@@ -88,6 +89,7 @@ public class ServerSkillManager
         if (server.Level >= 5)
         {
             server.customerChanged += server.CustomerTipChanceUp;
+            Debug.Log("서버 팁찬스 업 ");
         }
     }
 }

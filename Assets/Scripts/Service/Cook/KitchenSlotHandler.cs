@@ -16,6 +16,7 @@ public class KitchenSlotHandler : MonoBehaviour
     [SerializeField] Transform QueuePanel;
     [SerializeField] Transform CookerPanel;
     [SerializeField] DishRequestQueue requestQueue;
+    [SerializeField] DishEffectQueue effectQueue;
 
     private CookSkillManager skillManager = new();
 
@@ -38,17 +39,17 @@ public class KitchenSlotHandler : MonoBehaviour
             if (GameManager.Instance.Upgrade.RuntimeLevel.Get(CookerTypes[i]) >= 1)
             {
                 Cooker cooker = Instantiate(cookerPrefab, CookerPanel.transform);
-                cooker.Initialize(GameManager.Instance.Upgrade.RuntimeLevel.Get(CookerTypes[i]), requestQueue, kitchenSlotViewerPrefab);
+                cooker.Initialize(GameManager.Instance.Upgrade.RuntimeLevel.Get(CookerTypes[i]), requestQueue, effectQueue, kitchenSlotViewerPrefab);
                 
                 cookers.Add(cooker);
                 skillManager.SkillApply(i);
             }
-            if (cookers.Count <= 0)
+
+            else
             {
-                cookers.Add(Instantiate(cookerPrefab, CookerPanel.transform));
+                cookers.Add(null);
             }
         }
-        
     }
 
     private void Update()
@@ -91,6 +92,7 @@ public class KitchenSlotHandler : MonoBehaviour
         Cook();
         foreach (Cooker cooker in cookers)
         {
+            if(cooker== null) continue;
             if (!cooker.IsBusy) continue;
             cooker.Cook();
         }
@@ -120,6 +122,7 @@ public class KitchenSlotHandler : MonoBehaviour
     {
         for (int i = 0; i < cookers.Count; i++)
         {
+            if (cookers[i] == null) continue;
             if (!cookers[i].IsBusy)
             {
                 return true;
@@ -132,6 +135,7 @@ public class KitchenSlotHandler : MonoBehaviour
     {
         for (int i = 0; i < cookers.Count; i++)
         {
+            if (cookers[i] == null) continue;
             if (!cookers[i].IsBusy)
             {
                 cookers[i].GetNextCook(data);
