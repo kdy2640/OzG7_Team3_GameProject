@@ -15,6 +15,7 @@ public class OrderButton : MonoBehaviour
     [SerializeField] private TMP_Text dishName;
     [SerializeField] private TMP_Text amountText;
 
+
     private void OnEnable()
     {
         customer = GetComponentInParent<CustomerStateManager>();
@@ -34,6 +35,7 @@ public class OrderButton : MonoBehaviour
         //dishIcon.sprite = data.Icon;
         dishName.text = data.DisplayName;
         amountText.text = order.amount.ToString();
+
     }
 
     public void OnClick()
@@ -60,5 +62,6 @@ public class OrderButton : MonoBehaviour
             OnClicked?.Invoke();
             Debug.Log("주문 수락 성공");
         }
+
     }
 }

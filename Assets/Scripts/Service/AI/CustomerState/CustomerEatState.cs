@@ -14,6 +14,7 @@ public class CustomerEatState : IState
     public void Enter()
     {
         stateManager.Animator.SetBool("IsEating", true);
+        stateManager.EatSpeedApply();
         timer = stateManager.EatTime;
     }
 
