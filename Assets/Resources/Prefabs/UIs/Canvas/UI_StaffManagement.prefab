@@ -40,7 +40,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -20, y: 0}
-  m_SizeDelta: {x: 420, y: 60}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &9095472751198876298
 CanvasRenderer:
@@ -63,15 +63,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 0.7783019, a: 1}
+  m_Color: {r: 1, g: 0.8156863, b: 0.5176471, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3025658147045860452, guid: 301e97ea6cea27043bb7f9901fea9b3e, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 2035949675116368610, guid: 14833512604d84647828c0082928d014, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -661,7 +661,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -80}
-  m_SizeDelta: {x: 900, y: 64}
+  m_SizeDelta: {x: 980, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1804534111292379770
 CanvasRenderer:
@@ -1511,7 +1511,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 20, y: 0}
-  m_SizeDelta: {x: 420, y: 60}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8140146713030408504
 CanvasRenderer:
@@ -1534,15 +1534,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 0.7783019, a: 1}
+  m_Color: {r: 0.70980394, g: 0.5254902, b: 0.8509804, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3025658147045860452, guid: 301e97ea6cea27043bb7f9901fea9b3e, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 2035949675116368610, guid: 14833512604d84647828c0082928d014, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2596,6 +2596,26 @@ PrefabInstance:
     - target: {fileID: 5987300123559734467, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
       propertyPath: m_Name
       value: UI_StaffInfoPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344995556674012339, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344995556674012339, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 2035949675116368610, guid: 14833512604d84647828c0082928d014, type: 3}
+    - target: {fileID: 7344995556674012339, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
+      propertyPath: m_Color.b
+      value: 0.43137255
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344995556674012339, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8235294
+      objectReference: {fileID: 0}
+    - target: {fileID: 7344995556674012339, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
+      propertyPath: m_Color.r
+      value: 0.68235296
       objectReference: {fileID: 0}
     - target: {fileID: 8210978660536656164, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
       propertyPath: m_AnchorMax.y
