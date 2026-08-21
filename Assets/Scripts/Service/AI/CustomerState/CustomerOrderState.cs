@@ -20,15 +20,13 @@ public class CustomerOrderState : IState
             );
         stateManager.Animator.SetBool("IsOrdering", true);
 
-        timer = 5.0f;
-
-        stateManager.CreateOrder();
-        stateManager.OrderButton.SetOrder(stateManager.Order);
-        Debug.Log("주문 시작");
-
+        timer = 10.0f;
 
         stateManager.OrderButton.gameObject.SetActive(true);
-
+        stateManager.CreateOrder();
+        stateManager.OrderButton.SetOrder(stateManager.Order);
+        stateManager.RequestQueue.Queue.Enqueue(stateManager.Order.dish);
+        Debug.Log("주문 시작");
         stateManager.OrderButton.OnClicked += ReceiveOrder;
 
     }
@@ -39,6 +37,10 @@ public class CustomerOrderState : IState
 
         if (timer <= 0)
         {
+            if (stateManager.RequestQueue.Queue.Count > 0)
+            {
+                stateManager.RequestQueue.Queue.Dequeue();
+            }
             stateManager.ChangeState(
                 new CustomerGoHomeState(stateManager)
             );
@@ -58,6 +60,10 @@ public class CustomerOrderState : IState
 
     private void ReceiveOrder()
     {
+        if(stateManager.RequestQueue.Queue.Count > 0)
+        {
+            stateManager.RequestQueue.Queue.Dequeue();
+        }
         stateManager.OrderButton.gameObject.SetActive(false);
         stateManager.ChangeState(new CustomerWaitForFoodState(stateManager));
     }

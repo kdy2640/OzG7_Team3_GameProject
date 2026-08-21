@@ -7,7 +7,14 @@ public class FacilityDetailPanel : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text facilityNameText;
     [SerializeField] private TMP_Text levelText;
-    [SerializeField] private Slider levelSlider;
+    
+    [SerializeField] private Transform levelIndicatorRoot;
+    [SerializeField] private Image levelIndicatorPrefab;
+
+    [Header("Level Indicator Color")]
+    [SerializeField] private Color activeLevelColor = Color.green;
+    [SerializeField] private Color inactiveLevelColor = Color.white;
+
     [SerializeField] private TMP_Text currentEffectText;
     [SerializeField] private TMP_Text nextEffectText;
 
@@ -42,12 +49,9 @@ public class FacilityDetailPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        subscribedUpgradeManager =
-            GameManager.Instance?.Upgrade;
+        subscribedUpgradeManager = GameManager.Instance?.Upgrade;
 
-        subscribedUpgradeManager?.SubscribeUpgradeChanged(
-            Refresh
-        );
+        subscribedUpgradeManager?.SubscribeUpgradeChanged(Refresh);
 
         Refresh();
     }
@@ -57,9 +61,7 @@ public class FacilityDetailPanel : MonoBehaviour
         if (subscribedUpgradeManager == null)
             return;
 
-        subscribedUpgradeManager.UnsubscribeUpgradeChanged(
-            Refresh
-        );
+        subscribedUpgradeManager.UnsubscribeUpgradeChanged(Refresh);
 
         subscribedUpgradeManager = null;
     }
@@ -103,32 +105,14 @@ public class FacilityDetailPanel : MonoBehaviour
         Refresh();
     }
 
-    private FacilityController FindFacilityController(
-        FacilityType facilityType)
-    {
-        FacilityController[] facilities =
-            FindObjectsByType<FacilityController>(
-                FindObjectsInactive.Include,
-                FindObjectsSortMode.None
-            );
-
-        foreach (FacilityController facility in facilities)
-        {
-            if (facility.FacilityType == facilityType)
-                return facility;
-        }
-
-        return null;
-    }
 
     private void OnClickPrevious()
     {
         if (facilityCollection == null)
             return;
 
-        if (facilityCollection.TryGetPrevious(
-                currentFacilityType,
-                out FacilityType previous))
+        if (facilityCollection.TryGetPrevious
+            (currentFacilityType,out FacilityType previous))
         {
             ShowFacility(previous);
         }
@@ -139,9 +123,7 @@ public class FacilityDetailPanel : MonoBehaviour
         if (facilityCollection == null)
             return;
 
-        if (facilityCollection.TryGetNext(
-                currentFacilityType,
-                out FacilityType next))
+        if (facilityCollection.TryGetNext(currentFacilityType,out FacilityType next))
         {
             ShowFacility(next);
         }
@@ -161,19 +143,13 @@ public class FacilityDetailPanel : MonoBehaviour
         UpgradeManager upgradeManager =
             GameManager.Instance?.Upgrade;
 
-        int currentLevel =
-            upgradeManager != null
-                ? upgradeManager.RuntimeLevel.Get(
-                    currentFacilityType)
-                : 0;
+        int currentLevel = upgradeManager != null
+                ? upgradeManager.RuntimeLevel.Get(currentFacilityType) : 0;
 
-        int maxLevel =
-            upgradeData != null
-                ? upgradeData.MaxLevel
-                : 0;
+        int maxLevel = upgradeData != null
+                ? upgradeData.MaxLevel : 0;
 
-        bool isPurchased =
-            currentLevel > 0;
+        bool isPurchased = currentLevel > 0;
 
         UpgradeAvailability availability =
             upgradeManager != null && upgradeData != null
@@ -188,15 +164,10 @@ public class FacilityDetailPanel : MonoBehaviour
 
         if (levelText != null)
         {
-            levelText.text =
-                $"Lv.{currentLevel} / Lv.{maxLevel}";
+            levelText.text = $"Lv.{currentLevel} / Lv.{maxLevel}";
         }
 
-        if (levelSlider != null)
-        {
-            levelSlider.maxValue = maxLevel;
-            levelSlider.value = currentLevel;
-        }
+        RefreshLevelIndicators(currentLevel, maxLevel);
 
         if (currentEffectText != null)
         {
@@ -212,24 +183,33 @@ public class FacilityDetailPanel : MonoBehaviour
                         ? $"Lv.{currentLevel + 1}" : "Max Level";
         }
 
-        RefreshActionButton(
-            isPurchased, availability);
+        RefreshActionButton(isPurchased, availability);
 
         RefreshNavigationButtons();
     }
+    private void RefreshLevelIndicators(int curentLevel, int maxLevel)
+    {
+        if (levelIndicatorRoot == null || levelIndicatorPrefab == null) return;
 
-    private void RefreshActionButton(
-        bool isPurchased, UpgradeAvailability availability)
+        for(int i = levelIndicatorRoot.childCount -1; i >= 0; i--)
+        {
+            Destroy(levelIndicatorRoot.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < maxLevel; i++)
+        {
+            Image indicator = Instantiate(levelIndicatorPrefab, levelIndicatorRoot);
+
+            indicator.color = i<curentLevel ? activeLevelColor : inactiveLevelColor;
+        }
+    }
+    private void RefreshActionButton(bool isPurchased, UpgradeAvailability availability)
     {
         if (!isPurchased)
         {
             actionButtonText.text =
                 availability ==
-                    UpgradeAvailability.Available
-                    ? "Purchase"
-                    : GetAvailabilityText(
-                        availability,
-                        false );
+                    UpgradeAvailability.Available ? "Purchase"
+                    : GetAvailabilityText(availability, false);
 
             actionButton.interactable =
                 availability == UpgradeAvailability.Available;
@@ -238,9 +218,7 @@ public class FacilityDetailPanel : MonoBehaviour
         }
 
         actionButtonText.text =
-            GetAvailabilityText(
-                availability,
-                true );
+            GetAvailabilityText(availability, true);
 
         actionButton.interactable =
             availability == UpgradeAvailability.Available;
@@ -250,28 +228,20 @@ public class FacilityDetailPanel : MonoBehaviour
     {
         bool hasPrevious =
             facilityCollection != null &&
-            facilityCollection.TryGetPrevious(
-                currentFacilityType,
-                out _ );
+            facilityCollection.TryGetPrevious(currentFacilityType,out _ );
 
         bool hasNext =
             facilityCollection != null &&
-            facilityCollection.TryGetNext(
-                currentFacilityType,
-                out _ );
+            facilityCollection.TryGetNext(currentFacilityType,out _ );
 
         if (previousButton != null)
-            previousButton.gameObject.SetActive(
-                hasPrevious );
+            previousButton.gameObject.SetActive(hasPrevious);
 
         if (nextButton != null)
-            nextButton.gameObject.SetActive(
-                hasNext );
+            nextButton.gameObject.SetActive(hasNext);
     }
 
-    private string GetAvailabilityText(
-        UpgradeAvailability availability,
-        bool isPurchased)
+    private string GetAvailabilityText(UpgradeAvailability availability, bool isPurchased)
     {
         return availability switch
         {
