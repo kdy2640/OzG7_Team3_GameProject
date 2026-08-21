@@ -103,6 +103,8 @@ public class MarketManager : MonoBehaviour
             marketData.CurrentLevel < MaxMarketLevel
                 ? LevelMissionGroupDB.GetData(marketData.CurrentLevel)
                 : null);
+
+        GameManager.Instance?.Upgrade?.RefreshRuntimeData();
     }
 
     public bool CanStartTasteFestival(TasteType taste)
@@ -172,6 +174,7 @@ public class MarketManager : MonoBehaviour
         levelMissionProgress.SetMissionGroup(nextMissionGroup);
         levelMissionProgress.LoadClaimedMissionCount(0);
         marketData.CurrentLevel = nextLevel;
+        GameManager.Instance?.Upgrade?.RefreshRuntimeData();
         return true;
     }
 

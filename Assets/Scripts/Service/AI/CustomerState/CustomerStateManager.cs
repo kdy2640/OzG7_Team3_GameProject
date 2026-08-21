@@ -11,35 +11,41 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private TableManager tableManager;
     [SerializeField] private OrderButton orderButton;
     [SerializeField] private Animator animator;
+    [SerializeField] private DishRequestQueue requestQueue;
+    [SerializeField] private WaitTimeBackGround waitBackGround;
 
-    
     private Table currentTable;
     private Transform seat;
     private DishAmount order;
     public Action foodReceived;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
+    
+
     public AIMove AiMove => aiMove;
     public Transform ExitPoint => exitPoint;
     public TipBox TipBox => tipBox;
     public OrderButton OrderButton => orderButton;
     public Animator Animator => animator;
-
+    public DishRequestQueue RequestQueue => requestQueue;   
+    public WaitTimeBackGround WaitBackGround => waitBackGround;
     
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
     public DishAmount Order => order;
     public float EatTime => eatTime;
 
+    private float eatSpeedUpPercentage;
 
     [SerializeField]private IState currentState;
 
 
-    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox)
+    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue)
     {
         this.exitPoint = exitPoint;
         this.tableManager = tableManager;
         this.tipBox = tipBox;
+        this.requestQueue = queue;
         AiMove.SetSpeed(speed);
     }
 
@@ -126,10 +132,16 @@ public class CustomerStateManager : MonoBehaviour
         return UnityEngine.Random.value < tipChance;
     }
 
-    public void EatSpeedUp()
+    public void EatSpeedUp(float percentage)
     {
-        eatTime /= 2;
+        eatSpeedUpPercentage += percentage;
     }
+
+    public void EatSpeedApply()
+    {
+        eatTime = eatTime / (1 + (eatSpeedUpPercentage / 100));
+    }
+
     public void TipChanceUp()
     {
         tipChance *= 2;

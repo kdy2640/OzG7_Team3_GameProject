@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class UI_MareketVisualPanel : MonoBehaviour
+public sealed class UI_MarketVisualPanel : MonoBehaviour
 {
     [SerializeField] private Image[] levelSlots;
     [SerializeField] private GameObject salesProgressPanel;
@@ -26,6 +26,12 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
 
     private MarketManager marketManager;
     private UpgradeManager upgradeManager;
+    private HubCanvasController owner;
+
+    public void Init(HubCanvasController owner)
+    {
+        this.owner = owner;
+    }
 
     private void OnEnable()
     {
@@ -267,7 +273,10 @@ public sealed class UI_MareketVisualPanel : MonoBehaviour
 
     public void Promote()
     {
-        marketManager?.TryPromote();
+        if (marketManager == null || !marketManager.TryPromote())
+            return;
+
+        owner.RequestStateChange(HubCanvasController.HubCanvasState.RankUpPanel);
     }
 
     private void SetSlotColor(Image slot, bool isActive)
