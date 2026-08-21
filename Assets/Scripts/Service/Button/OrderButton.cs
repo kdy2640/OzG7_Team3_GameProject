@@ -2,24 +2,28 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class OrderButton : MonoBehaviour
 {
     public event Action OnClicked;
     private DishAmount dishAmount;
 
-
     [SerializeField] ServerList serverList;
     private CustomerStateManager customer;
     //[SerializeField] private Image dishIcon;
     [SerializeField] private TMP_Text dishName;
     [SerializeField] private TMP_Text amountText;
+    [SerializeField] private Image waitingForFoodImg;
+    
 
 
     private void OnEnable()
     {
+        waitingForFoodImg.enabled = false;
         customer = GetComponentInParent<CustomerStateManager>();
         serverList = FindFirstObjectByType<ServerList>();
+        
     }
 
     public void SetOrder(DishAmount order)
@@ -61,7 +65,9 @@ public class OrderButton : MonoBehaviour
         {
             OnClicked?.Invoke();
             Debug.Log("주문 수락 성공");
+            waitingForFoodImg.enabled = true;
         }
 
     }
+
 }

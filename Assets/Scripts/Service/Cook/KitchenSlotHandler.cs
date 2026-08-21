@@ -79,6 +79,10 @@ public class KitchenSlotHandler : MonoBehaviour
         QueueSlot queueSlot = new();
 
         KitchenSlotViewer slotViewer = Instantiate(kitchenSlotViewerPrefab, QueuePanel.transform);
+        // 사이즈 줄이기
+        RectTransform rect = slotViewer.GetComponent<RectTransform>();
+        rect.sizeDelta *= 0.5f;
+
         slotViewer.SetData(slotData);
         slotViewer.transform.SetAsFirstSibling();
         queueSlot.SetData(slotData);
