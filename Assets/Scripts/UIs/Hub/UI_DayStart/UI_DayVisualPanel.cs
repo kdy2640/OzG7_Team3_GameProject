@@ -2,7 +2,6 @@ using System.Collections;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public sealed class UI_DayVisualPanel : MonoBehaviour
 {
@@ -14,12 +13,18 @@ public sealed class UI_DayVisualPanel : MonoBehaviour
 
     private readonly RectTransform[] dayCards = new RectTransform[DayCardCount];
     private readonly TMP_Text[] dayTexts = new TMP_Text[DayCardCount];
+    private readonly TMP_Text[] dayShadowTexts = new TMP_Text[DayCardCount];
+    private readonly Vector2[] initialCardPositions = new Vector2[DayCardCount];
+    private readonly Vector2[] initialCardSizes = new Vector2[DayCardCount];
+    private readonly Vector3[] initialCardScales = new Vector3[DayCardCount];
+    private readonly Vector2[] initialDayTextPositions = new Vector2[DayCardCount];
+    private readonly Vector3[] initialDayTextScales = new Vector3[DayCardCount];
+    private readonly Color[] initialDayTextColors = new Color[DayCardCount];
+    private readonly Vector2[] initialDayShadowPositions = new Vector2[DayCardCount];
+    private readonly Vector3[] initialDayShadowScales = new Vector3[DayCardCount];
+    private readonly Color[] initialDayShadowColors = new Color[DayCardCount];
 
-    private RectTransform grid;
-    private HorizontalLayoutGroup gridLayout;
-    private Vector2 initialGridPosition;
-    private Vector2 normalCardSize;
-    private Vector2 emphasizedCardSize;
+    private UI_TodayDeco todayDeco;
     private Sequence animationSequence;
     private bool isInitialized;
 
@@ -28,33 +33,30 @@ public sealed class UI_DayVisualPanel : MonoBehaviour
         if (isInitialized)
             return;
 
-        grid = transform.Find("Grid") as RectTransform;
-        gridLayout = grid != null ? grid.GetComponent<HorizontalLayoutGroup>() : null;
-
-        if (grid == null || gridLayout == null)
-        {
-            Debug.LogError($"[{nameof(UI_DayVisualPanel)}] Grid 또는 HorizontalLayoutGroup을 찾을 수 없습니다.", this);
-            return;
-        }
+        RectTransform grid = transform.Find("Grid") as RectTransform;
 
         for (int i = 0; i < DayCardCount; i++)
         {
-            Transform cardTransform = grid.Find($"UI_DayCard_{i + 1}");
-            Transform dayTextTransform = cardTransform?.Find("Day");
+            RectTransform dayCard = grid.Find($"UI_DayCard_{i + 1}") as RectTransform;
+            TMP_Text dayText = dayCard.Find("Day").GetComponent<TMP_Text>();
+            TMP_Text dayShadowText = dayCard.Find("Day_Shadow").GetComponent<TMP_Text>();
 
-            dayCards[i] = cardTransform as RectTransform;
-            dayTexts[i] = dayTextTransform?.GetComponent<TMP_Text>();
-
-            if (dayCards[i] == null || dayTexts[i] == null)
-            {
-                Debug.LogError($"[{nameof(UI_DayVisualPanel)}] UI_DayCard_{i + 1} 또는 Day 텍스트를 찾을 수 없습니다.", this);
-                return;
-            }
+            dayCards[i] = dayCard;
+            dayTexts[i] = dayText;
+            dayShadowTexts[i] = dayShadowText;
+            initialCardPositions[i] = dayCard.anchoredPosition;
+            initialCardSizes[i] = dayCard.sizeDelta;
+            initialCardScales[i] = dayCard.localScale;
+            initialDayTextPositions[i] = dayText.rectTransform.anchoredPosition;
+            initialDayTextScales[i] = dayText.rectTransform.localScale;
+            initialDayTextColors[i] = dayText.color;
+            initialDayShadowPositions[i] = dayShadowText.rectTransform.anchoredPosition;
+            initialDayShadowScales[i] = dayShadowText.rectTransform.localScale;
+            initialDayShadowColors[i] = dayShadowText.color;
         }
 
-        initialGridPosition = grid.anchoredPosition;
-        normalCardSize = dayCards[CurrentDayCardIndex].sizeDelta;
-        emphasizedCardSize = dayCards[PreviousDayCardIndex].sizeDelta;
+        todayDeco = transform.Find("Today_Deco").GetComponent<UI_TodayDeco>();
+        todayDeco.Init();
         isInitialized = true;
     }
 
@@ -71,26 +73,67 @@ public sealed class UI_DayVisualPanel : MonoBehaviour
 
         SyncDayTexts(currentBusinessDay);
         ResetVisualState();
+        dayCards[DayCardCount - 1].gameObject.SetActive(true);
 
-        Vector2 targetGridPosition = initialGridPosition
-            + Vector2.left * (normalCardSize.x + gridLayout.spacing);
+        Vector2 exitPosition = initialCardPositions[0]
+            + initialCardPositions[0]
+            - initialCardPositions[1];
 
         Sequence sequence = DOTween.Sequence()
             .SetUpdate(true)
             .AppendInterval(AnimationDelay)
-            .Append(grid.DOAnchorPos(targetGridPosition, AnimationDuration)
+            .Append(dayCards[0].DOAnchorPos(exitPosition, AnimationDuration)
                 .SetEase(Ease.InOutSine))
-            .Join(dayCards[PreviousDayCardIndex].DOSizeDelta(normalCardSize, AnimationDuration)
-                .SetEase(Ease.InOutSine))
-            .Join(dayCards[CurrentDayCardIndex].DOSizeDelta(emphasizedCardSize, AnimationDuration)
-                .SetEase(Ease.InOutSine))
-            .OnUpdate(() => LayoutRebuilder.ForceRebuildLayoutImmediate(grid));
+            .Join(dayTexts[0].DOFade(0f, AnimationDuration));
+
+        for (int i = 1; i < DayCardCount; i++)
+        {
+            int targetIndex = i - 1;
+
+            sequence
+                .Join(dayCards[i].DOAnchorPos(initialCardPositions[targetIndex], AnimationDuration)
+                    .SetEase(Ease.InOutSine))
+                .Join(dayCards[i].DOSizeDelta(initialCardSizes[targetIndex], AnimationDuration)
+                    .SetEase(Ease.InOutSine))
+                .Join(dayCards[i].DOScale(initialCardScales[targetIndex], AnimationDuration)
+                    .SetEase(Ease.InOutSine))
+                .Join(dayTexts[i].rectTransform
+                    .DOAnchorPos(initialDayTextPositions[targetIndex], AnimationDuration)
+                    .SetEase(Ease.InOutSine))
+                .Join(dayTexts[i].rectTransform
+                    .DOScale(initialDayTextScales[targetIndex], AnimationDuration)
+                    .SetEase(Ease.InOutSine))
+                .Join(dayTexts[i].DOColor(initialDayTextColors[targetIndex], AnimationDuration)
+                    .SetEase(Ease.InOutSine));
+        }
 
         animationSequence = sequence;
         yield return sequence.WaitForCompletion();
 
-        if (animationSequence == sequence)
-            animationSequence = null;
+        if (animationSequence != sequence)
+            yield break;
+
+        animationSequence = null;
+        dayCards[0].gameObject.SetActive(false);
+        dayShadowTexts[PreviousDayCardIndex].gameObject.SetActive(false);
+        dayShadowTexts[CurrentDayCardIndex].rectTransform.anchoredPosition =
+            initialDayShadowPositions[PreviousDayCardIndex];
+        dayShadowTexts[CurrentDayCardIndex].rectTransform.localScale =
+            initialDayShadowScales[PreviousDayCardIndex];
+        dayShadowTexts[CurrentDayCardIndex].color =
+            initialDayShadowColors[PreviousDayCardIndex];
+        dayShadowTexts[CurrentDayCardIndex].gameObject.SetActive(true);
+        todayDeco.Show();
+    }
+
+    public void ShowTasteFestival(TasteType tasteType)
+    {
+        todayDeco.ShowTasteFestival(tasteType);
+    }
+
+    public void ShowCategoryFestival(CategoryType categoryType)
+    {
+        todayDeco.ShowCategoryFestival(categoryType);
     }
 
     private void OnDisable()
@@ -105,9 +148,11 @@ public sealed class UI_DayVisualPanel : MonoBehaviour
         {
             int businessDay = currentBusinessDay + i - CurrentDayCardIndex;
             bool isVisible = businessDay > 0;
+            string day = isVisible ? businessDay.ToString() : string.Empty;
 
             SetDayCardVisible(i, isVisible);
-            dayTexts[i].text = isVisible ? businessDay.ToString() : string.Empty;
+            dayTexts[i].text = day;
+            dayShadowTexts[i].text = day;
         }
     }
 
@@ -121,9 +166,22 @@ public sealed class UI_DayVisualPanel : MonoBehaviour
 
     private void ResetVisualState()
     {
-        grid.anchoredPosition = initialGridPosition;
-        dayCards[PreviousDayCardIndex].sizeDelta = emphasizedCardSize;
-        dayCards[CurrentDayCardIndex].sizeDelta = normalCardSize;
-        LayoutRebuilder.ForceRebuildLayoutImmediate(grid);
+        for (int i = 0; i < DayCardCount; i++)
+        {
+            dayCards[i].gameObject.SetActive(i < DayCardCount - 1);
+            dayCards[i].anchoredPosition = initialCardPositions[i];
+            dayCards[i].sizeDelta = initialCardSizes[i];
+            dayCards[i].localScale = initialCardScales[i];
+            dayTexts[i].rectTransform.anchoredPosition = initialDayTextPositions[i];
+            dayTexts[i].rectTransform.localScale = initialDayTextScales[i];
+            dayTexts[i].color = initialDayTextColors[i];
+            dayShadowTexts[i].rectTransform.anchoredPosition = initialDayShadowPositions[i];
+            dayShadowTexts[i].rectTransform.localScale = initialDayShadowScales[i];
+            dayShadowTexts[i].color = initialDayShadowColors[i];
+            dayShadowTexts[i].gameObject.SetActive(
+                i == PreviousDayCardIndex && !string.IsNullOrEmpty(dayTexts[i].text));
+        }
+
+        todayDeco.Hide();
     }
 }
