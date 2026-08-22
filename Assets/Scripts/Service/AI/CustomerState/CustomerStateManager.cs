@@ -12,6 +12,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private OrderButton orderButton;
     [SerializeField] private Animator animator;
     [SerializeField] private DishRequestQueue requestQueue;
+    [SerializeField] private WaitTimeBackGround waitBackGround;
 
     private Table currentTable;
     private Transform seat;
@@ -27,6 +28,7 @@ public class CustomerStateManager : MonoBehaviour
     public OrderButton OrderButton => orderButton;
     public Animator Animator => animator;
     public DishRequestQueue RequestQueue => requestQueue;   
+    public WaitTimeBackGround WaitBackGround => waitBackGround;
     
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
