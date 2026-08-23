@@ -67,7 +67,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
     {
         if (!EmployeeDataDB.TryGetData(selectedType, out EmployeeDataSO employeeData))
         {
-            Debug.LogWarning($"EmployeeData�� �����ϴ�: {selectedType}");
+            Debug.LogWarning($"EmployeeData가 없습니다 : {selectedType}");
             return false;
         }
 

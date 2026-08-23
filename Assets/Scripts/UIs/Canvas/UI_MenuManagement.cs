@@ -1,8 +1,15 @@
 using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
 public sealed class UI_MenuManagement : UI_Base
 {
+    [SerializeField] private PanelAnimator selectAnimator;
+    [SerializeField] private PanelAnimator slideAnimator;
+    [SerializeField] private PanelAnimator visualAnimator;
+    [SerializeField] private PanelAnimator commonAnimator;
+    [SerializeField] private PanelAnimator dayAnimator;
+
     private UI_SelectMenuPanel selectMenuPanel;
     private UI_MenuSlidePanel menuSlidePanel;
     private UI_MenuVisualizer menuVisualizer;
@@ -52,6 +59,13 @@ public sealed class UI_MenuManagement : UI_Base
         menuUpgradePanel?.Hide();
         dayVisual?.Refresh();
 
+
+        DOTween.Sequence()
+        .Join(dayAnimator.Show())
+        .Join(selectAnimator.Show())
+        .Join(commonAnimator.Show())
+        .Join(slideAnimator.Show())
+        .Join(visualAnimator.Show());
         yield break;
     }
 

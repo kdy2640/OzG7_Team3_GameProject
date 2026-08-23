@@ -9,6 +9,9 @@ public sealed class UI_RankUpPanel : UI_Base
     private UI_NewFunctionList newFunctionList;
     private UI_HubStateButton exitButton;
 
+    [Header("Panel Animations")]
+    [SerializeField] private PanelAnimator[] entranceAnimators;
+
     private enum GameObjects
     {
         UI_RastaurantLevel,
@@ -46,6 +49,19 @@ public sealed class UI_RankUpPanel : UI_Base
         newDishList?.Refresh();
         newIngredientList?.Refresh();
         newFunctionList?.Refresh();
+
+        if (entranceAnimators != null)
+        {
+            for (int i = 0; i < entranceAnimators.Length; i++)
+            {
+                if (entranceAnimators[i] == null) continue;
+
+                entranceAnimators[i].SetDelay(i * 0.06f);
+                entranceAnimators[i].Show();
+            }
+        }
+
+
         yield break;
     }
 }

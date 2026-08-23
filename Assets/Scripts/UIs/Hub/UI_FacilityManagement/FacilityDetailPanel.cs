@@ -11,6 +11,8 @@ public class FacilityDetailPanel : MonoBehaviour
     [SerializeField] private Transform levelIndicatorRoot;
     [SerializeField] private Image levelIndicatorPrefab;
 
+    [SerializeField] private PanelAnimator entranceAnimator;
+
     [Header("Level Indicator Color")]
     [SerializeField] private Color activeLevelColor = Color.green;
     [SerializeField] private Color inactiveLevelColor = Color.white;
@@ -75,11 +77,20 @@ public class FacilityDetailPanel : MonoBehaviour
     {
         if (facilityType == FacilityType.Count) return;
 
+        bool isAlreadyActive = gameObject.activeSelf;
+        bool isDifferentFacility = (currentFacilityType != facilityType);
+
         currentFacilityType = facilityType;
 
         gameObject.SetActive(true);
 
         Refresh();
+
+        // 팝업이 처음 열리거나 다른 시설 카드를 클릭했을 때 등장 애니메이션 재생
+        if (entranceAnimator != null && (!isAlreadyActive || isDifferentFacility))
+        {
+            entranceAnimator.Show();
+        }
     }
 
     public void ClosePanel()
@@ -217,8 +228,7 @@ public class FacilityDetailPanel : MonoBehaviour
             return;
         }
 
-        actionButtonText.text =
-            GetAvailabilityText(availability, true);
+        actionButtonText.text = GetAvailabilityText(availability, true);
 
         actionButton.interactable =
             availability == UpgradeAvailability.Available;

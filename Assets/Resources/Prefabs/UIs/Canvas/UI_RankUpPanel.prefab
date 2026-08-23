@@ -184,6 +184,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8469426173420060810}
   - component: {fileID: 5020930006371276890}
+  - component: {fileID: 7391753381871142258}
   m_Layer: 5
   m_Name: UI_NewFunctionList
   m_TagString: Untagged
@@ -229,6 +230,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 923f65d2ddf5bf64b8c6668e81e7bd06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_NewFunctionList
+--- !u!114 &7391753381871142258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 161280999773535736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c3c1a0a8c139f49b232edc912a6cfd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RightPanelAnimator
+  duration: 0.6
+  delay: 0.6
+  startOffsetX: 420
 --- !u!1 &268341766581157863
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,6 +255,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3000768824612395138}
   - component: {fileID: 5638797232346514505}
+  - component: {fileID: 3352958936787086287}
   m_Layer: 5
   m_Name: UI_NewIngredientList
   m_TagString: Untagged
@@ -284,6 +301,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b482cd1eaf0271a4698d52210c42b608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_NewIngredientList
+--- !u!114 &3352958936787086287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268341766581157863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3cae36b3369944f9c477901b20b443, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LeftPanelAnimator
+  duration: 0.6
+  delay: 0.4
+  startOffsetX: -420
 --- !u!1 &488430270245984446
 GameObject:
   m_ObjectHideFlags: 0
@@ -1801,6 +1833,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8613503437886267075}
   - component: {fileID: 3096186635615057202}
+  - component: {fileID: 1535817064113680867}
   m_Layer: 5
   m_Name: UI_RastaurantLevel
   m_TagString: Untagged
@@ -1843,6 +1876,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_RastaurantLevel
   inactiveLevelColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   activeLevelColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1535817064113680867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4323229526264331454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ebe8061fda071459e6f9d2ef1f8618, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallingPanelAnimator
+  duration: 0.6
+  delay: 0.2
+  startOffset: {x: 0, y: 180}
+  curveOffset: {x: -60, y: -30}
+  startRotation: -8
+  startScale: 0.8
+  startAlpha: 0.2
 --- !u!1 &4349689569974315720
 GameObject:
   m_ObjectHideFlags: 0
@@ -2907,6 +2959,7 @@ GameObject:
   - component: {fileID: 817768226906895872}
   - component: {fileID: 5816211935228278698}
   - component: {fileID: 6158925735739515213}
+  - component: {fileID: 2148301502347370586}
   m_Layer: 5
   m_Name: ExitButton
   m_TagString: Untagged
@@ -3060,6 +3113,21 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
+--- !u!114 &2148301502347370586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6194251275912762963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5413ff96cee8634488294fa01ce2ffa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatPanelAnimator
+  duration: 0.6
+  delay: 0.7
+  startOffset: {x: 0, y: 35}
 --- !u!1 &6227653154239511629
 GameObject:
   m_ObjectHideFlags: 0
@@ -3414,6 +3482,7 @@ GameObject:
   - component: {fileID: 5612191003562193327}
   - component: {fileID: 733399930336273468}
   - component: {fileID: 7608564151695242172}
+  - component: {fileID: 5354623182869505192}
   m_Layer: 5
   m_Name: PanelIconImage
   m_TagString: Untagged
@@ -3479,6 +3548,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5354623182869505192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6332699263728310424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c96ccf6d76fe6e7448deea15dc051b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HangingSignPanelAnimator
+  duration: 0.6
+  delay: 0
+  startOffset: {x: 0, y: 220}
 --- !u!1 &6379990421751190143
 GameObject:
   m_ObjectHideFlags: 0
@@ -4386,6 +4470,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9068790354977400099}
   - component: {fileID: 3000574641049832163}
+  - component: {fileID: 2866583080875574980}
   m_Layer: 5
   m_Name: UI_NewDishList
   m_TagString: Untagged
@@ -4431,6 +4516,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144cb07b39afe5546a9c29c58a306bdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_NewDishList
+--- !u!114 &2866583080875574980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8300339127669581225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3cae36b3369944f9c477901b20b443, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LeftPanelAnimator
+  duration: 0.6
+  delay: 0.3
+  startOffsetX: -420
 --- !u!1 &8451975861735528842
 GameObject:
   m_ObjectHideFlags: 0
@@ -4526,6 +4626,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad538e736f476b144b9d6b20f04b3d04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_RankUpPanel
+  entranceAnimators:
+  - {fileID: 5354623182869505192}
+  - {fileID: 1535817064113680867}
+  - {fileID: 2866583080875574980}
+  - {fileID: 3352958936787086287}
+  - {fileID: 7391753381871142258}
+  - {fileID: 2148301502347370586}
 --- !u!1 &8658983569275405652
 GameObject:
   m_ObjectHideFlags: 0
