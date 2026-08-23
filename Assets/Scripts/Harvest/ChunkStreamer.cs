@@ -227,10 +227,12 @@ public sealed class ChunkStreamer
         {
             if (stageResolver.TryGetStaticType(
                     localPosition.y,
-                    out HarvestType staticType))
+                    out HarvestType staticType,
+                    out StageType staticStageType))
             {
                 spawner.SpawnCrop(
                     staticType,
+                    staticStageType,
                     localPosition,
                     runtime.Root);
             }
@@ -241,10 +243,12 @@ public sealed class ChunkStreamer
 
         if (stageResolver.TryGetMovableType(
                 movablePosition.y,
-                out HarvestType movableType))
+                out HarvestType movableType,
+                out StageType movableStageType))
         {
             spawner.SpawnCrop(
                 movableType,
+                movableStageType,
                 movablePosition,
                 runtime.Root);
         }

@@ -9,4 +9,9 @@ public sealed class UI_TasteCard : MonoBehaviour
     {
         tasteText.text = tasteType.ToString();
     }
+
+    public void SetData(CategoryType categoryType)
+    {
+        tasteText.text = categoryType.ToString();
+    }
 }

@@ -15,7 +15,7 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
     [SerializeField] private TMP_Text cookValueText;
     [SerializeField] private TMP_Text descriptionText;
 
-    [Header("Taste")]
+    [Header("Taste & Category")]
     [SerializeField] private UI_TasteCard[] tasteCards;
 
     [Header("Ingredient")]
@@ -134,7 +134,7 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
                 out displayedIngredients);
         }
 
-        UpdateTasteCards(new List<TasteType> { data.Tastes });
+        UpdateTasteCards(data.Tastes, data.Category);
         UpdateIngredientCards(displayedIngredients);
         UpdateStatusPanels(level, upgradeData);
         UpdateSelectionButtons();
@@ -171,19 +171,22 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
         UpdateSelectionButtons();
     }
 
-    private void UpdateTasteCards(List<TasteType> tastes)
+    private void UpdateTasteCards(TasteType taste, CategoryType category)
     {
         for (int i = 0; i < tasteCards.Length; i++)
-        {
-            bool hasTaste = tastes != null
-                && i < tastes.Count
-                && tastes[i] != TasteType.Count;
+            tasteCards[i].gameObject.SetActive(false);
 
-            tasteCards[i].gameObject.SetActive(hasTaste);
+        bool hasTaste = taste != TasteType.Count;
+        tasteCards[0].gameObject.SetActive(hasTaste);
 
-            if (hasTaste)
-                tasteCards[i].SetData(tastes[i]);
-        }
+        if (hasTaste)
+            tasteCards[0].SetData(taste);
+
+        bool hasCategory = category != CategoryType.Count;
+        tasteCards[1].gameObject.SetActive(hasCategory);
+
+        if (hasCategory)
+            tasteCards[1].SetData(category);
     }
 
     private void UpdateIngredientCards(List<GroceryAmount> ingredients)

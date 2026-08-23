@@ -14,43 +14,121 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelMissionGroupSO
   level: 1
   missions:
-  - conditionType: 2
+  - conditionType: 1
     condition:
-      rid: 4385386984373485638
-    title: 
+      rid: 4385387211786289251
+    rewardType: 1
+    reward:
+      rid: 4385387211786289252
+    title: "\uB18D\uC9C0 1 \uAC1C\uAC04"
     description: 
-  - conditionType: 2
+  - conditionType: 1
     condition:
-      rid: 4385387030248423688
-    title: 
+      rid: 4385387211786289253
+    rewardType: 2
+    reward:
+      rid: 4385387211786289254
+    title: "\uB18D\uC0AC \uC9C1\uC6D0 1 \uACE0\uC6A9"
     description: 
-  - conditionType: 2
+  - conditionType: 6
     condition:
-      rid: 4385387030248423689
-    title: 
+      rid: 4385387211786289255
+    rewardType: 1
+    reward:
+      rid: 4385387211786289256
+    title: "\uB2F9\uADFC \uB0A9\uD488"
     description: 
-  - conditionType: 2
+  - conditionType: 1
     condition:
-      rid: 4385387030248423689
-    title: 320
+      rid: 4385387211786289257
+    rewardType: 1
+    reward:
+      rid: 4385387211786289258
+    title: "\uC774\uB3D9\uC18D\uB3C4 \uC5C5\uADF8\uB808\uC774\uB4DC 1 \uAD6C\uB9E4"
     description: 
-  - conditionType: 2
+  - conditionType: 6
     condition:
-      rid: 4385387030248423689
-    title: 
+      rid: 4385387211786289259
+    rewardType: 2
+    reward:
+      rid: 4385387211786289260
+    title: "\uC300 \uB0A9\uD488"
     description: 
   references:
     version: 2
     RefIds:
-    - rid: 4385386984373485638
-      type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
+    - rid: 4385387211786289251
+      type: {class: UpgradeMissionCondition, ns: , asm: Assembly-CSharp}
       data:
-        targetIncome: 220
-    - rid: 4385387030248423688
-      type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
+        requiredSatisfiedCount: 1
+        subConditions:
+        - type: 3
+          subCondition:
+            rid: 4385387211786289261
+    - rid: 4385387211786289252
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
       data:
-        targetIncome: 240
-    - rid: 4385387030248423689
-      type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
+        amount: 100
+    - rid: 4385387211786289253
+      type: {class: UpgradeMissionCondition, ns: , asm: Assembly-CSharp}
       data:
-        targetIncome: 380
+        requiredSatisfiedCount: 1
+        subConditions:
+        - type: 2
+          subCondition:
+            rid: 4385387211786289262
+    - rid: 4385387211786289254
+      type: {class: MissionGroceryReward, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 2
+          amount: 5
+    - rid: 4385387211786289255
+      type: {class: GroceryDeliveryMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 1
+          amount: 10
+    - rid: 4385387211786289256
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 50
+    - rid: 4385387211786289257
+      type: {class: UpgradeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        requiredSatisfiedCount: 1
+        subConditions:
+        - type: 3
+          subCondition:
+            rid: 4385387211786289263
+    - rid: 4385387211786289258
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 50
+    - rid: 4385387211786289259
+      type: {class: GroceryDeliveryMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 0
+          amount: 30
+    - rid: 4385387211786289260
+      type: {class: MissionGroceryReward, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 2
+          amount: 15
+    - rid: 4385387211786289261
+      type: {class: HarvestUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        harvestUpgradeType: 6
+        targetLevel: 1
+    - rid: 4385387211786289262
+      type: {class: EmployeeUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        employeeType: 8
+        targetLevel: 1
+    - rid: 4385387211786289263
+      type: {class: HarvestUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        harvestUpgradeType: 3
+        targetLevel: 1

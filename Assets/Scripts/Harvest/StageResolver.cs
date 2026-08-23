@@ -53,25 +53,41 @@ public sealed class StageResolver
             a.StageData.ZStart.CompareTo(b.StageData.ZStart));
     }
 
-    public bool TryGetStaticType(float localZ, out HarvestType type)
+    public bool TryGetStaticType(
+        float localZ,
+        out HarvestType type,
+        out StageType stageType)
     {
-        return TryGetType(localZ, false, out type);
+        return TryGetType(localZ, false, out type, out stageType);
     }
 
-    public bool TryGetMovableType(float localZ, out HarvestType type)
+    public bool TryGetMovableType(
+        float localZ,
+        out HarvestType type,
+        out StageType stageType)
     {
-        return TryGetType(localZ, true, out type);
+        return TryGetType(localZ, true, out type, out stageType);
     }
 
     private bool TryGetType(
         float localZ,
         bool isMovable,
-        out HarvestType type)
+        out HarvestType type,
+        out StageType stageType)
     {
         StageEntry entry = GetEntry(localZ);
+
+        if (entry == null)
+        {
+            type = HarvestType.Count;
+            stageType = StageType.Count;
+            return false;
+        }
+
+        stageType = entry.StageData.StageType;
         List<HarvestType> types = isMovable
-            ? entry?.MovableTypes
-            : entry?.StaticTypes;
+            ? entry.MovableTypes
+            : entry.StaticTypes;
 
         if (types == null || types.Count == 0)
         {

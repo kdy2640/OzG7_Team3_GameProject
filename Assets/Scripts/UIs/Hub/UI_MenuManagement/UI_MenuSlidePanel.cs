@@ -8,12 +8,10 @@ public class UI_MenuSlidePanel : MonoBehaviour
     // - 카드 클릭 시 슬라이더 내부에 현재 선택 중인 DishType을 표시한다.
     // - 슬라이더 내부에 현재 선택 중인 DishType과
     //   UI_SelectedMenuPanel에 등록된 DishType을 함께 표시하고 상태를 구분한다.
-    // - 이벤트 기간의 DishType은 별도의 UI_MenuContainer로 이동하고,
-    //   이벤트 종료 시 원래 컨테이너로 복귀시킨다.
-    // - ScrollRect와 Viewport Mask를 적용해 UI_MenuContainer의 양 끝이 잘리도록 만들고
-    //   카드 목록이 슬라이더처럼 보이게 한다.
     // - Refresh 후 선택 중인 DishType이 사라지거나 이동한 경우 선택 상태를 해제하거나 갱신한다.
 
+    [SerializeField] private GameObject eventMenuContainer;
+    [SerializeField] private Transform eventCardContainer;
     [SerializeField] private Transform cardContainer;
     [SerializeField] private UI_MenuVisualCard cardPrefab;
 
@@ -53,7 +51,13 @@ public class UI_MenuSlidePanel : MonoBehaviour
 
     public void Refresh()
     {
-        int marketLevel = GameManager.Instance.Market.MarketData.CurrentLevel;
+        MarketManager market = GameManager.Instance.Market;
+        int marketLevel = market.MarketData.CurrentLevel;
+        int currentBusinessDay = market.MarketData.CurrentBusinessDay;
+        TasteType eventTaste = market.FestivalCalendar.GetNowTaste(currentBusinessDay);
+        CategoryType eventCategory = market.FestivalCalendar.GetNowCategory(currentBusinessDay);
+        IReadOnlyList<DishType> selectedDishes = market.MarketData.SelectedDishes;
+        int eventCardCount = 0;
 
         for (int i = cards.Count - 1; i >= 0; i--)
         {
@@ -101,11 +105,38 @@ public class UI_MenuSlidePanel : MonoBehaviour
                 cards.Add(card);
             }
 
+            DishDataSO dishData = DishDataDB.GetData(dishType);
+            bool isEventMenu = IsEventMenu(dishData, eventTaste, eventCategory);
+            Transform targetContainer = isEventMenu
+                ? eventCardContainer
+                : cardContainer;
+
+            card.transform.SetParent(targetContainer, false);
+            card.transform.SetAsLastSibling();
+
+            if (isEventMenu)
+                eventCardCount++;
+
             int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(dishType);
+            int selectedOrder = 0;
+
+            for (int selectedIndex = 0;
+                 selectedIndex < selectedDishes.Count;
+                 selectedIndex++)
+            {
+                if (selectedDishes[selectedIndex] != dishType)
+                    continue;
+
+                selectedOrder = selectedIndex + 1;
+                break;
+            }
 
             card.SetData(dishType);
             card.SetStatus(GetStatus(upgradeData, level));
+            card.SetSelectedOrder(selectedOrder);
         }
+
+        eventMenuContainer.SetActive(eventCardCount > 0);
     }
 
     public void SubscribeCardClicked(Action<DishType> callback)
@@ -127,6 +158,9 @@ public class UI_MenuSlidePanel : MonoBehaviour
 
     private MenuVisualStatus GetStatus(DishUpgradeDataSO upgradeData, int level)
     {
+        if (level >= upgradeData.MaxLevel)
+            return MenuVisualStatus.FullUpgraded;
+
         if (level > 0)
             return MenuVisualStatus.Opened;
 
@@ -134,6 +168,22 @@ public class UI_MenuSlidePanel : MonoBehaviour
             == UpgradeAvailability.Available
             ? MenuVisualStatus.CanOpen
             : MenuVisualStatus.Locked;
+    }
+
+    private static bool IsEventMenu(
+        DishDataSO dishData,
+        TasteType eventTaste,
+        CategoryType eventCategory)
+    {
+        if (dishData == null)
+            return false;
+
+        bool matchesTaste = eventTaste != TasteType.Count
+            && dishData.Tastes == eventTaste;
+        bool matchesCategory = eventCategory != CategoryType.Count
+            && dishData.Category == eventCategory;
+
+        return matchesTaste || matchesCategory;
     }
 
     private void OnUpgradeChanged()
