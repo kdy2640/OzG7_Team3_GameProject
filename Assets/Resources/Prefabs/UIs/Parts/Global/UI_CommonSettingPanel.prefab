@@ -38,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -20, y: -20}
-  m_SizeDelta: {x: 450, y: 80}
+  m_SizeDelta: {x: 450, y: 100}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &553240843084300944
 CanvasRenderer:
@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 1703185225437481542}
   - component: {fileID: 2025174736365271400}
   - component: {fileID: 1882594913199398374}
+  - component: {fileID: 6006557578642173097}
   m_Layer: 0
   m_Name: SettingButton
   m_TagString: Untagged
@@ -231,6 +232,19 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
+--- !u!114 &6006557578642173097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4590917428558581060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d39c8901b6a0134fa3eb1d4abd5e599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_SettingButton
+  settingPanelPrefab: {fileID: 1468604453910068990, guid: be06cf9a7ff187749baa3650e6e5243c, type: 3}
 --- !u!1 &6722727122257668409
 GameObject:
   m_ObjectHideFlags: 0

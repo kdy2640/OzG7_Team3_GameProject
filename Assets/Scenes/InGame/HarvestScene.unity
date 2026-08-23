@@ -3370,6 +3370,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88bb5629019c61f45bb2943b4e729def, type: 3}
+--- !u!114 &1436139306 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8876732326954580713, guid: 88bb5629019c61f45bb2943b4e729def, type: 3}
+  m_PrefabInstance: {fileID: 1436139305}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cbbb6f2f154bb94b84eddb218e0fdb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_GroceryViewPanel
 --- !u!1001 &1444736111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5453,6 +5464,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2039123437}
   - component: {fileID: 2039123438}
+  - component: {fileID: 2039123439}
   m_Layer: 5
   m_Name: UI_InfoPanel
   m_TagString: Untagged
@@ -5489,6 +5501,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2039123436}
   m_CullTransparentMesh: 1
+--- !u!114 &2039123439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039123436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb697f85618d6c9449752267f8024c53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_InfoPanel
+  player: {fileID: 1197255039772184436}
+  gridChunkHandler: {fileID: 1720089969}
+  groceryViewPanel: {fileID: 1436139306}
 --- !u!1 &2077612106
 GameObject:
   m_ObjectHideFlags: 0
@@ -5801,6 +5828,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5645cb83d087427e8462de41143ad1ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HarvestEmployeeResolver
+--- !u!114 &1197255039772184436 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8547026679067484037, guid: 0c73e84de52701e489fa7d4110fcb63a, type: 3}
+  m_PrefabInstance: {fileID: 1197255039772184434}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4550d0c084724b00ad6e2415ec0f12e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TractorController
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
