@@ -4,7 +4,7 @@ using UnityEngine;
 public class CustomerGoHomeState : IState
 {
     private CustomerStateManager stateManager;
-
+    private float timer;
     public CustomerGoHomeState(CustomerStateManager stateManager)
     {
         this.stateManager = stateManager;
@@ -12,7 +12,6 @@ public class CustomerGoHomeState : IState
 
     public void Enter()
     {
-        stateManager.CurrentTable.ReleaseSeat(stateManager);
 
         stateManager.Animator.SetBool("IsWalking", true);
 
@@ -26,7 +25,12 @@ public class CustomerGoHomeState : IState
 
     public void Execute()
     {
-
+        timer -= Time.deltaTime;
+        if (timer < 0)
+        {
+            CheckSeatCleaned();
+            timer = 2.0f;
+        }
     }
 
 
@@ -39,6 +43,14 @@ public class CustomerGoHomeState : IState
 
     private void ArrivedHome()
     {
-        GameObject.Destroy(stateManager.gameObject);
+        CheckSeatCleaned();
+    }
+    private void CheckSeatCleaned()
+    {
+        if (!stateManager.SeatDirty)
+        {
+            stateManager.CurrentTable.ReleaseSeat(stateManager);
+            GameObject.Destroy(stateManager.gameObject);
+        }
     }
 }

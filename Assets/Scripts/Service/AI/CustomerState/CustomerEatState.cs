@@ -5,6 +5,7 @@ public class CustomerEatState : IState
 {
     private CustomerStateManager stateManager;
     private float timer;
+    private float dirtyChance = 1f;
     public CustomerEatState(CustomerStateManager stateManager)
     {
         this.stateManager = stateManager;
@@ -33,7 +34,16 @@ public class CustomerEatState : IState
 
     private void FinishEating()
     {
-        stateManager.CurrentTable.ReleaseSeat(stateManager);
+        if(Random.value < dirtyChance)
+        {
+            stateManager.CreateDirty();
+        }
+
+        if(!stateManager.SeatDirty)
+        {
+            stateManager.CurrentTable.ReleaseSeat(stateManager);
+        }
+        
 
         if (Random.value < stateManager.RunChance)
         {

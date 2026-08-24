@@ -11,6 +11,7 @@ public class CustomerSpawner : MonoBehaviour
     [SerializeField] private TipBox tipBox;
     [SerializeField] private float spawnInterval = 2f;
     [SerializeField] private RuntimeAnimatorController controller;
+    [SerializeField] private Dirty dirtyPrefab;
 
 
     [Header("랜덤 동물 범위")]
@@ -52,7 +53,7 @@ public class CustomerSpawner : MonoBehaviour
         GameObject animal =
             Instantiate(animalPrefabs[Random.Range(0, animalPrefabs.Count)], customer.transform);
 
-        customer.Initialize(exitPoint, tableManager, tipBox, requestQueue);
+        customer.Initialize(exitPoint, tableManager, tipBox, requestQueue, dirtyPrefab);
         animal.transform.localScale = Vector3.one * animalSize;
         animal.transform.localPosition += Vector3.down * (1 - animalSize) * 2;
         

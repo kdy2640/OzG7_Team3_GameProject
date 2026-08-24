@@ -15,6 +15,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private DishRequestQueue requestQueue;
     [SerializeField] private WaitTimeBackGround waitBackGround;
     [SerializeField] private RunnerCatchButton runnerCatchButton;
+    [SerializeField] private Dirty dirtyPrefab;
 
     private Table currentTable;
     private Transform seat;
@@ -23,8 +24,9 @@ public class CustomerStateManager : MonoBehaviour
     public Action caught;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
-    private float runChance = 1f;
+    private float runChance = 0.05f;
     private float eatSpeedUpPercentage;
+    public bool SeatDirty = false;
     
 
     public float Speed => speed;
@@ -36,12 +38,12 @@ public class CustomerStateManager : MonoBehaviour
     public DishRequestQueue RequestQueue => requestQueue;   
     public WaitTimeBackGround WaitBackGround => waitBackGround;
     public RunnerCatchButton RunnerCatchButton => runnerCatchButton;
+    public Dirty DirtyPrefab => dirtyPrefab;
     
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
     public DishAmount Order => order;
     public float EatTime => eatTime;
-
     public float RunChance => runChance;
     
     [SerializeField]private IState currentState;
@@ -49,12 +51,13 @@ public class CustomerStateManager : MonoBehaviour
     #endregion
 
     #region State Machine Main
-    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue)
+    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue, Dirty dirtyPrefab)
     {
         this.exitPoint = exitPoint;
         this.tableManager = tableManager;
         this.tipBox = tipBox;
         this.requestQueue = queue;
+        this.dirtyPrefab = dirtyPrefab;
         AiMove.SetSpeed(speed);
     }
 
@@ -156,5 +159,13 @@ public class CustomerStateManager : MonoBehaviour
     public void TipChanceUp()
     {
         tipChance *= 2;
+    }
+
+    public void CreateDirty()
+    {
+        Vector3 dirtyPoint = transform.position + transform.forward * 1.0f + transform.up * 1.0f;
+        Dirty dirty = Instantiate(DirtyPrefab, dirtyPoint, Quaternion.identity);
+        dirty.SetCustomer(this);
+        SeatDirty = true;
     }
 }

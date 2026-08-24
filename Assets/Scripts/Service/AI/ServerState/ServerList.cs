@@ -77,6 +77,7 @@ public class ServerList : MonoBehaviour
             }
             else
             {
+                server.IsBusy = true;
                 server.SetServerDish(dish, customer);
                 return true;
             }
@@ -95,6 +96,7 @@ public class ServerList : MonoBehaviour
             }
             else
             {
+                server.IsBusy = true;
                 server.SetCustomer(customer);
                 server.ChangeState(new ServerCatchRunnerState(server));
                 catcher = server;
@@ -102,6 +104,26 @@ public class ServerList : MonoBehaviour
             }
         }
         catcher = null;
+        return false;
+    }
+
+    public bool TryAllocClean(Dirty dirty)
+    {
+        foreach (ServerStateManager server in servers)
+        {
+            if (server == null) continue;
+            if (server.IsBusy)
+            {
+                continue;
+            }
+            else
+            {
+                server.IsBusy = true;
+                server.ChangeState(new ServerMoveToCleanState(server, dirty));
+                
+                return true;
+            }
+        }
         return false;
     }
 
