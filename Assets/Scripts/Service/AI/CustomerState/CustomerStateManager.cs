@@ -24,7 +24,7 @@ public class CustomerStateManager : MonoBehaviour
     public Action caught;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
-    private float runChance = 0.1f;
+    private float runChance = 0.05f;
     private float eatSpeedUpPercentage;
     public bool SeatDirty = false;
     

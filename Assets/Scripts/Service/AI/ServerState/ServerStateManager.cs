@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class ServerStateManager : MonoBehaviour
 {
@@ -28,7 +27,7 @@ public class ServerStateManager : MonoBehaviour
 
     private DishEffectQueue dishEffectQueue;
 
-    private float sleepingChance = 0.1f;
+    private float sleepingChance = 0.05f;
 
     public AIMove AiMove => aiMove;
     public Transform ServePoint => servePoint;
