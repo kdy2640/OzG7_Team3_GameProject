@@ -13,7 +13,7 @@ public class UI_ButtonClickSound : MonoBehaviour,
             audioManager = GameManager.Instance.Utility.Audio;
 
         if (audioManager != null)
-            audioManager.PlaySFX(SFXType.ButtonClick);
+            audioManager.PlaySFX(SFXType.Global_ButtonClick);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

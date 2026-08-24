@@ -37,11 +37,10 @@ public class MarketManager : MonoBehaviour
             if (!LevelDataDB.TryGetData(nextLevel, out _))
                 return false;
 
-            if (nextLevel < MaxMarketLevel
-                && (!LevelMissionGroupDB.TryGetData(nextLevel, out LevelMissionGroupSO nextMissionGroup)
-                    || nextMissionGroup == null
-                    || nextMissionGroup.Missions == null
-                    || nextMissionGroup.Missions.Count == 0))
+            if (!LevelMissionGroupDB.TryGetData(nextLevel, out LevelMissionGroupSO nextMissionGroup)
+                || nextMissionGroup == null
+                || nextMissionGroup.Missions == null
+                || nextMissionGroup.Missions.Count == 0)
             {
                 return false;
             }
@@ -100,9 +99,7 @@ public class MarketManager : MonoBehaviour
     {
         levelData = LevelDataDB.GetData(marketData.CurrentLevel) ?? new LevelData();
         levelMissionProgress.SetMissionGroup(
-            marketData.CurrentLevel < MaxMarketLevel
-                ? LevelMissionGroupDB.GetData(marketData.CurrentLevel)
-                : null);
+            LevelMissionGroupDB.GetData(marketData.CurrentLevel));
 
         GameManager.Instance?.Upgrade?.RefreshRuntimeData();
     }
@@ -162,10 +159,9 @@ public class MarketManager : MonoBehaviour
         if (!LevelDataDB.TryGetData(nextLevel, out LevelData nextLevelData))
             return false;
 
-        LevelMissionGroupSO nextMissionGroup = null;
-
-        if (nextLevel < MaxMarketLevel
-            && !LevelMissionGroupDB.TryGetData(nextLevel, out nextMissionGroup))
+        if (!LevelMissionGroupDB.TryGetData(
+                nextLevel,
+                out LevelMissionGroupSO nextMissionGroup))
         {
             return false;
         }

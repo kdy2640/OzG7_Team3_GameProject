@@ -1,12 +1,9 @@
-using Unity.VisualScripting;
+
 using UnityEngine;
 
 public class CustomerGoHomeState : IState
 {
     private CustomerStateManager stateManager;
-    private AIMove aiMove;
-    private Transform exitPoint;
-    private bool isTipable = false;
 
     public CustomerGoHomeState(CustomerStateManager stateManager)
     {
@@ -20,6 +17,8 @@ public class CustomerGoHomeState : IState
         stateManager.Animator.SetBool("IsWalking", true);
 
         stateManager.AiMove.OnArrived += ArrivedHome;
+
+        stateManager.AiMove.SetSpeed(stateManager.Speed);
 
         stateManager.AiMove.MoveTo(stateManager.ExitPoint);
     }

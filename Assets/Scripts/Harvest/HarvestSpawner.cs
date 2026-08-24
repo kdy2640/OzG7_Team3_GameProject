@@ -31,10 +31,11 @@ public sealed class HarvestSpawner : MonoBehaviour
 
     public void SpawnCrop(
         HarvestType type,
+        StageType stageType,
         Vector2 localPosition,
         Transform parent)
     {
-        CreateCrop(type, localPosition, parent);
+        CreateCrop(type, stageType, localPosition, parent);
     }
 
     private void ClearSpawnedCrops()
@@ -50,6 +51,7 @@ public sealed class HarvestSpawner : MonoBehaviour
 
     private void CreateCrop(
         HarvestType type,
+        StageType stageType,
         Vector2 localPosition,
         Transform parent)
     {
@@ -62,7 +64,7 @@ public sealed class HarvestSpawner : MonoBehaviour
             parent);
 
         crop.name = "Crop";
-        crop.Init(type, player, gridChunkHandler);
+        crop.Init(type, stageType, player, gridChunkHandler);
         spawnedCrops.Add(crop);
     }
 }

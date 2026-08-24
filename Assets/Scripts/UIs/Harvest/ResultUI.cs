@@ -2,29 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ResultUI : MonoBehaviour
 {
-    [SerializeField] private ResultGroceryItem itemPrefab;
+    [SerializeField] private Transform rewardArea;
 
-    [FormerlySerializedAs("oreContainer")]
-    [SerializeField] private Transform groceryContainer;
-
-    [FormerlySerializedAs("upgradeButton")]
     [SerializeField] private Button hubButton;
 
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private RectTransform panel;
 
-    private readonly List<ResultGroceryItem> groceryItems = new();
+    private UI_GroceryViewPanel[] rewardPanels;
     private bool isInitialized;
 
     private void Awake()
     {
-        isInitialized = itemPrefab != null
-            && groceryContainer != null
+        rewardPanels = rewardArea.GetComponentsInChildren<UI_GroceryViewPanel>(true);
+
+        isInitialized = rewardPanels.Length == (int)StageType.Count
             && canvasGroup != null
             && panel != null;
 
@@ -42,24 +38,13 @@ public class ResultUI : MonoBehaviour
             hubButton.onClick.RemoveListener(HandleHubButtonClicked);
     }
 
-    public void SetData(IReadOnlyList<GroceryAmount> groceryAmounts)
+    public void SetData(IReadOnlyList<GroceryAmount> _)
     {
-        if (!isInitialized || groceryAmounts == null)
+        if (!isInitialized)
             return;
 
-        Clear();
-
-        for (int i = 0; i < groceryAmounts.Count; i++)
-        {
-            GroceryAmount groceryAmount = groceryAmounts[i];
-
-            if (groceryAmount == null || groceryAmount.amount <= 0)
-                continue;
-
-            ResultGroceryItem item = Instantiate(itemPrefab, groceryContainer);
-            item.SetData(groceryAmount);
-            groceryItems.Add(item);
-        }
+        for (int i = 0; i < rewardPanels.Length; i++)
+            rewardPanels[i].Initialize(StageDataDB.GetData((StageType)i).RewardList);
     }
 
     public IEnumerator Show()
@@ -87,14 +72,6 @@ public class ResultUI : MonoBehaviour
         sequence.Join(canvasGroup.DOFade(0f, 0.25f));
         sequence.Join(panel.DOScale(0.85f, 0.25f));
         sequence.OnComplete(() => gameObject.SetActive(false));
-    }
-
-    private void Clear()
-    {
-        for (int i = groceryContainer.childCount - 1; i >= 0; i--)
-            Destroy(groceryContainer.GetChild(i).gameObject);
-
-        groceryItems.Clear();
     }
 
     private void HandleHubButtonClicked()

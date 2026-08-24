@@ -44,11 +44,19 @@ public sealed class LevelMissionProgress
 
         if (currentMission?.Condition == null
             || !currentMission.Condition.IsSatisfied()
-            || currentMission.Reward == null
-            || !currentMission.Reward.TryGrant())
+            || currentMission.Reward == null)
         {
             return false;
         }
+
+        if (currentMission.Condition is GroceryDeliveryMissionCondition deliveryCondition
+            && !deliveryCondition.TryDeliver())
+        {
+            return false;
+        }
+
+        if (!currentMission.Reward.TryGrant())
+            return false;
 
         claimedMissionCount = Mathf.Min(
             claimedMissionCount + 1,

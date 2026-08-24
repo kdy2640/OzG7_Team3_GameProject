@@ -8,7 +8,8 @@ public enum MenuVisualStatus
 {
     Opened,
     CanOpen,
-    Locked
+    Locked,
+    FullUpgraded
 }
 
 public class UI_MenuVisualCard : MonoBehaviour
@@ -29,11 +30,19 @@ public class UI_MenuVisualCard : MonoBehaviour
 
     [SerializeField] private GameObject canOpen;
 
+    [SerializeField] private TMP_Text developmentStateText;
+
     [SerializeField] private GameObject lockOverlay;
+
+    [SerializeField] private Image selectVisual;
+
+    [SerializeField] private TMP_Text selectedOrderText;
 
     [SerializeField] private Color developedColor = Color.yellow;
 
     [SerializeField] private Color lockedColor = Color.gray;
+
+    [SerializeField] private Color selectedColor = new(0.54f, 0.33f, 0.18f, 1f);
 
     private event Action<DishType> onClicked;
     private DishType dishType = DishType.None;
@@ -79,6 +88,7 @@ public class UI_MenuVisualCard : MonoBehaviour
     public void SetData(DishType dishType)
     {
         this.dishType = dishType;
+        SetSelectedOrder(0);
 
         if (dishType == DishType.None || dishType == DishType.Count)
         {
@@ -110,13 +120,39 @@ public class UI_MenuVisualCard : MonoBehaviour
 
     public void SetStatus(MenuVisualStatus status)
     {
-        bool isOpened = status == MenuVisualStatus.Opened;
+        bool isLocked = status == MenuVisualStatus.Locked;
+        bool canDevelop = status == MenuVisualStatus.CanOpen;
+        bool isDeveloped = status == MenuVisualStatus.Opened
+            || status == MenuVisualStatus.FullUpgraded;
 
-        canOpen.SetActive(status == MenuVisualStatus.CanOpen);
-        lockOverlay.SetActive(status == MenuVisualStatus.Locked);
+        canOpen.SetActive(isLocked || canDevelop);
+        lockOverlay.SetActive(isLocked || canDevelop);
 
-        backgroundImage.color = isOpened
-            ? developedColor : lockedColor;
+        if (isLocked)
+            developmentStateText.text = "개발 불가";
+        else if (canDevelop)
+            developmentStateText.text = "개발 가능!";
+
+        backgroundImage.color = isDeveloped
+            ? developedColor
+            : lockedColor;
+    }
+
+    public void SetSelectedOrder(int order)
+    {
+        bool isSelected = order > 0;
+
+        selectVisual.gameObject.SetActive(isSelected);
+
+        if (!isSelected)
+        {
+            selectedOrderText.text = string.Empty;
+            return;
+        }
+
+        backgroundImage.color = selectedColor;
+        selectVisual.color = selectedColor;
+        selectedOrderText.text = order.ToString();
     }
 
     private void HandleClick(PointerEventData _)

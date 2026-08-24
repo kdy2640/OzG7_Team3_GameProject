@@ -14,6 +14,7 @@ public class CustomerEatState : IState
     public void Enter()
     {
         stateManager.Animator.SetBool("IsEating", true);
+        stateManager.EatSpeedApply();
         timer = stateManager.EatTime;
     }
 
@@ -32,7 +33,16 @@ public class CustomerEatState : IState
 
     private void FinishEating()
     {
+        stateManager.CurrentTable.ReleaseSeat(stateManager);
+
+        if (Random.value < stateManager.RunChance)
+        {
+            stateManager.ChangeState(new CustomerRunState(stateManager));
+            return;
+        }
+
         DishDataSO data = DishDataDB.GetData(stateManager.Order.dish);
+
         if(data != null)
         {
             // 돈 획득
@@ -43,7 +53,6 @@ public class CustomerEatState : IState
                 data.Cost);
         }
 
-        stateManager.CurrentTable.ReleaseSeat(stateManager);
 
         if (stateManager.IsTip())
         {
