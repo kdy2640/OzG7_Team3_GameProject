@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using DG.Tweening;
 
 public sealed class UI_MenuManagement : UI_Base
 {
@@ -9,8 +8,6 @@ public sealed class UI_MenuManagement : UI_Base
     private UI_MenuVisualizer menuVisualizer;
     private UI_MenuUpgradePanel menuUpgradePanel;
     private UI_DayVisual dayVisual;
-
-    private PanelAnimator[] panelAnimators;
 
     private enum GameObjects
     {
@@ -22,9 +19,19 @@ public sealed class UI_MenuManagement : UI_Base
         UI_DayVisual
     }
 
+    private enum PanelAnimators
+    {
+        UI_DayVisual,
+        UI_CommonExitPanel,
+        UI_SelectMenuPanel,
+        UI_MenuSlidePanel,
+        UI_MenuVisualizer
+    }
+
     protected override void OnInit()
     {
         Bind<GameObject>(typeof(GameObjects));
+        Bind<PanelAnimator>(typeof(PanelAnimators));
         GetUI<GameObject>((int)GameObjects.ExitButton)?
             .GetComponent<UI_HubStateButton>()?.Init(Owner);
 
@@ -46,14 +53,6 @@ public sealed class UI_MenuManagement : UI_Base
         menuVisualizer?.SetData(DishType.None);
         menuUpgradePanel?.Hide();
 
-        // 애니메이션 실행 순서를 코드에서 명시
-        panelAnimators = new[]
-        {
-            GetPanelAnimator(dayVisual),
-            GetPanelAnimator(selectMenuPanel),
-            GetPanelAnimator(menuSlidePanel),
-            GetPanelAnimator(menuVisualizer)
-        };
     }
     protected override IEnumerator OnShow()
     {
@@ -63,36 +62,18 @@ public sealed class UI_MenuManagement : UI_Base
         menuUpgradePanel?.Hide();
         dayVisual?.Refresh();
 
-        PlayPanelAnimations();
-
-        yield break;
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_DayVisual).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_MenuSlidePanel).Show();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_MenuVisualizer).Show();
     }
     protected override IEnumerator OnHide()
     {
-        yield break;
-    }
-    private void PlayPanelAnimations()
-    {
-        if (panelAnimators == null) return;
-
-        foreach (PanelAnimator animator in panelAnimators)
-        {
-            if (animator == null) continue;
-            if (!animator.gameObject.activeInHierarchy) continue;
-
-            animator.Show();
-        }
-    }
-    private PanelAnimator GetPanelAnimator(Component target)
-    {
-        if (target == null) return null;
-
-        PanelAnimator animator = target.GetComponent<PanelAnimator>();
-
-        if (animator == null)
-        {
-            Debug.LogWarning($"[{GetType().Name}] '{target.name}'에 PanelAnimator가 없습니다.", target);
-        }
-        return animator;
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_MenuVisualizer).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_MenuSlidePanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_DayVisual).Hide();
     }
 }

@@ -468,24 +468,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 3690601283573349593}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba66afd7393cd444d8b32d2aec1e9eaa, type: 3}
+  m_Script: {fileID: 11500000, guid: bd13109681a8fb34b82ef7e7c6db1f1e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TweenPanelAnimator
+  m_EditorClassIdentifier: Assembly-CSharp::FallingPanelAnimator
   duration: 0.6
-  delay: 0
-  playOnParentShow: 1
-  animationType: 0
-  direction: 0
   startOffset: {x: 0, y: 180}
-  edgeOffsetX: 420
   curveOffset: {x: -60, y: -30}
   startRotation: -8
   startScale: 0.92
   startAlpha: 0.2
-  hangingStartRotation: -18
-  centerStartScale: 0.8
-  dimCanvasGroup: {fileID: 0}
-  dimAlpha: 0.6
 --- !u!1 &4795911849942483276
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,24 +1140,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 945057114230581072}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba66afd7393cd444d8b32d2aec1e9eaa, type: 3}
+  m_Script: {fileID: 11500000, guid: 01a65b2ee7d99cd4e8beadff96a81680, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TweenPanelAnimator
+  m_EditorClassIdentifier: Assembly-CSharp::FloatPanelAnimator
   duration: 0.6
-  delay: 0.1
-  playOnParentShow: 1
-  animationType: 1
-  direction: 0
   startOffset: {x: 0, y: 180}
-  edgeOffsetX: 420
-  curveOffset: {x: -60, y: -30}
-  startRotation: -8
   startScale: 0.92
-  startAlpha: 0.2
-  hangingStartRotation: -18
-  centerStartScale: 0.8
-  dimCanvasGroup: {fileID: 0}
-  dimAlpha: 0.6
 --- !u!224 &6472853513339084502 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5800785246385659039, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
@@ -1526,6 +1505,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 1429587145577396020, guid: b155243ff74a10243ae15ad52c294919, type: 3}
+      propertyPath: panelAnimator
+      value:
+      objectReference: {fileID: 4549533758548561915}
     - target: {fileID: 1429587145577396020, guid: b155243ff74a10243ae15ad52c294919, type: 3}
       propertyPath: levelIndicatorRoot
       value: 
@@ -2245,6 +2228,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1722623766038386737, guid: b155243ff74a10243ae15ad52c294919, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4549533758548561915}
+    - targetCorrespondingSourceObject: {fileID: 1722623766038386737, guid: b155243ff74a10243ae15ad52c294919, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5616341669710814485}
     - targetCorrespondingSourceObject: {fileID: 2593112067202168051, guid: b155243ff74a10243ae15ad52c294919, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6264757154463376913}
@@ -2322,24 +2308,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 4035981711590566777}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba66afd7393cd444d8b32d2aec1e9eaa, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c506973b38d4dcca7ac7ac24b49f61e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TweenPanelAnimator
+  m_EditorClassIdentifier: Assembly-CSharp::EdgePanelAnimator
   duration: 0.6
-  delay: 0.2
-  playOnParentShow: 0
-  animationType: 2
-  direction: 1
-  startOffset: {x: 0, y: 180}
-  edgeOffsetX: 420
-  curveOffset: {x: -60, y: -30}
-  startRotation: -8
-  startScale: 0.92
-  startAlpha: 0.2
-  hangingStartRotation: -18
-  centerStartScale: 0.8
-  dimCanvasGroup: {fileID: 0}
-  dimAlpha: 0.6
+  offsetX: 420
+--- !u!225 &5616341669710814485
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4035981711590566777}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6593283886343337018 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8387213272113481586, guid: b155243ff74a10243ae15ad52c294919, type: 3}

@@ -6,8 +6,6 @@ public sealed class UI_ServiceSelection : UI_Base
     private UI_SelectMenuPanel selectMenuPanel;
     private UI_MarketVisualPanel marketVisualPanel;
 
-    private PanelAnimator[] panelAnimators;
-
     private enum GameObjects
     {
         UI_StartServiceButton,
@@ -19,10 +17,20 @@ public sealed class UI_ServiceSelection : UI_Base
         ExitButton
     }
 
+    private enum PanelAnimators
+    {
+        Header,
+        TopLeft,
+        UI_CommonExitPanel,
+        UI_SelectMenuPanel,
+        UI_MareketVisualPanel
+    }
+
     protected override void OnInit()
     {
         Bind<GameObject>(typeof(GameObjects));
         Bind<UI_HubStateButton>(typeof(HubStateButtons));
+        Bind<PanelAnimator>(typeof(PanelAnimators));
 
         GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?.Init(Owner);
 
@@ -39,8 +47,6 @@ public sealed class UI_ServiceSelection : UI_Base
 
         marketVisualPanel = GetComponentInChildren<UI_MarketVisualPanel>(true);
 
-        // 하위 오브젝트에 붙어 있는 PanelAnimator 자동 수집
-        panelAnimators = GetComponentsInChildren<PanelAnimator>(true);
     }
 
     protected override IEnumerator OnShow()
@@ -48,30 +54,20 @@ public sealed class UI_ServiceSelection : UI_Base
         selectMenuPanel?.Refresh();
         marketVisualPanel?.Refresh();
 
-        PlayPanelAnimations();
-
-        yield break;
+        GetUI<PanelAnimator>((int)PanelAnimators.Header).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.TopLeft).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Show();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_MareketVisualPanel).Show();
     }
 
     protected override IEnumerator OnHide()
     {
-        yield break;
-    }
-
-    private void PlayPanelAnimations()
-    {
-        if (panelAnimators == null) return;
-
-        foreach (PanelAnimator animator in panelAnimators)
-        {
-            if (animator == null) continue;
-
-            if (!animator.PlayOnParentShow) continue;
-
-            if (!animator.gameObject.activeInHierarchy) continue;
-
-            animator.Show();
-        }
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_MareketVisualPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.TopLeft).Hide();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.Header).Hide();
     }
 
     private void StartService()

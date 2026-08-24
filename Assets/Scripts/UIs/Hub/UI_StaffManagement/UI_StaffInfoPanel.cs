@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,12 +39,10 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
     private Action<EmployeeType> onAction;
     private EmployeeType selectedType = EmployeeType.Count;
 
-    private PanelAnimator panelAnimator;
+    [SerializeField] private PanelAnimator panelAnimator;
 
     private void Awake()
     {
-        panelAnimator = GetComponent<PanelAnimator>();
-
         actionButton.onClick.AddListener(OnClickAction);
         gameObject.SetActive(false);
     }
@@ -53,19 +52,19 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         onAction = callback;
     }
 
-    public void Show(EmployeeType type, bool playAnimation = true)
+    public IEnumerator Show(EmployeeType type, bool playAnimation = true)
     {
         selectedType = type;
 
         if (!CreateInfoData())
         {
             gameObject.SetActive(false);
-            return;
+            yield break;
         }
 
         gameObject.SetActive(true);
 
-        if (playAnimation) panelAnimator?.Show();
+        if (playAnimation) yield return panelAnimator.Show();
     }
 
  

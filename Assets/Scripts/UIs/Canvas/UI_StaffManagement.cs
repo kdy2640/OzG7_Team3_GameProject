@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-// Staff Management Canvas¿« »≠∏È ¡¶æÓøÕ ∆–≥Œ ∞£ ¿Ã∫•∆Æ ø¨∞·¿ª ¥„¥Á«’¥œ¥Ÿ.
+// Staff Management CanvasÏùò ÌôîÎ©¥ Ï†úÏñ¥ÏôÄ Ìå®ÎÑê Í∞Ñ Ïù¥Î≤§Ìä∏ Ïó∞Í≤∞ÏùÑ Îã¥ÎãπÌï©ÎãàÎã§.
 public sealed class UI_StaffManagement : UI_Base
 {
     private enum HubStateButtons
@@ -10,11 +10,17 @@ public sealed class UI_StaffManagement : UI_Base
         DinerInteriorButton,
         StaffManagerButton
     }
+
+    private enum PanelAnimators
+    {
+        Header,
+        UI_CommonExitPanel,
+        StaffListPanel
+    }
+
     [Header("Panels")]
     [SerializeField] private UI_StaffListPanel staffListPanel;
     [SerializeField] private UI_StaffInfoPanel staffInfoPanel;
-
-    private PanelAnimator[] panelAnimators;
 
     private readonly StaffManagementService staffService = new StaffManagementService();
 
@@ -23,6 +29,7 @@ public sealed class UI_StaffManagement : UI_Base
     protected override void OnInit()
     {
         Bind<UI_HubStateButton>(typeof(HubStateButtons));
+        Bind<PanelAnimator>(typeof(PanelAnimators));
 
         GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?.Init(Owner);
         GetUI<UI_HubStateButton>((int)HubStateButtons.DinerInteriorButton)?.Init(Owner);
@@ -31,26 +38,23 @@ public sealed class UI_StaffManagement : UI_Base
         staffListPanel.Initialize(OnSelectStaff);
         staffInfoPanel.Initialize(OnClickRecruitOrUpgrade);
 
-        // µÓ¿Â ø¨√‚ º¯º≠∏¶ ƒ⁄µÂø°º≠ ∏ÌΩ√
-        panelAnimators = new[]
-        {
-            GetPanelAnimator(staffListPanel)
-        };
     }
 
     protected override IEnumerator OnShow()
     {
         RefreshAll();
 
-        PlayPanelAnimations();
-
-        yield break;
+        GetUI<PanelAnimator>((int)PanelAnimators.Header).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.StaffListPanel).Show();
     }
 
     protected override IEnumerator OnHide()
     {
+        GetUI<PanelAnimator>((int)PanelAnimators.StaffListPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.Header).Hide();
         staffListPanel.HideAllCards();
-        yield break;
     }
 
     private void OnSelectStaff(EmployeeType type)
@@ -60,7 +64,7 @@ public sealed class UI_StaffManagement : UI_Base
 
         selectedType = type;
 
-        staffInfoPanel.Show(type, isNewSelection);
+        StartCoroutine(staffInfoPanel.Show(type, isNewSelection));
     }
 
     private void OnClickRecruitOrUpgrade(EmployeeType type)
@@ -74,29 +78,7 @@ public sealed class UI_StaffManagement : UI_Base
     {
         staffListPanel.ShowCards();
 
-        if (selectedType != EmployeeType.Count) staffInfoPanel.Show(selectedType);
-    }
-    private PanelAnimator GetPanelAnimator(Component target)
-    {
-        if (target == null) return null;
-
-        PanelAnimator animator = target.GetComponent<PanelAnimator>();
-
-        if (animator == null)
-        {
-            Debug.LogWarning
-                ($"[{GetType().Name}] '{target.name}'ø° PanelAnimator∞° æ¯Ω¿¥œ¥Ÿ.",target);
-        }
-        return animator;
-    }
-
-    private void PlayPanelAnimations()
-    {
-        if (panelAnimators == null) return;
-
-        foreach (PanelAnimator animator in panelAnimators)
-        {
-            animator?.Show();
-        }
+        if (selectedType != EmployeeType.Count)
+            StartCoroutine(staffInfoPanel.Show(selectedType));
     }
 }

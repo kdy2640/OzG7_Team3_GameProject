@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,12 +31,10 @@ public class FacilityDetailPanel : MonoBehaviour
 
     private UpgradeManager subscribedUpgradeManager;
 
-    private PanelAnimator panelAnimator;
+    [SerializeField] private PanelAnimator panelAnimator;
 
     private void Awake()
     {
-        panelAnimator = GetComponent<PanelAnimator>();
-
         if (actionButton != null)
             actionButton.onClick.AddListener(OnClickAction);
 
@@ -75,10 +74,10 @@ public class FacilityDetailPanel : MonoBehaviour
         facilityCollection = collection;
     }
 
-    public void ShowFacility(FacilityType facilityType)
+    public IEnumerator ShowFacility(FacilityType facilityType)
     {
         if (facilityType == FacilityType.Count)
-            return;
+            yield break;
 
         bool wasActive = gameObject.activeSelf;
         bool isDifferentFacility = currentFacilityType != facilityType;
@@ -91,7 +90,7 @@ public class FacilityDetailPanel : MonoBehaviour
 
         if (!wasActive || isDifferentFacility)
         {
-            panelAnimator?.Show();
+            yield return panelAnimator.Show();
         }
     }
 
@@ -127,7 +126,7 @@ public class FacilityDetailPanel : MonoBehaviour
         if (facilityCollection.TryGetPrevious
             (currentFacilityType,out FacilityType previous))
         {
-            ShowFacility(previous);
+            StartCoroutine(ShowFacility(previous));
         }
     }
 
@@ -138,7 +137,7 @@ public class FacilityDetailPanel : MonoBehaviour
 
         if (facilityCollection.TryGetNext(currentFacilityType,out FacilityType next))
         {
-            ShowFacility(next);
+            StartCoroutine(ShowFacility(next));
         }
     }
 

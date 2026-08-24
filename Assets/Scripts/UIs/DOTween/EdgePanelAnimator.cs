@@ -2,11 +2,10 @@ using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
-public sealed class FloatPanelAnimator : PanelAnimator
+public sealed class EdgePanelAnimator : PanelAnimator
 {
     [SerializeField] private float duration = 0.6f;
-    [SerializeField] private Vector2 startOffset = new(0f, 35f);
-    [SerializeField] private float startScale = 0.92f;
+    [SerializeField] private float offsetX = -420f;
 
     public override IEnumerator Show()
     {
@@ -16,9 +15,9 @@ public sealed class FloatPanelAnimator : PanelAnimator
         Vector3 endEuler = Rect.localEulerAngles;
         Vector3 endScale = Rect.localScale;
 
-        Rect.anchoredPosition = endPosition + startOffset;
+        Rect.anchoredPosition = endPosition + new Vector2(offsetX, 0f);
         Rect.localEulerAngles = endEuler;
-        Rect.localScale = endScale * startScale;
+        Rect.localScale = endScale * 0.95f;
         CanvasGroup.alpha = 0f;
         CanvasGroup.blocksRaycasts = false;
 
@@ -60,10 +59,7 @@ public sealed class FloatPanelAnimator : PanelAnimator
             .SetTarget(this)
             .SetAutoKill(false)
             .Join(Rect.DOAnchorPos(
-                startPosition + startOffset * 0.5f,
-                duration * 0.3f).SetEase(Ease.InCubic))
-            .Join(Rect.DOScale(
-                startScaleValue * 0.95f,
+                startPosition + new Vector2(offsetX, 0f),
                 duration * 0.3f).SetEase(Ease.InCubic))
             .Join(CanvasGroup.DOFade(0f, duration * 0.3f).SetEase(Ease.InQuad));
 
