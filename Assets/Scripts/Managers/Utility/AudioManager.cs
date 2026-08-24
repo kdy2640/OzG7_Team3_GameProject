@@ -6,15 +6,26 @@ using UnityEngine;
 public enum BGMType
 {
     None,
-    Titie,
-    Upgrade,
-    Harvest
+    TitieBGM = 0,
+    HubBGM = 1,
+    ServiceBGM = 2,
+    HarvestBGM = 3,
 }
 public enum SFXType
 {
     None,
-    ButtonClick, 
-
+    Global_ButtonClick = 0,
+    Global_ButtonHover = 1,
+    Global_SceneChange = 2,
+    Global_Notification = 3,
+    Global_Error = 4,
+    Hub_Upgrade = 100,
+    Service_SessionStart = 200,
+    Harvest_SessionStart = 300,
+    Harvest_Collect = 301,
+    Harvest_Grind = 302,
+    Harvest_CropHarvested = 303,
+    Harvest_TractorEngine = 304,
 }
 public class AudioManager : MonoBehaviour
 {
