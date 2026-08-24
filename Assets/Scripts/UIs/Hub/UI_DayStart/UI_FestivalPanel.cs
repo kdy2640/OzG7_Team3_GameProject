@@ -8,18 +8,22 @@ public sealed class UI_FestivalPanel : MonoBehaviour
     private readonly List<UI_FestivalElement> tasteElements = new();
 
     private UI_DishDetailPanel dishDetailPanel;
+    private UI_DayVisualPanel dayVisualPanel;
     private Button festivalStartButton;
     private UI_FestivalElement selectedElement;
     private bool isInitialized;
 
-    public void Init(UI_DishDetailPanel dishDetailPanel, Button festivalStartButton)
+    public void Init(
+        UI_DishDetailPanel dishDetailPanel,
+        UI_DayVisualPanel dayVisualPanel,
+        Button festivalStartButton)
     {
         if (isInitialized)
             return;
 
-        if (dishDetailPanel == null || festivalStartButton == null)
+        if (dishDetailPanel == null || dayVisualPanel == null || festivalStartButton == null)
         {
-            Debug.LogError($"[{nameof(UI_FestivalPanel)}] Dish Detail Panel 또는 Festival Start Button이 필요합니다.", this);
+            Debug.LogError($"[{nameof(UI_FestivalPanel)}] Dish Detail Panel, Day Visual Panel, Festival Start Button이 필요합니다.", this);
             return;
         }
 
@@ -45,6 +49,7 @@ public sealed class UI_FestivalPanel : MonoBehaviour
         }
 
         this.dishDetailPanel = dishDetailPanel;
+        this.dayVisualPanel = dayVisualPanel;
         this.festivalStartButton = festivalStartButton;
 
         for (int i = 0; i < categoryElements.Count; i++)
@@ -103,8 +108,15 @@ public sealed class UI_FestivalPanel : MonoBehaviour
             ? GameManager.Instance.Market.TryStartTasteFestival((TasteType)selectedElement.NowEnum)
             : GameManager.Instance.Market.TryStartCategoryFestival((CategoryType)selectedElement.NowEnum);
 
-        if (didStart)
-            Refresh();
+        if (!didStart)
+            return;
+
+        Refresh();
+
+        if (selectedElement.IsTaste)
+            dayVisualPanel.ShowTasteFestival((TasteType)selectedElement.NowEnum);
+        else
+            dayVisualPanel.ShowCategoryFestival((CategoryType)selectedElement.NowEnum);
     }
 
     private void RefreshStartButton()

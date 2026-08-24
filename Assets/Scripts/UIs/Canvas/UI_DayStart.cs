@@ -41,6 +41,7 @@ public sealed class UI_DayStart : UI_Base
         dayVisualPanel?.Init();
         festivalPanel?.Init(
             dishDetailPanel,
+            dayVisualPanel,
             GetButton((int)Buttons.UI_FestivalStartButton));
 
         GetUI<UI_HubStateButton>((int)HubStateButtons.UI_ToHubButton)?

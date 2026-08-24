@@ -25,6 +25,7 @@ public class ServerStateManager : MonoBehaviour
 
     public event Action customerChanged;
 
+    private DishEffectQueue dishEffectQueue;
 
     public AIMove AiMove => aiMove;
     public Transform ServePoint => servePoint;
@@ -47,6 +48,7 @@ public class ServerStateManager : MonoBehaviour
         aiMove = gameObject.GetComponent<AIMove>();
         animator = gameObject.GetComponentInChildren<Animator>();
         animator.applyRootMotion = false;
+        dishEffectQueue = FindFirstObjectByType<DishEffectQueue>();
         speed = baseSpeed;
         UpdateStatus();
     }
@@ -84,6 +86,9 @@ public class ServerStateManager : MonoBehaviour
         this.dish = dish;
 
         servePoint = customer.CurrentTable.GetServePoint(customer.Seat);
+
+
+        CookEffectApply();
 
         ChangeState(new ServerMoveToKitchenState(this, aiMove, kitchen));
     }
@@ -132,7 +137,12 @@ public class ServerStateManager : MonoBehaviour
 
     public void CustomerEatSpeedUp()
     {
-        customer.EatSpeedUp();
+        customer.EatSpeedUp(50.0f);
+    }
+
+    public void CookerCustomerEatSpeedUp()
+    {
+        customer.EatSpeedUp(30.0f);
     }
 
     public void CustomerTipChanceUp()
@@ -162,6 +172,36 @@ public class ServerStateManager : MonoBehaviour
     }
 
     #endregion
+
+    private void CookEffectApply()
+    {
+
+        if(dishEffectQueue.EatSpeedUpQueue.Count>0)
+        {
+            DishType EDish = dishEffectQueue.EatSpeedUpQueue.Peek();
+            if (EDish == dish)
+            {
+                dishEffectQueue.EatSpeedUpQueue.Dequeue();
+                CookerCustomerEatSpeedUp();
+            }
+        }
+
+        if (dishEffectQueue.TipChanceUpQueue.Count > 0)
+        {
+            DishType TDish = dishEffectQueue.TipChanceUpQueue.Peek();
+            if (TDish == dish)
+            {
+                dishEffectQueue.TipChanceUpQueue.Dequeue();
+
+                CustomerTipChanceUp();
+            }
+        }
+    }
+
+    public void SetCustomer(CustomerStateManager customer)
+    {
+        this.customer = customer;
+    }
 
     private void OnDisable()
     {

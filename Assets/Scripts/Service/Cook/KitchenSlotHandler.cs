@@ -12,9 +12,25 @@ public class KitchenSlotHandler : MonoBehaviour
 
     [SerializeField, Min(0f)] private float cookingTime = 3f;
     [SerializeField] private KitchenSlotViewer kitchenSlotViewerPrefab;
-    
+    [SerializeField] private Cooker cookerPrefab;
+    [SerializeField] Transform QueuePanel;
+    [SerializeField] Transform CookerPanel;
+    [SerializeField] DishRequestQueue requestQueue;
+    [SerializeField] DishEffectQueue effectQueue;
+
+    private CookSkillManager skillManager = new();
+
     private readonly List<Cooker> cookers = new();
     private readonly List<QueueSlot> queueSlots = new();
+
+    private void OnEnable()
+    {
+        if(requestQueue ==  null)
+        {
+            requestQueue = FindFirstObjectByType<DishRequestQueue>();
+        }
+        skillManager.Initialize(cookers);
+    }
 
     private void Start()
     {
@@ -22,13 +38,17 @@ public class KitchenSlotHandler : MonoBehaviour
         {
             if (GameManager.Instance.Upgrade.RuntimeLevel.Get(CookerTypes[i]) >= 1)
             {
-                Cooker cooker = new Cooker();
+                Cooker cooker = Instantiate(cookerPrefab, CookerPanel.transform);
+                cooker.Initialize(GameManager.Instance.Upgrade.RuntimeLevel.Get(CookerTypes[i]), requestQueue, effectQueue, kitchenSlotViewerPrefab);
+                
                 cookers.Add(cooker);
+                skillManager.SkillApply(i);
             }
-        }
-        if(cookers.Count <= 0)
-        {
-            cookers.Add(new Cooker());
+
+            else
+            {
+                cookers.Add(null);
+            }
         }
     }
 
@@ -58,9 +78,13 @@ public class KitchenSlotHandler : MonoBehaviour
     {
         QueueSlot queueSlot = new();
 
-        KitchenSlotViewer slotViewer = Instantiate(kitchenSlotViewerPrefab, transform);
-        slotViewer.SetData(slotData);
+        KitchenSlotViewer slotViewer = Instantiate(kitchenSlotViewerPrefab, QueuePanel.transform);
+        // 사이즈 줄이기
+        RectTransform rect = slotViewer.GetComponent<RectTransform>();
+        rect.sizeDelta *= 0.5f;
 
+        slotViewer.SetData(slotData);
+        slotViewer.transform.SetAsFirstSibling();
         queueSlot.SetData(slotData);
         queueSlot.SetViewer(slotViewer);
 
@@ -72,16 +96,9 @@ public class KitchenSlotHandler : MonoBehaviour
         Cook();
         foreach (Cooker cooker in cookers)
         {
+            if(cooker== null) continue;
             if (!cooker.IsBusy) continue;
-
-            cooker.Data.RemainTime -= Time.deltaTime;
-            cooker.Viewer.Refresh();
-
-            if (cooker.Data.RemainTime <= 0)
-            {
-                cooker.FinishCooking();
-                Destroy(cooker.Viewer.gameObject);
-            }
+            cooker.Cook();
         }
     }
 
@@ -109,6 +126,7 @@ public class KitchenSlotHandler : MonoBehaviour
     {
         for (int i = 0; i < cookers.Count; i++)
         {
+            if (cookers[i] == null) continue;
             if (!cookers[i].IsBusy)
             {
                 return true;
@@ -121,62 +139,14 @@ public class KitchenSlotHandler : MonoBehaviour
     {
         for (int i = 0; i < cookers.Count; i++)
         {
+            if (cookers[i] == null) continue;
             if (!cookers[i].IsBusy)
             {
                 cookers[i].GetNextCook(data);
-                KitchenSlotViewer viewer = Instantiate(kitchenSlotViewerPrefab, transform);
-                cookers[i].SetViewer(viewer);
                 break;
             }
         }
     }
 
     #endregion
-
-
-    private void SkillApply(int index)
-    {
-        // 2~4 레벨 요리속도 10% 증가
-        for(int i = 1; i < GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)index) -1 ;i++)
-        {
-            cookers[index].Data.RemainTime /= 1.1f;
-        }
-        switch (index)
-        {
-            case 0:
-                if(GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)index) >= 3)
-                {
-                    //AutoCook();
-                }
-                if (GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)index) >= 5)
-                {
-                    //TipChanceUp();
-                }
-                return;
-            case 1:
-                //AutoCook();
-                if (GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)index) >= 3)
-                {
-                    //CustomerEatSpeedUp();
-                }
-                if (GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)index) >= 5)
-                {
-                    //TipChanceUp();
-                }
-                return;
-            case 2:
-                //CustomerEatSpeedUp();
-                if (GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)index) >= 3)
-                {
-                    //AutoCook();
-                }
-                if (GameManager.Instance.Upgrade.RuntimeLevel.Get((EmployeeType)index) >= 5)
-                {
-                    //TipChanceUp();
-                }
-                return;
-            default: return;
-        }
-    }
-
 }

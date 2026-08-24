@@ -16,6 +16,7 @@ public sealed class HarvestActor : MonoBehaviour
 
     public void Init(
         HarvestType type,
+        StageType stageType,
         Transform player,
         GridChunkHandler gridChunkHandler)
     {
@@ -50,7 +51,11 @@ public sealed class HarvestActor : MonoBehaviour
                 return;
             }
 
-            mover.Init(player, harvestDataSO.Speed, gridChunkHandler);
+            mover.Init(
+                player,
+                harvestDataSO.Speed,
+                stageType,
+                gridChunkHandler);
         }
         else if (mover != null)
         {

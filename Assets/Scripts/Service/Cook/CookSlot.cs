@@ -18,6 +18,8 @@ public class CookSlot : MonoBehaviour
     private KitchenSlotHandler kitchenSlotHandler;
     private bool isInitialized;
 
+    
+
     public void Initialize(DishType dish, KitchenSlotHandler kitchenSlotHandler)
     {
         this.dish = dish;

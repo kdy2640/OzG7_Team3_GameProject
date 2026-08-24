@@ -1,0 +1,294 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd3aa091fb09abd439acfe1d328d7618, type: 3}
+  m_Name: Level3
+  m_EditorClassIdentifier: Assembly-CSharp::LevelMissionGroupSO
+  level: 3
+  missions:
+  - conditionType: 1
+    condition:
+      rid: 4385387211786289300
+    rewardType: 1
+    reward:
+      rid: 4385387211786289301
+    title: "\uB18D\uC0AC \uC9C1\uC6D0 3 \uACE0\uC6A9"
+    description: 
+  - conditionType: 6
+    condition:
+      rid: 4385387211786289302
+    rewardType: 1
+    reward:
+      rid: 4385387211786289303
+    title: "\uC591\uBC30\uCD94 \uB0A9\uD488"
+    description: 
+  - conditionType: 1
+    condition:
+      rid: 4385387211786289304
+    rewardType: 2
+    reward:
+      rid: 4385387211786289305
+    title: "\uBA54\uB274 1\uAC1C 3\uB808\uBCA8 \uB2EC\uC131"
+    description: 
+  - conditionType: 6
+    condition:
+      rid: 4385387211786289306
+    rewardType: 2
+    reward:
+      rid: 4385387211786289307
+    title: "\uAC10\uC790 \uB0A9\uD488"
+    description: 
+  - conditionType: 1
+    condition:
+      rid: 4385387211786289308
+    rewardType: 1
+    reward:
+      rid: 4385387211786289309
+    title: "\uD14C\uC774\uBE14 5\uAC1C \uBCF4\uC720"
+    description: 
+  references:
+    version: 2
+    RefIds:
+    - rid: 4385387211786289300
+      type: {class: UpgradeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        requiredSatisfiedCount: 1
+        subConditions:
+        - type: 2
+          subCondition:
+            rid: 4385387211786289310
+    - rid: 4385387211786289301
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 500
+    - rid: 4385387211786289302
+      type: {class: GroceryDeliveryMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 7
+          amount: 40
+    - rid: 4385387211786289303
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 500
+    - rid: 4385387211786289304
+      type: {class: UpgradeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        requiredSatisfiedCount: 1
+        subConditions:
+        - type: 0
+          subCondition:
+            rid: 4385387211786289311
+        - type: 0
+          subCondition:
+            rid: 4385387211786289312
+        - type: 0
+          subCondition:
+            rid: 4385387211786289313
+        - type: 0
+          subCondition:
+            rid: 4385387211786289314
+        - type: 0
+          subCondition:
+            rid: 4385387211786289315
+        - type: 0
+          subCondition:
+            rid: 4385387211786289316
+        - type: 0
+          subCondition:
+            rid: 4385387211786289317
+        - type: 0
+          subCondition:
+            rid: 4385387211786289318
+        - type: 0
+          subCondition:
+            rid: 4385387211786289319
+        - type: 0
+          subCondition:
+            rid: 4385387211786289320
+        - type: 0
+          subCondition:
+            rid: 4385387211786289321
+        - type: 0
+          subCondition:
+            rid: 4385387211786289322
+        - type: 0
+          subCondition:
+            rid: 4385387211786289323
+        - type: 0
+          subCondition:
+            rid: 4385387211786289324
+        - type: 0
+          subCondition:
+            rid: 4385387211786289325
+    - rid: 4385387211786289305
+      type: {class: MissionGroceryReward, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 8
+          amount: 15
+    - rid: 4385387211786289306
+      type: {class: GroceryDeliveryMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 6
+          amount: 30
+    - rid: 4385387211786289307
+      type: {class: MissionGroceryReward, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 8
+          amount: 30
+    - rid: 4385387211786289308
+      type: {class: UpgradeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        requiredSatisfiedCount: 5
+        subConditions:
+        - type: 1
+          subCondition:
+            rid: 4385387211786289326
+        - type: 1
+          subCondition:
+            rid: 4385387211786289327
+        - type: 1
+          subCondition:
+            rid: 4385387211786289328
+        - type: 1
+          subCondition:
+            rid: 4385387211786289329
+        - type: 1
+          subCondition:
+            rid: 4385387211786289330
+        - type: 1
+          subCondition:
+            rid: 4385387211786289331
+        - type: 1
+          subCondition:
+            rid: 4385387211786289332
+    - rid: 4385387211786289309
+      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
+      data:
+        amount: 2000
+    - rid: 4385387211786289310
+      type: {class: EmployeeUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        employeeType: 10
+        targetLevel: 1
+    - rid: 4385387211786289311
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 0
+        targetLevel: 3
+    - rid: 4385387211786289312
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 1
+        targetLevel: 3
+    - rid: 4385387211786289313
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 2
+        targetLevel: 3
+    - rid: 4385387211786289314
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 3
+        targetLevel: 3
+    - rid: 4385387211786289315
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 4
+        targetLevel: 3
+    - rid: 4385387211786289316
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 5
+        targetLevel: 3
+    - rid: 4385387211786289317
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 6
+        targetLevel: 3
+    - rid: 4385387211786289318
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 7
+        targetLevel: 3
+    - rid: 4385387211786289319
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 8
+        targetLevel: 3
+    - rid: 4385387211786289320
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 9
+        targetLevel: 3
+    - rid: 4385387211786289321
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 10
+        targetLevel: 3
+    - rid: 4385387211786289322
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 11
+        targetLevel: 3
+    - rid: 4385387211786289323
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 12
+        targetLevel: 3
+    - rid: 4385387211786289324
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 13
+        targetLevel: 3
+    - rid: 4385387211786289325
+      type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        dishType: 14
+        targetLevel: 3
+    - rid: 4385387211786289326
+      type: {class: FacilityUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        facilityType: 0
+        targetLevel: 1
+    - rid: 4385387211786289327
+      type: {class: FacilityUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        facilityType: 1
+        targetLevel: 1
+    - rid: 4385387211786289328
+      type: {class: FacilityUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        facilityType: 2
+        targetLevel: 1
+    - rid: 4385387211786289329
+      type: {class: FacilityUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        facilityType: 3
+        targetLevel: 1
+    - rid: 4385387211786289330
+      type: {class: FacilityUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        facilityType: 4
+        targetLevel: 1
+    - rid: 4385387211786289331
+      type: {class: FacilityUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        facilityType: 5
+        targetLevel: 1
+    - rid: 4385387211786289332
+      type: {class: FacilityUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        facilityType: 6
+        targetLevel: 1

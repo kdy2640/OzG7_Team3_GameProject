@@ -9,21 +9,27 @@ public enum HarvestMoveState
 [DisallowMultipleComponent]
 public sealed class HarvestMover : MonoBehaviour
 {
+    private const float StageBoundaryEpsilon = 0.01f;
+
     [SerializeField, Min(0f)] private float fleeRange = 3f;
     [SerializeField, Min(0f)] private float arrivalDistance = 0.25f;
     [SerializeField] private HarvestMoveState state;
 
     private Transform player;
+    private Transform gridOrigin;
     private GridGeometry geometry;
     private ChunkRegistry registry;
     private ChunkStreamer streamer;
     private float speed;
+    private float stageMinZ;
+    private float stageMaxZ;
     private Vector3 patrolTarget;
     private bool isInitialized;
 
     public void Init(
         Transform player,
         float speed,
+        StageType stageType,
         GridChunkHandler gridChunkHandler)
     {
         this.player = player;
@@ -38,11 +44,13 @@ public sealed class HarvestMover : MonoBehaviour
             return;
         }
 
+        gridOrigin = gridChunkHandler.transform;
         geometry = gridChunkHandler.Geometry;
         registry = gridChunkHandler.Registry;
         streamer = gridChunkHandler.Streamer;
+        InitializeStageBounds(stageType);
         state = HarvestMoveState.Patrol;
-        patrolTarget = geometry.GetRandomPosition(transform.position);
+        patrolTarget = GetRandomPatrolPosition();
         isInitialized = true;
         enabled = true;
     }
@@ -84,7 +92,7 @@ public sealed class HarvestMover : MonoBehaviour
         state = nextState;
 
         if (state == HarvestMoveState.Patrol)
-            patrolTarget = geometry.GetRandomPosition(transform.position);
+            patrolTarget = GetRandomPatrolPosition();
     }
 
     private void Patrol()
@@ -94,7 +102,7 @@ public sealed class HarvestMover : MonoBehaviour
 
         if (targetOffset.sqrMagnitude <= arrivalDistance * arrivalDistance)
         {
-            patrolTarget = geometry.GetRandomPosition(transform.position);
+            patrolTarget = GetRandomPatrolPosition();
             targetOffset = patrolTarget - transform.position;
             targetOffset.y = 0f;
         }
@@ -118,6 +126,7 @@ public sealed class HarvestMover : MonoBehaviour
         Vector3 nextPosition = currentPosition
             + direction.normalized * (speed * Time.fixedDeltaTime);
         nextPosition = geometry.ClampToArea(nextPosition);
+        nextPosition = ClampToStage(nextPosition);
 
         Vector3 movement = nextPosition - currentPosition;
         movement.y = 0f;
@@ -132,5 +141,40 @@ public sealed class HarvestMover : MonoBehaviour
         {
             streamer.MoveActorToChunk(transform, coordinate);
         }
+    }
+
+    private void InitializeStageBounds(StageType stageType)
+    {
+        Rect area = geometry.Area;
+        StageDataSO stageData = StageDataDB.GetData(stageType);
+        stageMinZ = Mathf.Max(area.yMin, stageData.ZStart);
+
+        int nextStageIndex = (int)stageType + 1;
+        stageMaxZ = nextStageIndex < (int)StageType.Count
+            ? StageDataDB.GetData((StageType)nextStageIndex).ZStart
+                - StageBoundaryEpsilon
+            : area.yMax;
+    }
+
+    private Vector3 GetRandomPatrolPosition()
+    {
+        Rect area = geometry.Area;
+        Vector3 localPosition = gridOrigin.InverseTransformPoint(
+            transform.position);
+        localPosition.x = Random.Range(area.xMin, area.xMax);
+        localPosition.z = Random.Range(stageMinZ, stageMaxZ);
+
+        return gridOrigin.TransformPoint(localPosition);
+    }
+
+    private Vector3 ClampToStage(Vector3 worldPosition)
+    {
+        Vector3 localPosition = gridOrigin.InverseTransformPoint(worldPosition);
+        localPosition.z = Mathf.Clamp(
+            localPosition.z,
+            stageMinZ,
+            stageMaxZ);
+
+        return gridOrigin.TransformPoint(localPosition);
     }
 }

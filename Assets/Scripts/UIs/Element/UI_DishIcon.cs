@@ -1,11 +1,10 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-
-[RequireComponent(typeof(Image))]
+using UnityEngine.UI; 
 public sealed class UI_DishIcon : MonoBehaviour
 {
     [SerializeField] private Image dishImage;
-
+    [SerializeField] private TextMeshProUGUI text;
     private DishType dishType = DishType.None;
 
     public DishType DishType => dishType;
@@ -32,5 +31,7 @@ public sealed class UI_DishIcon : MonoBehaviour
         }
 
         dishImage.sprite = dishData.Icon;
+
+        text.text = dishData.DisplayName;
     }
 }
