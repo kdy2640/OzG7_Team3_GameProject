@@ -57,8 +57,7 @@ public abstract class PanelAnimator : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        if (!isInitialized)
-            return;
+        if (!isInitialized) return;
 
         rect.DOKill();
         canvasGroup.DOKill();
@@ -68,7 +67,6 @@ public abstract class PanelAnimator : MonoBehaviour
     }
 
     public abstract Tween Show();
-
     public abstract Tween Hide();
 
     public void SetDelay(float value)

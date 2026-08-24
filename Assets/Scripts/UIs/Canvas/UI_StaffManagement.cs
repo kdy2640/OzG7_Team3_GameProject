@@ -30,6 +30,12 @@ public sealed class UI_StaffManagement : UI_Base
 
         staffListPanel.Initialize(OnSelectStaff);
         staffInfoPanel.Initialize(OnClickRecruitOrUpgrade);
+
+        // 등장 연출 순서를 코드에서 명시
+        panelAnimators = new[]
+        {
+            GetPanelAnimator(staffListPanel)
+        };
     }
 
     protected override IEnumerator OnShow()
@@ -53,8 +59,8 @@ public sealed class UI_StaffManagement : UI_Base
         bool isNewSelection = (selectedType != type);
 
         selectedType = type;
-        staffInfoPanel.Show(type, isNewSelection);
 
+        staffInfoPanel.Show(type, isNewSelection);
     }
 
     private void OnClickRecruitOrUpgrade(EmployeeType type)
@@ -69,5 +75,28 @@ public sealed class UI_StaffManagement : UI_Base
         staffListPanel.ShowCards();
 
         if (selectedType != EmployeeType.Count) staffInfoPanel.Show(selectedType);
+    }
+    private PanelAnimator GetPanelAnimator(Component target)
+    {
+        if (target == null) return null;
+
+        PanelAnimator animator = target.GetComponent<PanelAnimator>();
+
+        if (animator == null)
+        {
+            Debug.LogWarning
+                ($"[{GetType().Name}] '{target.name}'에 PanelAnimator가 없습니다.",target);
+        }
+        return animator;
+    }
+
+    private void PlayPanelAnimations()
+    {
+        if (panelAnimators == null) return;
+
+        foreach (PanelAnimator animator in panelAnimators)
+        {
+            animator?.Show();
+        }
     }
 }

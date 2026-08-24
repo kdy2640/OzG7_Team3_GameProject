@@ -40,8 +40,7 @@ public sealed class UI_ServiceSelection : UI_Base
         marketVisualPanel = GetComponentInChildren<UI_MarketVisualPanel>(true);
 
         // 하위 오브젝트에 붙어 있는 PanelAnimator 자동 수집
-        panelAnimators =
-            GetComponentsInChildren<PanelAnimator>(true);
+        panelAnimators = GetComponentsInChildren<PanelAnimator>(true);
     }
 
     protected override IEnumerator OnShow()
@@ -59,7 +58,21 @@ public sealed class UI_ServiceSelection : UI_Base
         yield break;
     }
 
-    
+    private void PlayPanelAnimations()
+    {
+        if (panelAnimators == null) return;
+
+        foreach (PanelAnimator animator in panelAnimators)
+        {
+            if (animator == null) continue;
+
+            if (!animator.PlayOnParentShow) continue;
+
+            if (!animator.gameObject.activeInHierarchy) continue;
+
+            animator.Show();
+        }
+    }
 
     private void StartService()
     {

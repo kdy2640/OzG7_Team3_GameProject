@@ -46,19 +46,15 @@ public sealed class UI_MenuManagement : UI_Base
         menuVisualizer?.SetData(DishType.None);
         menuUpgradePanel?.Hide();
 
-        // 애니메이션 재생 순서를 코드에서 명시적으로 보장
+        // 애니메이션 실행 순서를 코드에서 명시
         panelAnimators = new[]
         {
-            dayVisual?.GetComponent<PanelAnimator>(),
-
-            selectMenuPanel?.GetComponent<PanelAnimator>(),
-
-            menuSlidePanel?.GetComponent<PanelAnimator>(),
-
-            menuVisualizer?.GetComponent<PanelAnimator>()
+            GetPanelAnimator(dayVisual),
+            GetPanelAnimator(selectMenuPanel),
+            GetPanelAnimator(menuSlidePanel),
+            GetPanelAnimator(menuVisualizer)
         };
     }
-
     protected override IEnumerator OnShow()
     {
         selectMenuPanel?.Refresh();
@@ -67,18 +63,36 @@ public sealed class UI_MenuManagement : UI_Base
         menuUpgradePanel?.Hide();
         dayVisual?.Refresh();
 
+        PlayPanelAnimations();
+
         yield break;
     }
-
     protected override IEnumerator OnHide()
     {
         yield break;
     }
     private void PlayPanelAnimations()
     {
+        if (panelAnimators == null) return;
+
         foreach (PanelAnimator animator in panelAnimators)
         {
-            animator?.Show();
+            if (animator == null) continue;
+            if (!animator.gameObject.activeInHierarchy) continue;
+
+            animator.Show();
         }
+    }
+    private PanelAnimator GetPanelAnimator(Component target)
+    {
+        if (target == null) return null;
+
+        PanelAnimator animator = target.GetComponent<PanelAnimator>();
+
+        if (animator == null)
+        {
+            Debug.LogWarning($"[{GetType().Name}] '{target.name}'에 PanelAnimator가 없습니다.", target);
+        }
+        return animator;
     }
 }

@@ -145,11 +145,9 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         bool unlocked = level >= 1;
 
         skill1Name.text = skill.Name;
-        skill1Description.text = unlocked
-            ? skill.Description : "Unlock after Recruit";
+        skill1Description.text = unlocked ? skill.Description : "Unlock after Recruit";
 
-        skill1Effect.text = unlocked
-            ? skill.Effect : string.Empty;
+        skill1Effect.text = unlocked ? skill.Effect : string.Empty;
     }
 
     private void SetLockedSkill(
@@ -164,12 +162,10 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         bool unlocked = level >= unlockLevel;
 
         icon.color = unlocked
-            ? Color.white
-            : new Color(1f, 1f, 1f, .35f);
+            ? Color.white : new Color(1f, 1f, 1f, .35f);
 
         name.text = skill.Name;
-        label.text = unlocked
-            ? $"Lv.{unlockLevel} Unlocked" : $"Lv.{unlockLevel} Locked";
+        label.text = unlocked ? $"Lv.{unlockLevel} Unlocked" : $"Lv.{unlockLevel} Locked";
 
         description.text = unlocked
             ? $"{skill.Description}\n{skill.Effect}" : $"Unlocks at Lv.{unlockLevel}.";

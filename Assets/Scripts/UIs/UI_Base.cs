@@ -18,7 +18,6 @@ public abstract class UI_Base : MonoBehaviour
     public bool IsInitialized => isInitialized;
     protected HubCanvasController Owner => owner;
 
-    private PanelAnimator[] panelAnimators;
     /// <summary>
     /// UI를 최초 생성한 직후 호출하는 초기화 진입점입니다.
     /// 여러 번 호출되더라도 실제 초기화는 한 번만 실행됩니다.
