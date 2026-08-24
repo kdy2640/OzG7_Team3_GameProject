@@ -1,16 +1,34 @@
 using UnityEngine;
 
-public class ServerCatchRunnerState : MonoBehaviour
+public class ServerCatchRunnerState : IState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private ServerStateManager stateManager;
+
+    public ServerCatchRunnerState(ServerStateManager stateManager)
+    {
+        this.stateManager = stateManager;
+    }
+
+    public void Enter()
+    {
+        stateManager.IsBusy = true;
+        stateManager.AiMove.MoveTo(stateManager.Customer.transform);
+        stateManager.AiMove.OnArrived += Catch;
+    }
+
+    public void Execute()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Exit()
     {
-        
+        stateManager.AiMove.OnArrived -= Catch;
+    }
+
+    private void Catch()
+    {
+        stateManager.Customer.caught?.Invoke();
+        stateManager.ChangeState(new ServerTakeMoneyFromRunnerState(stateManager));
     }
 }
