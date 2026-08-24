@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-// Staff Management Canvas¿« »≠∏È ¡¶æÓøÕ ∆–≥Œ ∞£ ¿Ã∫•∆Æ ø¨∞·¿ª ¥„¥Á«’¥œ¥Ÿ.
+// Staff Management CanvasÏùò ÌôîÎ©¥ Ï†úÏñ¥ÏôÄ Ìå®ÎÑê Í∞Ñ Ïù¥Î≤§Ìä∏ Ïó∞Í≤∞ÏùÑ Îã¥ÎãπÌï©ÎãàÎã§.
 public sealed class UI_StaffManagement : UI_Base
 {
     private enum HubStateButtons
@@ -11,17 +11,25 @@ public sealed class UI_StaffManagement : UI_Base
         StaffManagerButton
     }
 
+    private enum PanelAnimators
+    {
+        Header,
+        UI_CommonExitPanel,
+        StaffListPanel
+    }
+
+    [Header("Panels")]
     [SerializeField] private UI_StaffListPanel staffListPanel;
     [SerializeField] private UI_StaffInfoPanel staffInfoPanel;
 
-    private readonly StaffManagementService staffService =
-        new StaffManagementService();
+    private readonly StaffManagementService staffService = new StaffManagementService();
 
     private EmployeeType selectedType = EmployeeType.Count;
 
     protected override void OnInit()
     {
         Bind<UI_HubStateButton>(typeof(HubStateButtons));
+        Bind<PanelAnimator>(typeof(PanelAnimators));
 
         GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?.Init(Owner);
         GetUI<UI_HubStateButton>((int)HubStateButtons.DinerInteriorButton)?.Init(Owner);
@@ -29,24 +37,34 @@ public sealed class UI_StaffManagement : UI_Base
 
         staffListPanel.Initialize(OnSelectStaff);
         staffInfoPanel.Initialize(OnClickRecruitOrUpgrade);
+
     }
 
     protected override IEnumerator OnShow()
     {
         RefreshAll();
-        yield break;
+
+        GetUI<PanelAnimator>((int)PanelAnimators.Header).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.StaffListPanel).Show();
     }
 
     protected override IEnumerator OnHide()
     {
+        GetUI<PanelAnimator>((int)PanelAnimators.StaffListPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.Header).Hide();
         staffListPanel.HideAllCards();
-        yield break;
     }
 
     private void OnSelectStaff(EmployeeType type)
     {
+
+        bool isNewSelection = (selectedType != type);
+
         selectedType = type;
-        staffInfoPanel.Show(type);
+
+        StartCoroutine(staffInfoPanel.Show(type, isNewSelection));
     }
 
     private void OnClickRecruitOrUpgrade(EmployeeType type)
@@ -60,6 +78,7 @@ public sealed class UI_StaffManagement : UI_Base
     {
         staffListPanel.ShowCards();
 
-        if (selectedType != EmployeeType.Count) staffInfoPanel.Show(selectedType);
+        if (selectedType != EmployeeType.Count)
+            StartCoroutine(staffInfoPanel.Show(selectedType));
     }
 }

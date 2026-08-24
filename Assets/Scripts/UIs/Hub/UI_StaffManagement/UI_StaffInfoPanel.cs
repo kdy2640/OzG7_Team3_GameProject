@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,6 +39,8 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
     private Action<EmployeeType> onAction;
     private EmployeeType selectedType = EmployeeType.Count;
 
+    [SerializeField] private PanelAnimator panelAnimator;
+
     private void Awake()
     {
         actionButton.onClick.AddListener(OnClickAction);
@@ -49,17 +52,19 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         onAction = callback;
     }
 
-    public void Show(EmployeeType type)
+    public IEnumerator Show(EmployeeType type, bool playAnimation = true)
     {
         selectedType = type;
 
         if (!CreateInfoData())
         {
             gameObject.SetActive(false);
-            return;
+            yield break;
         }
 
         gameObject.SetActive(true);
+
+        if (playAnimation) yield return panelAnimator.Show();
     }
 
  
@@ -67,7 +72,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
     {
         if (!EmployeeDataDB.TryGetData(selectedType, out EmployeeDataSO employeeData))
         {
-            Debug.LogWarning($"EmployeeData�� �����ϴ�: {selectedType}");
+            Debug.LogWarning($"EmployeeData가 없습니다 : {selectedType}");
             return false;
         }
 
@@ -139,11 +144,9 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         bool unlocked = level >= 1;
 
         skill1Name.text = skill.Name;
-        skill1Description.text = unlocked
-            ? skill.Description : "Unlock after Recruit";
+        skill1Description.text = unlocked ? skill.Description : "Unlock after Recruit";
 
-        skill1Effect.text = unlocked
-            ? skill.Effect : string.Empty;
+        skill1Effect.text = unlocked ? skill.Effect : string.Empty;
     }
 
     private void SetLockedSkill(
@@ -158,17 +161,13 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         bool unlocked = level >= unlockLevel;
 
         icon.color = unlocked
-            ? Color.white
-            : new Color(1f, 1f, 1f, .35f);
+            ? Color.white : new Color(1f, 1f, 1f, .35f);
 
         name.text = skill.Name;
-        label.text = unlocked
-            ? $"Lv.{unlockLevel} Unlocked"
-            : $"Lv.{unlockLevel} Locked";
+        label.text = unlocked ? $"Lv.{unlockLevel} Unlocked" : $"Lv.{unlockLevel} Locked";
 
         description.text = unlocked
-            ? $"{skill.Description}\n{skill.Effect}"
-            : $"Unlocks at Lv.{unlockLevel}.";
+            ? $"{skill.Description}\n{skill.Effect}" : $"Unlocks at Lv.{unlockLevel}.";
     }
 
     private void OnClickAction()
