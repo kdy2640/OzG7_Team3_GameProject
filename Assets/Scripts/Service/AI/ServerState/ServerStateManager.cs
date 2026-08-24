@@ -198,6 +198,11 @@ public class ServerStateManager : MonoBehaviour
         }
     }
 
+    public void SetCustomer(CustomerStateManager customer)
+    {
+        this.customer = customer;
+    }
+
     private void OnDisable()
     {
         Destroy(this.gameObject);

@@ -84,7 +84,28 @@ public class ServerList : MonoBehaviour
         return false;
     }
 
-    
+    public bool TryAllocCatch(CustomerStateManager customer, out ServerStateManager catcher)
+    {
+        foreach (ServerStateManager server in servers)
+        {
+            if (server == null) continue;
+            if (server.IsBusy)
+            {
+                continue;
+            }
+            else
+            {
+                server.SetCustomer(customer);
+                server.ChangeState(new ServerCatchRunnerState(server));
+                catcher = server;
+                return true;
+            }
+        }
+        catcher = null;
+        return false;
+    }
+
+
 
     private void OnDisable()
     {

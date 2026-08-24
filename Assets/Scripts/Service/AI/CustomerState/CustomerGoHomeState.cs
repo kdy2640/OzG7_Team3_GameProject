@@ -18,6 +18,8 @@ public class CustomerGoHomeState : IState
 
         stateManager.AiMove.OnArrived += ArrivedHome;
 
+        stateManager.AiMove.SetSpeed(stateManager.Speed);
+
         stateManager.AiMove.MoveTo(stateManager.ExitPoint);
     }
 

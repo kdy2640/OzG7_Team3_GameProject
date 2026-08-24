@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CustomerStateManager : MonoBehaviour
 {
+    #region Fields
     [SerializeField] private float speed = 4f;
     [SerializeField] private AIMove aiMove;
     [SerializeField] private Transform exitPoint;
@@ -13,15 +14,20 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private DishRequestQueue requestQueue;
     [SerializeField] private WaitTimeBackGround waitBackGround;
+    [SerializeField] private RunnerCatchButton runnerCatchButton;
 
     private Table currentTable;
     private Transform seat;
     private DishAmount order;
     public Action foodReceived;
+    public Action caught;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
+    private float runChance = 1f;
+    private float eatSpeedUpPercentage;
     
 
+    public float Speed => speed;
     public AIMove AiMove => aiMove;
     public Transform ExitPoint => exitPoint;
     public TipBox TipBox => tipBox;
@@ -29,17 +35,20 @@ public class CustomerStateManager : MonoBehaviour
     public Animator Animator => animator;
     public DishRequestQueue RequestQueue => requestQueue;   
     public WaitTimeBackGround WaitBackGround => waitBackGround;
+    public RunnerCatchButton RunnerCatchButton => runnerCatchButton;
     
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
     public DishAmount Order => order;
     public float EatTime => eatTime;
 
-    private float eatSpeedUpPercentage;
-
+    public float RunChance => runChance;
+    
     [SerializeField]private IState currentState;
 
+    #endregion
 
+    #region State Machine Main
     public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue)
     {
         this.exitPoint = exitPoint;
@@ -89,6 +98,8 @@ public class CustomerStateManager : MonoBehaviour
 
         currentState.Enter();
     }
+
+    #endregion
 
     public void AssignTable(Table table, Transform seat)
     {

@@ -22,7 +22,6 @@ public class ServerMoveToKitchenState : IState
     {
         stateManager.Animator.SetBool("IsRunning", true);
         stateManager.IsBusy = true;
-        stateManager.IsBusy = true;
 
         aiMove.OnArrived += Arrived;
 
