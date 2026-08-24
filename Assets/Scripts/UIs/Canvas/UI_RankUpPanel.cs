@@ -22,10 +22,21 @@ public sealed class UI_RankUpPanel : UI_Base
         ExitButton
     }
 
+    private enum PanelAnimators
+    {
+        PanelIconImage,
+        Background,
+        UI_NewIngredientList,
+        UI_NewDishList,
+        UI_NewFunctionList,
+        ExitButton
+    }
+
     protected override void OnInit()
     {
         Bind<GameObject>(typeof(GameObjects));
         Bind<UI_HubStateButton>(typeof(HubStateButtons));
+        Bind<PanelAnimator>(typeof(PanelAnimators));
 
         rastaurantLevel = GetGameObject((int)GameObjects.UI_RastaurantLevel)?
             .GetComponent<UI_RastaurantLevel>();
@@ -38,6 +49,7 @@ public sealed class UI_RankUpPanel : UI_Base
 
         exitButton = GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton);
         exitButton?.Init(Owner);
+
     }
 
     protected override IEnumerator OnShow()
@@ -46,6 +58,22 @@ public sealed class UI_RankUpPanel : UI_Base
         newDishList?.Refresh();
         newIngredientList?.Refresh();
         newFunctionList?.Refresh();
-        yield break;
+
+        GetUI<PanelAnimator>((int)PanelAnimators.PanelIconImage).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.Background).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_NewIngredientList).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_NewDishList).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_NewFunctionList).Show();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.ExitButton).Show();
+    }
+
+    protected override IEnumerator OnHide()
+    {
+        GetUI<PanelAnimator>((int)PanelAnimators.ExitButton).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_NewFunctionList).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_NewDishList).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_NewIngredientList).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.Background).Hide();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.PanelIconImage).Hide();
     }
 }

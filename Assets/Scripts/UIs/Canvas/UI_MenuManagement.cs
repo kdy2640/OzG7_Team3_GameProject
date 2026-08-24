@@ -19,9 +19,19 @@ public sealed class UI_MenuManagement : UI_Base
         UI_DayVisual
     }
 
+    private enum PanelAnimators
+    {
+        UI_DayVisual,
+        UI_CommonExitPanel,
+        UI_SelectMenuPanel,
+        UI_MenuSlidePanel,
+        UI_MenuVisualizer
+    }
+
     protected override void OnInit()
     {
         Bind<GameObject>(typeof(GameObjects));
+        Bind<PanelAnimator>(typeof(PanelAnimators));
         GetUI<GameObject>((int)GameObjects.ExitButton)?
             .GetComponent<UI_HubStateButton>()?.Init(Owner);
 
@@ -42,8 +52,8 @@ public sealed class UI_MenuManagement : UI_Base
         menuVisualizer?.SetUpgradePanel(menuUpgradePanel);
         menuVisualizer?.SetData(DishType.None);
         menuUpgradePanel?.Hide();
-    }
 
+    }
     protected override IEnumerator OnShow()
     {
         selectMenuPanel?.Refresh();
@@ -52,11 +62,18 @@ public sealed class UI_MenuManagement : UI_Base
         menuUpgradePanel?.Hide();
         dayVisual?.Refresh();
 
-        yield break;
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_DayVisual).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_MenuSlidePanel).Show();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_MenuVisualizer).Show();
     }
-
     protected override IEnumerator OnHide()
     {
-        yield break;
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_MenuVisualizer).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_MenuSlidePanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_DayVisual).Hide();
     }
 }
