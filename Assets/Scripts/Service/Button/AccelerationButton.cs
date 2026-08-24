@@ -6,7 +6,14 @@ using UnityEngine;
 public class AccelerationButton : MonoBehaviour
 {
     [SerializeField] List<GameObject> accelCountImg = new();
-    
+    private ServerList serverList;
+
+    private void Start()
+    {
+        serverList = FindFirstObjectByType<ServerList>();
+        // 조건
+    }
+
     private int accelCount;
     public event Action OnClicked;
     private void OnEnable()
@@ -16,6 +23,11 @@ public class AccelerationButton : MonoBehaviour
 
     public void OnClick()
     {
+        if(serverList.Acceled)
+        {
+            return;
+        }
+
         if(accelCount <=0) return;
 
         accelCount--;

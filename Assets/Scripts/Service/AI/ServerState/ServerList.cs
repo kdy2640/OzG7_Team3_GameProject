@@ -22,6 +22,8 @@ public class ServerList : MonoBehaviour
     private float timer;
     private bool acceled = false;
 
+    public bool Acceled => acceled;
+
     private void OnEnable()
     {
         CreateServers();
@@ -40,6 +42,7 @@ public class ServerList : MonoBehaviour
         if (timer <= 0)
         {
             Deceleration();
+            acceled = false;
         }
     }
 
@@ -150,8 +153,6 @@ public class ServerList : MonoBehaviour
 
     private void Deceleration()
     {
-        acceled = false;
-
         foreach (ServerStateManager server in servers)
         {
             if (server == null) continue;

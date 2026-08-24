@@ -27,7 +27,11 @@ public class ServerCleanState : IState
         if (timer < 0.0f)
         {
             timer = cleaningTime;
-            GameObject.Destroy(dirty.gameObject);
+            if(dirty != null)
+            {
+                GameObject.Destroy(dirty.gameObject);
+            }
+            
             dirty.Customer.SeatDirty = false;
             stateManager.ChangeState(new ServerGetBackState(stateManager));
             return;

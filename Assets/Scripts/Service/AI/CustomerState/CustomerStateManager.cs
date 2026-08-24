@@ -163,7 +163,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public void CreateDirty()
     {
-        Vector3 dirtyPoint = transform.position + transform.forward * 1.0f + transform.up * 1.0f;
+        Vector3 dirtyPoint = transform.position + transform.forward * 1.0f + transform.up * 0.7f;
         Dirty dirty = Instantiate(DirtyPrefab, dirtyPoint, Quaternion.identity);
         dirty.SetCustomer(this);
         SeatDirty = true;
