@@ -1,0 +1,152 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6985484319627070182
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3013680109023167009}
+  - component: {fileID: 7458446934023435796}
+  m_Layer: 0
+  m_Name: RestaurantModelViewer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3013680109023167009
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6985484319627070182}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8083405999203614506}
+  - {fileID: 7000988024477816364}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7458446934023435796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6985484319627070182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f96045b89afcbd547b01de0006ef02f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RestaurantModelViewer
+  environmentRoot: {fileID: 8083405999203614506}
+  modelPrefabsByMarketLevel:
+  - {fileID: 2513158721436127917, guid: d8c231e70eae9134a94f6feebc4d734b, type: 3}
+  - {fileID: 2513158721436127917, guid: d8c231e70eae9134a94f6feebc4d734b, type: 3}
+  - {fileID: 5752361808211334260, guid: 90e35d3e54dc5db48afacf0578a927a8, type: 3}
+  - {fileID: 4013028988641227199, guid: 5716f8d2893448b43aaf439e0234e274, type: 3}
+  - {fileID: 9204457241426742759, guid: d91b9200fb74bb440bf8489a2bef9095, type: 3}
+--- !u!1 &8254917621406380589
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8083405999203614506}
+  m_Layer: 0
+  m_Name: EnvironmentRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8083405999203614506
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8254917621406380589}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3013680109023167009}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2365681461365419650
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3013680109023167009}
+    m_Modifications:
+    - target: {fileID: 306076680154665087, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2271702468298101434, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_Name
+      value: FacilityManagementRoot(Restaurant)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+--- !u!4 &7000988024477816364 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4754700881644632238, guid: 0e070a6487484fd4ba2d66d3108a41b0, type: 3}
+  m_PrefabInstance: {fileID: 2365681461365419650}
+  m_PrefabAsset: {fileID: 0}
