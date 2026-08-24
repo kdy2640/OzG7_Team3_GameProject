@@ -4,17 +4,13 @@ using DG.Tweening;
 
 public sealed class UI_MenuManagement : UI_Base
 {
-    [SerializeField] private PanelAnimator selectAnimator;
-    [SerializeField] private PanelAnimator slideAnimator;
-    [SerializeField] private PanelAnimator visualAnimator;
-    [SerializeField] private PanelAnimator commonAnimator;
-    [SerializeField] private PanelAnimator dayAnimator;
-
     private UI_SelectMenuPanel selectMenuPanel;
     private UI_MenuSlidePanel menuSlidePanel;
     private UI_MenuVisualizer menuVisualizer;
     private UI_MenuUpgradePanel menuUpgradePanel;
     private UI_DayVisual dayVisual;
+
+    private PanelAnimator[] panelAnimators;
 
     private enum GameObjects
     {
@@ -49,6 +45,18 @@ public sealed class UI_MenuManagement : UI_Base
         menuVisualizer?.SetUpgradePanel(menuUpgradePanel);
         menuVisualizer?.SetData(DishType.None);
         menuUpgradePanel?.Hide();
+
+        // 애니메이션 재생 순서를 코드에서 명시적으로 보장
+        panelAnimators = new[]
+        {
+            dayVisual?.GetComponent<PanelAnimator>(),
+
+            selectMenuPanel?.GetComponent<PanelAnimator>(),
+
+            menuSlidePanel?.GetComponent<PanelAnimator>(),
+
+            menuVisualizer?.GetComponent<PanelAnimator>()
+        };
     }
 
     protected override IEnumerator OnShow()
@@ -59,18 +67,18 @@ public sealed class UI_MenuManagement : UI_Base
         menuUpgradePanel?.Hide();
         dayVisual?.Refresh();
 
-
-        DOTween.Sequence()
-        .Join(dayAnimator.Show())
-        .Join(selectAnimator.Show())
-        .Join(commonAnimator.Show())
-        .Join(slideAnimator.Show())
-        .Join(visualAnimator.Show());
         yield break;
     }
 
     protected override IEnumerator OnHide()
     {
         yield break;
+    }
+    private void PlayPanelAnimations()
+    {
+        foreach (PanelAnimator animator in panelAnimators)
+        {
+            animator?.Show();
+        }
     }
 }

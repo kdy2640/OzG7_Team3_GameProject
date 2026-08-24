@@ -9,8 +9,7 @@ public sealed class UI_RankUpPanel : UI_Base
     private UI_NewFunctionList newFunctionList;
     private UI_HubStateButton exitButton;
 
-    [Header("Panel Animations")]
-    [SerializeField] private PanelAnimator[] entranceAnimators;
+    private PanelAnimator[] panelAnimators;
 
     private enum GameObjects
     {
@@ -41,6 +40,8 @@ public sealed class UI_RankUpPanel : UI_Base
 
         exitButton = GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton);
         exitButton?.Init(Owner);
+
+        panelAnimators = GetComponentsInChildren<PanelAnimator>(true);
     }
 
     protected override IEnumerator OnShow()
@@ -50,15 +51,15 @@ public sealed class UI_RankUpPanel : UI_Base
         newIngredientList?.Refresh();
         newFunctionList?.Refresh();
 
-        if (entranceAnimators != null)
+        foreach (var animator in panelAnimators)
         {
-            for (int i = 0; i < entranceAnimators.Length; i++)
-            {
-                if (entranceAnimators[i] == null) continue;
+            if (animator == null) continue;
 
-                entranceAnimators[i].SetDelay(i * 0.06f);
-                entranceAnimators[i].Show();
-            }
+            if (!animator.PlayOnParentShow) continue;
+
+            if (!animator.gameObject.activeInHierarchy) continue;
+
+            animator.Show();
         }
 
 

@@ -14,15 +14,9 @@ public sealed class UI_StaffManagement : UI_Base
     [SerializeField] private UI_StaffListPanel staffListPanel;
     [SerializeField] private UI_StaffInfoPanel staffInfoPanel;
 
-    [Header("Entrance Animations")]
-    // OnShow 시점에 동시에 등장할 패널들
-    [SerializeField] private PanelAnimator[] defaultEntranceAnimators;
+    private PanelAnimator[] panelAnimators;
 
-    // 클릭(선택) 시점에 별도로 연출될 인포 패널 애니메이터
-    [SerializeField] private PanelAnimator infoPanelAnimator;
-
-    private readonly StaffManagementService staffService =
-        new StaffManagementService();
+    private readonly StaffManagementService staffService = new StaffManagementService();
 
     private EmployeeType selectedType = EmployeeType.Count;
 
@@ -42,13 +36,7 @@ public sealed class UI_StaffManagement : UI_Base
     {
         RefreshAll();
 
-        if (defaultEntranceAnimators != null)
-        {
-            foreach (var animator in defaultEntranceAnimators)
-            {
-                animator?.Show();
-            }
-        }
+        PlayPanelAnimations();
 
         yield break;
     }
@@ -65,13 +53,8 @@ public sealed class UI_StaffManagement : UI_Base
         bool isNewSelection = (selectedType != type);
 
         selectedType = type;
-        staffInfoPanel.Show(type);
-        
-        //스태프 선택시 infoPanel만 연출 실행
-        if (isNewSelection && infoPanelAnimator != null)
-        {
-            infoPanelAnimator.Show();
-        }
+        staffInfoPanel.Show(type, isNewSelection);
+
     }
 
     private void OnClickRecruitOrUpgrade(EmployeeType type)

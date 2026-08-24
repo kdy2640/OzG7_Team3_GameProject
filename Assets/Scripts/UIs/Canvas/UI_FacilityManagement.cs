@@ -10,9 +10,6 @@ public sealed class UI_FacilityManagement : UI_Base
         DinerInteriorButton,
         StaffManagerButton
     }
-    //애니메이터 저장용 배열
-    [Header("Panel Animations")]
-    [SerializeField] private PanelAnimator[] defaultEntranceAnimators;
 
     private FacilityCollection facilityCollection;
     private FacilityDetailPanel detailPanel;
@@ -30,6 +27,7 @@ public sealed class UI_FacilityManagement : UI_Base
 
         detailPanel = GetComponentInChildren<FacilityDetailPanel>(true);
 
+
     }
 
     protected override IEnumerator OnShow()
@@ -39,17 +37,7 @@ public sealed class UI_FacilityManagement : UI_Base
         detailPanel.Initialize(facilityCollection);
         facilityCollection.FacilitySelected += detailPanel.ShowFacility;
 
-        // 상시 패널 등장 연출
-        if (defaultEntranceAnimators != null)
-        {
-            foreach (var animator in defaultEntranceAnimators)
-            {
-                if (animator != null && animator.gameObject.activeInHierarchy)
-                {
-                    animator.Show();
-                }
-            }
-        }
+        PlayPanelAnimations();
 
         yield break;
     }

@@ -38,8 +38,12 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
     private Action<EmployeeType> onAction;
     private EmployeeType selectedType = EmployeeType.Count;
 
+    private PanelAnimator panelAnimator;
+
     private void Awake()
     {
+        panelAnimator = GetComponent<PanelAnimator>();
+
         actionButton.onClick.AddListener(OnClickAction);
         gameObject.SetActive(false);
     }
@@ -49,7 +53,7 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         onAction = callback;
     }
 
-    public void Show(EmployeeType type)
+    public void Show(EmployeeType type, bool playAnimation = true)
     {
         selectedType = type;
 
@@ -60,6 +64,8 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         }
 
         gameObject.SetActive(true);
+
+        if (playAnimation) panelAnimator?.Show();
     }
 
  
@@ -163,12 +169,10 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
 
         name.text = skill.Name;
         label.text = unlocked
-            ? $"Lv.{unlockLevel} Unlocked"
-            : $"Lv.{unlockLevel} Locked";
+            ? $"Lv.{unlockLevel} Unlocked" : $"Lv.{unlockLevel} Locked";
 
         description.text = unlocked
-            ? $"{skill.Description}\n{skill.Effect}"
-            : $"Unlocks at Lv.{unlockLevel}.";
+            ? $"{skill.Description}\n{skill.Effect}" : $"Unlocks at Lv.{unlockLevel}.";
     }
 
     private void OnClickAction()

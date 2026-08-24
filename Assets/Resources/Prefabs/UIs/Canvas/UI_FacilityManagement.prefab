@@ -380,7 +380,7 @@ GameObject:
   - component: {fileID: 1804534111292379770}
   - component: {fileID: 1086712846801270158}
   - component: {fileID: 1133414070981344557}
-  - component: {fileID: 2938172333399532603}
+  - component: {fileID: 657717274779592734}
   m_Layer: 0
   m_Name: Header
   m_TagString: Untagged
@@ -459,7 +459,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &2938172333399532603
+--- !u!114 &657717274779592734
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -468,12 +468,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 3690601283573349593}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5413ff96cee8634488294fa01ce2ffa8, type: 3}
+  m_Script: {fileID: 11500000, guid: ba66afd7393cd444d8b32d2aec1e9eaa, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FloatPanelAnimator
+  m_EditorClassIdentifier: Assembly-CSharp::TweenPanelAnimator
   duration: 0.6
   delay: 0
-  startOffset: {x: 0, y: 35}
+  playOnParentShow: 1
+  animationType: 0
+  direction: 0
+  startOffset: {x: 0, y: 180}
+  edgeOffsetX: 420
+  curveOffset: {x: -60, y: -30}
+  startRotation: -8
+  startScale: 0.92
+  startAlpha: 0.2
+  hangingStartRotation: -18
+  centerStartScale: 0.8
+  dimCanvasGroup: {fileID: 0}
+  dimAlpha: 0.6
 --- !u!1 &4795911849942483276
 GameObject:
   m_ObjectHideFlags: 0
@@ -971,9 +983,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5d820661a3a97246b5dd49ee4a1a512, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_FacilityManagement
-  defaultEntranceAnimators:
-  - {fileID: 2938172333399532603}
-  - {fileID: 2313885219025247461}
 --- !u!225 &3124407380116089243
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1112,7 +1121,7 @@ PrefabInstance:
       addedObject: {fileID: 2910964639060599204}
     - targetCorrespondingSourceObject: {fileID: 308834104793146649, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2313885219025247461}
+      addedObject: {fileID: 4989712732694301560}
   m_SourcePrefab: {fileID: 100100000, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
 --- !u!1 &945057114230581072 stripped
 GameObject:
@@ -1131,7 +1140,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &2313885219025247461
+--- !u!114 &4989712732694301560
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1140,16 +1149,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 945057114230581072}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51ebe8061fda071459e6f9d2ef1f8618, type: 3}
+  m_Script: {fileID: 11500000, guid: ba66afd7393cd444d8b32d2aec1e9eaa, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FallingPanelAnimator
+  m_EditorClassIdentifier: Assembly-CSharp::TweenPanelAnimator
   duration: 0.6
-  delay: 0.2
+  delay: 0.1
+  playOnParentShow: 1
+  animationType: 1
+  direction: 0
   startOffset: {x: 0, y: 180}
+  edgeOffsetX: 420
   curveOffset: {x: -60, y: -30}
   startRotation: -8
-  startScale: 0.8
+  startScale: 0.92
   startAlpha: 0.2
+  hangingStartRotation: -18
+  centerStartScale: 0.8
+  dimCanvasGroup: {fileID: 0}
+  dimAlpha: 0.6
 --- !u!224 &6472853513339084502 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5800785246385659039, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
@@ -1509,10 +1526,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 25
       objectReference: {fileID: 0}
-    - target: {fileID: 1429587145577396020, guid: b155243ff74a10243ae15ad52c294919, type: 3}
-      propertyPath: entranceAnimator
-      value: 
-      objectReference: {fileID: 596555083097910863}
     - target: {fileID: 1429587145577396020, guid: b155243ff74a10243ae15ad52c294919, type: 3}
       propertyPath: levelIndicatorRoot
       value: 
@@ -2231,7 +2244,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1722623766038386737, guid: b155243ff74a10243ae15ad52c294919, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 596555083097910863}
+      addedObject: {fileID: 4549533758548561915}
     - targetCorrespondingSourceObject: {fileID: 2593112067202168051, guid: b155243ff74a10243ae15ad52c294919, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6264757154463376913}
@@ -2300,7 +2313,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1722623766038386737, guid: b155243ff74a10243ae15ad52c294919, type: 3}
   m_PrefabInstance: {fileID: 3451255723815154504}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &596555083097910863
+--- !u!114 &4549533758548561915
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2309,12 +2322,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 4035981711590566777}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c3c1a0a8c139f49b232edc912a6cfd, type: 3}
+  m_Script: {fileID: 11500000, guid: ba66afd7393cd444d8b32d2aec1e9eaa, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RightPanelAnimator
+  m_EditorClassIdentifier: Assembly-CSharp::TweenPanelAnimator
   duration: 0.6
-  delay: 0.4
-  startOffsetX: 820
+  delay: 0.2
+  playOnParentShow: 0
+  animationType: 2
+  direction: 1
+  startOffset: {x: 0, y: 180}
+  edgeOffsetX: 420
+  curveOffset: {x: -60, y: -30}
+  startRotation: -8
+  startScale: 0.92
+  startAlpha: 0.2
+  hangingStartRotation: -18
+  centerStartScale: 0.8
+  dimCanvasGroup: {fileID: 0}
+  dimAlpha: 0.6
 --- !u!1 &6593283886343337018 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8387213272113481586, guid: b155243ff74a10243ae15ad52c294919, type: 3}
