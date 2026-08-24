@@ -123,4 +123,6 @@ public class Table : MonoBehaviour
     {
         return leftCustomer == customer || rightCustomer == customer;
     }
+
+    
 }

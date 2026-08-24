@@ -9,6 +9,7 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private Transform servePoint;
     [SerializeField] private Transform kitchen;
     [SerializeField] private Transform waitPoint;
+    [SerializeField] private SleepingButton sleepingButton;
 
     [SerializeField] private float baseSpeed = 2;
     [SerializeField] private float speed;
@@ -27,6 +28,8 @@ public class ServerStateManager : MonoBehaviour
 
     private DishEffectQueue dishEffectQueue;
 
+    private float sleepingChance = 0.1f;
+
     public AIMove AiMove => aiMove;
     public Transform ServePoint => servePoint;
     public Transform Kitchen => kitchen;
@@ -37,6 +40,7 @@ public class ServerStateManager : MonoBehaviour
     public int Level => level; 
     public float ServeTime => serveTime;
     public float ReceiveFoodTime => receiveFoodTime;
+    public SleepingButton SleepingButton => sleepingButton;
 
     [SerializeField] private IState currentState;
 
@@ -56,6 +60,7 @@ public class ServerStateManager : MonoBehaviour
     private void Start()
     {
         ChangeState(new ServerGetBackState(this));
+        StartCoroutine(SleepingChanceCo());
     }
 
     private void Update()
@@ -161,6 +166,16 @@ public class ServerStateManager : MonoBehaviour
                 {
                     orderButton.OnClick();
                 }
+
+                if(!IsBusy)
+                {
+                    CleaningButton cleaningButton = FindFirstObjectByType<CleaningButton>();
+                    if(cleaningButton != null)
+                    {
+                        cleaningButton.OnClick();
+                    }
+                }
+                
             }
             yield return new WaitForSeconds(0.2f);
         }
@@ -178,8 +193,8 @@ public class ServerStateManager : MonoBehaviour
 
         if(dishEffectQueue.EatSpeedUpQueue.Count>0)
         {
-            DishType EDish = dishEffectQueue.EatSpeedUpQueue.Peek();
-            if (EDish == dish)
+            DishType eDish = dishEffectQueue.EatSpeedUpQueue.Peek();
+            if (eDish == dish)
             {
                 dishEffectQueue.EatSpeedUpQueue.Dequeue();
                 CookerCustomerEatSpeedUp();
@@ -188,8 +203,8 @@ public class ServerStateManager : MonoBehaviour
 
         if (dishEffectQueue.TipChanceUpQueue.Count > 0)
         {
-            DishType TDish = dishEffectQueue.TipChanceUpQueue.Peek();
-            if (TDish == dish)
+            DishType tDish = dishEffectQueue.TipChanceUpQueue.Peek();
+            if (tDish == dish)
             {
                 dishEffectQueue.TipChanceUpQueue.Dequeue();
 
@@ -202,6 +217,25 @@ public class ServerStateManager : MonoBehaviour
     {
         this.customer = customer;
     }
+
+    private IEnumerator SleepingChanceCo()
+    {
+        while (true)
+        {
+            if(IsBusy)
+            {
+                yield return new WaitForSeconds(2.0f);
+                continue;
+            }
+            if (UnityEngine.Random.value < sleepingChance)
+            {
+                IsBusy = true;
+                ChangeState(new ServerSleepingState(this));
+                yield return new WaitForSeconds(20.0f);
+            }
+        }
+    }
+
 
     private void OnDisable()
     {
