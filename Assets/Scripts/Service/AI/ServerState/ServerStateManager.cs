@@ -231,7 +231,10 @@ public class ServerStateManager : MonoBehaviour
                 IsBusy = true;
                 ChangeState(new ServerSleepingState(this));
                 yield return new WaitForSeconds(20.0f);
+                continue;
             }
+
+            yield return new WaitForSeconds(2.0f);
         }
     }
 

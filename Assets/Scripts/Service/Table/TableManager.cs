@@ -28,8 +28,15 @@ public class TableManager : MonoBehaviour
 
     public Table FindEmptyTable()
     {
-        foreach (Table table in tables)
+        for (int i = 0; i < tables.Count; i++)
         {
+            FacilityType tableType = (FacilityType)i;
+
+            if (GameManager.Instance.Upgrade.RuntimeLevel.Get(tableType) == 0)
+                continue;
+
+            Table table = tables[i];
+
             if (table.HasEmptySeat())
             {
                 return table;

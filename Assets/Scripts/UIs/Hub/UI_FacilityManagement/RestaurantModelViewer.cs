@@ -6,6 +6,7 @@ public sealed class RestaurantModelViewer : MonoBehaviour
     [SerializeField] private Transform environmentRoot;
     [SerializeField] private GameObject[] modelPrefabsByMarketLevel =
         new GameObject[MarketManager.MaxMarketLevel + 1];
+    [SerializeField] private bool collidersEnabled = true;
 
     private MarketManager marketManager;
     private GameObject currentModelInstance;
@@ -21,6 +22,11 @@ public sealed class RestaurantModelViewer : MonoBehaviour
     private void OnDisable()
     {
         marketManager.UnsubscribeMarketDataChanged(Refresh);
+    }
+
+    private void Start()
+    {
+        ApplyColliderState();
     }
 
     public void Refresh()
@@ -41,6 +47,18 @@ public sealed class RestaurantModelViewer : MonoBehaviour
             false);
 
         shownLevel = level;
+        ApplyColliderState();
+    }
+
+    private void ApplyColliderState()
+    {
+        if (collidersEnabled)
+            return;
+
+        Collider[] colliders = GetComponentsInChildren<Collider>(true);
+
+        foreach (Collider targetCollider in colliders)
+            targetCollider.enabled = false;
     }
 
     private void ClearCurrentModel()
