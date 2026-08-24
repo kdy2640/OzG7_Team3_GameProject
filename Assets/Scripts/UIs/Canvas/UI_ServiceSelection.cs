@@ -17,51 +17,67 @@ public sealed class UI_ServiceSelection : UI_Base
         ExitButton
     }
 
+    private enum PanelAnimators
+    {
+        Header,
+        TopLeft,
+        UI_CommonExitPanel,
+        UI_SelectMenuPanel,
+        UI_MareketVisualPanel
+    }
+
     protected override void OnInit()
     {
         Bind<GameObject>(typeof(GameObjects));
         Bind<UI_HubStateButton>(typeof(HubStateButtons));
-        GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?
-            .Init(Owner);
-        UI_EventHandler StartServiceButton = GetGameObject((int)GameObjects.UI_StartServiceButton)?.GetComponent<UI_EventHandler>();
-        StartServiceButton?.AddUIEvent(_ => StartService(), UI_EventHandler.UIEvent.LClick);
+        Bind<PanelAnimator>(typeof(PanelAnimators));
 
-        selectMenuPanel =
-            GetGameObject((int)GameObjects.UI_SelectMenuPanel)?
+        GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?.Init(Owner);
+
+        UI_EventHandler startServiceButton =
+            GetGameObject((int)GameObjects.UI_StartServiceButton)?.GetComponent<UI_EventHandler>();
+
+        startServiceButton?.AddUIEvent(_ => StartService(),UI_EventHandler.UIEvent.LClick);
+
+        selectMenuPanel = GetGameObject((int)GameObjects.UI_SelectMenuPanel)?
                 .GetComponent<UI_SelectMenuPanel>();
+
         selectMenuPanel?.SetCanDeselect(false);
         selectMenuPanel?.Init(Owner);
 
         marketVisualPanel = GetComponentInChildren<UI_MarketVisualPanel>(true);
-        marketVisualPanel?.Refresh();
-    }
 
-    private void StartService()
-    {
-        if (GameManager.Instance.Market.MarketData.SelectedDishes.Count == 0)
-        {
-            GameManager.Instance.Utility.Toast.Show("메뉴를 선택홰 주세요");
-            return;
-        }
-
-        GameManager.Instance.Scene.ChangeScene(SceneType.Service);
-    }
-
-    private void Start()
-    {
-        // 다른 객체의 Awake 완료 후 필요한 초기 작업을 작성합니다.
     }
 
     protected override IEnumerator OnShow()
     {
         selectMenuPanel?.Refresh();
         marketVisualPanel?.Refresh();
-        yield break;
+
+        GetUI<PanelAnimator>((int)PanelAnimators.Header).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.TopLeft).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Show();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_MareketVisualPanel).Show();
     }
 
     protected override IEnumerator OnHide()
     {
-        // 화면을 숨기기 전 정리할 값과 퇴장 연출을 작성합니다.
-        yield break;
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_MareketVisualPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.TopLeft).Hide();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.Header).Hide();
+    }
+
+    private void StartService()
+    {
+        if (GameManager.Instance.Market.MarketData.SelectedDishes.Count == 0)
+        {
+            GameManager.Instance.Utility.Toast.Show("메뉴를 선택해 주세요");
+            return;
+        }
+
+        GameManager.Instance.Scene.ChangeScene(SceneType.Service);
     }
 }

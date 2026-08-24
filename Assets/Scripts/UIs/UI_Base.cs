@@ -166,6 +166,7 @@ public abstract class UI_Base : MonoBehaviour
         return boundObjects[index] as T;
     }
 
+    
     public Text GetText(int index) => GetUI<Text>(index);
     public Button GetButton(int index) => GetUI<Button>(index);
     public Image GetImage(int index) => GetUI<Image>(index);

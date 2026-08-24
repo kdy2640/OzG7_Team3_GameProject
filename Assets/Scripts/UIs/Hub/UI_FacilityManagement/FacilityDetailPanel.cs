@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +30,8 @@ public class FacilityDetailPanel : MonoBehaviour
     private FacilityType currentFacilityType = FacilityType.Count;
 
     private UpgradeManager subscribedUpgradeManager;
+
+    [SerializeField] private PanelAnimator panelAnimator;
 
     private void Awake()
     {
@@ -71,15 +74,24 @@ public class FacilityDetailPanel : MonoBehaviour
         facilityCollection = collection;
     }
 
-    public void ShowFacility(FacilityType facilityType)
+    public IEnumerator ShowFacility(FacilityType facilityType)
     {
-        if (facilityType == FacilityType.Count) return;
+        if (facilityType == FacilityType.Count)
+            yield break;
+
+        bool wasActive = gameObject.activeSelf;
+        bool isDifferentFacility = currentFacilityType != facilityType;
 
         currentFacilityType = facilityType;
 
         gameObject.SetActive(true);
 
         Refresh();
+
+        if (!wasActive || isDifferentFacility)
+        {
+            yield return panelAnimator.Show();
+        }
     }
 
     public void ClosePanel()
@@ -114,7 +126,7 @@ public class FacilityDetailPanel : MonoBehaviour
         if (facilityCollection.TryGetPrevious
             (currentFacilityType,out FacilityType previous))
         {
-            ShowFacility(previous);
+            StartCoroutine(ShowFacility(previous));
         }
     }
 
@@ -125,7 +137,7 @@ public class FacilityDetailPanel : MonoBehaviour
 
         if (facilityCollection.TryGetNext(currentFacilityType,out FacilityType next))
         {
-            ShowFacility(next);
+            StartCoroutine(ShowFacility(next));
         }
     }
 
@@ -217,8 +229,7 @@ public class FacilityDetailPanel : MonoBehaviour
             return;
         }
 
-        actionButtonText.text =
-            GetAvailabilityText(availability, true);
+        actionButtonText.text = GetAvailabilityText(availability, true);
 
         actionButton.interactable =
             availability == UpgradeAvailability.Available;
