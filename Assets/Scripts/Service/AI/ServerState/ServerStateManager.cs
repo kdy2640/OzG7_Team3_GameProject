@@ -47,7 +47,7 @@ public class ServerStateManager : MonoBehaviour
     public bool isAutoWorking = false;
 
     [SerializeField] private IState currentState;
-
+    private Action serviceEnd;
 
 
     private void Awake()
@@ -61,6 +61,12 @@ public class ServerStateManager : MonoBehaviour
         UpdateStatus();
     }
 
+    private void OnEnable()
+    {
+        serviceEnd += ServerDie;
+        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, serviceEnd);
+    }
+
     private void Start()
     {
         ChangeState(new ServerGetBackState(this));
@@ -71,6 +77,7 @@ public class ServerStateManager : MonoBehaviour
     private void Update()
     {
         currentState?.Execute();
+        
     }
 
 
@@ -266,11 +273,19 @@ public class ServerStateManager : MonoBehaviour
         }
     }
 
+    
+
+    private void ServerDie()
+    {
+        ChangeState(new ServerGameOverState(this));
+    }
 
     private void OnDisable()
     {
         Destroy(this.gameObject);
         customerChanged -= CustomerEatSpeedUp;
         customerChanged -= CustomerTipChanceUp;
+        serviceEnd -= ServerDie;
+        GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, serviceEnd);
     }
 }

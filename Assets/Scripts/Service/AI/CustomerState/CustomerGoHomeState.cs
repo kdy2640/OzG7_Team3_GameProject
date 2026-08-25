@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CustomerGoHomeState : IState
 {
+
     private CustomerStateManager stateManager;
     private float timer;
     public CustomerGoHomeState(CustomerStateManager stateManager)
@@ -36,13 +37,18 @@ public class CustomerGoHomeState : IState
 
     public void Exit()
     {
-        stateManager.Animator.SetBool("IsWalking", false);
-
+        if (stateManager != null)
+        {
+            stateManager.Animator.SetBool("IsWalking", false);
+        }
         stateManager.AiMove.OnArrived -= ArrivedHome;
     }
 
     private void ArrivedHome()
     {
+        // 오늘의 손님 ++;
+        // 콤보 ++;
+        stateManager.Combo.AddCount();
         CheckSeatCleaned();
     }
     private void CheckSeatCleaned()

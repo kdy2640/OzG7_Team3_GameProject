@@ -4,7 +4,7 @@ using UnityEngine;
 public class ServiceManager : MonoBehaviour
 {
     public bool IsServiceScene => GameManager.Instance.Scene.CurrentSceneType == SceneType.Service;
-    private float loopDuration = 20f;
+    private float loopDuration = 120f;
 
     private ServiceEventManager eventManager;
     private SalesResultBuilder resultBuilder;

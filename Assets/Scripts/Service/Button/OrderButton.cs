@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,19 +14,23 @@ public class OrderButton : MonoBehaviour
     //[SerializeField] private Image dishIcon;
     [SerializeField] private TMP_Text dishName;
     [SerializeField] private TMP_Text amountText;
-    [SerializeField] private Image waitingForFoodImg;
     [SerializeField] private Image autoServeImg;
+    [SerializeField] private Image cookingImg;
+    [SerializeField] private Image foodReadyImg;
+
+    private CookingList cookingList;
 
     public bool IsAutoServing = false;
-
+    public bool IsCooking = false;
 
     private void OnEnable()
     {
         customer = GetComponentInParent<CustomerStateManager>();
         serverList = FindFirstObjectByType<ServerList>();
+        cookingList = FindFirstObjectByType<CookingList>();
         
-        waitingForFoodImg.gameObject.SetActive(false);
         autoServeImg.gameObject.SetActive(false);
+        cookingList.cookingListChanged += UpdateCookingUI;
     }
 
     public void SetOrder(DishAmount order)
@@ -43,6 +47,15 @@ public class OrderButton : MonoBehaviour
         dishName.text = data.DisplayName;
         amountText.text = order.amount.ToString();
 
+    }
+
+    private void UpdateCookingUI()
+    {
+        bool isCooking = cookingList.List.Contains(dishAmount.dish);
+        cookingImg.gameObject.SetActive(isCooking);
+        foodReadyImg.gameObject.SetActive(
+            GameManager.Instance.StockManager.CanConsumeDish(dishAmount)
+            );
     }
 
     public void OnClick()
@@ -68,16 +81,16 @@ public class OrderButton : MonoBehaviour
         {
             OnClicked?.Invoke();
             Debug.Log("주문 수락 성공");
-            if(IsAutoServing)
-            {
-                waitingForFoodImg.gameObject.SetActive(false);
-                autoServeImg.gameObject.SetActive(true);
-            }
-            else
-            {
-                autoServeImg.gameObject.SetActive(false);
-                waitingForFoodImg.gameObject.SetActive(true);
-            }
         }
+    }
+
+    private void OnDisable()
+    {
+        cookingList.cookingListChanged -= UpdateCookingUI;
+    }
+
+    private void OnDestroy()
+    {
+        cookingList.cookingListChanged -= UpdateCookingUI;
     }
 }
