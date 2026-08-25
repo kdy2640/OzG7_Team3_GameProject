@@ -5,8 +5,13 @@ using UnityEngine;
 public class UI_DayVisual : MonoBehaviour
 {
     [SerializeField] private TMP_Text dayText;
+    [SerializeField] private TMP_Text dayShadowText;
     [SerializeField] private Transform festivalCardContainer;
     [SerializeField] private UI_FestivalCard festivalCardPrefab;
+    [SerializeField] private TMP_Text flavorText;
+    [SerializeField] private TMP_Text themeText;
+    [SerializeField] private List<GameObject> tasteFlavors;
+    [SerializeField] private List<GameObject> categoryThemes;
 
     private readonly List<UI_FestivalCard> festivalCards = new();
     private MarketManager marketManager;
@@ -35,11 +40,26 @@ public class UI_DayVisual : MonoBehaviour
         MarketManager market = GameManager.Instance.Market;
         int currentBusinessDay = market.MarketData.CurrentBusinessDay;
 
-        dayText.text = $"Day {currentBusinessDay:D2}";
-
+        dayText.text = $"{currentBusinessDay:D2}";
+        dayShadowText.text = $"{currentBusinessDay:D2}";
         FestivalCalendar festivalCalendar = market.FestivalCalendar;
         int festivalCount = 0;
         TasteType nowTaste = festivalCalendar.GetNowTaste(currentBusinessDay);
+
+        flavorText.text = nowTaste switch
+        {
+            TasteType.Salty => "짭짤한 맛 UP",
+            TasteType.Clean => "담백한 맛 UP",
+            TasteType.SpicyAndSour => "매콤새콤 맛 UP",
+            _ => string.Empty
+        };
+
+        for (int i = 0; i < tasteFlavors.Count; i++)
+        {
+            tasteFlavors[i].SetActive(
+                nowTaste != TasteType.Count
+                && i == (int)nowTaste);
+        }
 
         if (nowTaste != TasteType.Count)
         {
@@ -60,6 +80,21 @@ public class UI_DayVisual : MonoBehaviour
         }
 
         CategoryType nowCategory = festivalCalendar.GetNowCategory(currentBusinessDay);
+
+        themeText.text = nowCategory switch
+        {
+            CategoryType.WesternDine => "웨스턴 다인 UP",
+            CategoryType.AsianFood => "아시안 푸드 UP",
+            CategoryType.StreetSnack => "스트릿 스낵 UP",
+            _ => string.Empty
+        };
+
+        for (int i = 0; i < categoryThemes.Count; i++)
+        {
+            categoryThemes[i].SetActive(
+                nowCategory != CategoryType.Count
+                && i == (int)nowCategory);
+        }
 
         if (nowCategory != CategoryType.Count)
         {

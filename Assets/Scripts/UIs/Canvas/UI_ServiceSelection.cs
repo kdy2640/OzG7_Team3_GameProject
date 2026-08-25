@@ -5,11 +5,13 @@ public sealed class UI_ServiceSelection : UI_Base
 {
     private UI_SelectMenuPanel selectMenuPanel;
     private UI_MarketVisualPanel marketVisualPanel;
+    private UI_DayVisual dayVisual;
 
     private enum GameObjects
     {
         UI_StartServiceButton,
-        UI_SelectMenuPanel
+        UI_SelectMenuPanel,
+        UI_DayVisual
     }
 
     private enum HubStateButtons
@@ -19,7 +21,7 @@ public sealed class UI_ServiceSelection : UI_Base
 
     private enum PanelAnimators
     {
-        Header,
+        UI_DayVisual,
         TopLeft,
         UI_CommonExitPanel,
         UI_SelectMenuPanel,
@@ -47,14 +49,19 @@ public sealed class UI_ServiceSelection : UI_Base
 
         marketVisualPanel = GetComponentInChildren<UI_MarketVisualPanel>(true);
 
+        dayVisual = GetGameObject((int)GameObjects.UI_DayVisual)
+            .GetComponent<UI_DayVisual>();
+        dayVisual.Refresh();
+
     }
 
     protected override IEnumerator OnShow()
     {
         selectMenuPanel?.Refresh();
         marketVisualPanel?.Refresh();
+        dayVisual.Refresh();
 
-        GetUI<PanelAnimator>((int)PanelAnimators.Header).Show();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_DayVisual).Show();
         GetUI<PanelAnimator>((int)PanelAnimators.TopLeft).Show();
         GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();
         GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Show();
@@ -67,7 +74,7 @@ public sealed class UI_ServiceSelection : UI_Base
         GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Hide();
         GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
         GetUI<PanelAnimator>((int)PanelAnimators.TopLeft).Hide();
-        yield return GetUI<PanelAnimator>((int)PanelAnimators.Header).Hide();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_DayVisual).Hide();
     }
 
     private void StartService()
