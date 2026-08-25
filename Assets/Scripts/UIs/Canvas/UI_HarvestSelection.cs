@@ -14,6 +14,14 @@ public sealed class UI_HarvestSelection : UI_Base
         ExitButton
     }
 
+    private enum PanelAnimators
+    {
+        UI_HarvestStageListPanel,
+        UI_HarvestStageDetailPanel,
+        UI_GroceryViewPanel,
+        UI_CommonExitPanel
+    }
+
     private UI_HarvestStageListPanel stageListPanel;
     private UI_HarvestStageDetailPanel stageDetailPanel;
 
@@ -21,6 +29,7 @@ public sealed class UI_HarvestSelection : UI_Base
     {
         Bind<GameObject>(typeof(GameObjects));
         Bind<UI_HubStateButton>(typeof(HubStateButtons));
+        Bind<PanelAnimator>(typeof(PanelAnimators));
 
         GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?
             .Init(Owner);
@@ -45,12 +54,27 @@ public sealed class UI_HarvestSelection : UI_Base
     protected override IEnumerator OnShow()
     {
         stageDetailPanel?.Refresh();
-        yield break;
+
+        GetUI<PanelAnimator>(
+            (int)PanelAnimators.UI_HarvestStageListPanel).Show();
+        GetUI<PanelAnimator>(
+            (int)PanelAnimators.UI_HarvestStageDetailPanel).Show();
+        GetUI<PanelAnimator>(
+            (int)PanelAnimators.UI_GroceryViewPanel).Show();
+        yield return GetUI<PanelAnimator>(
+            (int)PanelAnimators.UI_CommonExitPanel).Show();
     }
 
     protected override IEnumerator OnHide()
     {
-        yield break;
+        GetUI<PanelAnimator>(
+            (int)PanelAnimators.UI_CommonExitPanel).Hide();
+        GetUI<PanelAnimator>(
+            (int)PanelAnimators.UI_GroceryViewPanel).Hide();
+        GetUI<PanelAnimator>(
+            (int)PanelAnimators.UI_HarvestStageDetailPanel).Hide();
+        yield return GetUI<PanelAnimator>(
+            (int)PanelAnimators.UI_HarvestStageListPanel).Hide();
     }
 
     private void OnDestroy()

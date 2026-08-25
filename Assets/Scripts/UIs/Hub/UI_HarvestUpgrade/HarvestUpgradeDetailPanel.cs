@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -20,6 +21,7 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
     [SerializeField] private Button actionButton;
     [SerializeField] private TMP_Text actionButtonText;
     [SerializeField] private Button closeButton;
+    [SerializeField] private PanelAnimator panelAnimator;
 
     private HarvestUpgradeType currentUpgradeType = HarvestUpgradeType.Count;
     private UpgradeManager subscribedUpgradeManager;
@@ -57,14 +59,20 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
         subscribedMarketManager = null;
     }
 
-    public void ShowUpgrade(HarvestUpgradeType upgradeType)
+    public IEnumerator ShowUpgrade(HarvestUpgradeType upgradeType)
     {
         if (upgradeType == HarvestUpgradeType.Count)
-            return;
+            yield break;
+
+        bool wasActive = gameObject.activeSelf;
+        bool isDifferentUpgrade = currentUpgradeType != upgradeType;
 
         currentUpgradeType = upgradeType;
         gameObject.SetActive(true);
         Refresh();
+
+        if (!wasActive || isDifferentUpgrade)
+            yield return panelAnimator.Show();
     }
 
     public void ClosePanel()

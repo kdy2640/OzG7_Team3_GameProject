@@ -12,6 +12,7 @@ public sealed class HarvestActor : MonoBehaviour
     private HarvestDataSO harvestDataSO;
     private ChunkRegistry registry;
     private bool isInitialized;
+    private bool isDying;
 
 
     public void Init(
@@ -22,6 +23,7 @@ public sealed class HarvestActor : MonoBehaviour
     {
         registry = gridChunkHandler.Registry;
         harvestDataSO = HarvestDataDB.GetData(type);
+        isDying = false;
 
         if (hpHandler == null)
         {
@@ -94,7 +96,7 @@ public sealed class HarvestActor : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (damage <= 0f || !gameObject.activeInHierarchy)
+        if (damage <= 0f || !gameObject.activeInHierarchy || isDying)
         {
             return;
         }
@@ -105,8 +107,10 @@ public sealed class HarvestActor : MonoBehaviour
 
     private void OnDied()
     {
+        isDying = true;
+        registry.Unregister(transform);
         GameManager.Instance.StockManager.AddGrocery(harvestDataSO.Rewards);
-        presenter.Disappear();
+        presenter.PlayDeath();
     }
 
 #if UNITY_EDITOR

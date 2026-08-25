@@ -1507,6 +1507,8 @@ GameObject:
   - component: {fileID: 5468839314825761659}
   - component: {fileID: 7854166111010682873}
   - component: {fileID: 2303589139765926928}
+  - component: {fileID: 4157377717595452797}
+  - component: {fileID: 1838462065430353724}
   m_Layer: 5
   m_Name: UpgradeListPanel
   m_TagString: Untagged
@@ -1614,6 +1616,32 @@ MonoBehaviour:
   m_Spacing: {x: 14, y: 14}
   m_Constraint: 1
   m_ConstraintCount: 4
+--- !u!225 &4157377717595452797
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2899970693565153822}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &1838462065430353724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2899970693565153822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c506973b38d4dcca7ac7ac24b49f61e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EdgePanelAnimator
+  duration: 0.6
+  offsetX: -420
 --- !u!1 &3498767267227777949
 GameObject:
   m_ObjectHideFlags: 0
@@ -2794,6 +2822,8 @@ GameObject:
   - component: {fileID: 2459891260800572167}
   - component: {fileID: 3746212089794236812}
   - component: {fileID: 1854960167816779618}
+  - component: {fileID: 3588910597301918005}
+  - component: {fileID: 7452047235725622940}
   m_Layer: 5
   m_Name: PreviewPanel
   m_TagString: Untagged
@@ -2886,6 +2916,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HarvestUpgradePreviewPanel
   previewImage: {fileID: 5517048830577912467}
+--- !u!225 &3588910597301918005
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660011046657617757}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &7452047235725622940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660011046657617757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c506973b38d4dcca7ac7ac24b49f61e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EdgePanelAnimator
+  duration: 0.6
+  offsetX: -420
 --- !u!1 &8049054870520919781
 GameObject:
   m_ObjectHideFlags: 0
@@ -3608,8 +3664,46 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 308834104793146649, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1237196169752627612}
+    - targetCorrespondingSourceObject: {fileID: 308834104793146649, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1040268509712938428}
   m_SourcePrefab: {fileID: 100100000, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
+--- !u!1 &3701153752684415649 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 308834104793146649, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
+  m_PrefabInstance: {fileID: 3968816142916743096}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &1237196169752627612
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3701153752684415649}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &1040268509712938428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3701153752684415649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a65b2ee7d99cd4e8beadff96a81680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatPanelAnimator
+  duration: 0.6
+  startOffset: {x: 0, y: 180}
+  startScale: 0.92
 --- !u!224 &7463755630466544423 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5800785246385659039, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
@@ -3639,6 +3733,10 @@ PrefabInstance:
       propertyPath: levelSlider
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 143088292907981361, guid: d69da550e42be8148b8a43bd019486be, type: 3}
+      propertyPath: panelAnimator
+      value: 
+      objectReference: {fileID: 3421060091827636033}
     - target: {fileID: 143088292907981361, guid: d69da550e42be8148b8a43bd019486be, type: 3}
       propertyPath: nextEffectText
       value: 
@@ -4085,6 +4183,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2711182572531478063}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1722623766038386737, guid: d69da550e42be8148b8a43bd019486be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8839850739029248777}
+    - targetCorrespondingSourceObject: {fileID: 1722623766038386737, guid: d69da550e42be8148b8a43bd019486be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3421060091827636033}
     - targetCorrespondingSourceObject: {fileID: 1656833690830839960, guid: d69da550e42be8148b8a43bd019486be, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2199809106853417767}
@@ -4142,6 +4246,37 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 2, y: 2}
   m_UseGraphicAlpha: 1
+--- !u!1 &4966390685646330507 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1722623766038386737, guid: d69da550e42be8148b8a43bd019486be, type: 3}
+  m_PrefabInstance: {fileID: 5984113147183563450}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &8839850739029248777
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4966390685646330507}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &3421060091827636033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4966390685646330507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c506973b38d4dcca7ac7ac24b49f61e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EdgePanelAnimator
+  duration: 0.6
+  offsetX: 420
 --- !u!1 &5041100582757081634 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1656833690830839960, guid: d69da550e42be8148b8a43bd019486be, type: 3}
