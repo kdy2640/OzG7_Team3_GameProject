@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Cooker : MonoBehaviour
 {
@@ -15,13 +16,21 @@ public class Cooker : MonoBehaviour
     private int level;
     private DishRequestQueue requestQueue;
     private DishEffectQueue effectQueue;
+    private CookingList cookingList;
     public KitchenSlotData Data => data;
     public KitchenSlotViewer Viewer => viewer;
 
+    [SerializeField] Image autoCookingImg;
 
+    private bool isAutoCooking = false;
     
     public bool IsBusy => isBusy;
 
+
+    private void Start()
+    {
+        StartCoroutine(AutoCookUIUpdateCo());
+    }
 
     private void Update()
     {
@@ -40,23 +49,26 @@ public class Cooker : MonoBehaviour
         }
     }
 
-    public void Initialize(int level, DishRequestQueue requestQueue, DishEffectQueue effectQueue,KitchenSlotViewer prefab)
+    public void Initialize(int level, DishRequestQueue requestQueue, DishEffectQueue effectQueue,KitchenSlotViewer prefab, CookingList cookingList)
     {
         this.level = level;
         this.requestQueue = requestQueue;
         this.effectQueue = effectQueue;
         this.viewerPrefab = prefab;
+        this.cookingList = cookingList;
     }
 
     public void GetNextCook(KitchenSlotData data)
     {
         isBusy = true;
+        cookingList.Add(data.DishType);
         data.RemainTime = CookSpeedApply(data);
         this.data = data;
         SetViewer(data);
     }
     public void FinishCooking()
     {
+        cookingList.Remove(data.DishType);
         GameManager.Instance.CookingManager.AddCookedDish(data.DishType);
 
         if(tipChanceApply)
@@ -64,7 +76,7 @@ public class Cooker : MonoBehaviour
 
         if(eatSpeedApply)
             CustomerEatSpeedUpApply(data.DishType);
-
+        isAutoCooking = false;
         isBusy = false;
     }
 
@@ -104,6 +116,7 @@ public class Cooker : MonoBehaviour
                 if (!hasDish)
                 {
                     KitchenSlotData data = new KitchenSlotData(requiredDish, 3.0f);
+                    isAutoCooking = true;
                     GetNextCook(data);
                     requestQueue.Queue.Dequeue();
                 }
@@ -113,10 +126,29 @@ public class Cooker : MonoBehaviour
         }
     }
 
+
+
     public void AutoCook()
     {
         StartCoroutine(AutoCookCo());
     }
+
+    private IEnumerator AutoCookUIUpdateCo()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(0.5f);
+            if(isAutoCooking)
+            {
+                autoCookingImg.gameObject.SetActive(true);
+            }
+            else
+            {
+                autoCookingImg.gameObject.SetActive(false);
+            }
+        }
+    }
+
 
     private void CustomerTipChanceUpApply(DishType dish)
     {

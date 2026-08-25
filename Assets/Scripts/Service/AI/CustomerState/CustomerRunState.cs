@@ -31,11 +31,15 @@ public class CustomerRunState : IState
     {
         stateManager.AiMove.OnArrived -= ArrivedHome;
         stateManager.caught -= Caught;
-        stateManager.RunnerCatchButton.gameObject.SetActive(false);
+        if(stateManager.RunnerCatchButton != null )
+        {
+            stateManager.RunnerCatchButton.gameObject.SetActive(false);
+        }
     }
 
     private void ArrivedHome()
     {
+        stateManager.Combo.BreakCombo();
         GameObject.Destroy(stateManager.gameObject);
     }
 

@@ -11,7 +11,7 @@ public class CustomerAngryGoState : IState
 
     public void Enter()
     {
-
+        stateManager.Combo.BreakCombo();
 
         stateManager.OrderButton.gameObject.SetActive(false);
 
