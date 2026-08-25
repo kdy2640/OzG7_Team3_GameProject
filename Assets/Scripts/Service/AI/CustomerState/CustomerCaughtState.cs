@@ -42,9 +42,15 @@ public class CustomerCaughtState : IState
             // 돈 획득
             GameManager.Instance.StockManager.AddCurrency(data.Cost);
             GameManager.Instance.Market.MarketData.TotalIncome += data.Cost;
+
+
+            int bonusCurrency = (int)(data.Cost * stateManager.Combo.BonusRate / 100);
+            GameManager.Instance.StockManager.AddCurrency(bonusCurrency);
+            GameManager.Instance.Market.MarketData.TotalIncome += bonusCurrency;
+
             GameManager.Instance.Service.ResultBuilder.RecordDishSale(
                 stateManager.Order.dish,
-                data.Cost);
+                data.Cost + bonusCurrency);
         }
     }
 }
