@@ -13,6 +13,7 @@ public class Combo : MonoBehaviour
     private float bonusRate;
 
     public int ComboCount => comboCount;
+    public float BonusRate => bonusRate;    
     public void AddCount()
     {
         comboCount++;
