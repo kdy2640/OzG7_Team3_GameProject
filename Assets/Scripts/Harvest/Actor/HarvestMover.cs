@@ -11,16 +11,16 @@ public sealed class HarvestMover : MonoBehaviour
     private GridGeometry geometry;
     private ChunkRegistry registry;
     private ChunkStreamer streamer;
-    private bool ignoreStageBounds;
+    private bool isChunkIndependent;
     private float stageMinZ;
     private float stageMaxZ;
 
     public void Init(
         StageType stageType,
         GridChunkHandler gridChunkHandler,
-        bool ignoreStageBounds)
+        bool isChunkIndependent)
     {
-        this.ignoreStageBounds = ignoreStageBounds;
+        this.isChunkIndependent = isChunkIndependent;
 
         if (gridChunkHandler == null)
         {
@@ -36,7 +36,7 @@ public sealed class HarvestMover : MonoBehaviour
         registry = gridChunkHandler.Registry;
         streamer = gridChunkHandler.Streamer;
 
-        if (!ignoreStageBounds)
+        if (!isChunkIndependent)
             InitializeStageBounds(stageType);
 
         enabled = true;
@@ -63,7 +63,7 @@ public sealed class HarvestMover : MonoBehaviour
             * (moveSpeed * Time.fixedDeltaTime);
         nextPosition = geometry.ClampToArea(nextPosition);
 
-        if (!ignoreStageBounds)
+        if (!isChunkIndependent)
             nextPosition = ClampToStage(nextPosition);
 
         Vector3 movement = nextPosition - currentPosition;
@@ -77,7 +77,8 @@ public sealed class HarvestMover : MonoBehaviour
 
         if (registry.TryUpdateChunk(transform, out Vector2Int coordinate))
         {
-            streamer.MoveActorToChunk(transform, coordinate);
+            if (!isChunkIndependent)
+                streamer.MoveActorToChunk(transform, coordinate);
         }
     }
 
@@ -100,7 +101,7 @@ public sealed class HarvestMover : MonoBehaviour
         Vector3 localPosition = gridOrigin.InverseTransformPoint(
             transform.position);
         localPosition.x = Random.Range(area.xMin, area.xMax);
-        localPosition.z = ignoreStageBounds
+        localPosition.z = isChunkIndependent
             ? Random.Range(area.yMin, area.yMax)
             : Random.Range(stageMinZ, stageMaxZ);
 
