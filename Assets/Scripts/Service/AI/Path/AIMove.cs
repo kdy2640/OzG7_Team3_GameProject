@@ -223,7 +223,7 @@ public class AIMove : MonoBehaviour
 
     public void Acceleration()
     {
-        moveSpeed *= 2;
+        moveSpeed += 2;
     }
 
     public void Deceleration()

@@ -15,15 +15,18 @@ public class OrderButton : MonoBehaviour
     [SerializeField] private TMP_Text dishName;
     [SerializeField] private TMP_Text amountText;
     [SerializeField] private Image waitingForFoodImg;
-    
+    [SerializeField] private Image autoServeImg;
+
+    public bool IsAutoServing = false;
 
 
     private void OnEnable()
     {
-        waitingForFoodImg.enabled = false;
         customer = GetComponentInParent<CustomerStateManager>();
         serverList = FindFirstObjectByType<ServerList>();
         
+        waitingForFoodImg.gameObject.SetActive(false);
+        autoServeImg.gameObject.SetActive(false);
     }
 
     public void SetOrder(DishAmount order)
@@ -65,9 +68,16 @@ public class OrderButton : MonoBehaviour
         {
             OnClicked?.Invoke();
             Debug.Log("주문 수락 성공");
-            waitingForFoodImg.enabled = true;
+            if(IsAutoServing)
+            {
+                waitingForFoodImg.gameObject.SetActive(false);
+                autoServeImg.gameObject.SetActive(true);
+            }
+            else
+            {
+                autoServeImg.gameObject.SetActive(false);
+                waitingForFoodImg.gameObject.SetActive(true);
+            }
         }
-
     }
-
 }

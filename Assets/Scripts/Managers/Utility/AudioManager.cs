@@ -14,13 +14,28 @@ public enum BGMType
 public enum SFXType
 {
     None,
+
+    //Global
     Global_ButtonClick = 0,
     Global_ButtonHover = 1,
     Global_SceneChange = 2,
     Global_Notification = 3,
     Global_Error = 4,
+    //Hub
     Hub_Upgrade = 100,
+    Hub_FacilitySelect = 101,
+    Hub_StaffSelect = 102,
+    Hub_MenuSelect = 103,
+    Hub_MenuDeselect = 104,
+    Hub_Recruit = 105,
+    Hub_ServiceStart = 106,
+    Hub_LevelUp = 107,
+    Hub_GetReward = 108,
+    Hub_Rankup = 109,
+    Hup_PanelPopup = 110,
+    //Service
     Service_SessionStart = 200,
+    //Harvest
     Harvest_SessionStart = 300,
     Harvest_Collect = 301,
     Harvest_Grind = 302,

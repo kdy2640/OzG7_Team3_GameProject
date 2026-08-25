@@ -163,7 +163,9 @@ public class ServerStateManager : MonoBehaviour
                 OrderButton orderButton = FindFirstObjectByType<OrderButton>();
                 if (orderButton != null)
                 {
+                    orderButton.IsAutoServing = true;
                     orderButton.OnClick();
+                    
                 }
 
                 if(!IsBusy)
@@ -221,7 +223,8 @@ public class ServerStateManager : MonoBehaviour
     {
         while (true)
         {
-            if(IsBusy)
+            yield return new WaitForSeconds(5.0f);
+            if (IsBusy)
             {
                 yield return new WaitForSeconds(2.0f);
                 continue;
