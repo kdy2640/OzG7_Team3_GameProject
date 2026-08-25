@@ -13,6 +13,11 @@ GameObject:
   - component: {fileID: 2424644141719764984}
   - component: {fileID: 6072916682551283211}
   - component: {fileID: 3303071145808237000}
+  - component: {fileID: 6248518773770128840}
+  - component: {fileID: 3621354719088884179}
+  - component: {fileID: 5413564413693199641}
+  - component: {fileID: 6451580159723639738}
+  - component: {fileID: 7054079565244798741}
   m_Layer: 0
   m_Name: CropActor
   m_TagString: Harvestable
@@ -75,9 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9d2e2b7c11f4347809bbd9dc09d23dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HarvestMover
-  fleeRange: 3
   arrivalDistance: 0.25
-  state: 0
 --- !u!114 &3303071145808237000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,3 +96,72 @@ MonoBehaviour:
   hpHandler: {fileID: 8137749692546121123}
   presenter: {fileID: 2424644141719764984}
   mover: {fileID: 6072916682551283211}
+  animalStateController: {fileID: 6248518773770128840}
+--- !u!114 &6248518773770128840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170371248692864655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2c12a0e38501f746a0e3ffb5dfc1dc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimalStateController
+  currentState: 4
+  states:
+  - {fileID: 3621354719088884179}
+  - {fileID: 5413564413693199641}
+  - {fileID: 6451580159723639738}
+  - {fileID: 7054079565244798741}
+--- !u!114 &3621354719088884179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170371248692864655}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c75b4320c63a3542aa517fdbf2108d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimalEatState
+  minDuration: 1.5
+  maxDuration: 3
+--- !u!114 &5413564413693199641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170371248692864655}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3ecf093349f8b40b1c866a87dc5726, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimalPatrolState
+--- !u!114 &6451580159723639738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170371248692864655}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d4a0c82063edef47b6e8f846ee46459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimalFleeState
+--- !u!114 &7054079565244798741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170371248692864655}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b2de95667c32c24eb61a3e8ca50eaa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimalDeadState

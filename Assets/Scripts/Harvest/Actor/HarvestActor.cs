@@ -3,11 +3,13 @@ using UnityEngine;
 [DisallowMultipleComponent]
 [RequireComponent(typeof(HPHandler))]
 [RequireComponent(typeof(HarvestPresenter))]
+[RequireComponent(typeof(AnimalStateController))]
 public sealed class HarvestActor : MonoBehaviour
 {
     [SerializeField] private HPHandler hpHandler;
     [SerializeField] private HarvestPresenter presenter;
     [SerializeField] private HarvestMover mover;
+    [SerializeField] private AnimalStateController animalStateController;
 
     private HarvestDataSO harvestDataSO;
     private ChunkRegistry registry;
@@ -54,14 +56,28 @@ public sealed class HarvestActor : MonoBehaviour
             }
 
             mover.Init(
-                player,
-                harvestDataSO.Speed,
                 stageType,
-                gridChunkHandler);
+                gridChunkHandler,
+                harvestDataSO.HarvestType == HarvestType.Pig);
+
+            Animator animator = solid.AddComponent<Animator>();
+            animator.applyRootMotion = false;
+            animalStateController.enabled = true;
+            animalStateController.Init(
+                player,
+                mover,
+                animator,
+                harvestDataSO.AnimalStat,
+                harvestDataSO.AnimatorController);
         }
-        else if (mover != null)
+        else
         {
-            mover.enabled = false;
+            if (mover != null)
+            {
+                mover.enabled = false;
+            }
+
+            animalStateController.enabled = false;
         }
 
         if (gameObject.activeInHierarchy)
@@ -101,7 +117,15 @@ public sealed class HarvestActor : MonoBehaviour
             return;
         }
 
-        presenter.PlayHit();
+        if (harvestDataSO.IsMove)
+        {
+            animalStateController.PlayHit();
+        }
+        else
+        {
+            presenter.PlayHit();
+        }
+
         hpHandler.TakeDamage(damage);
     }
 
@@ -110,7 +134,14 @@ public sealed class HarvestActor : MonoBehaviour
         isDying = true;
         registry.Unregister(transform);
         GameManager.Instance.StockManager.AddGrocery(harvestDataSO.Rewards);
-        presenter.PlayDeath();
+        if (harvestDataSO.IsMove)
+        {
+            animalStateController.SetState(AnimalStateType.Dead);
+        }
+        else
+        {
+            presenter.PlayDeath();
+        }
     }
 
 #if UNITY_EDITOR
@@ -119,6 +150,7 @@ public sealed class HarvestActor : MonoBehaviour
         hpHandler = GetComponent<HPHandler>();
         presenter = GetComponent<HarvestPresenter>();
         mover = GetComponent<HarvestMover>();
+        animalStateController = GetComponent<AnimalStateController>();
     }
 #endif
 }
