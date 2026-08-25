@@ -1,9 +1,9 @@
+using System.Collections;
 using UnityEngine;
 
 public class ServerGetBackState : IState
 {
     private ServerStateManager stateManager;
-
 
     public ServerGetBackState(ServerStateManager stateManager)
     {
@@ -22,6 +22,8 @@ public class ServerGetBackState : IState
         stateManager.AiMove.MoveTo(
             stateManager.WaitPoint
         );
+
+        
     }
 
 
@@ -44,4 +46,6 @@ public class ServerGetBackState : IState
             new ServerIdleState(stateManager)
         );
     }
+
+    
 }
