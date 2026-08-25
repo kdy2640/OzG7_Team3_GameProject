@@ -9,6 +9,9 @@ public sealed class UI_HarvestStageListPanel : MonoBehaviour
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color selectedColor =
         new(1f, 0.8f, 0.3f, 1f);
+    [SerializeField] private Color lockedColor = Color.gray;
+    [SerializeField] private Color lockedSelectedColor =
+        new(0.55f, 0.48f, 0.32f, 1f);
 
     private readonly Button[] stageButtons =
         new Button[(int)StageType.Count];
@@ -16,6 +19,7 @@ public sealed class UI_HarvestStageListPanel : MonoBehaviour
         new UnityAction[(int)StageType.Count];
 
     private StageType selectedStage = StageType.Count;
+    private UpgradeManager subscribedUpgradeManager;
     private bool isInitialized;
 
     public event Action<StageType> OnSelected;
@@ -26,6 +30,8 @@ public sealed class UI_HarvestStageListPanel : MonoBehaviour
             return;
 
         isInitialized = true;
+        subscribedUpgradeManager = GameManager.Instance.Upgrade;
+        subscribedUpgradeManager.SubscribeUpgradeChanged(RefreshSelection);
 
         int stageCount = Mathf.Min(
             transform.childCount,
@@ -71,6 +77,9 @@ public sealed class UI_HarvestStageListPanel : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (isInitialized)
+            subscribedUpgradeManager.UnsubscribeUpgradeChanged(RefreshSelection);
+
         for (int i = 0; i < stageButtons.Length; i++)
         {
             if (stageButtons[i] != null && clickActions[i] != null)
@@ -80,13 +89,19 @@ public sealed class UI_HarvestStageListPanel : MonoBehaviour
 
     private void RefreshSelection()
     {
+        int unlockedStageCount = subscribedUpgradeManager.RuntimeLevel.Get(
+            HarvestUpgradeType.StageLevel);
+
         for (int i = 0; i < stageButtons.Length; i++)
         {
             if (stageButtons[i]?.image != null)
             {
-                stageButtons[i].image.color = i == (int)selectedStage
-                    ? selectedColor
-                    : normalColor;
+                bool isSelected = i == (int)selectedStage;
+                bool isUnlocked = i < unlockedStageCount;
+
+                stageButtons[i].image.color = isSelected
+                    ? isUnlocked ? selectedColor : lockedSelectedColor
+                    : isUnlocked ? normalColor : lockedColor;
             }
         }
     }

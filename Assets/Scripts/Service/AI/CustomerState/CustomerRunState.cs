@@ -14,8 +14,8 @@ public class CustomerRunState : IState
         stateManager.Animator.SetBool("IsWalking", true);
         stateManager.AiMove.OnArrived += ArrivedHome;
         stateManager.caught += Caught;
-        stateManager.RunnerCatchButton.gameObject.SetActive(true);
         stateManager.RunnerCatchButton.Initialize(stateManager);
+        stateManager.RunnerCatchButton.gameObject.SetActive(true);
         stateManager.AiMove.SetSpeed(0.5f);
 
         stateManager.AiMove.MoveTo(stateManager.ExitPoint);
@@ -31,7 +31,7 @@ public class CustomerRunState : IState
     {
         stateManager.AiMove.OnArrived -= ArrivedHome;
         stateManager.caught -= Caught;
-        
+        stateManager.RunnerCatchButton.gameObject.SetActive(false);
     }
 
     private void ArrivedHome()

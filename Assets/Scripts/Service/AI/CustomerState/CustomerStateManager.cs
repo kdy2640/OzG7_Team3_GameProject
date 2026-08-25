@@ -16,15 +16,17 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private WaitTimeBackGround waitBackGround;
     [SerializeField] private RunnerCatchButton runnerCatchButton;
     [SerializeField] private Dirty dirtyPrefab;
+    [SerializeField] private float visibleCanvasHeight = 5.25f;
 
     private Table currentTable;
     private Transform seat;
     private DishAmount order;
+    private Transform customerCanvas;
     public Action foodReceived;
     public Action caught;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
-    private float runChance = 0.05f;
+    private float runChance = 0.5f;
     private float eatSpeedUpPercentage;
     public bool SeatDirty = false;
     
@@ -92,6 +94,19 @@ public class CustomerStateManager : MonoBehaviour
         currentState?.Execute();
     }
 
+    private void LateUpdate()
+    {
+        bool isCanvasVisible =
+            orderButton.gameObject.activeSelf
+            || runnerCatchButton.gameObject.activeSelf;
+
+        if (!isCanvasVisible)
+            return;
+
+        customerCanvas.position =
+            transform.position + Vector3.up * visibleCanvasHeight;
+    }
+
 
     public void ChangeState(IState newState)
     {
@@ -139,6 +154,8 @@ public class CustomerStateManager : MonoBehaviour
     {
         this.animator = animator;
         animator.applyRootMotion = false;
+
+        customerCanvas = orderButton.GetComponentInParent<Canvas>().transform;
     }
 
     public bool IsTip()
