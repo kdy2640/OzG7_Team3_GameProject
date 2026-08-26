@@ -15,7 +15,22 @@ public enum HarvestType
     Corn,
     Tomato,
     Grape,
+    Pig,
     Count
+}
+
+[System.Serializable]
+public sealed class HarvestAnimalStat
+{
+    [SerializeField, Min(0f)] private float detectionRange = 3f;
+    [SerializeField, Min(0f)] private float fleeDistance = 4f;
+    [SerializeField, Min(0f)] private float patrolSpeed = 1.25f;
+    [SerializeField, Min(0f)] private float fleeSpeed = 2.5f;
+
+    public float DetectionRange => detectionRange;
+    public float FleeDistance => fleeDistance;
+    public float PatrolSpeed => patrolSpeed;
+    public float FleeSpeed => fleeSpeed;
 }
 
 [CreateAssetMenu(menuName = "Game/HarvestDataSO")]
@@ -25,7 +40,8 @@ public sealed class HarvestDataSO : ScriptableObject
     [SerializeField] private HarvestType harvestType = HarvestType.Count;
     [SerializeField] private List<GroceryAmount> rewards = new();
     [SerializeField] private bool isMove;
-    [SerializeField, Min(0f)] private float speed;
+    [SerializeField] private HarvestAnimalStat animalStat = new();
+    [SerializeField] private RuntimeAnimatorController animatorController;
     [SerializeField] private GameObject solidPrefab;
     [SerializeField] private GameObject itemPrefab;
 
@@ -33,7 +49,8 @@ public sealed class HarvestDataSO : ScriptableObject
     public HarvestType HarvestType => harvestType;
     public List<GroceryAmount> Rewards => rewards;
     public bool IsMove => isMove;
-    public float Speed => speed;
+    public HarvestAnimalStat AnimalStat => animalStat;
+    public RuntimeAnimatorController AnimatorController => animatorController;
     public GameObject SolidPrefab => solidPrefab;
     public GameObject ItemPrefab => itemPrefab;
 }

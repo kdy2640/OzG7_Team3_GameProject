@@ -58,6 +58,19 @@ public class SceneController : MonoBehaviour
 
         yield return currentScene.Exit();
 
+        switch (nextSceneType)
+        {
+            case SceneType.Hub:
+                GameManager.Instance.Utility.Audio.PlayBGM(BGMType.HubBGM);
+                break;
+            case SceneType.Harvest:
+                GameManager.Instance.Utility.Audio.PlayBGM(BGMType.HarvestBGM);
+                break;
+            case SceneType.Service:
+                GameManager.Instance.Utility.Audio.PlayBGM(BGMType.ServiceBGM);
+                break;
+        }
+
         SceneBase nextScene = scenes[nextSceneType];
         AsyncOperation operation = SceneManager.LoadSceneAsync(nextScene.SceneName);
         currentScene = nextScene;
