@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private RunnerCatchButton runnerCatchButton;
     [SerializeField] private Dirty dirtyPrefab;
     [SerializeField] private float visibleCanvasHeight = 5.25f;
+    [SerializeField] private Combo combo;
 
     private Table currentTable;
     private Transform seat;
@@ -41,6 +43,7 @@ public class CustomerStateManager : MonoBehaviour
     public WaitTimeBackGround WaitBackGround => waitBackGround;
     public RunnerCatchButton RunnerCatchButton => runnerCatchButton;
     public Dirty DirtyPrefab => dirtyPrefab;
+    public Combo Combo => combo;
     
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
@@ -53,14 +56,20 @@ public class CustomerStateManager : MonoBehaviour
     #endregion
 
     #region State Machine Main
-    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue, Dirty dirtyPrefab)
+    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue, Dirty dirtyPrefab, Combo combo)
     {
         this.exitPoint = exitPoint;
         this.tableManager = tableManager;
         this.tipBox = tipBox;
         this.requestQueue = queue;
         this.dirtyPrefab = dirtyPrefab;
+        this.combo = combo;
         AiMove.SetSpeed(speed);
+    }
+
+    private void OnEnable()
+    {
+        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, CustomerDie);
     }
 
     private void Start()
@@ -87,6 +96,7 @@ public class CustomerStateManager : MonoBehaviour
                 ChangeState(new CustomerMoveToTableState(this, aiMove, seat));
             }
         }
+
     }
 
     private void Update()
@@ -145,11 +155,7 @@ public class CustomerStateManager : MonoBehaviour
         animator.SetBool("IsRunning", false);
     }
 
-    private void OnDisable()
-    {
-        Destroy(this.gameObject);
-    }
-
+    
     public void SetAnimator(Animator animator)
     {
         this.animator = animator;
@@ -185,4 +191,16 @@ public class CustomerStateManager : MonoBehaviour
         dirty.SetCustomer(this);
         SeatDirty = true;
     }
+
+    private void CustomerDie()
+    {
+            ChangeState(new CustomerGameOverState(this));
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, CustomerDie);
+        Destroy(this.gameObject);
+    }
+
 }

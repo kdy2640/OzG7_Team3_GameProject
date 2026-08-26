@@ -17,6 +17,7 @@ public class KitchenSlotHandler : MonoBehaviour
     [SerializeField] Transform CookerPanel;
     [SerializeField] DishRequestQueue requestQueue;
     [SerializeField] DishEffectQueue effectQueue;
+    [SerializeField] CookingList cookingList;
 
     private CookSkillManager skillManager = new();
 
@@ -29,6 +30,14 @@ public class KitchenSlotHandler : MonoBehaviour
         {
             requestQueue = FindFirstObjectByType<DishRequestQueue>();
         }
+        if(effectQueue == null)
+        {
+            effectQueue = FindFirstObjectByType<DishEffectQueue>();
+        }
+        if(cookingList == null)
+        {
+            cookingList = FindFirstObjectByType<CookingList>();
+        }
         skillManager.Initialize(cookers);
     }
 
@@ -39,7 +48,7 @@ public class KitchenSlotHandler : MonoBehaviour
             if (GameManager.Instance.Upgrade.RuntimeLevel.Get(CookerTypes[i]) >= 1)
             {
                 Cooker cooker = Instantiate(cookerPrefab, CookerPanel.transform);
-                cooker.Initialize(GameManager.Instance.Upgrade.RuntimeLevel.Get(CookerTypes[i]), requestQueue, effectQueue, kitchenSlotViewerPrefab);
+                cooker.Initialize(GameManager.Instance.Upgrade.RuntimeLevel.Get(CookerTypes[i]), requestQueue, effectQueue, kitchenSlotViewerPrefab, cookingList);
                 
                 cookers.Add(cooker);
                 skillManager.SkillApply(i);

@@ -33,6 +33,8 @@ public class ServerCleanState : IState
             }
             
             dirty.Customer.SeatDirty = false;
+
+            stateManager.isAutoWorking = false;
             stateManager.ChangeState(new ServerGetBackState(stateManager));
             return;
         }

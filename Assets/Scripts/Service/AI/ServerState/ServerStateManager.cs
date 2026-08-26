@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ServerStateManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private Transform kitchen;
     [SerializeField] private Transform waitPoint;
     [SerializeField] private SleepingButton sleepingButton;
+    [SerializeField] private Image AutoWorkingImg;
 
     [SerializeField] private float baseSpeed = 2;
     [SerializeField] private float speed;
@@ -29,6 +31,8 @@ public class ServerStateManager : MonoBehaviour
 
     private float sleepingChance = 0.05f;
 
+    
+
     public AIMove AiMove => aiMove;
     public Transform ServePoint => servePoint;
     public Transform Kitchen => kitchen;
@@ -40,9 +44,10 @@ public class ServerStateManager : MonoBehaviour
     public float ServeTime => serveTime;
     public float ReceiveFoodTime => receiveFoodTime;
     public SleepingButton SleepingButton => sleepingButton;
+    public bool isAutoWorking = false;
 
     [SerializeField] private IState currentState;
-
+    private Action serviceEnd;
 
 
     private void Awake()
@@ -56,15 +61,23 @@ public class ServerStateManager : MonoBehaviour
         UpdateStatus();
     }
 
+    private void OnEnable()
+    {
+        serviceEnd += ServerDie;
+        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, serviceEnd);
+    }
+
     private void Start()
     {
         ChangeState(new ServerGetBackState(this));
         StartCoroutine(SleepingChanceCo());
+        StartCoroutine(AutoWorkingUICo());
     }
 
     private void Update()
     {
         currentState?.Execute();
+        
     }
 
 
@@ -100,6 +113,7 @@ public class ServerStateManager : MonoBehaviour
     public void GiveFood()
     {
         customer.foodReceived?.Invoke();
+        isAutoWorking = false;
     }
 
     public void AnimSetIdle()
@@ -164,6 +178,7 @@ public class ServerStateManager : MonoBehaviour
                 if (orderButton != null)
                 {
                     orderButton.IsAutoServing = true;
+                    isAutoWorking = true;
                     orderButton.OnClick();
                     
                 }
@@ -174,6 +189,7 @@ public class ServerStateManager : MonoBehaviour
                     if(cleaningButton != null)
                     {
                         cleaningButton.OnClick();
+                        isAutoWorking = true;
                     }
                 }
                 
@@ -241,11 +257,35 @@ public class ServerStateManager : MonoBehaviour
         }
     }
 
+    private IEnumerator AutoWorkingUICo()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            if(isAutoWorking)
+            {
+                AutoWorkingImg.gameObject.SetActive(true);
+            }
+            else
+            {
+                AutoWorkingImg.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    
+
+    private void ServerDie()
+    {
+        ChangeState(new ServerGameOverState(this));
+    }
 
     private void OnDisable()
     {
         Destroy(this.gameObject);
         customerChanged -= CustomerEatSpeedUp;
         customerChanged -= CustomerTipChanceUp;
+        serviceEnd -= ServerDie;
+        GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, serviceEnd);
     }
 }
