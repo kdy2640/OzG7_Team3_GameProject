@@ -15,7 +15,7 @@ public enum FacilityType
     Decor_2,
     Decor_3,
     Decor_4,
-    Decor_5,
+    Decor_5, // 스태프리더
     Decor_6,
     Count
 }
