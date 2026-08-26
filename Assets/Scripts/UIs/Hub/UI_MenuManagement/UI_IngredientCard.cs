@@ -9,6 +9,8 @@ public sealed class UI_IngredientCard : MonoBehaviour
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text countText;
     [SerializeField] private GroceryType nowType;
+    [SerializeField] private Color defaultColor = Color.black;
+    [SerializeField] private Color insufficientColor = Color.red;
 
     public void SetData(GroceryAmount ingredient, int ownedAmount)
     {
@@ -19,7 +21,7 @@ public sealed class UI_IngredientCard : MonoBehaviour
 
         countText.color = 
             ownedAmount >= ingredient.amount
-            ? Color.white : Color.red;
+            ? defaultColor : insufficientColor;
 
         icon.sprite = GroceryDataDB.GetData(ingredient.grocery).Icon;
     }
