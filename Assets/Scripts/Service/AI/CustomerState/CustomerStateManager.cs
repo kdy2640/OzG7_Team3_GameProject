@@ -6,7 +6,7 @@ using UnityEngine;
 public class CustomerStateManager : MonoBehaviour
 {
     #region Fields
-    [SerializeField] private float speed = 4f;
+    [SerializeField] private float speed = 8f;
     [SerializeField] private AIMove aiMove;
     [SerializeField] private Transform exitPoint;
     [SerializeField] private TipBox tipBox;
@@ -19,6 +19,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private Dirty dirtyPrefab;
     [SerializeField] private float visibleCanvasHeight = 5.25f;
     [SerializeField] private Combo combo;
+    [SerializeField] private DrinkZone drinkZone;
 
     private Table currentTable;
     private Transform seat;
@@ -28,7 +29,7 @@ public class CustomerStateManager : MonoBehaviour
     public Action caught;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
-    private float runChance = 0.5f;
+    private float runChance = 0.1f;
     private float eatSpeedUpPercentage;
     public bool SeatDirty = false;
     
@@ -44,6 +45,7 @@ public class CustomerStateManager : MonoBehaviour
     public RunnerCatchButton RunnerCatchButton => runnerCatchButton;
     public Dirty DirtyPrefab => dirtyPrefab;
     public Combo Combo => combo;
+    public DrinkZone DrinkZone => drinkZone;
     
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
@@ -58,7 +60,7 @@ public class CustomerStateManager : MonoBehaviour
     #endregion
 
     #region State Machine Main
-    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue, Dirty dirtyPrefab, Combo combo)
+    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue, Dirty dirtyPrefab, Combo combo, DrinkZone drinkZone)
     {
         this.exitPoint = exitPoint;
         this.tableManager = tableManager;
@@ -66,6 +68,7 @@ public class CustomerStateManager : MonoBehaviour
         this.requestQueue = queue;
         this.dirtyPrefab = dirtyPrefab;
         this.combo = combo;
+        this.drinkZone = drinkZone;
         AiMove.SetSpeed(speed);
     }
 
@@ -99,7 +102,6 @@ public class CustomerStateManager : MonoBehaviour
                 ChangeState(new CustomerMoveToTableState(this, aiMove, seat));
             }
         }
-
     }
 
     private void Update()
@@ -193,6 +195,35 @@ public class CustomerStateManager : MonoBehaviour
         Dirty dirty = Instantiate(DirtyPrefab, dirtyPoint, Quaternion.identity);
         dirty.SetCustomer(this);
         SeatDirty = true;
+    }
+
+    public void Pay()  // 돈 획득 이펙트
+    {
+        DishDataSO data = DishDataDB.GetData(Order.dish);
+        int basicPrice = DishPriceCalculator.BasicPriceCalculate(data.Dish);
+        if (data != null)
+        {
+            GameManager.Instance.StockManager.AddCurrency(basicPrice);
+            GameManager.Instance.Market.MarketData.TotalIncome += basicPrice;
+
+            int bonusCurrency = (int)(basicPrice * Combo.BonusRate / 100);
+
+            GameManager.Instance.StockManager.AddCurrency(bonusCurrency);
+            GameManager.Instance.Market.MarketData.TotalIncome += bonusCurrency;
+
+            GameManager.Instance.Service.ResultBuilder.RecordDishSale(
+                Order.dish,
+                basicPrice + bonusCurrency);
+        }
+    }
+
+    public void PayDrink()
+    {
+        //int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_?);
+        int level = 3; // 드링크바 레벨
+        int drinkPrice = -100 + level * 300;
+        GameManager.Instance.StockManager.AddCurrency(drinkPrice);
+        GameManager.Instance.Market.MarketData.TotalIncome += drinkPrice;
     }
 
     private void CustomerDie()

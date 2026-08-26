@@ -6,6 +6,7 @@ public class CustomerGoHomeState : IState
 
     private CustomerStateManager stateManager;
     private float timer;
+    private bool arrived = false;
     public CustomerGoHomeState(CustomerStateManager stateManager)
     {
         this.stateManager = stateManager;
@@ -13,6 +14,7 @@ public class CustomerGoHomeState : IState
 
     public void Enter()
     {
+        timer = 5.0f;
 
         stateManager.Animator.SetBool("IsWalking", true);
 
@@ -27,10 +29,11 @@ public class CustomerGoHomeState : IState
     public void Execute()
     {
         timer -= Time.deltaTime;
+        
         if (timer < 0)
         {
-            CheckSeatCleaned();
-            timer = 2.0f;
+            TryDestroyCustomer();
+            timer = 5.0f;
         }
     }
 
@@ -46,16 +49,30 @@ public class CustomerGoHomeState : IState
 
     private void ArrivedHome()
     {
+
         // 오늘의 손님 ++;
         // 콤보 ++;
+        arrived = true;
         stateManager.Combo.AddCount();
-        CheckSeatCleaned();
     }
-    private void CheckSeatCleaned()
+    private bool CheckSeatCleaned()
     {
         if (!stateManager.SeatDirty)
         {
             stateManager.CurrentTable.ReleaseSeat(stateManager);
+            return true;
+        }
+        return false;
+    }
+
+    private void TryDestroyCustomer()
+    {
+        if(!arrived)
+        {
+            return;
+        }
+        if(CheckSeatCleaned())
+        {
             GameObject.Destroy(stateManager.gameObject);
         }
     }
