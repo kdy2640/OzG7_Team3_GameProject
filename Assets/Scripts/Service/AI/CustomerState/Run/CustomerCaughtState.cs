@@ -35,22 +35,6 @@ public class CustomerCaughtState : IState
     private void Pay()
     {
         timer = 2f;
-        DishDataSO data = DishDataDB.GetData(stateManager.Order.dish);
-
-        if (data != null)
-        {
-            // 돈 획득
-            GameManager.Instance.StockManager.AddCurrency(data.Cost);
-            GameManager.Instance.Market.MarketData.TotalIncome += data.Cost;
-
-
-            int bonusCurrency = (int)(data.Cost * stateManager.Combo.BonusRate / 100);
-            GameManager.Instance.StockManager.AddCurrency(bonusCurrency);
-            GameManager.Instance.Market.MarketData.TotalIncome += bonusCurrency;
-
-            GameManager.Instance.Service.ResultBuilder.RecordDishSale(
-                stateManager.Order.dish,
-                data.Cost + bonusCurrency);
-        }
+        stateManager.Pay();
     }
 }
