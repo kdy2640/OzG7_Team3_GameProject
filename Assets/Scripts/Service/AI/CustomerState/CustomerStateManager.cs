@@ -55,8 +55,6 @@ public class CustomerStateManager : MonoBehaviour
     
     [SerializeField]private IState currentState;
 
-    private Action serviceEnd;
-
     #endregion
 
     #region State Machine Main
@@ -74,8 +72,7 @@ public class CustomerStateManager : MonoBehaviour
 
     private void OnEnable()
     {
-        serviceEnd += CustomerDie;
-        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, serviceEnd);
+        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, CustomerDie);
     }
 
     private void Start()
@@ -233,8 +230,7 @@ public class CustomerStateManager : MonoBehaviour
 
     private void OnDisable()
     {
-        serviceEnd -= CustomerDie;
-        GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded ,serviceEnd);
+        GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, CustomerDie);
         Destroy(this.gameObject);
     }
 
