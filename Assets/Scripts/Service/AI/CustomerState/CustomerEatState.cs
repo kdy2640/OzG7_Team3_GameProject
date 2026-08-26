@@ -51,24 +51,13 @@ public class CustomerEatState : IState
             return;
         }
 
-        DishDataSO data = DishDataDB.GetData(stateManager.Order.dish);
+        stateManager.Pay();
 
-        if(data != null)
+        if(stateManager.DrinkZone.CanSpendDrink())
         {
-            // 돈 획득
-            GameManager.Instance.StockManager.AddCurrency(data.Cost);
-            GameManager.Instance.Market.MarketData.TotalIncome += data.Cost;
-            
-
-            int bonusCurrency = (int) (data.Cost * stateManager.Combo.BonusRate / 100);
-            GameManager.Instance.StockManager.AddCurrency(bonusCurrency);
-            GameManager.Instance.Market.MarketData.TotalIncome += bonusCurrency;
-
-            GameManager.Instance.Service.ResultBuilder.RecordDishSale(
-                stateManager.Order.dish,
-                data.Cost + bonusCurrency);
+            stateManager.ChangeState(new CustomerGoToDrinkState(stateManager));
+            return;
         }
-
 
         if (stateManager.IsTip())
         {

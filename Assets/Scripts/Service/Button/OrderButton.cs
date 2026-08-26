@@ -31,6 +31,7 @@ public class OrderButton : MonoBehaviour
         
         autoServeImg.gameObject.SetActive(false);
         cookingList.cookingListChanged += UpdateCookingUI;
+        UpdateCookingUI();
     }
 
     public void SetOrder(DishAmount order)
@@ -51,8 +52,16 @@ public class OrderButton : MonoBehaviour
 
     private void UpdateCookingUI()
     {
-        bool isCooking = cookingList.List.Contains(dishAmount.dish);
-        cookingImg.gameObject.SetActive(isCooking);
+        if (dishAmount == null)
+            return;
+
+        if (cookingList != null)
+        {
+            cookingImg.gameObject.SetActive(
+            cookingList.List.Contains(dishAmount.dish)
+            );
+        }
+        
         foodReadyImg.gameObject.SetActive(
             GameManager.Instance.StockManager.CanConsumeDish(dishAmount)
             );

@@ -33,8 +33,10 @@ public class CustomerAngryGoState : IState
 
     public void Exit()
     {
-        stateManager.Animator.SetBool("IsAngryWalking", false);
-
+        if (stateManager != null)
+        {
+            stateManager.Animator.SetBool("IsAngryWalking", false);
+        }
         stateManager.AiMove.OnArrived -= ArrivedHome;
     }
 
