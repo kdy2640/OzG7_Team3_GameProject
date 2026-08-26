@@ -13,14 +13,15 @@ public enum BGMType
 }
 public enum SFXType
 {
-    None,
+    None = -1,
 
     //Global
     Global_ButtonClick = 0,
     Global_ButtonHover = 1,
-    Global_SceneChange = 2,
-    Global_Notification = 3,
-    Global_Error = 4,
+    Global_SceneChangeStart = 2,
+    Global_SceneChangeEnd = 3,
+    Global_Notification = 4,
+    Global_Error = 5,
     //Hub
     Hub_Upgrade = 100,
     Hub_FacilitySelect = 101,
@@ -32,15 +33,34 @@ public enum SFXType
     Hub_LevelUp = 107,
     Hub_GetReward = 108,
     Hub_Rankup = 109,
-    Hup_PanelPopup = 110,
+    Hub_PanelPopup = 110,
     //Service
     Service_SessionStart = 200,
+    Service_SessionEnd = 201,
+    Service_CustomerAngry = 202,
+    Service_CustomerEat = 203,
+    Service_CustomerPay= 204,
+    Service_ServerVoice = 205,
+    Service_ComboSound = 206,
     //Harvest
     Harvest_SessionStart = 300,
-    Harvest_Collect = 301,
-    Harvest_Grind = 302,
-    Harvest_CropHarvested = 303,
-    Harvest_TractorEngine = 304,
+    Harvest_SessionEnd = 301,
+    Harvest_Collect = 302,
+    Harvest_Grind = 303,
+    Harvest_CropHarvested = 304,
+    Harvest_TractorEngine = 305,
+    Harvest_ChickenVoice = 306,
+    Harvest_ChickenHit = 307,
+    Harvest_ChickenDie = 308,
+    Harvest_CowVoice = 309,
+    Harvest_CowHit = 310,
+    Harvest_CowDie = 311,
+    Harvest_SheepVoice = 312,
+    Harvest_SheepHit = 313,
+    Harvest_SheepDie = 314,
+    Harvest_PigVoice = 315,
+    Harvest_PigHit = 316,
+    Harvest_PigDie = 317
 }
 public class AudioManager : MonoBehaviour
 {
@@ -193,6 +213,46 @@ public class AudioManager : MonoBehaviour
             }
         }
     }
+#if UNITY_EDITOR
+    [ContextMenu("Refresh SFX Clips By Type")]
+    private void RefreshSFXClipsByType()
+    {
+        UnityEditor.Undo.RecordObject(this, "Refresh SFX Clips By Type");
+
+        Dictionary<SFXType, SFXClipData> existingClips = new Dictionary<SFXType, SFXClipData>();
+        for (int i = 0; i < sfxClips.Length; i++)
+        {
+            SFXClipData data = sfxClips[i];
+            if (data == null || data.type == SFXType.None) continue;
+            if (!existingClips.ContainsKey(data.type))
+            {
+                existingClips.Add(data.type, data);
+            }
+        }
+
+        System.Array types = System.Enum.GetValues(typeof(SFXType));
+        List<SFXClipData> refreshedClips = new List<SFXClipData>();
+
+        for (int i = 0; i < types.Length; i++)
+        {
+            SFXType type = (SFXType)types.GetValue(i);
+            if (type == SFXType.None) continue;
+
+            if (existingClips.TryGetValue(type, out SFXClipData data))
+            {
+                refreshedClips.Add(data);
+            }
+            else
+            {
+                refreshedClips.Add(new SFXClipData { type = type });
+            }
+        }
+
+        sfxClips = refreshedClips.ToArray();
+        UnityEditor.EditorUtility.SetDirty(this);
+    }
+#endif
+
     //BGM을 재생하는 녀석
     //AudioManager.Instance.PlayBGM(BGMType.Stage);
     public void PlayBGM(BGMType type)
