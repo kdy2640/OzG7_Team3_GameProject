@@ -6,14 +6,7 @@ public class TutorialManager : MonoBehaviour
 {
     public enum TutorialType
     {
-        Hub,
-        BeforeHarvest,
-        HarvestUpgrade,
-        Facility,
-        Menu,
-        Staff,
-        ServiceSelection,
-        Sales,
+        BeforeHarvest, 
         Length
     }
 
