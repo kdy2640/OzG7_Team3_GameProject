@@ -10,6 +10,7 @@ public enum HarvestStatType
     TruckSpeed,
     TruckCapacity,
     TruckFuel,
+    GoldenPigDetectionRadius,
     Count
 }
 
@@ -60,6 +61,7 @@ public sealed class HarvestRuntimeStat
         values[(int)HarvestStatType.TruckSpeed].SetValue(5f);
         values[(int)HarvestStatType.TruckCapacity].SetValue(10f);
         values[(int)HarvestStatType.TruckFuel].SetValue(20f);
+        values[(int)HarvestStatType.GoldenPigDetectionRadius].SetValue(10f);
     }
 
     public float Get(HarvestStatType statType)

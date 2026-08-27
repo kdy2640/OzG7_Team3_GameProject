@@ -376,10 +376,13 @@ public class UpgradeManager : MonoBehaviour
 
     public void ResetUpgradeSaveData()
     {
-
         upgradeStates.Clear();
-
         BuildUpgradeStateMaps();
+
+        GetState(UpgradeDataDB.GetData(FacilityType.Table_1)).level = 1;
+        GetState(UpgradeDataDB.GetData(EmployeeType.Server_1)).level = 1;
+        GetState(UpgradeDataDB.GetData(EmployeeType.Cooker_1)).level = 1;
+
         RefreshRuntimeData();
     }
 

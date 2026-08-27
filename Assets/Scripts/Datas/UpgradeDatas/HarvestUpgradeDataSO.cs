@@ -10,6 +10,7 @@ public enum HarvestUpgradeType
     TruckCapacity,
     TruckFuel,
     StageLevel,
+    GoldenPigRadar,
     Count
 }
 

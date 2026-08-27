@@ -11,12 +11,17 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
     [SerializeField] private Image menuIcon;
     [SerializeField] private TMP_Text menuNameText;
     [SerializeField] private TMP_Text levelText;
+    [SerializeField] private TMP_Text levelTextShadow;
     [SerializeField] private TMP_Text sellValueText;
     [SerializeField] private TMP_Text cookValueText;
     [SerializeField] private TMP_Text descriptionText;
 
     [Header("Taste & Category")]
-    [SerializeField] private UI_TasteCard[] tasteCards;
+    [SerializeField] private RectTransform[] tasteCards;
+    [SerializeField] private RectTransform[] categoryCards;
+
+    [Header("Level")]
+    [SerializeField] private Image[] levelFrontSlots;
 
     [Header("Ingredient")]
     [SerializeField] private TMP_Text ingredientTitleText;
@@ -31,8 +36,6 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
     [SerializeField] private Button menuSelectionButton;
     [SerializeField] private TMP_Text menuSelectionButtonText;
     [SerializeField] private Button levelUpButton;
-    [SerializeField] private Button fullUpgradedMenuSelectionButton;
-    [SerializeField] private TMP_Text fullUpgradedMenuSelectionButtonText;
     [SerializeField] private Button menuDevelopButton;
 
     private DishType currentDishType = DishType.None;
@@ -43,7 +46,6 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
     private void Awake()
     {
         menuSelectionButton.onClick.AddListener(OnSelectionButtonClicked);
-        fullUpgradedMenuSelectionButton.onClick.AddListener(OnSelectionButtonClicked);
         levelUpButton.onClick.AddListener(OnUpgradeButtonClicked);
         menuDevelopButton.onClick.AddListener(OnUpgradeButtonClicked);
 
@@ -71,7 +73,6 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
     private void OnDestroy()
     {
         menuSelectionButton.onClick.RemoveListener(OnSelectionButtonClicked);
-        fullUpgradedMenuSelectionButton.onClick.RemoveListener(OnSelectionButtonClicked);
         levelUpButton.onClick.RemoveListener(OnUpgradeButtonClicked);
         menuDevelopButton.onClick.RemoveListener(OnUpgradeButtonClicked);
 
@@ -106,13 +107,17 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
 
         int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(dishType);
         DishUpgradeDataSO upgradeData = UpgradeDataDB.GetData(dishType);
+        string levelLabel = $"LV.{level}";
 
         menuIcon.gameObject.SetActive(true);
         menuIcon.sprite = data.Icon;
         menuNameText.text = data.DisplayName;
-        levelText.text = $"LV.{level}";
-        sellValueText.text = $"G {data.Cost:N0}";
-        cookValueText.text = $"C {GameManager.Instance.CookingManager.CalculateCookableAmount(dishType):N0}";
+        levelText.text = levelLabel;
+        levelTextShadow.text = levelLabel;
+        sellValueText.text =
+            $"{DishPriceCalculator.BasicPriceCalculate(dishType):N0}";
+        cookValueText.text =
+            $"{GameManager.Instance.CookingManager.CalculateCookableAmount(dishType):N0}";
         descriptionText.text = data.Description;
 
         bool isMaxLevel = upgradeData != null && level >= upgradeData.MaxLevel;
@@ -120,14 +125,14 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
 
         if (isMaxLevel)
         {
-            ingredientTitleText.text = "Ingredients for Cooking";
+            ingredientTitleText.text = "조리 필요 재료 목록";
             displayedIngredients = data.Ingredients;
         }
         else
         {
             ingredientTitleText.text = level <= 0
-                ? "Ingredients for Develop"
-                : "Ingredients for Upgrade";
+                ? "개발 필요 재료 목록"
+                : "업그레이드 필요 재료 목록";
 
             upgradeData?.TryGetRequiredIngredients(
                 level + 1,
@@ -135,6 +140,7 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
         }
 
         UpdateTasteCards(data.Tastes, data.Category);
+        UpdateLevelSlots(level);
         UpdateIngredientCards(displayedIngredients);
         UpdateStatusPanels(level, upgradeData);
         UpdateSelectionButtons();
@@ -149,6 +155,7 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
 
         menuNameText.text = string.Empty;
         levelText.text = string.Empty;
+        levelTextShadow.text = string.Empty;
         sellValueText.text = string.Empty;
         cookValueText.text = string.Empty;
         descriptionText.text = string.Empty;
@@ -159,10 +166,17 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
             tasteCards[i].gameObject.SetActive(false);
         }
 
+        for (int i = 0; i < categoryCards.Length; i++)
+        {
+            categoryCards[i].gameObject.SetActive(false);
+        }
+
         for (int i = 0; i < ingredientCards.Length; i++)
         {
             ingredientCards[i].gameObject.SetActive(false);
         }
+
+        UpdateLevelSlots(0);
 
         isDevelopedPanel.SetActive(false);
         isFullUpgradedPanel.SetActive(false);
@@ -176,17 +190,20 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
         for (int i = 0; i < tasteCards.Length; i++)
             tasteCards[i].gameObject.SetActive(false);
 
-        bool hasTaste = taste != TasteType.Count;
-        tasteCards[0].gameObject.SetActive(hasTaste);
+        for (int i = 0; i < categoryCards.Length; i++)
+            categoryCards[i].gameObject.SetActive(false);
 
-        if (hasTaste)
-            tasteCards[0].SetData(taste);
+        if (taste != TasteType.Count)
+            tasteCards[(int)taste].gameObject.SetActive(true);
 
-        bool hasCategory = category != CategoryType.Count;
-        tasteCards[1].gameObject.SetActive(hasCategory);
+        if (category != CategoryType.Count)
+            categoryCards[(int)category].gameObject.SetActive(true);
+    }
 
-        if (hasCategory)
-            tasteCards[1].SetData(category);
+    private void UpdateLevelSlots(int level)
+    {
+        for (int i = 0; i < levelFrontSlots.Length; i++)
+            levelFrontSlots[i].gameObject.SetActive(i < level);
     }
 
     private void UpdateIngredientCards(List<GroceryAmount> ingredients)
@@ -212,7 +229,8 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
 
         isNonDevelopedPanel.SetActive(isNonDeveloped);
         isFullUpgradedPanel.SetActive(!isNonDeveloped && isFullUpgraded);
-        isDevelopedPanel.SetActive(!isNonDeveloped && !isFullUpgraded);
+        isDevelopedPanel.SetActive(!isNonDeveloped);
+        levelUpButton.interactable = !isFullUpgraded;
     }
 
     private void OnUpgradeButtonClicked()
@@ -263,13 +281,11 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
         bool isSelected = hasDish && IsCurrentDishSelected(selectedDishes);
         bool canSelect = selectedDishes != null
             && selectedDishes.Count < GameManager.Instance.Market.LevelData.MaxDishLimit;
-        string buttonText = isSelected ? "Deselect" : "Select";
+        string buttonText = isSelected ? "메뉴 해제" : "메뉴 추가";
 
         menuSelectionButtonText.text = buttonText;
-        fullUpgradedMenuSelectionButtonText.text = buttonText;
 
         menuSelectionButton.interactable = hasDish && (isSelected || canSelect);
-        fullUpgradedMenuSelectionButton.interactable = hasDish && (isSelected || canSelect);
     }
 
     private bool IsCurrentDishSelected(IReadOnlyList<DishType> selectedDishes)
