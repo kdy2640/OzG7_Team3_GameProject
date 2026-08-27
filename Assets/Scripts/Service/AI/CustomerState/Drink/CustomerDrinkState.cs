@@ -11,6 +11,7 @@ public class CustomerDrinkState : IState
 
     public void Enter()
     {
+        stateManager.AnimSetIdle();
         if(!stateManager.DrinkZone.CanSpendDrink())
         {
             GoNext();

@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public sealed class TractorController : MonoBehaviour
 {
+    // 잠긴 스테이지 경계보다 5m 앞에서 멈추기 위한 의도적인 버퍼다.
     private const float StageBoundaryBuffer = 5f;
 
     [SerializeField] private InputActionAsset inputActions;

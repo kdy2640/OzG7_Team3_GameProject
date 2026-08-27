@@ -1625,7 +1625,7 @@ GameObject:
   - component: {fileID: 8967859940547363744}
   - component: {fileID: 9053078912502460138}
   m_Layer: 0
-  m_Name: Theme_Text
+  m_Name: Flavor_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1762,6 +1762,8 @@ GameObject:
   - component: {fileID: 5584553942162313415}
   - component: {fileID: 8264255694291313407}
   - component: {fileID: 5829121033652109761}
+  - component: {fileID: 4508707169300376607}
+  - component: {fileID: 2998179743438504330}
   m_Layer: 0
   m_Name: UI_DayVisual
   m_TagString: Untagged
@@ -1776,7 +1778,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8974728810623751825}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1791,7 +1793,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -70}
-  m_SizeDelta: {x: 600, y: 140}
+  m_SizeDelta: {x: 334.4241, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5584553942162313415
 CanvasRenderer:
@@ -1844,5 +1846,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_DayVisual
   dayText: {fileID: 6714591141511901008}
+  dayShadowText: {fileID: 1890036587743749463}
   festivalCardContainer: {fileID: 132073953069963574}
   festivalCardPrefab: {fileID: 4215919027705483319, guid: 4915b38243ca383488564142de173aac, type: 3}
+  flavorText: {fileID: 9053078912502460138}
+  themeText: {fileID: 4376160441761964949}
+  tasteFlavors:
+  - {fileID: 2479918044162968702}
+  - {fileID: 6129818274513076196}
+  - {fileID: 7033923375991654468}
+  categoryThemes:
+  - {fileID: 6688605712021613958}
+  - {fileID: 4187796316534641501}
+  - {fileID: 869453731676234338}
+--- !u!225 &4508707169300376607
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8974728810623751825}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &2998179743438504330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8974728810623751825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd13109681a8fb34b82ef7e7c6db1f1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallingPanelAnimator
+  duration: 0.6
+  startOffset: {x: 0, y: 180}
+  curveOffset: {x: -60, y: -30}
+  startRotation: -8
+  startScale: 0.8
+  startAlpha: 0.2

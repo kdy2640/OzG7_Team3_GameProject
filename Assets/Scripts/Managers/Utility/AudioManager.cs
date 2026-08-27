@@ -13,14 +13,15 @@ public enum BGMType
 }
 public enum SFXType
 {
-    None,
+    None = -1,
 
     //Global
     Global_ButtonClick = 0,
     Global_ButtonHover = 1,
-    Global_SceneChange = 2,
-    Global_Notification = 3,
-    Global_Error = 4,
+    Global_SceneChangeStart = 2,
+    Global_SceneChangeEnd = 3,
+    Global_Notification = 4,
+    Global_Error = 5,
     //Hub
     Hub_Upgrade = 100,
     Hub_FacilitySelect = 101,
@@ -32,20 +33,41 @@ public enum SFXType
     Hub_LevelUp = 107,
     Hub_GetReward = 108,
     Hub_Rankup = 109,
-    Hup_PanelPopup = 110,
+    Hub_PanelPopup = 110,
     //Service
     Service_SessionStart = 200,
+    Service_SessionEnd = 201,
+    Service_CustomerAngry = 202,
+    Service_CustomerEat = 203,
+    Service_CustomerPay= 204,
+    Service_ServerVoice = 205,
+    Service_ComboSound = 206,
     //Harvest
     Harvest_SessionStart = 300,
-    Harvest_Collect = 301,
-    Harvest_Grind = 302,
-    Harvest_CropHarvested = 303,
-    Harvest_TractorEngine = 304,
+    Harvest_SessionEnd = 301,
+    Harvest_Collect = 302,
+    Harvest_Grind = 303,
+    Harvest_CropHarvested = 304,
+    Harvest_TractorEngine = 305,
+    Harvest_ChickenVoice = 306,
+    Harvest_ChickenHit = 307,
+    Harvest_ChickenDie = 308,
+    Harvest_CowVoice = 309,
+    Harvest_CowHit = 310,
+    Harvest_CowDie = 311,
+    Harvest_SheepVoice = 312,
+    Harvest_SheepHit = 313,
+    Harvest_SheepDie = 314,
+    Harvest_PigVoice = 315,
+    Harvest_PigHit = 316,
+    Harvest_PigDie = 317
 }
 public class AudioManager : MonoBehaviour
 {
     [Header("AudioSource")]
-    [SerializeField] private AudioSource bgmSource;
+    [SerializeField] private AudioSource hubBGMSource;
+    [SerializeField] private AudioSource serviceBGMSource;
+    [SerializeField] private AudioSource harvestBGMSource;
     [SerializeField] private int sfxSourceCount = 20;//10에서 20으로 변경
     [SerializeField] private AudioSource[] sfxSources;
 
@@ -54,6 +76,7 @@ public class AudioManager : MonoBehaviour
 
     [Header("BGM List")]
     [SerializeField] private BGMClipData[] bgmClips;//인스펙터에서 등록할 BGM
+    [SerializeField, Min(0f)] private float bgmBlendDuration = 1f;
     [Header("SFX List")]
     [SerializeField] private SFXClipData[] sfxClips;//인스펙터에서 등록할 효과음 데이터
 
@@ -70,6 +93,11 @@ public class AudioManager : MonoBehaviour
     private Dictionary<SFXType, int> playingCounts;
 
     private BGMClipData currentBGMData;
+    private Coroutine bgmBlendCoroutine;
+    private bool areBGMPlayersStarted;
+    private float hubBGMBlendWeight;
+    private float serviceBGMBlendWeight;
+    private float harvestBGMBlendWeight;
     private float masterVolume = 1.0f;
     private float bgmVolume = 1.0f;
     private float sfxVolume = 1.0f;
@@ -87,22 +115,11 @@ public class AudioManager : MonoBehaviour
         playingCounts = new Dictionary<SFXType, int>();
 
         InitializeDictionary();
+        StartSynchronizedBGM();
     }
    //AudioSource가 없을경우 자동으로 만들어주는 녀석
    private void CreateAudioSources()
     {
-        if(bgmSource==null)
-        {
-            //BGM source 라는 이름의 빈 게임오브젝트를 생성하자.
-            GameObject bgmObj = new GameObject("BGM source");
-            bgmObj.transform.SetParent(transform);
-
-            //생성한 오브젝트에 AudioSource컴포넌트를 추가
-            bgmSource = bgmObj.AddComponent<AudioSource>();
-
-            //BGM은 반복재생하니까 루프를 true로 설정
-            bgmSource.loop = true;
-        }
         if (sfxSources == null || sfxSources.Length == 0)
         {
             sfxSources = new AudioSource[sfxSourceCount];
@@ -120,6 +137,29 @@ public class AudioManager : MonoBehaviour
                 sfxQueue.Enqueue(source);
             }
         }
+    }
+
+    private void StartSynchronizedBGM()
+    {
+        double startTime = AudioSettings.dspTime + 0.1d;
+
+        hubBGMBlendWeight = 0f;
+        serviceBGMBlendWeight = 0f;
+        harvestBGMBlendWeight = 0f;
+
+        hubBGMSource.clip = bgmDictionary[BGMType.HubBGM].clip;
+        serviceBGMSource.clip = bgmDictionary[BGMType.ServiceBGM].clip;
+        harvestBGMSource.clip = bgmDictionary[BGMType.HarvestBGM].clip;
+
+        hubBGMSource.volume = 0f;
+        serviceBGMSource.volume = 0f;
+        harvestBGMSource.volume = 0f;
+
+        hubBGMSource.PlayScheduled(startTime);
+        serviceBGMSource.PlayScheduled(startTime);
+        harvestBGMSource.PlayScheduled(startTime);
+
+        areBGMPlayersStarted = true;
     }
     private AudioSource GetSFXSource()
     {
@@ -173,6 +213,46 @@ public class AudioManager : MonoBehaviour
             }
         }
     }
+#if UNITY_EDITOR
+    [ContextMenu("Refresh SFX Clips By Type")]
+    private void RefreshSFXClipsByType()
+    {
+        UnityEditor.Undo.RecordObject(this, "Refresh SFX Clips By Type");
+
+        Dictionary<SFXType, SFXClipData> existingClips = new Dictionary<SFXType, SFXClipData>();
+        for (int i = 0; i < sfxClips.Length; i++)
+        {
+            SFXClipData data = sfxClips[i];
+            if (data == null || data.type == SFXType.None) continue;
+            if (!existingClips.ContainsKey(data.type))
+            {
+                existingClips.Add(data.type, data);
+            }
+        }
+
+        System.Array types = System.Enum.GetValues(typeof(SFXType));
+        List<SFXClipData> refreshedClips = new List<SFXClipData>();
+
+        for (int i = 0; i < types.Length; i++)
+        {
+            SFXType type = (SFXType)types.GetValue(i);
+            if (type == SFXType.None) continue;
+
+            if (existingClips.TryGetValue(type, out SFXClipData data))
+            {
+                refreshedClips.Add(data);
+            }
+            else
+            {
+                refreshedClips.Add(new SFXClipData { type = type });
+            }
+        }
+
+        sfxClips = refreshedClips.ToArray();
+        UnityEditor.EditorUtility.SetDirty(this);
+    }
+#endif
+
     //BGM을 재생하는 녀석
     //AudioManager.Instance.PlayBGM(BGMType.Stage);
     public void PlayBGM(BGMType type)
@@ -186,38 +266,96 @@ public class AudioManager : MonoBehaviour
         BGMClipData data = bgmDictionary[type];
 
         //현재 재생중인 BGM과 요청한 BGM이 같다면
-        if(bgmSource.clip==data.clip)
+        if(currentBGMData == data)
         {
             return;
         }
+
+        if (!areBGMPlayersStarted)
+        {
+            StartSynchronizedBGM();
+        }
+
+        if (bgmBlendCoroutine != null)
+        {
+            StopCoroutine(bgmBlendCoroutine);
+        }
+
         //현재 재생중인 BGM데이터를 저장
         currentBGMData = data;
-        //BGM AudioSource에 재생할 AudioClip을 넣는다.
-        bgmSource.clip = data.clip;
+        bgmBlendCoroutine = StartCoroutine(BlendBGM(data));
+    }
 
-        bgmSource.volume = data.volume * bgmVolume * masterVolume;
-        //BGM을 재생한다.
-        bgmSource.Play();
+    private IEnumerator BlendBGM(BGMClipData nextBGMData)
+    {
+        float startHubWeight = hubBGMBlendWeight;
+        float startServiceWeight = serviceBGMBlendWeight;
+        float startHarvestWeight = harvestBGMBlendWeight;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < bgmBlendDuration)
+        {
+            elapsedTime += Time.unscaledDeltaTime;
+            float progress = Mathf.Clamp01(elapsedTime / bgmBlendDuration);
+
+            float hubTargetWeight = nextBGMData.type == BGMType.HubBGM ? 1f : 0f;
+            float serviceTargetWeight = nextBGMData.type == BGMType.ServiceBGM ? 1f : 0f;
+            float harvestTargetWeight = nextBGMData.type == BGMType.HarvestBGM ? 1f : 0f;
+
+            hubBGMBlendWeight = Mathf.Lerp(startHubWeight, hubTargetWeight, progress);
+            serviceBGMBlendWeight = Mathf.Lerp(startServiceWeight, serviceTargetWeight, progress);
+            harvestBGMBlendWeight = Mathf.Lerp(startHarvestWeight, harvestTargetWeight, progress);
+
+            UpdateBGMVolume();
+            yield return null;
+        }
+
+        hubBGMBlendWeight = nextBGMData.type == BGMType.HubBGM ? 1f : 0f;
+        serviceBGMBlendWeight = nextBGMData.type == BGMType.ServiceBGM ? 1f : 0f;
+        harvestBGMBlendWeight = nextBGMData.type == BGMType.HarvestBGM ? 1f : 0f;
+        UpdateBGMVolume();
+
+        bgmBlendCoroutine = null;
     }
     //BGM을 정지시키는 퓬
     public void StopBGM()
     {
-        //현재 재쇼ㅐㅇ중인 BGM을 정지
-        bgmSource.Stop();
-        //오디오 소스에 연결된 오디오 클립을 제거
-        bgmSource.clip = null;
+        if (bgmBlendCoroutine != null)
+        {
+            StopCoroutine(bgmBlendCoroutine);
+            bgmBlendCoroutine = null;
+        }
+
+        hubBGMSource.Stop();
+        serviceBGMSource.Stop();
+        harvestBGMSource.Stop();
+
+        hubBGMSource.clip = null;
+        serviceBGMSource.clip = null;
+        harvestBGMSource.clip = null;
+
+        hubBGMBlendWeight = 0f;
+        serviceBGMBlendWeight = 0f;
+        harvestBGMBlendWeight = 0f;
+
+        areBGMPlayersStarted = false;
         //현재 재생중인 BGM데이터도 비우자.
         currentBGMData = null;
     }
     //일시 정지
     public void PauseBGM()
     {
-        bgmSource.Pause();
+        hubBGMSource.Pause();
+        serviceBGMSource.Pause();
+        harvestBGMSource.Pause();
     }
     //일시정지된 BGM을 다시 재생
     public void ResumeBGM()
     {
-        bgmSource.UnPause();
+        hubBGMSource.UnPause();
+        serviceBGMSource.UnPause();
+        harvestBGMSource.UnPause();
     }
 
     //효과음 랜덤으로 Randomratio (0~0.2) 추천
@@ -348,15 +486,8 @@ public class AudioManager : MonoBehaviour
     //현재 재생중인 BGM의 볼륨을 계산
     private void UpdateBGMVolume()
     {
-        //bgmSource가 없으면
-        if (bgmSource == null) return;
-        //현재 재생중인 BGM데이터가 없다면
-        if(currentBGMData==null)
-        {
-            //기본 BGM볼륨과 마스터 볼륨만 적용
-            bgmSource.volume = bgmVolume * masterVolume;
-            return;
-        }
-        bgmSource.volume = currentBGMData.volume * bgmVolume * masterVolume;
+        hubBGMSource.volume = bgmDictionary[BGMType.HubBGM].volume * hubBGMBlendWeight * bgmVolume * masterVolume;
+        serviceBGMSource.volume = bgmDictionary[BGMType.ServiceBGM].volume * serviceBGMBlendWeight * bgmVolume * masterVolume;
+        harvestBGMSource.volume = bgmDictionary[BGMType.HarvestBGM].volume * harvestBGMBlendWeight * bgmVolume * masterVolume;
     }
 }

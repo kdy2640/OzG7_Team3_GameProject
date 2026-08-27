@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class KitchenSlotViewer : MonoBehaviour
 {
-    private const float CookingDuration = 3f;
+    private float cookingDuration;
 
     [SerializeField] private TMP_Text dishName;
     [SerializeField] private Image timeMask;
@@ -13,6 +13,7 @@ public class KitchenSlotViewer : MonoBehaviour
 
     public void SetData(KitchenSlotData slotData)
     {
+        cookingDuration = slotData.RemainTime;
         this.slotData = slotData;
         if (slotData == null)
         {
@@ -37,7 +38,7 @@ public class KitchenSlotViewer : MonoBehaviour
         if (slotData == null)
             return;
 
-        timeMask.fillAmount = Mathf.Clamp01(slotData.RemainTime / CookingDuration);
+        timeMask.fillAmount = Mathf.Clamp01(slotData.RemainTime / cookingDuration);
     }
 
     private void Clear()
