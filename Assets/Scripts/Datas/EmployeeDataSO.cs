@@ -33,12 +33,14 @@ public sealed class EmployeeDataSO : ScriptableObject
     [SerializeField] private EmployeeType employeeType = EmployeeType.Count;
     [SerializeField] private WorkType workType = WorkType.Count;
     [SerializeField, Min(1)] private int maxLevel = 1;
+    [SerializeField, TextArea] private string description;
 
     public string Id => id;
     public string DisplayName => displayName;
     public EmployeeType EmployeeType => employeeType;
     public WorkType WorkType => workType;
     public int MaxLevel => maxLevel;
+    public string Description => description;
 
     [Header("Staff Info Panel")]
     [SerializeField] private Sprite roleIcon;

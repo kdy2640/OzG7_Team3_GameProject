@@ -3,7 +3,10 @@ using UnityEngine;
 public class TipBox : MonoBehaviour
 {
     [SerializeField] private int tipAmount;
+    [SerializeField] private Transform tipSpot;
     private TipButton tipButton;
+
+    public Transform TipSpot => tipSpot;
 
     private void OnEnable()
     {
