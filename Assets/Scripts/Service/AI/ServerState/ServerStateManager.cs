@@ -12,7 +12,7 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private SleepingButton sleepingButton;
     [SerializeField] private Image AutoWorkingImg;
 
-    [SerializeField] private float baseSpeed = 2;
+    [SerializeField] private float baseSpeed = 8;
     [SerializeField] private float speed;
     [SerializeField] private int level;
     [SerializeField] private float serveTime = 3f;
@@ -32,7 +32,7 @@ public class ServerStateManager : MonoBehaviour
     private float sleepingChance = 0.05f;
 
     
-
+    public float Speed => speed;
     public AIMove AiMove => aiMove;
     public Transform ServePoint => servePoint;
     public Transform Kitchen => kitchen;
@@ -44,6 +44,7 @@ public class ServerStateManager : MonoBehaviour
     public float ServeTime => serveTime;
     public float ReceiveFoodTime => receiveFoodTime;
     public SleepingButton SleepingButton => sleepingButton;
+    
     public bool isAutoWorking = false;
 
     [SerializeField] private IState currentState;

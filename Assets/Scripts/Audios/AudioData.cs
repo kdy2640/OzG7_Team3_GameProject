@@ -21,6 +21,7 @@ public class SFXClipData
     public float volume = 1.0f;
     [Range(-3.0f, 3.0f)]
     public float pitch = 1.0f;
+    public bool isLoop;
 
     // 같은 효과음이 너무 짧은 시간 안에 여러 번 재생되는 것을 막기 위한 최소 재생 간격(초)
     // 예)
