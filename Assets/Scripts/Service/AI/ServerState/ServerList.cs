@@ -19,15 +19,12 @@ public class ServerList : MonoBehaviour
     private ServerSkillManager skillManager = new();
 
     private List<ServerStateManager> servers = new();
-    private float timer;
     private bool acceled = false;
-
     public bool Acceled => acceled;
 
     private void OnEnable()
     {
         CreateServers();
-        accelerationButton.OnClicked += Acceleration;
     }
 
     private void Update()
@@ -37,13 +34,6 @@ public class ServerList : MonoBehaviour
             return;
         }
 
-        timer -= Time.deltaTime;
-
-        if (timer <= 0)
-        {
-            Deceleration();
-            acceled = false;
-        }
     }
 
     private void CreateServers()
@@ -137,26 +127,22 @@ public class ServerList : MonoBehaviour
         servers.Clear();
     }
 
-    private void Acceleration()
+    public void Acceleration(float percentage)
     {
-        acceled = true;
-        
         foreach (ServerStateManager server in servers)
         {
             if (server == null) continue;
-            server.AiMove.Acceleration();
+            server.AiMove.SetSpeed(server.Speed * (1+ percentage));
             server.Animator.speed = 2f;
         }
-
-        timer = accelDuration;
     }
 
-    private void Deceleration()
+    public void Deceleration()
     {
         foreach (ServerStateManager server in servers)
         {
             if (server == null) continue;
-            server.AiMove.Deceleration();
+            server.AiMove.SetSpeed(server.Speed);
             server.Animator.speed = 1f;
         }
     }

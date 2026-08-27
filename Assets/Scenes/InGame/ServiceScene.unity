@@ -1709,7 +1709,7 @@ Transform:
   m_GameObject: {fileID: 346881759}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5, y: 0, z: -1}
+  m_LocalPosition: {x: -5, y: 0, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1788,6 +1788,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DrinkZone
   drinkFillButton: {fileID: 462132135}
   drinkFillImg: {fileID: 1859986324}
+  drinkSpot: {fileID: 701084407}
 --- !u!1 &380968562
 GameObject:
   m_ObjectHideFlags: 0
@@ -2074,7 +2075,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 550982026689913226, guid: 8f83d878f47bcd04d96e3f3f696e899a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 80
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550982026689913226, guid: 8f83d878f47bcd04d96e3f3f696e899a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7543,6 +7544,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1787538068}
+  - {fileID: 1715236411}
   m_Father: {fileID: 184458785}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1672978792
@@ -7558,6 +7560,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TipBox
   tipAmount: 0
+  tipSpot: {fileID: 1715236411}
 --- !u!1 &1701662971
 GameObject:
   m_ObjectHideFlags: 0
@@ -7654,6 +7657,37 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3162970854001463282, guid: b8e3875c67a828f44a635e01b7d4c6dd, type: 3}
   m_PrefabInstance: {fileID: 1708722854}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1715236410
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1715236411}
+  m_Layer: 0
+  m_Name: TipSpot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1715236411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1715236410}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1672978791}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1719336323
 GameObject:
   m_ObjectHideFlags: 0
