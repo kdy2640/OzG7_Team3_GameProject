@@ -140,4 +140,35 @@ public static class UIEventHandlerExtensions
                 break;
         }
     }
+
+
+    public static void RemoveUIEvent(
+        this UI_EventHandler handler,
+        Action<PointerEventData> action,
+        UI_EventHandler.UIEvent eventType = UI_EventHandler.UIEvent.LClick)
+    {
+        if (handler == null || action == null)
+        {
+            return;
+        }
+
+        switch (eventType)
+        {
+            case UI_EventHandler.UIEvent.LClick:
+                handler.OnClickHandler -= action; 
+                break;
+            case UI_EventHandler.UIEvent.Enter:
+                handler.OnPointerEnterHandler -= action; 
+                break;
+            case UI_EventHandler.UIEvent.Exit:
+                handler.OnPointerExitHandler -= action; 
+                break;
+            case UI_EventHandler.UIEvent.Hold:
+                handler.OnHoldHandler -= action; 
+                break;
+            case UI_EventHandler.UIEvent.Deselect:
+                handler.OnDeselectHandler -= action; 
+                break;
+        }
+    }
 }
