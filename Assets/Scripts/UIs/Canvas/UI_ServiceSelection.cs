@@ -25,7 +25,7 @@ public sealed class UI_ServiceSelection : UI_Base
         TopLeft,
         UI_CommonExitPanel,
         UI_SelectMenuPanel,
-        UI_MareketVisualPanel
+        UI_MarketVisualPanel
     }
 
     protected override void OnInit()
@@ -65,12 +65,12 @@ public sealed class UI_ServiceSelection : UI_Base
         GetUI<PanelAnimator>((int)PanelAnimators.TopLeft).Show();
         GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();
         GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Show();
-        yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_MareketVisualPanel).Show();
+        yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_MarketVisualPanel).Show();
     }
 
     protected override IEnumerator OnHide()
     {
-        GetUI<PanelAnimator>((int)PanelAnimators.UI_MareketVisualPanel).Hide();
+        GetUI<PanelAnimator>((int)PanelAnimators.UI_MarketVisualPanel).Hide();
         GetUI<PanelAnimator>((int)PanelAnimators.UI_SelectMenuPanel).Hide();
         GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
         GetUI<PanelAnimator>((int)PanelAnimators.TopLeft).Hide();
