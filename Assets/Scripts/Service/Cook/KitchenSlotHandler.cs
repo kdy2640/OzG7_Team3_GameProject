@@ -24,6 +24,9 @@ public class KitchenSlotHandler : MonoBehaviour
     private readonly List<Cooker> cookers = new();
     private readonly List<QueueSlot> queueSlots = new();
 
+    private bool isAcceled;
+    private float accelPercentage;
+
     private void OnEnable()
     {
         if(requestQueue ==  null)
@@ -146,6 +149,9 @@ public class KitchenSlotHandler : MonoBehaviour
 
     private void StartCook(KitchenSlotData data)
     {
+        if (isAcceled)
+            data.RemainTime /= 1 + accelPercentage;
+
         for (int i = 0; i < cookers.Count; i++)
         {
             if (cookers[i] == null) continue;
@@ -157,5 +163,18 @@ public class KitchenSlotHandler : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region 가속
+    public void Acceleration(float percentage)
+    {
+        accelPercentage = percentage;
+        isAcceled = true;
+    }
+
+    public void Deceleration()
+    {
+        isAcceled = false;
+    }
     #endregion
 }

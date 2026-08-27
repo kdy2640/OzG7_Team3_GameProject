@@ -12,9 +12,9 @@ public class CustomerGoToTipState : IState
     {
         stateManager.Animator.SetBool("IsWalking", true);
 
-        stateManager.AiMove.OnArrived += StartTip;
+        stateManager.AiMove.MoveTo(stateManager.TipBox.TipSpot);
 
-        stateManager.AiMove.MoveTo(stateManager.TipBox.transform);
+        stateManager.AiMove.OnArrived += StartTip;
     }
 
     public void Execute()
@@ -29,6 +29,10 @@ public class CustomerGoToTipState : IState
 
     private void StartTip()
     {
+        stateManager.AiMove.OnArrived -= StartTip;
+        stateManager.AiMove.SetDirection(stateManager.TipBox.transform.position);
+        stateManager.Animator.SetBool("IsWalking", false);
         stateManager.ChangeState(new CustomerTipState(stateManager));
+        return;
     }
 }
