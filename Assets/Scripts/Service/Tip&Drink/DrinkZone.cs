@@ -5,13 +5,16 @@ public class DrinkZone : MonoBehaviour
 {
     [SerializeField] private DrinkFillButton drinkFillButton;
     [SerializeField] private Image drinkFillImg;
+    [SerializeField] private Transform drinkSpot;
 
     private float spendDrinkFillAmount = 1.0f;
 
+    public Transform DrinkSpot => drinkSpot;
+
     private void Awake()
     {
-        //if((GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_?) < 1))
-        //    Destroy(this.gameObject);
+        if ((GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_2) < 1))
+            Destroy(this.gameObject);
 
         drinkFillButton.gameObject.SetActive(false);
     }

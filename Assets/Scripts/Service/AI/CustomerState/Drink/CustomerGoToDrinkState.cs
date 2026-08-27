@@ -9,8 +9,9 @@ public class CustomerGoToDrinkState : IState
     }
 
     public void Enter()
-    {
-        stateManager.AiMove.MoveTo(stateManager.DrinkZone.transform);
+    {stateManager.Animator.SetBool("IsWalking", true);
+        stateManager.AiMove.MoveTo(stateManager.DrinkZone.DrinkSpot);
+        
         stateManager.AiMove.OnArrived += ArrivedDrink;
     }
 
@@ -24,6 +25,9 @@ public class CustomerGoToDrinkState : IState
 
     private void ArrivedDrink()
     {
+        stateManager.AiMove.OnArrived -= ArrivedDrink;
+        stateManager.AiMove.SetDirection(stateManager.DrinkZone.transform.position);
+        stateManager.Animator.SetBool("IsWalking", false);
         stateManager.ChangeState(new CustomerDrinkState(stateManager));
         return;
     }

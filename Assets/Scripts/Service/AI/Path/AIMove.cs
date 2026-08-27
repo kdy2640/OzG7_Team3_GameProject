@@ -1,6 +1,5 @@
 
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using System;
 
@@ -20,7 +19,8 @@ public class AIMove : MonoBehaviour
 
     private MoveState moveState;
 
-    [SerializeField]private float moveSpeed;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float rotateSpeed = 10.0f;
     [SerializeField] private PathManager pathManager;
     [SerializeField] private GraphManager graph;
 
@@ -52,6 +52,7 @@ public class AIMove : MonoBehaviour
     private void Update()
     {
         Move();
+        Rotate();
     }
 
     private void Move()
@@ -202,32 +203,28 @@ public class AIMove : MonoBehaviour
     private void SetDirection(Vector3 startPos, Vector3 goalPos)
     {
         direction = (goalPos - startPos).normalized;
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
     }
     public void SetDirection(Vector3 dir)
     {
         direction = dir.normalized;
-        if (direction != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(direction);
-        }
+    }
+
+    private void Rotate()
+    {
+        if(direction == Vector3.zero)
+            return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            rotateSpeed * Time.deltaTime
+        );
     }
 
     public void SetSpeed(float speed)
     {
         moveSpeed = speed;
-    }
-
-    public void Acceleration()
-    {
-        moveSpeed += 2;
-    }
-
-    public void Deceleration()
-    {
-        moveSpeed -= 2;
     }
 }
