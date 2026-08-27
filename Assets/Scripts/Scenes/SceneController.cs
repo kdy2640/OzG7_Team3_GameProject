@@ -81,11 +81,17 @@ public class SceneController : MonoBehaviour
         }
 
         SceneBase nextScene = scenes[nextSceneType];
+        ThreadPriority previousLoadingPriority =
+            Application.backgroundLoadingPriority;
+        Application.backgroundLoadingPriority = ThreadPriority.Low;
+
         AsyncOperation operation = SceneManager.LoadSceneAsync(nextScene.SceneName);
         currentScene = nextScene;
 
         while (!operation.isDone)
             yield return null;
+
+        Application.backgroundLoadingPriority = previousLoadingPriority;
 
         yield return currentScene.PrepareBeforeReveal();
 
