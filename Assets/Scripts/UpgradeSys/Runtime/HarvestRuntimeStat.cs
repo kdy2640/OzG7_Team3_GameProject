@@ -10,6 +10,7 @@ public enum HarvestStatType
     TruckSpeed,
     TruckCapacity,
     TruckFuel,
+    GoldenPigDetectionRadius,
     Count
 }
 
