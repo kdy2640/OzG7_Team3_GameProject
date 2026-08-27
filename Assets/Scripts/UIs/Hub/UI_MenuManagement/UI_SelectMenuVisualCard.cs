@@ -86,7 +86,7 @@ public sealed class UI_SelectMenuVisualCard : MonoBehaviour
         deselectButton.gameObject.SetActive(canDeselect && hasDish);
         deselectButton.interactable = canDeselect && hasDish && !isLocked;
 
-        menuVisualCard.SetClickEnabled(!canDeselect && !hasDish && !isLocked);
+        menuVisualCard.SetClickEnabled(!canDeselect && !isLocked);
         addMenuOverlay.SetActive(!canDeselect && !hasDish && !isLocked);
     }
 }
