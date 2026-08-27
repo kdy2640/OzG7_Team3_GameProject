@@ -6,14 +6,11 @@ public class UI_DayVisual : MonoBehaviour
 {
     [SerializeField] private TMP_Text dayText;
     [SerializeField] private TMP_Text dayShadowText;
-    [SerializeField] private Transform festivalCardContainer;
-    [SerializeField] private UI_FestivalCard festivalCardPrefab;
     [SerializeField] private TMP_Text flavorText;
     [SerializeField] private TMP_Text themeText;
     [SerializeField] private List<GameObject> tasteFlavors;
     [SerializeField] private List<GameObject> categoryThemes;
 
-    private readonly List<UI_FestivalCard> festivalCards = new();
     private MarketManager marketManager;
 
     private void OnEnable()
@@ -43,7 +40,6 @@ public class UI_DayVisual : MonoBehaviour
         dayText.text = $"{currentBusinessDay:D2}";
         dayShadowText.text = $"{currentBusinessDay:D2}";
         FestivalCalendar festivalCalendar = market.FestivalCalendar;
-        int festivalCount = 0;
         TasteType nowTaste = festivalCalendar.GetNowTaste(currentBusinessDay);
 
         flavorText.text = nowTaste switch
@@ -61,24 +57,6 @@ public class UI_DayVisual : MonoBehaviour
                 && i == (int)nowTaste);
         }
 
-        if (nowTaste != TasteType.Count)
-        {
-            while (festivalCards.Count <= festivalCount)
-            {
-                UI_FestivalCard festivalCard = Instantiate(
-                    festivalCardPrefab,
-                    festivalCardContainer);
-                festivalCards.Add(festivalCard);
-            }
-
-            int daysLeft = festivalCalendar.TasteEndBusinessDay
-                - currentBusinessDay
-                + 1;
-            UI_FestivalCard tasteFestivalCard = festivalCards[festivalCount++];
-            tasteFestivalCard.gameObject.SetActive(true);
-            tasteFestivalCard.SetData($"{nowTaste} Festival", daysLeft);
-        }
-
         CategoryType nowCategory = festivalCalendar.GetNowCategory(currentBusinessDay);
 
         themeText.text = nowCategory switch
@@ -94,29 +72,6 @@ public class UI_DayVisual : MonoBehaviour
             categoryThemes[i].SetActive(
                 nowCategory != CategoryType.Count
                 && i == (int)nowCategory);
-        }
-
-        if (nowCategory != CategoryType.Count)
-        {
-            while (festivalCards.Count <= festivalCount)
-            {
-                UI_FestivalCard festivalCard = Instantiate(
-                    festivalCardPrefab,
-                    festivalCardContainer);
-                festivalCards.Add(festivalCard);
-            }
-
-            int daysLeft = festivalCalendar.CategoryEndBusinessDay
-                - currentBusinessDay
-                + 1;
-            UI_FestivalCard categoryFestivalCard = festivalCards[festivalCount++];
-            categoryFestivalCard.gameObject.SetActive(true);
-            categoryFestivalCard.SetData($"{nowCategory} Festival", daysLeft);
-        }
-
-        for (int i = festivalCount; i < festivalCards.Count; i++)
-        {
-            festivalCards[i].gameObject.SetActive(false);
         }
     }
 }

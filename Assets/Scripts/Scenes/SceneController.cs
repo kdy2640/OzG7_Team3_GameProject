@@ -13,9 +13,12 @@ public enum SceneType
 
 public class SceneController : MonoBehaviour
 {
+    [SerializeField] private UI_Loading loadingPrefab;
+
     private Dictionary<SceneType, SceneBase> scenes;
     private SceneBase currentScene;
     private bool isChangingScene;
+    private UI_Loading loading;
 
     public SceneType CurrentSceneType => currentScene.SceneType;
 
@@ -30,6 +33,11 @@ public class SceneController : MonoBehaviour
         };
 
         currentScene = scenes[SceneType.Main];
+    }
+
+    private void Start()
+    {
+        loading = Instantiate(loadingPrefab);
     }
 
     public void ChangeScene(SceneType nextSceneType, bool isForced = false)
@@ -57,6 +65,7 @@ public class SceneController : MonoBehaviour
         isChangingScene = true;
 
         yield return currentScene.Exit();
+        yield return loading.OpenLoading();
 
         switch (nextSceneType)
         {
@@ -79,6 +88,8 @@ public class SceneController : MonoBehaviour
             yield return null;
 
         yield return currentScene.PrepareBeforeReveal();
+
+        yield return loading.CloseLoading();
 
         yield return currentScene.Enter();
 

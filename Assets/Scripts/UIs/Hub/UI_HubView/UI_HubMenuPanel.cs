@@ -1,21 +1,17 @@
-public sealed class UI_HubMenuPanel : UI_Base
+using UnityEngine;
+
+public sealed class UI_HubMenuPanel : MonoBehaviour
 {
-    private enum HubStateButtons
-    {
-        UI_ToFacilityManagementButton,
-        UI_ToMenuManagementButton,
-        UI_ToHarvestUpgradeButton
-    }
+    [SerializeField] private UI_HubStateButton facilityManagementButton;
+    [SerializeField] private UI_HubStateButton menuManagementButton;
+    [SerializeField] private UI_HubStateButton harvestUpgradeButton;
+    [SerializeField] private UI_HubStateButton staffManagementButton;
 
-    protected override void OnInit()
+    public void Init(HubCanvasController owner)
     {
-        Bind<UI_HubStateButton>(typeof(HubStateButtons));
-
-        GetUI<UI_HubStateButton>((int)HubStateButtons.UI_ToFacilityManagementButton)?
-            .Init(Owner);
-        GetUI<UI_HubStateButton>((int)HubStateButtons.UI_ToMenuManagementButton)?
-            .Init(Owner);
-        GetUI<UI_HubStateButton>((int)HubStateButtons.UI_ToHarvestUpgradeButton)?
-            .Init(Owner);
+        facilityManagementButton.Init(owner);
+        menuManagementButton.Init(owner);
+        harvestUpgradeButton.Init(owner);
+        staffManagementButton.Init(owner);
     }
 }
