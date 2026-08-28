@@ -106,9 +106,12 @@ public class Cooker : MonoBehaviour
             if (!isBusy && requestQueue.Queue.Count > 0)
             {
                 DishType requiredDish = requestQueue.Queue.Peek();
+                if (!GameManager.Instance.CookingManager.CanCook(requiredDish))
+                    break;
                 for (int i = 0; i < GameManager.Instance.StockManager.StockData.Dishes.Count; i++)
                 {
-                    if (requiredDish == GameManager.Instance.StockManager.StockData.Dishes[i].dish && GameManager.Instance.StockManager.StockData.Dishes[i].amount > 0)
+                    if (requiredDish == GameManager.Instance.StockManager.StockData.Dishes[i].dish 
+                        && GameManager.Instance.StockManager.StockData.Dishes[i].amount > 0)
                     {
                         hasDish = true; break;
                     }

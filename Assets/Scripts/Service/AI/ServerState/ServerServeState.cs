@@ -38,5 +38,6 @@ public class ServerServeState : IState
 
     public void Exit()
     {
+        stateManager.DestroyDish();
     }
 }
