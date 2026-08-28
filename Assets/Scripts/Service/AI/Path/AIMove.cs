@@ -1,7 +1,8 @@
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+using static UnityEngine.GraphicsBuffer;
 
 
 
@@ -34,6 +35,8 @@ public class AIMove : MonoBehaviour
 
     private Waypoint startWaypoint;
 
+    private bool isMoveToNear;
+
     private void Awake()
     {
         if(pathManager == null)
@@ -57,7 +60,15 @@ public class AIMove : MonoBehaviour
 
     private void Move()
     {
-        
+        if (isMoveToNear)
+        {
+            if (Vector3.Distance(transform.position, destination.transform.position) < 3.0f)
+            {
+                moveState = MoveState.Arrived;
+                isMoveToNear = false;
+                OnArrived?.Invoke();
+            }
+        }
 
         switch (moveState)
         {
@@ -125,6 +136,8 @@ public class AIMove : MonoBehaviour
         {
             pathIndex++;
         }
+
+        
 
     }
     private void MoveToDestination()
@@ -206,7 +219,7 @@ public class AIMove : MonoBehaviour
     }
     public void SetDirection(Vector3 dir)
     {
-        direction = dir.normalized;
+        SetDirection(transform.position, dir);
     }
 
     private void Rotate()
@@ -226,5 +239,11 @@ public class AIMove : MonoBehaviour
     public void SetSpeed(float speed)
     {
         moveSpeed = speed;
+    }
+
+    public void MoveToNear(Transform target)
+    {
+        isMoveToNear = true;
+        MoveTo(target);
     }
 }

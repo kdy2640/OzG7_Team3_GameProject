@@ -20,6 +20,9 @@ public class OrderButton : MonoBehaviour
 
     private CookingList cookingList;
 
+    public Image AutoServeImg => autoServeImg;
+    public CustomerStateManager Customer => customer;
+
     public bool IsAutoServing = false;
     public bool IsCooking = false;
 
@@ -92,6 +95,8 @@ public class OrderButton : MonoBehaviour
             Debug.Log("주문 수락 성공");
         }
     }
+
+    
 
     private void OnDisable()
     {

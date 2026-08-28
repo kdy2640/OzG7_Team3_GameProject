@@ -28,5 +28,6 @@ public class ServerReceiveFoodState : IState
 
     public void Exit()
     {
+        //음식 프리팹 생성
     }
 }

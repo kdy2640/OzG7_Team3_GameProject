@@ -12,6 +12,7 @@ public class ServerMoveToCleanState : IState
 
     public void Enter()
     {
+        stateManager.Animator.SetBool("IsWalking", true);
         stateManager.AiMove.MoveTo(dirty.Customer.CurrentTable.GetServePoint(dirty.Customer.Seat));
         stateManager.AiMove.OnArrived += ArrivedDirty;
     }
@@ -28,6 +29,7 @@ public class ServerMoveToCleanState : IState
 
     private void ArrivedDirty()
     {
+        stateManager.Animator.SetBool("IsWalking", false);
         stateManager.ChangeState(new ServerCleanState(stateManager, dirty));
     }
 }
