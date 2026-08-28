@@ -18,13 +18,8 @@ public class UI_ClearData : MonoBehaviour
     }
     private void OnClickButtonHandler()
     {
-        if (saveManager == null)
-        {
-            Debug.LogWarning("SaveManager is not assigned.");
-            return;
-        }
-
-        saveManager.ResetSave();
+        GetComponentInParent<SettingsPopup>().Close();
+        GameManager.Instance.Utility.Save.ResetSave();
         GameManager.Instance.Scene.ChangeScene(SceneType.Main, true);
     }
 }

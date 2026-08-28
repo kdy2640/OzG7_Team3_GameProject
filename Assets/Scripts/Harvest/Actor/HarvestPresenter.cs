@@ -77,6 +77,7 @@ public sealed class HarvestPresenter : MonoBehaviour
 
     private IEnumerator HitRoutine()
     {
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Harvest_CropHit);
         Vector3 bendDirection = Camera.main.transform.forward;
         bendDirection.y = 0f;
 
@@ -158,7 +159,8 @@ public sealed class HarvestPresenter : MonoBehaviour
     }
 
     private IEnumerator DeathRoutine()
-    {
+    { 
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Harvest_CropHarvested);
         Vector3 bendDirection = Camera.main.transform.forward;
         bendDirection.y = 0f;
 

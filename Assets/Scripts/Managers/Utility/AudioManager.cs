@@ -15,52 +15,77 @@ public enum SFXType
 {
     None = -1,
 
-    //Global
-    Global_ButtonClick = 0,
-    Global_ButtonHover = 1,
-    Global_SceneChangeStart = 2,
-    Global_SceneChangeEnd = 3,
-    Global_Notification = 4,
-    Global_Error = 5,
-    //Hub
-    Hub_Upgrade = 100,
-    Hub_FacilitySelect = 101,
-    Hub_StaffSelect = 102,
-    Hub_MenuSelect = 103,
-    Hub_MenuDeselect = 104,
-    Hub_Recruit = 105,
-    Hub_ServiceStart = 106,
-    Hub_LevelUp = 107,
-    Hub_GetReward = 108,
-    Hub_Rankup = 109,
-    Hub_PanelPopup = 110,
-    //Service
-    Service_SessionStart = 200,
-    Service_SessionEnd = 201,
-    Service_CustomerAngry = 202,
-    Service_CustomerEat = 203,
-    Service_CustomerPay= 204,
-    Service_ServerVoice = 205,
-    Service_ComboSound = 206,
-    //Harvest
-    Harvest_SessionStart = 300,
-    Harvest_SessionEnd = 301,
-    Harvest_Collect = 302,
-    Harvest_Grind = 303,
-    Harvest_CropHarvested = 304,
-    Harvest_TractorEngine = 305,
-    Harvest_ChickenVoice = 306,
-    Harvest_ChickenHit = 307,
-    Harvest_ChickenDie = 308,
-    Harvest_CowVoice = 309,
-    Harvest_CowHit = 310,
-    Harvest_CowDie = 311,
-    Harvest_SheepVoice = 312,
-    Harvest_SheepHit = 313,
-    Harvest_SheepDie = 314,
-    Harvest_PigVoice = 315,
-    Harvest_PigHit = 316,
-    Harvest_PigDie = 317
+    // Global
+    Global_ButtonClick = 0,         // 활성 공용 버튼을 눌렀을 때
+    Global_ButtonHover = 1,         // 포인터가 활성 버튼이나 카드에 처음 진입했을 때
+    Global_SceneChangeStart = 2,    // 씬 전환 로딩 화면이 열릴 때
+    Global_SceneChangeEnd = 3,      // 로딩 화면이 닫히고 새 씬이 공개될 때
+    Global_Notification = 4,        // 토스트나 새 알림이 표시될 때
+    Global_Error = 5,               // 실행 가능한 입력이 조건 부족으로 거절됐을 때
+    Global_PanelPopup = 6,          // 공통 팝업이나 상세 패널이 열릴 때
+    Global_PanelClose = 7,          // 팝업이나 상세 패널을 닫고 이전 화면으로 돌아갈 때
+    Global_Confirm = 8,             // 확인, 저장, 초기화 같은 동작이 완료됐을 때
+
+    // Hub
+    Hub_Upgrade = 100,              // 시설, 직원, 요리, 수확 능력, 스테이지 업그레이드 성공 시
+    Hub_Select = 101,               // 시설, 직원, 요리 카드, 수확 항목, 스테이지, 축제 항목을 탐색 선택했을 때
+    Hub_MenuSelect = 103,           // 오늘의 메뉴에 요리를 추가했을 때
+    Hub_MenuDeselect = 104,         // 오늘의 메뉴에서 요리를 제거했을 때
+    Hub_GetReward = 105,            // 현재 마켓 미션 보상을 수령했을 때
+    Hub_Rankup = 106,               // 마켓 승급이 확정되고 승급 패널이 열릴 때
+    Hub_FestivalStart = 107,        // 맛 또는 카테고리 축제를 실제 시작했을 때
+    Hub_NextDay = 108,              // 밤에서 다음 영업일 아침으로 넘어갈 때
+
+    // Service
+    Service_SessionStart = 200,     // 영업 시작 카운트다운의 GO 또는 영업 루프 시작 시
+    Service_SessionEnd = 201,       // 영업 시간이 끝나 결과 흐름으로 진입할 때
+    Service_CustomerAngry = 202,    // 주문 제한시간 초과로 고객이 화나서 떠날 때
+    Service_CustomerEat = 203,      // 고객이 식사하는 동안 한입 연출이 재생될 때
+    Service_CustomerPay = 204,      // 식사 또는 음료 대금이 실제 재화로 지급될 때
+    Service_ServerVoice = 205,      // 서버가 작업을 시작하거나 상황에 반응할 때
+    Service_ComboSound = 206,       // 콤보가 임계치에 도달하여 발동됐을때.
+    Service_OrderCreated = 207,     // 새 고객의 주문 UI가 나타났을 때
+    Service_OrderAccepted = 208,    // 주문 접수와 완성 요리 차감이 성공했을 때
+    Service_CookQueued = 209,       // 조리 요청이 성공해 조리 대기열에 들어갔을 때
+    Service_CookComplete = 210,     // 조리가 끝나 완성 요리가 재고에 추가됐을 때
+    Service_DishPickup = 211,       // 서버가 주방에서 완성 요리를 집었을 때
+    Service_DishServed = 212,       // 서버가 고객에게 요리를 전달했을 때
+    Service_TipAdded = 213,         // 고객이 팁 박스에 팁을 추가했을 때
+    Service_TipCollected = 214,     // 팁 버튼으로 누적 팁을 회수했을 때
+    Service_ComboBreak = 215,       // 제한시간 초과나 먹튀 성공으로 콤보가 끊겼을 때
+    Service_NegativeEventStart = 216,   // 먹튀, 테이블 오염, 서버 수면 등 부정 이벤트가 발생했을 때
+    Service_NegativeEventSelect = 217,  // 해결할 부정 이벤트를 선택했을 때
+    Service_NegativeEventResolve = 218, // 선택한 부정 이벤트를 해결했을 때
+    Service_DrinkServed = 219,      // 고객이 음료를 소비하고 음료 매출이 발생했을 때
+    Service_DrinkRefill = 220,      // 음료 리필 게이지가 가득 차 보충이 완료됐을 때
+    Service_Acceleration = 221,     // 남은 횟수를 소비해 영업 가속이 실제 발동했을 때
+
+    // Harvest
+    Harvest_SessionStart = 300,     // 수확 시작 카운트다운의 GO 또는 수확 루프 시작 시
+    Harvest_SessionEnd = 301,       // 수확 시간이나 연료가 끝나 조작이 종료될 때
+    Harvest_Collect = 302,          // 수확 보상 재료가 플레이어 재고에 귀속될 때
+    Harvest_Grind = 303,            // 커터가 수확 대상과 접촉해 절단 중일 때 사용하는 루프음
+    Harvest_CropHarvested = 304,    // 정적 작물의 HP가 0이 되어 수확 완료됐을 때
+    Harvest_TractorEngine = 305,    // 수확 세션에서 트랙터가 실제 주행 중일 때 사용하는 루프음
+    Harvest_ChickenVoice = 306,     // 닭이 평상 또는 도주 상태에서 울 때
+    Harvest_ChickenHit = 307,       // 닭이 커터에 피격됐을 때
+    Harvest_ChickenDie = 308,       // 닭의 HP가 0이 되어 사망할 때
+    Harvest_CowVoice = 309,         // 소가 평상 또는 도주 상태에서 울 때
+    Harvest_CowHit = 310,           // 소가 커터에 피격됐을 때
+    Harvest_CowDie = 311,           // 소의 HP가 0이 되어 사망할 때
+    Harvest_SheepVoice = 312,       // 양이 평상 또는 도주 상태에서 울 때
+    Harvest_SheepHit = 313,         // 양이 커터에 피격됐을 때
+    Harvest_SheepDie = 314,         // 양의 HP가 0이 되어 사망할 때
+    Harvest_PigVoice = 315,         // 돼지가 평상 또는 도주 상태에서 울 때
+    Harvest_PigHit = 316,           // 돼지가 커터에 피격됐을 때
+    Harvest_PigDie = 317,           // 돼지의 HP가 0이 되어 사망할 때
+    Harvest_ResultReveal = 318,     // 수확 종료 후 결과 패널과 획득량을 공개할 때
+    Harvest_CropHit = 319,          // 정적 작물이 커터 피해를 받았을 때
+    Harvest_GoldenPigDetected = 320, // 황금돼지가 레이더 범위에 처음 들어왔을 때
+    Harvest_GoldenPigCollected = 321,// 황금돼지를 쓰러뜨리고 희귀 보상을 획득했을 때
+    Harvest_SkillActivate = 322,    // 수확 스킬이 사용 가능 검사를 통과하고 발동했을 때
+    Harvest_SkillReady = 323,       // 수확 스킬 쿨다운이 끝나 다시 사용 가능해졌을 때
+    Harvest_TimeWarning = 324       // 수확 남은 시간이 경고 임계값에 처음 진입했을 때
 }
 public class AudioManager : MonoBehaviour
 {
@@ -217,6 +242,8 @@ public class AudioManager : MonoBehaviour
     [ContextMenu("Refresh SFX Clips By Type")]
     private void RefreshSFXClipsByType()
     {
+        const string sfxFolderPath = "Assets/Resources/Audios/SFXs";
+
         UnityEditor.Undo.RecordObject(this, "Refresh SFX Clips By Type");
 
         Dictionary<SFXType, SFXClipData> existingClips = new Dictionary<SFXType, SFXClipData>();
@@ -230,6 +257,42 @@ public class AudioManager : MonoBehaviour
             }
         }
 
+        string[] audioClipGuids = UnityEditor.AssetDatabase.FindAssets(
+            "t:AudioClip",
+            new[] { sfxFolderPath });
+        List<string> audioClipPaths = new List<string>();
+
+        for (int i = 0; i < audioClipGuids.Length; i++)
+        {
+            audioClipPaths.Add(
+                UnityEditor.AssetDatabase.GUIDToAssetPath(audioClipGuids[i]));
+        }
+
+        audioClipPaths.Sort(System.StringComparer.Ordinal);
+
+        Dictionary<string, AudioClip> audioClipsByName =
+            new Dictionary<string, AudioClip>(System.StringComparer.Ordinal);
+
+        for (int i = 0; i < audioClipPaths.Count; i++)
+        {
+            string audioClipPath = audioClipPaths[i];
+            string audioClipName =
+                System.IO.Path.GetFileNameWithoutExtension(audioClipPath);
+            AudioClip audioClip =
+                UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>(audioClipPath);
+
+            if (audioClipsByName.ContainsKey(audioClipName))
+            {
+                Debug.LogWarning(
+                    $"[AudioManager] 같은 이름의 SFX AudioClip이 중복되었습니다. "
+                    + $"name: {audioClipName}, ignoredPath: {audioClipPath}",
+                    this);
+                continue;
+            }
+
+            audioClipsByName.Add(audioClipName, audioClip);
+        }
+
         System.Array types = System.Enum.GetValues(typeof(SFXType));
         List<SFXClipData> refreshedClips = new List<SFXClipData>();
 
@@ -238,14 +301,25 @@ public class AudioManager : MonoBehaviour
             SFXType type = (SFXType)types.GetValue(i);
             if (type == SFXType.None) continue;
 
-            if (existingClips.TryGetValue(type, out SFXClipData data))
+            if (!existingClips.TryGetValue(type, out SFXClipData data))
             {
-                refreshedClips.Add(data);
+                data = new SFXClipData { type = type };
+            }
+
+            if (audioClipsByName.TryGetValue(type.ToString(), out AudioClip audioClip))
+            {
+                data.clip = audioClip;
             }
             else
             {
-                refreshedClips.Add(new SFXClipData { type = type });
+                data.clip = null;
+                Debug.LogWarning(
+                    $"[AudioManager] SFX AudioClip을 찾을 수 없습니다. "
+                    + $"type: {type}, folder: {sfxFolderPath}",
+                    this);
             }
+
+            refreshedClips.Add(data);
         }
 
         sfxClips = refreshedClips.ToArray();
