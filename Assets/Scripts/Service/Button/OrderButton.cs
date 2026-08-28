@@ -35,8 +35,13 @@ public class OrderButton : MonoBehaviour
         
         autoServeImg.gameObject.SetActive(false);
         cookingList.cookingListChanged += UpdateCookingUI;
-        UpdateCookingUI();
+        
 
+    }
+
+    private void Start()
+    {
+        UpdateCookingUI();
     }
 
     public void SetOrder(DishAmount order)
@@ -62,10 +67,13 @@ public class OrderButton : MonoBehaviour
             cookingList.List.Contains(dishAmount.dish)
             );
         }
+
+        Debug.Log("UpdateCookingUI>>\n DishAmount = " + dishAmount + " foodReadyImg = " + foodReadyImg);
         
         foodReadyImg.gameObject.SetActive(
             GameManager.Instance.StockManager.CanConsumeDish(dishAmount)
             );
+
     }
 
     public void OnClick()
@@ -93,8 +101,6 @@ public class OrderButton : MonoBehaviour
             Debug.Log("주문 수락 성공");
         }
     }
-
-    
 
     private void OnDisable()
     {
