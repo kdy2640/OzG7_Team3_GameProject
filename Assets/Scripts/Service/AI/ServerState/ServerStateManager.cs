@@ -9,14 +9,17 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private Transform servePoint;
     [SerializeField] private Transform kitchen;
     [SerializeField] private Transform waitPoint;
+    [SerializeField] private Transform foodSpot;
     [SerializeField] private SleepingButton sleepingButton;
     [SerializeField] private Image AutoWorkingImg;
+    
 
     [SerializeField] private float baseSpeed = 8;
     [SerializeField] private float speed;
     [SerializeField] private int level;
     [SerializeField] private float serveTime = 3f;
     [SerializeField] private float receiveFoodTime = 3f;
+   
     private Animator animator;
 
     private DishType dish;
@@ -30,13 +33,14 @@ public class ServerStateManager : MonoBehaviour
     private DishEffectQueue dishEffectQueue;
 
     private float sleepingChance = 0.05f;
-
+    
     
     public float Speed => speed;
     public AIMove AiMove => aiMove;
     public Transform ServePoint => servePoint;
     public Transform Kitchen => kitchen;
     public Transform WaitPoint => waitPoint;
+    public Transform FoodSpot => foodSpot;
     public Animator Animator => animator;
     public CustomerStateManager Customer => customer;
     public DishType Dish => dish;
@@ -45,6 +49,8 @@ public class ServerStateManager : MonoBehaviour
     public float ReceiveFoodTime => receiveFoodTime;
     public SleepingButton SleepingButton => sleepingButton;
     
+
+
     public bool isAutoWorking = false;
 
     [SerializeField] private IState currentState;
@@ -72,7 +78,6 @@ public class ServerStateManager : MonoBehaviour
     {
         ChangeState(new ServerGetBackState(this));
         StartCoroutine(SleepingChanceCo());
-        StartCoroutine(AutoWorkingUICo());
     }
 
     private void Update()
@@ -113,7 +118,12 @@ public class ServerStateManager : MonoBehaviour
 
     public void GiveFood()
     {
+        if( isAutoWorking)
+        {
+            customer.IsAutoServed = true;
+        }
         customer.foodReceived?.Invoke();
+        
         isAutoWorking = false;
     }
 
@@ -178,10 +188,10 @@ public class ServerStateManager : MonoBehaviour
                 OrderButton orderButton = FindFirstObjectByType<OrderButton>();
                 if (orderButton != null)
                 {
-                    orderButton.IsAutoServing = true;
+                    customer = orderButton.Customer;
+                    customer.IsAutoServed = true;
                     isAutoWorking = true;
                     orderButton.OnClick();
-                    
                 }
 
                 if(!IsBusy)
@@ -201,6 +211,7 @@ public class ServerStateManager : MonoBehaviour
 
     public void AutoServe()
     {
+        SetAutoWorkingUI();
         StartCoroutine(AutoServeCo());
     }
 
@@ -258,23 +269,13 @@ public class ServerStateManager : MonoBehaviour
         }
     }
 
-    private IEnumerator AutoWorkingUICo()
+   
+
+    public void SetAutoWorkingUI()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(1f);
-            if(isAutoWorking)
-            {
-                AutoWorkingImg.gameObject.SetActive(true);
-            }
-            else
-            {
-                AutoWorkingImg.gameObject.SetActive(false);
-            }
-        }
+        AutoWorkingImg.gameObject.SetActive(true);
     }
 
-    
 
     private void ServerDie()
     {

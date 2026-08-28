@@ -75,6 +75,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &3263439276693414373
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1810254933422817448}
+  m_Layer: 0
+  m_Name: FoodSpot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1810254933422817448
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3263439276693414373}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3402935090452215016}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4002377303480700069
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,6 +353,7 @@ Transform:
   m_Children:
   - {fileID: 5106556810944334447}
   - {fileID: 367696438460527241}
+  - {fileID: 1810254933422817448}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8349347295232314299
@@ -397,6 +429,7 @@ MonoBehaviour:
   servePoint: {fileID: 0}
   kitchen: {fileID: 0}
   waitPoint: {fileID: 0}
+  foodSpot: {fileID: 1810254933422817448}
   sleepingButton: {fileID: 5408920681423158067}
   AutoWorkingImg: {fileID: 2844251473963857347}
   baseSpeed: 8
@@ -419,6 +452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AIMove
   moveSpeed: 5
+  rotateSpeed: 10
   pathManager: {fileID: 0}
   graph: {fileID: 0}
 --- !u!1 &8141568128685299333
@@ -607,7 +641,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 5.25}
+  m_AnchoredPosition: {x: 0, y: 6.5}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1581103387903694277

@@ -12,11 +12,17 @@ public class Combo : MonoBehaviour
     private int comboCount = 0;
     private float bonusRate;
 
+    private void OnEnable()
+    {
+        UpdateUI();
+    }
+
     public int ComboCount => comboCount;
     public float BonusRate => bonusRate;    
     public void AddCount()
     {
         comboCount++;
+        
         UpdateUI();
     }
 
@@ -37,7 +43,7 @@ public class Combo : MonoBehaviour
             backgroundImg.gameObject.SetActive(true);
         }
         bonusRate = (comboCount / 5) * 10f;
-        countText.text = "combo : " + comboCount.ToString();
-        bonusText.text = "+ bonus : " + bonusRate + "%";
+        countText.text = "Combo : " + comboCount.ToString();
+        bonusText.text = "+ Bonus : " + bonusRate + "%";
     }
 }

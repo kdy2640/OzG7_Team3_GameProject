@@ -32,11 +32,6 @@ public class CustomerWaitForFoodState : IState
 
     private void StartEat()
     {
-        if (stateManager.OrderButton != null)
-        {
-            stateManager.OrderButton.gameObject.SetActive(false);
-        }
-        
         stateManager.ChangeState(
                 new CustomerEatState(stateManager)
             );

@@ -11,8 +11,9 @@ public class ServerCatchRunnerState : IState
 
     public void Enter()
     {
+        stateManager.Animator.SetBool("IsRunning", true);
         stateManager.IsBusy = true;
-        stateManager.AiMove.MoveTo(stateManager.Customer.transform);
+        stateManager.AiMove.MoveToNear(stateManager.Customer.transform);
         stateManager.AiMove.OnArrived += Catch;
     }
 
@@ -28,6 +29,8 @@ public class ServerCatchRunnerState : IState
 
     private void Catch()
     {
+        stateManager.AiMove.SetDirection(stateManager.Customer.transform.position);
+        stateManager.Animator.SetBool("IsRunning", false);
         stateManager.Customer.caught?.Invoke();
         stateManager.ChangeState(new ServerTakeMoneyFromRunnerState(stateManager));
     }

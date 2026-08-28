@@ -28,6 +28,7 @@ public class ServerSkillManager
         if(server.Level >= 3)
         {
             server.AutoServe();
+            
         }
 
         if(server.Level >= 5)

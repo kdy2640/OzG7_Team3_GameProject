@@ -10,6 +10,8 @@ public sealed class SalesResultBuilder
         };
     }
 
+
+
     public void RecordCustomer()
     {
         if (currentResult == null)

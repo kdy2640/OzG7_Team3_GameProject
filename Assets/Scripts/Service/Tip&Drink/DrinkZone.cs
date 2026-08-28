@@ -5,6 +5,7 @@ public class DrinkZone : MonoBehaviour
 {
     [SerializeField] private DrinkFillButton drinkFillButton;
     [SerializeField] private Image drinkFillImg;
+    [SerializeField] private Image backGroundImage;
     [SerializeField] private Transform drinkSpot;
 
     private float spendDrinkFillAmount = 1.0f;
@@ -17,6 +18,7 @@ public class DrinkZone : MonoBehaviour
             Destroy(this.gameObject);
 
         drinkFillButton.gameObject.SetActive(false);
+        backGroundImage.gameObject.SetActive(false);
     }
 
     private void OnEnable()
@@ -54,12 +56,14 @@ public class DrinkZone : MonoBehaviour
     private void FillDrink()
     {
         drinkFillButton.gameObject.SetActive (true);
+        backGroundImage.gameObject.SetActive (true);
     }
 
     private void ApplyFill()
     {
         spendDrinkFillAmount = 1.0f;
         drinkFillImg.fillAmount = spendDrinkFillAmount;
+        backGroundImage.gameObject.SetActive(false);
     }
 
     private void OnDisable()
