@@ -7,6 +7,7 @@ public class KitchenSlotViewer : MonoBehaviour
     private float cookingDuration;
 
     [SerializeField] private TMP_Text dishName;
+    [SerializeField] private Image dishImage;
     [SerializeField] private Image timeMask;
 
     private KitchenSlotData slotData;
@@ -30,6 +31,7 @@ public class KitchenSlotViewer : MonoBehaviour
         }
 
         dishName.text = data.DisplayName;
+        dishImage.sprite = data.Icon;
         Refresh();
     }
 

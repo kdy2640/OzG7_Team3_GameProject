@@ -21,6 +21,7 @@ public class SceneController : MonoBehaviour
     private UI_Loading loading;
 
     public SceneType CurrentSceneType => currentScene.SceneType;
+    public bool IsChangingScene => isChangingScene;
 
     private void Awake()
     {

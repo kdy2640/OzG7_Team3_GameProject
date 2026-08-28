@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4920692141108842366}
   - component: {fileID: 4348550483625830929}
   - component: {fileID: 8831544277720224558}
+  - component: {fileID: 1828886309847125043}
   m_Layer: 0
   m_Name: UI_StartServiceButton
   m_TagString: Untagged
@@ -151,6 +152,19 @@ MonoBehaviour:
   m_EffectColor: {r: 0.68235296, g: 0.8235294, b: 0.43137255, a: 1}
   m_EffectDistance: {x: 9, y: 9}
   m_UseGraphicAlpha: 1
+--- !u!114 &1828886309847125043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50029729467776678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  type: -1
 --- !u!1 &2832924732190668981
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,7 +381,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Start Sales
+  m_text: "\uC601\uC5C5\uD558\uB7EC \uAC00\uAE30"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

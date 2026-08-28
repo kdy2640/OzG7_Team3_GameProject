@@ -4,8 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class TempExitButton : MonoBehaviour
-{ 
-    [SerializeField] private TextMeshProUGUI text;
+{  
     [SerializeField] private Button button;
     public void OnButtonClicked()
     { 
@@ -15,16 +14,5 @@ public class TempExitButton : MonoBehaviour
     {
         if (button == null) button = gameObject.GetOrAddComponent<Button>();
         button.onClick.AddListener(OnButtonClicked);
-    }
-
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    } 
 }

@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 public class UI_ButtonSound : MonoBehaviour
 {
     UI_EventHandler eventHandler;
+    [SerializeField] SFXType type = SFXType.None;
 
     private void Awake()
     {
@@ -24,6 +25,7 @@ public class UI_ButtonSound : MonoBehaviour
     private void OnClick(PointerEventData data)
     {
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Global_ButtonClick);
+        if(type != SFXType.None) GameManager.Instance.Utility.Audio.PlaySFX(type);
     }
     private void OnHover(PointerEventData data)
     { 

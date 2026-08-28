@@ -36,7 +36,7 @@ public class SaveManager : MonoBehaviour
     {
         if (!HasSave())
         {
-            GameManager.Instance.Upgrade.ResetUpgradeSaveData();
+            ResetSave();
             Debug.Log($"Save file does not exist. path : {SavePath}");
             return;
         }
