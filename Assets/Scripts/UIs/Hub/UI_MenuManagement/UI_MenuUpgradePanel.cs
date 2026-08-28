@@ -11,12 +11,15 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
 
     [Header("Current Level")]
     [SerializeField] private TMP_Text currentLevelText;
+    [SerializeField] private TMP_Text currentLevelTextShadow;
     [SerializeField] private TMP_Text currentSellPriceText;
     [SerializeField] private Image[] currentLevelSlots;
 
     [Header("Next Level")]
     [SerializeField] private TMP_Text nextLevelText;
+    [SerializeField] private TMP_Text nextLevelTextShadow;
     [SerializeField] private TMP_Text nextSellPriceText;
+    [SerializeField] private TMP_Text nextSellPriceTextShadow;
     [SerializeField] private Image[] nextLevelSlots;
 
     [Header("Level Slot Colors")]
@@ -28,12 +31,14 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
     [SerializeField] private UI_IngredientCard[] ingredientCards;
 
     [Header("Status")]
+    [SerializeField] private GameObject warningBox;
     [SerializeField] private TMP_Text warningText;
 
     [Header("Buttons")]
     [SerializeField] private Button cancelButton;
     [SerializeField] private Button upgradeButton;
     [SerializeField] private TMP_Text upgradeButtonText;
+    [SerializeField] private GameObject upgradeLock;
 
     private DishType currentDishType = DishType.None;
 
@@ -82,13 +87,20 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
         menuIcon.sprite = dishData.Icon;
         menuNameText.text = dishData.DisplayName;
 
-        currentLevelText.text = $"Lv.{currentLevel}";
-        currentSellPriceText.text = $"G {GetSellPrice(upgradeData, currentLevel):N0}";
+        string currentLevelLabel = $"Lv.{currentLevel}";
+        currentLevelText.text = currentLevelLabel;
+        currentLevelTextShadow.text = currentLevelLabel;
+        currentSellPriceText.text = $"{GetSellPrice(upgradeData, currentLevel):N0}";
 
-        nextLevelText.text = isMaxLevel ? "MAX" : $"Lv.{nextLevel}";
-        nextSellPriceText.text = isMaxLevel
+        string nextLevelLabel = isMaxLevel ? "MAX" : $"Lv.{nextLevel}";
+        nextLevelText.text = nextLevelLabel;
+        nextLevelTextShadow.text = nextLevelLabel;
+
+        string nextSellPriceLabel = isMaxLevel
             ? "-"
-            : $"G {GetSellPrice(upgradeData, nextLevel):N0}";
+            : $"{GetSellPrice(upgradeData, nextLevel):N0}";
+        nextSellPriceText.text = nextSellPriceLabel;
+        nextSellPriceTextShadow.text = nextSellPriceLabel;
 
         UpdateLevelSlots(currentLevelSlots, currentLevel, filledSlotColor);
         UpdateLevelSlots(
@@ -110,11 +122,12 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
             upgradeManager.GetUpgradeAvailability(upgradeData);
 
         UpdateStatus(availability, upgradeData, currentLevel);
-        upgradeButton.interactable =
-            availability == UpgradeAvailability.Available;
+        bool canUpgrade = availability == UpgradeAvailability.Available;
+        upgradeButton.interactable = canUpgrade;
+        upgradeLock.SetActive(!canUpgrade);
         upgradeButtonText.text = isMaxLevel
-            ? "MAX"
-            : currentLevel <= 0 ? "Develop" : "Level Up";
+            ? "최대 레벨"
+            : currentLevel <= 0 ? "메뉴 개발" : "레벨 업";
     }
 
     private void UpdateLevelSlots(
@@ -124,12 +137,9 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
     {
         for (int i = 0; i < slots.Length; i++)
         {
-            if (slots[i] != null)
-            {
-                slots[i].color = i < displayedLevel
-                    ? filledColor
-                    : emptySlotColor;
-            }
+            slots[i].color = i < displayedLevel
+                ? filledColor
+                : emptySlotColor;
         }
     }
 
@@ -154,6 +164,7 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
         DishUpgradeDataSO upgradeData,
         int currentLevel)
     {
+        warningBox.SetActive(availability != UpgradeAvailability.Available);
         warningText.color = new Color(0.82f, 0.23f, 0.18f);
 
         switch (availability)
@@ -163,7 +174,7 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
                 break;
 
             case UpgradeAvailability.InsufficientIngredients:
-                warningText.text = "Not enough ingredients.";
+                warningText.text = "재료가 충분하지 않습니다.";
                 break;
 
             case UpgradeAvailability.MarketLevelLocked:
@@ -172,21 +183,21 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
                         out int requiredMarketLevel))
                 {
                     warningText.text =
-                        $"Market Lv.{requiredMarketLevel} required.";
+                        $"시장 Lv.{requiredMarketLevel} 달성이 필요합니다.";
                 }
                 else
                 {
-                    warningText.text = "Market level requirement unavailable.";
+                    warningText.text = "필요 시장 레벨 정보를 확인할 수 없습니다.";
                 }
                 break;
 
             case UpgradeAvailability.MaxLevel:
                 warningText.color = new Color(0.21f, 0.64f, 0.58f);
-                warningText.text = "Max Level";
+                warningText.text = "최대 레벨입니다.";
                 break;
 
             default:
-                warningText.text = "Upgrade data unavailable.";
+                warningText.text = "업그레이드 정보를 확인할 수 없습니다.";
                 break;
         }
     }

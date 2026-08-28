@@ -9,6 +9,7 @@ public sealed class HarvestUpgradeModel : MonoBehaviour
     [SerializeField] private GameObject truckSpeedHighlight;
     [SerializeField] private GameObject truckCapacityHighlight;
     [SerializeField] private GameObject truckFuelHighlight;
+    [SerializeField] private GameObject goldenPigRadarHighlight;
 
     private void Awake()
     {
@@ -27,6 +28,7 @@ public sealed class HarvestUpgradeModel : MonoBehaviour
             HarvestUpgradeType.TruckSpeed => truckSpeedHighlight,
             HarvestUpgradeType.TruckCapacity => truckCapacityHighlight,
             HarvestUpgradeType.TruckFuel => truckFuelHighlight,
+            HarvestUpgradeType.GoldenPigRadar => goldenPigRadarHighlight,
             _ => null
         };
 
@@ -42,5 +44,6 @@ public sealed class HarvestUpgradeModel : MonoBehaviour
         truckSpeedHighlight?.SetActive(false);
         truckCapacityHighlight?.SetActive(false);
         truckFuelHighlight?.SetActive(false);
+        goldenPigRadarHighlight.SetActive(false);
     }
 }

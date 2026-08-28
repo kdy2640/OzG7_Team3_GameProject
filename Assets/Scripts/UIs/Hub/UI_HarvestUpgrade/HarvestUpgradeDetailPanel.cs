@@ -11,6 +11,8 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
     [SerializeField] private TMP_Text levelText;
     [SerializeField] private Slider levelSlider;
     [SerializeField] private Image[] levelSlots = new Image[5];
+    [SerializeField] private TMP_Text nextLevelText;
+    [SerializeField] private Image[] nextLevelSlots = new Image[5];
     [SerializeField] private Color filledSlotColor = new(1f, .78f, .2f);
     [SerializeField] private Color emptySlotColor = new(.3f, .3f, .3f);
     [SerializeField] private TMP_Text currentEffectStateText;
@@ -117,7 +119,11 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
             upgradeNameText.text = data.DisplayName;
 
         if (levelText != null)
-            levelText.text = $"Lv.{currentLevel} / Lv.{data.MaxLevel}";
+            levelText.text = $"Lv.{currentLevel}";
+
+        nextLevelText.text = isMaxLevel
+            ? "MAX"
+            : $"Lv.{currentLevel + 1}";
 
         if (levelSlider != null)
         {
@@ -128,6 +134,15 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
         for (int i = 0; i < levelSlots.Length; i++)
         {
             levelSlots[i].color = i < currentLevel
+                ? filledSlotColor
+                : emptySlotColor;
+        }
+
+        int nextLevel = Mathf.Min(currentLevel + 1, data.MaxLevel);
+
+        for (int i = 0; i < nextLevelSlots.Length; i++)
+        {
+            nextLevelSlots[i].color = i < nextLevel
                 ? filledSlotColor
                 : emptySlotColor;
         }
@@ -168,6 +183,8 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
         if (levelText != null)
             levelText.text = "Lv.-";
 
+        nextLevelText.text = "Lv.-";
+
         if (currentEffectText != null)
             currentEffectText.text = "Data Error";
 
@@ -189,7 +206,7 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
         int level)
     {
         if (level <= 0)
-            return "Not Upgraded";
+            return "업그레이드 전";
 
         StringBuilder builder = new();
 
@@ -201,7 +218,17 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
                 builder.AppendLine();
 
             float value = modifier.value * level;
-            builder.Append(modifier.statType);
+            builder.Append(modifier.statType switch
+            {
+                HarvestStatType.SawSize => "톱날 크기",
+                HarvestStatType.SawSpeed => "톱날 속도",
+                HarvestStatType.SawSharpness => "톱날 날카로움",
+                HarvestStatType.TruckSpeed => "트럭 속도",
+                HarvestStatType.TruckCapacity => "트럭 적재량",
+                HarvestStatType.TruckFuel => "트럭 연료",
+                HarvestStatType.GoldenPigDetectionRadius => "황금돼지 탐지 반경",
+                _ => modifier.statType.ToString()
+            });
 
             switch (modifier.modifierType)
             {
@@ -215,7 +242,7 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
             }
         }
 
-        return builder.Length > 0 ? builder.ToString() : "No Effect Data";
+        return builder.Length > 0 ? builder.ToString() : "효과 정보 없음";
     }
 
     private static string GetAvailabilityText(
