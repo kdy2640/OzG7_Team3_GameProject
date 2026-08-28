@@ -83,6 +83,8 @@ public class FacilityModelView : MonoBehaviour
 
         ClearCurrentModel();
 
+        
+
         currentModelInstance =
             Instantiate( modelPrefab, facilityModelRoot, false );
 
@@ -93,6 +95,15 @@ public class FacilityModelView : MonoBehaviour
         currentModelInstance.transform.localScale = Vector3.one;
 
         shownLevel = level;
+
+        // ¼­ºñ½º¾À 0·¾ Á¦¿Ü
+        if (GameManager.Instance.Scene.CurrentSceneType == SceneType.Service)
+        {
+            if(level <= 0)
+            {
+                ClearCurrentModel();
+            }
+        }
 
         Debug.Log(
             $"[FacilityModelView] " +
