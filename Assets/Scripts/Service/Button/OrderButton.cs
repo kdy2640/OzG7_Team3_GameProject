@@ -17,6 +17,7 @@ public class OrderButton : MonoBehaviour
     [SerializeField] private Image autoServeImg;
     [SerializeField] private Image cookingImg;
     [SerializeField] private Image foodReadyImg;
+    [SerializeField] private Image foodIcon;
 
     private CookingList cookingList;
 
@@ -35,6 +36,7 @@ public class OrderButton : MonoBehaviour
         autoServeImg.gameObject.SetActive(false);
         cookingList.cookingListChanged += UpdateCookingUI;
         UpdateCookingUI();
+
     }
 
     public void SetOrder(DishAmount order)
@@ -46,11 +48,7 @@ public class OrderButton : MonoBehaviour
             Debug.LogWarning($"DishDataSO를 찾을 수 없습니다. {order.dish}");
             return;
         }
-
-        //dishIcon.sprite = data.Icon;
-        dishName.text = data.DisplayName;
-        amountText.text = order.amount.ToString();
-
+        foodIcon.sprite = DishDataDB.GetData(order.dish).Icon;
     }
 
     private void UpdateCookingUI()

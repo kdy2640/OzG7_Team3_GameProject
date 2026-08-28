@@ -29,7 +29,7 @@ public class CustomerStateManager : MonoBehaviour
     public Action caught;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
-    private float runChance = 1f;
+    private float runChance = 0.1f;
     private float eatSpeedUpPercentage;
     public bool SeatDirty = false;
     public bool IsAutoServed = false;
@@ -189,7 +189,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public void CreateDirty()
     {
-        Vector3 dirtyPoint = transform.position + transform.forward * 1.0f + transform.up * 0.7f;
+        Vector3 dirtyPoint = transform.position + transform.forward * 2.0f + transform.up * 1f;
         Dirty dirty = Instantiate(DirtyPrefab, dirtyPoint, Quaternion.identity);
         dirty.SetCustomer(this);
         SeatDirty = true;

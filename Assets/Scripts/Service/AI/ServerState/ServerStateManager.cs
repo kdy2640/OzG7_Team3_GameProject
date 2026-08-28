@@ -33,7 +33,9 @@ public class ServerStateManager : MonoBehaviour
     private DishEffectQueue dishEffectQueue;
 
     private float sleepingChance = 0.05f;
-    
+
+    private GameObject dishPrefab;
+    private GameObject dishObject;
     
     public float Speed => speed;
     public AIMove AiMove => aiMove;
@@ -48,6 +50,7 @@ public class ServerStateManager : MonoBehaviour
     public float ServeTime => serveTime;
     public float ReceiveFoodTime => receiveFoodTime;
     public SleepingButton SleepingButton => sleepingButton;
+    public GameObject DishPrefab => dishPrefab;
     
 
 
@@ -280,6 +283,18 @@ public class ServerStateManager : MonoBehaviour
     private void ServerDie()
     {
         ChangeState(new ServerGameOverState(this));
+    }
+
+    public void CreateDish()
+    {
+        dishPrefab = DishDataDB.GetData(dish).DishPrefab;
+        dishObject = Instantiate(dishPrefab, foodSpot);
+    }
+
+    public void DestroyDish()
+    {
+        Destroy(dishObject);
+        dishObject = null;
     }
 
     private void OnDisable()
