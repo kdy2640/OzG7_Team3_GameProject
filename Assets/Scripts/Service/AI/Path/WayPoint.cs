@@ -12,4 +12,11 @@ public class Waypoint : MonoBehaviour
     public int HCost;
 
     public int FCost => GCost + HCost;
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(transform.position, 0.3f);
+    }
 }

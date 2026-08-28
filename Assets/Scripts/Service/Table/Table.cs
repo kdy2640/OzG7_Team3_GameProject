@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Table : MonoBehaviour
 {
+    [Header("Table Position")]
+    [SerializeField] private Transform tableTransform;
+
     [Header("Seat")]
     [SerializeField] private Transform leftSeatPoint;
     [SerializeField] private Transform rightSeatPoint;
@@ -46,7 +49,12 @@ public class Table : MonoBehaviour
         leftSeatClosed = true;
     }
 
-    
+
+
+    private void OnValidate()
+    {
+        transform.position = tableTransform.position;
+    }
 
     public bool HasEmptySeat()
     {
@@ -124,5 +132,9 @@ public class Table : MonoBehaviour
         return leftCustomer == customer || rightCustomer == customer;
     }
 
-    
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.brown;
+        Gizmos.DrawCube(transform.position, new Vector3(2f, 1f, 2f));
+    }
 }
