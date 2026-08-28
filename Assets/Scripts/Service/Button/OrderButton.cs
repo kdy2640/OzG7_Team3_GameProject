@@ -17,6 +17,7 @@ public class OrderButton : MonoBehaviour
     [SerializeField] private Image autoServeImg;
     [SerializeField] private Image cookingImg;
     [SerializeField] private Image foodReadyImg;
+    [SerializeField] private Image foodIcon;
 
     private CookingList cookingList;
 
@@ -34,6 +35,12 @@ public class OrderButton : MonoBehaviour
         
         autoServeImg.gameObject.SetActive(false);
         cookingList.cookingListChanged += UpdateCookingUI;
+        
+
+    }
+
+    private void Start()
+    {
         UpdateCookingUI();
     }
 
@@ -46,11 +53,7 @@ public class OrderButton : MonoBehaviour
             Debug.LogWarning($"DishDataSO를 찾을 수 없습니다. {order.dish}");
             return;
         }
-
-        //dishIcon.sprite = data.Icon;
-        dishName.text = data.DisplayName;
-        amountText.text = order.amount.ToString();
-
+        foodIcon.sprite = DishDataDB.GetData(order.dish).Icon;
     }
 
     private void UpdateCookingUI()
@@ -64,10 +67,13 @@ public class OrderButton : MonoBehaviour
             cookingList.List.Contains(dishAmount.dish)
             );
         }
+
+        Debug.Log("UpdateCookingUI>>\n DishAmount = " + dishAmount + " foodReadyImg = " + foodReadyImg);
         
         foodReadyImg.gameObject.SetActive(
             GameManager.Instance.StockManager.CanConsumeDish(dishAmount)
             );
+
     }
 
     public void OnClick()
@@ -95,8 +101,6 @@ public class OrderButton : MonoBehaviour
             Debug.Log("주문 수락 성공");
         }
     }
-
-    
 
     private void OnDisable()
     {
