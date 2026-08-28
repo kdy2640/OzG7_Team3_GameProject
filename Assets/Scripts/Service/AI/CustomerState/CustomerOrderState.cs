@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CustomerOrderState : IState
@@ -14,10 +15,7 @@ public class CustomerOrderState : IState
 
     public void Enter()
     {
-        stateManager.AiMove.SetDirection(
-            (stateManager.CurrentTable.transform.position - stateManager.transform.position)
-            .normalized
-            );
+        stateManager.AiMove.SetDirection(stateManager.CurrentTable.transform.position);
         stateManager.Animator.SetBool("IsOrdering", true);
 
         timer = 10.0f;
@@ -65,7 +63,7 @@ public class CustomerOrderState : IState
         {
             stateManager.RequestQueue.Queue.Dequeue();
         }
-        
+        stateManager.DeactiveOrderButton();
         stateManager.ChangeState(new CustomerWaitForFoodState(stateManager));
     }
 

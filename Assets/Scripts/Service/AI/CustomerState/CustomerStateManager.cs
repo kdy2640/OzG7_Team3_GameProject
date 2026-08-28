@@ -29,9 +29,10 @@ public class CustomerStateManager : MonoBehaviour
     public Action caught;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
-    private float runChance = 0.1f;
+    private float runChance = 1f;
     private float eatSpeedUpPercentage;
     public bool SeatDirty = false;
+    public bool IsAutoServed = false;
     
 
     public float Speed => speed;
@@ -228,8 +229,27 @@ public class CustomerStateManager : MonoBehaviour
             ChangeState(new CustomerGameOverState(this));
     }
 
+    public void DeactiveOrderButton()
+    {
+        StartCoroutine(DeactiveOrderButtonCo());
+    }
+
+    private IEnumerator DeactiveOrderButtonCo()
+    {
+        if (IsAutoServed)
+        {
+            OrderButton.AutoServeImg.gameObject.SetActive(true);
+            Debug.Log("AutoServeImg : " + OrderButton.AutoServeImg);
+            yield return new WaitForSeconds(2);
+        }
+        
+        OrderButton.gameObject.SetActive(false);
+        IsAutoServed = false;
+    }
+
     private void OnDisable()
     {
+        
         GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, CustomerDie);
         Destroy(this.gameObject);
     }

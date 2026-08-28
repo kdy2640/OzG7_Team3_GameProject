@@ -22,10 +22,12 @@ public class CustomerSpawner : MonoBehaviour
     [SerializeField] List<GameObject> animalPrefabs = new();
     [SerializeField] float animalSize;
 
+    
     private float timer;
     private bool serviceEnd;
     private Action endService;
-
+    public event Action CustomerSpawned;
+    public int SpawnCount => spawnCount;
 
     private void Awake()
     {
@@ -47,12 +49,16 @@ public class CustomerSpawner : MonoBehaviour
     {
         endService += ServiceEnd;
         GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, endService);
+        spawnCount = (int)GameManager.Instance.Upgrade.RuntimeStat.Service.Get(ServiceStatType.CustomerCount);
+        spawnInterval = 100 / spawnCount;
+
     }
 
     private void Start()
     {
-        spawnCount = (int)GameManager.Instance.Upgrade.RuntimeStat.Service.Get(ServiceStatType.CustomerCount);
-        spawnInterval = 100 / spawnCount;
+        
+
+        
     }
 
     private void Update()
@@ -64,6 +70,7 @@ public class CustomerSpawner : MonoBehaviour
             SpawnCustomer();
             spawnCount--;
             timer = 0f;
+            CustomerSpawned?.Invoke();
         }
     }
 
@@ -83,6 +90,7 @@ public class CustomerSpawner : MonoBehaviour
         animator.runtimeAnimatorController = controller;
 
         customer.SetAnimator(animator);
+
         GameManager.Instance.Service.ResultBuilder.RecordCustomer();
     }
     

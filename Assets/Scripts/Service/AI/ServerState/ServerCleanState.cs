@@ -18,6 +18,7 @@ public class ServerCleanState : IState
 
     public void Enter()
     {
+        stateManager.AnimSetIdle();
         timer = cleaningTime;
     }
 
@@ -42,6 +43,5 @@ public class ServerCleanState : IState
 
     public void Exit()
     {
-        
     }
 }

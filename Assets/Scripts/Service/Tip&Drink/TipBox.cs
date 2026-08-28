@@ -25,6 +25,7 @@ public class TipBox : MonoBehaviour
     public void ApplyTip()
     {
         GameManager.Instance.StockManager.AddCurrency(tipAmount);
+        GameManager.Instance.Service.ResultBuilder.RecordTip(tipAmount);
         tipAmount = 0;
         UpdateUI();
     }
