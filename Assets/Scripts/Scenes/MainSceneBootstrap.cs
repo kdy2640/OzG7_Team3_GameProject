@@ -7,6 +7,11 @@ public sealed class MainSceneBootstrap : MonoBehaviour
     {
         yield return null;
 
-        GameManager.Instance.Scene.ChangeScene(SceneType.Hub);
+        SceneController sceneController = GameManager.Instance.Scene;
+
+        while (sceneController.IsChangingScene)
+            yield return null;
+
+        sceneController.ChangeScene(SceneType.Hub);
     }
 }

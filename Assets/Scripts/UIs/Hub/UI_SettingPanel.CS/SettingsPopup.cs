@@ -32,8 +32,7 @@ public class SettingsPopup : MonoBehaviour
 
     private void Awake()
     {
-        SettingCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        SettingCanvas.sortingOrder = 10;
+        SettingCanvas.renderMode = RenderMode.ScreenSpaceOverlay; 
 
         masterSlider.onValueChanged.AddListener(OnMasterChanged);
         bgmSlider.onValueChanged.AddListener(OnBGMChanged);
