@@ -382,6 +382,7 @@ public class UpgradeManager : MonoBehaviour
         GetState(UpgradeDataDB.GetData(FacilityType.Table_1)).level = 1;
         GetState(UpgradeDataDB.GetData(EmployeeType.Server_1)).level = 1;
         GetState(UpgradeDataDB.GetData(EmployeeType.Cooker_1)).level = 1;
+        GetState(UpgradeDataDB.GetData(HarvestUpgradeType.StageLevel)).level = 1;
 
         RefreshRuntimeData();
     }

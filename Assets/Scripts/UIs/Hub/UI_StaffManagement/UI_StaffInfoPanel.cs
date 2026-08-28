@@ -32,6 +32,8 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
     [SerializeField] private TMP_Text skill5Label;
     [SerializeField] private TMP_Text skill5Description;
 
+    [SerializeField] private TMP_Text staffDescription;
+
     [SerializeField] private Button actionButton;
     [SerializeField] private TMP_Text costText;
     [SerializeField] private TMP_Text actionText;
@@ -128,6 +130,8 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
 
         nextLevelEffect.text = isMaxLevel
             ? string.Empty : employeeData.GetLevelEffect(level + 1);
+
+        staffDescription.text = employeeData.Description;
 
         costText.text = isMaxLevel ? "-" : cost.ToString("N0");
 

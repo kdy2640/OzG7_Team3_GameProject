@@ -292,6 +292,8 @@ GameObject:
   - component: {fileID: 1293653001111239946}
   - component: {fileID: 415339402023820204}
   - component: {fileID: 7890552972342896843}
+  - component: {fileID: 6149397859465823686}
+  - component: {fileID: 5243307951554907443}
   m_Layer: 5
   m_Name: TruckSpeedButton
   m_TagString: Untagged
@@ -448,6 +450,32 @@ MonoBehaviour:
   m_EffectColor: {r: 0.52705884, g: 0.8235294, b: 0, a: 1}
   m_EffectDistance: {x: 5, y: 5}
   m_UseGraphicAlpha: 1
+--- !u!114 &6149397859465823686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418047118768324961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
+  holdThreshold: 0.5
+--- !u!114 &5243307951554907443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418047118768324961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  type: -1
 --- !u!1 &631174516788166733
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,6 +700,8 @@ GameObject:
   - component: {fileID: 7969388191324984140}
   - component: {fileID: 1906685625297045566}
   - component: {fileID: 2330831122944970173}
+  - component: {fileID: 2661315720365234062}
+  - component: {fileID: 2399221085163639316}
   m_Layer: 5
   m_Name: SawSharpnessButton
   m_TagString: Untagged
@@ -828,6 +858,32 @@ MonoBehaviour:
   m_EffectColor: {r: 0.52705884, g: 0.8235294, b: 0, a: 1}
   m_EffectDistance: {x: 5, y: 5}
   m_UseGraphicAlpha: 1
+--- !u!114 &2661315720365234062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079946517149542191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
+  holdThreshold: 0.5
+--- !u!114 &2399221085163639316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079946517149542191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  type: -1
 --- !u!1 &1273765847937076723
 GameObject:
   m_ObjectHideFlags: 0
@@ -1274,6 +1330,8 @@ GameObject:
   - component: {fileID: 4860417309002562810}
   - component: {fileID: 5513041753159178827}
   - component: {fileID: 4326110094052946927}
+  - component: {fileID: 7214594682411785801}
+  - component: {fileID: 585850642739993130}
   m_Layer: 5
   m_Name: SawSpeedButton
   m_TagString: Untagged
@@ -1430,6 +1488,32 @@ MonoBehaviour:
   m_EffectColor: {r: 0.52705884, g: 0.8235294, b: 0, a: 1}
   m_EffectDistance: {x: 5, y: 5}
   m_UseGraphicAlpha: 1
+--- !u!114 &7214594682411785801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2160576483948969240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
+  holdThreshold: 0.5
+--- !u!114 &585850642739993130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2160576483948969240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  type: -1
 --- !u!1 &2209490116602280715
 GameObject:
   m_ObjectHideFlags: 0
@@ -2929,6 +3013,8 @@ GameObject:
   - component: {fileID: 2411977077105310845}
   - component: {fileID: 2926546476890406020}
   - component: {fileID: 3163652450686808794}
+  - component: {fileID: 4290966982680955515}
+  - component: {fileID: 3307850795089729030}
   m_Layer: 5
   m_Name: SawSizeButton
   m_TagString: Untagged
@@ -3085,6 +3171,32 @@ MonoBehaviour:
   m_EffectColor: {r: 0.52705884, g: 0.8235294, b: 0, a: 1}
   m_EffectDistance: {x: 5, y: 5}
   m_UseGraphicAlpha: 1
+--- !u!114 &4290966982680955515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3498767267227777949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
+  holdThreshold: 0.5
+--- !u!114 &3307850795089729030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3498767267227777949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  type: -1
 --- !u!1 &3674047591537719976
 GameObject:
   m_ObjectHideFlags: 0
@@ -5278,6 +5390,8 @@ GameObject:
   - component: {fileID: 4528303838704167181}
   - component: {fileID: 1179579920150797100}
   - component: {fileID: 3705468875516553530}
+  - component: {fileID: 5851688156587183242}
+  - component: {fileID: 2481421136246150859}
   m_Layer: 5
   m_Name: TruckFuelButton
   m_TagString: Untagged
@@ -5434,6 +5548,32 @@ MonoBehaviour:
   m_EffectColor: {r: 0.52705884, g: 0.8235294, b: 0, a: 1}
   m_EffectDistance: {x: 5, y: 5}
   m_UseGraphicAlpha: 1
+--- !u!114 &5851688156587183242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8129135020903380742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
+  holdThreshold: 0.5
+--- !u!114 &2481421136246150859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8129135020903380742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  type: -1
 --- !u!1 &8175057005596318055
 GameObject:
   m_ObjectHideFlags: 0
@@ -5449,6 +5589,8 @@ GameObject:
   - component: {fileID: 8792514198560303959}
   - component: {fileID: 5669483278559802114}
   - component: {fileID: 4108614715994078283}
+  - component: {fileID: 3399501595965891779}
+  - component: {fileID: 7846151781277031776}
   m_Layer: 5
   m_Name: TruckRadarButton
   m_TagString: Untagged
@@ -5605,6 +5747,32 @@ MonoBehaviour:
   m_EffectColor: {r: 0.52705884, g: 0.8235294, b: 0, a: 1}
   m_EffectDistance: {x: 5, y: 5}
   m_UseGraphicAlpha: 1
+--- !u!114 &3399501595965891779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8175057005596318055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
+  holdThreshold: 0.5
+--- !u!114 &7846151781277031776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8175057005596318055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  type: -1
 --- !u!1 &8228749737177380006
 GameObject:
   m_ObjectHideFlags: 0
@@ -6861,12 +7029,49 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1722623766038386737, guid: d69da550e42be8148b8a43bd019486be, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3421060091827636033}
+    - targetCorrespondingSourceObject: {fileID: 8546832478753941787, guid: d69da550e42be8148b8a43bd019486be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5680228793414451334}
+    - targetCorrespondingSourceObject: {fileID: 8546832478753941787, guid: d69da550e42be8148b8a43bd019486be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5324290520249817860}
   m_SourcePrefab: {fileID: 100100000, guid: d69da550e42be8148b8a43bd019486be, type: 3}
 --- !u!224 &2103834356224642736 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5636682646036106250, guid: d69da550e42be8148b8a43bd019486be, type: 3}
   m_PrefabInstance: {fileID: 5984113147183563450}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2708816120956677025 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8546832478753941787, guid: d69da550e42be8148b8a43bd019486be, type: 3}
+  m_PrefabInstance: {fileID: 5984113147183563450}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5680228793414451334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2708816120956677025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
+  holdThreshold: 0.5
+--- !u!114 &5324290520249817860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2708816120956677025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  type: -1
 --- !u!1 &4966390685646330507 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1722623766038386737, guid: d69da550e42be8148b8a43bd019486be, type: 3}
