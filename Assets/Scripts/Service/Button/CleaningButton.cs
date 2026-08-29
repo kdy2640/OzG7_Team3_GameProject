@@ -4,15 +4,22 @@ public class CleaningButton : MonoBehaviour
 {
     private ServerList serverList;
     private Dirty dirty;
+
+    private bool isClicked;
+
     private void OnEnable()
     {
         serverList = FindFirstObjectByType<ServerList>();
         dirty = GetComponentInParent<Dirty>();
+        isClicked = false;
     }
     public void OnClick()
     {
+        if(isClicked) { return; }
+
         if(serverList.TryAllocClean(dirty))
         {
+            isClicked = true;
             Destroy(this.gameObject);
         }
         else

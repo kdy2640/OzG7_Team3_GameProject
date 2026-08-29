@@ -20,6 +20,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private float visibleCanvasHeight = 5.25f;
     [SerializeField] private Combo combo;
     [SerializeField] private DrinkZone drinkZone;
+    [SerializeField] private Transform foodSpot;
 
     private Table currentTable;
     private Transform seat;
@@ -29,10 +30,11 @@ public class CustomerStateManager : MonoBehaviour
     public Action caught;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
-    private float runChance = 1f;
+    private float runChance = 0.1f;
     private float eatSpeedUpPercentage;
     public bool SeatDirty = false;
     public bool IsAutoServed = false;
+    private GameObject dishObject;
     
 
     public float Speed => speed;
@@ -189,7 +191,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public void CreateDirty()
     {
-        Vector3 dirtyPoint = transform.position + transform.forward * 1.0f + transform.up * 0.7f;
+        Vector3 dirtyPoint = transform.position + transform.forward * 2.0f + transform.up * 1f;
         Dirty dirty = Instantiate(DirtyPrefab, dirtyPoint, Quaternion.identity);
         dirty.SetCustomer(this);
         SeatDirty = true;
@@ -245,6 +247,16 @@ public class CustomerStateManager : MonoBehaviour
         
         OrderButton.gameObject.SetActive(false);
         IsAutoServed = false;
+    }
+
+    public void CreateDish()
+    {
+        dishObject = Instantiate(DishDataDB.GetData(Order.dish).DishPrefab, foodSpot);
+    }
+
+    public void DestroyDish()
+    {
+        Destroy(dishObject);
     }
 
     private void OnDisable()

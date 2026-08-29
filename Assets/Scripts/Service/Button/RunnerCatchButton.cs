@@ -8,6 +8,8 @@ public class RunnerCatchButton : MonoBehaviour
     private ServerStateManager server;
     private ServerList serverList;
 
+    private bool isClicked = false;
+
     private void OnEnable()
     {
         serverList = FindAnyObjectByType<ServerList>();
@@ -19,12 +21,13 @@ public class RunnerCatchButton : MonoBehaviour
     }
     public void OnClick()
     {
+        if (isClicked) return;
         if(serverList.TryAllocCatch(customer, out server))
         {
+            isClicked = true;
             customer.AiMove.StopMove();
             customer.AiMove.SetDirection(server.transform.position);
             customer.ChangeState(new CustomerCaughtState(customer));
-
         }
         else
         {

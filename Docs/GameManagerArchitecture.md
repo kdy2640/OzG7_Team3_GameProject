@@ -188,7 +188,7 @@ GameManager
 
 `SceneController`는 `SceneType`과 `SceneBase` 구현체를 연결하고 씬 전환 순서를 관리한다.
 
-현재 등록된 씬은 `Main`, `Hub`, `Harvest`, `Service`다. 시작 상태는 `MainScene`으로 설정된다.
+현재 등록된 씬은 `Main`, `Hub`, `Harvest`, `Service`다. `MainScene`은 `GameManager`와 저장 데이터를 초기화한 뒤 자동으로 `HubScene`으로 전환하는 부트스트랩 씬이다.
 
 `ChangeScene`은 같은 씬으로의 일반 전환을 무시한다. `RestartScene`은 현재 씬과 요청한 씬이 같을 때만 다시 로드한다. 전환 중에는 `isChangingScene`이 새 요청을 차단한다.
 

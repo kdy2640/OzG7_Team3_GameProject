@@ -50,6 +50,7 @@ public class DishDataSO : ScriptableObject
     [SerializeField] private TasteType tastes;
     [SerializeField] private CategoryType category;
     [SerializeField] private Sprite icon;
+    [SerializeField] private GameObject dishPrefab;
 
     public string Id => id;
     public DishType Dish => dish;
@@ -61,6 +62,7 @@ public class DishDataSO : ScriptableObject
     public TasteType Tastes => tastes;
     public CategoryType Category => category;
     public Sprite Icon => icon;
+    public GameObject DishPrefab => dishPrefab;
 }
 
 [System.Serializable] // 0814 장은수

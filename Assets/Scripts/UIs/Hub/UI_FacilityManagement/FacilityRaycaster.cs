@@ -31,7 +31,7 @@ public class FacilityRaycaster : MonoBehaviour
         // LayerMask와 MaxDistance를 적용하여 Raycast
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, clickableLayer))
         {
-            FacilityClickTarget target = hit.collider.GetComponentInParent<FacilityClickTarget>();
+            FacilityClickTarget target = hit.collider.GetComponent<FacilityClickTarget>();
             target?.OnClicked();
         }
     }

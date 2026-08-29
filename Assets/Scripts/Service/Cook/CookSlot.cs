@@ -8,11 +8,12 @@ public class CookSlot : MonoBehaviour
 {
     public event Action OnClicked;
 
-    
-    [SerializeField] private TMP_Text dishName;
     [SerializeField] private TMP_Text countText;
+    [SerializeField] private TMP_Text countTextShadow;
     [SerializeField] private TMP_Text canCookText;
     [SerializeField] private Image dishIcon;
+    [SerializeField] private GameObject servingCountBackground;
+    [SerializeField] private GameObject lockBackground;
 
     private DishType dish;
     private KitchenSlotHandler kitchenSlotHandler;
@@ -45,10 +46,16 @@ public class CookSlot : MonoBehaviour
 
         if (data == null) return;
 
-        dishName.text = data.DisplayName;
-        countText.text = $"x {GetDishAmount()}";
-        canCookText.text = $"x {GameManager.Instance.CookingManager.CalculateCookableAmount(dish)}";
+        int dishAmount = GetDishAmount();
+        string countLabel = $"x {dishAmount}";
+        int cookableAmount = GameManager.Instance.CookingManager.CalculateCookableAmount(dish);
+
+        countText.text = countLabel;
+        countTextShadow.text = countLabel;
+        canCookText.text = $"x {cookableAmount}";
         dishIcon.sprite = data.Icon;
+        servingCountBackground.SetActive(dishAmount > 0);
+        lockBackground.SetActive(cookableAmount <= 0);
     }
 
     private int GetDishAmount()
