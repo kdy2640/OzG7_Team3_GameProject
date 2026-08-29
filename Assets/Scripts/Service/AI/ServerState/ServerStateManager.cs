@@ -287,8 +287,7 @@ public class ServerStateManager : MonoBehaviour
 
     public void CreateDish()
     {
-        dishPrefab = DishDataDB.GetData(dish).DishPrefab;
-        dishObject = Instantiate(dishPrefab, foodSpot);
+        dishObject = Instantiate(DishDataDB.GetData(dish).DishPrefab, foodSpot);
     }
 
     public void DestroyDish()

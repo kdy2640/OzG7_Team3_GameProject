@@ -26,6 +26,7 @@ public class OrderButton : MonoBehaviour
 
     public bool IsAutoServing = false;
     public bool IsCooking = false;
+    private bool isClicked = false;
 
     private void OnEnable()
     {
@@ -78,13 +79,9 @@ public class OrderButton : MonoBehaviour
 
     public void OnClick()
     {
+        if(isClicked) { return; }
+
         if (!GameManager.Instance.StockManager.CanConsumeDish(dishAmount))
-        {
-            return;
-        }
-
-
-        if (!serverList.TryAllocServe(dishAmount.dish, customer))
         {
             return;
         }
@@ -95,8 +92,14 @@ public class OrderButton : MonoBehaviour
             return;
         }
 
+        if (!serverList.TryAllocServe(dishAmount.dish, customer))
+        {
+            return;
+        }
+        
         if (GameManager.Instance.StockManager.TryConsumeDish(dishAmount))
         {
+            isClicked = true;
             OnClicked?.Invoke();
             Debug.Log("주문 수락 성공");
         }

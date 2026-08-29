@@ -15,6 +15,8 @@ public class CleaningButton : MonoBehaviour
     }
     public void OnClick()
     {
+        if(isClicked) { return; }
+
         if(serverList.TryAllocClean(dirty))
         {
             isClicked = true;
