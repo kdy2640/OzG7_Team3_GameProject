@@ -12,6 +12,7 @@ public sealed class HarvestActor : MonoBehaviour
     [SerializeField] private AnimalStateController animalStateController;
 
     private HarvestDataSO harvestDataSO;
+    private HarvestEmployeeResolver employeeResolver;
     private ChunkRegistry registry;
     private bool isInitialized;
     private bool isDying;
@@ -21,9 +22,11 @@ public sealed class HarvestActor : MonoBehaviour
         HarvestType type,
         StageType stageType,
         Transform player,
-        GridChunkHandler gridChunkHandler)
+        GridChunkHandler gridChunkHandler,
+        HarvestEmployeeResolver resolver)
     {
         registry = gridChunkHandler.Registry;
+        employeeResolver = resolver;
         harvestDataSO = HarvestDataDB.GetData(type);
         isDying = false;
 
@@ -134,6 +137,7 @@ public sealed class HarvestActor : MonoBehaviour
         isDying = true;
         registry.Unregister(transform);
         GameManager.Instance.StockManager.AddGrocery(harvestDataSO.Rewards);
+        employeeResolver.ResolveHarvested(harvestDataSO);
         if (harvestDataSO.IsMove)
         {
             animalStateController.SetState(AnimalStateType.Dead);

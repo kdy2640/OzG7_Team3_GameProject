@@ -35,6 +35,12 @@ public sealed class UI_HarvestSkillButton : MonoBehaviour
             return;
         }
 
+        if (!skill.IsUnlocked)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
         if (button == null)
         {
             button = GetComponent<Button>();

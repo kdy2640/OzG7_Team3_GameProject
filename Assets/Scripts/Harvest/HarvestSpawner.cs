@@ -13,6 +13,7 @@ public sealed class HarvestSpawner : MonoBehaviour
     [SerializeField] private List<HarvestActor> spawnedCrops = new();
 
     private GridChunkHandler gridChunkHandler;
+    private HarvestEmployeeResolver employeeResolver;
     private HarvestManager harvestManager;
     private bool hasSpawnedPig;
     private HarvestActor spawnedPig;
@@ -20,6 +21,7 @@ public sealed class HarvestSpawner : MonoBehaviour
     private void Awake()
     {
         gridChunkHandler = GetComponent<GridChunkHandler>();
+        employeeResolver = player.GetComponent<HarvestEmployeeResolver>();
     }
 
     private void Start()
@@ -109,7 +111,12 @@ public sealed class HarvestSpawner : MonoBehaviour
             parent);
 
         crop.name = "Crop";
-        crop.Init(type, stageType, player, gridChunkHandler);
+        crop.Init(
+            type,
+            stageType,
+            player,
+            gridChunkHandler,
+            employeeResolver);
         spawnedCrops.Add(crop);
         return crop;
     }
