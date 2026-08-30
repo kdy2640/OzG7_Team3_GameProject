@@ -135,10 +135,6 @@ public class Table : MonoBehaviour
 
     public void ReleaseSeat(CustomerStateManager customer)
     {
-        if(customer.CurrentTable == null)
-        {
-            return;
-        }
         if (rightCustomer == customer)
         {
             rightCustomer = null;
@@ -151,7 +147,8 @@ public class Table : MonoBehaviour
 
         if(tableManager.IsThereAnyWaiting())
         {
-            tableManager.GetSeatForWaitingCustomer();
+            tableManager.TryGetSeatForWaitingCustomer();
+            return;
         }
     }
 

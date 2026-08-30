@@ -79,8 +79,6 @@ public class CustomerStateManager : MonoBehaviour
 
     private void Start()
     {
-        currentTable = tableManager.FindEmptyTable();
-
         if (tableManager.IsThereAnyWaiting())
         {
             ChangeState(new CustomerWatingState(this, tableManager));
@@ -89,11 +87,15 @@ public class CustomerStateManager : MonoBehaviour
 
         else
         {
+            currentTable = tableManager.FindEmptyTable();
+            Debug.Log(this + " : " + CurrentTable);
+
             if (currentTable == null)
             {
                 ChangeState(new CustomerWatingState(this, tableManager));
                 return;
             }
+
             else
             {
                 seat = currentTable.ReserveSeat(this);

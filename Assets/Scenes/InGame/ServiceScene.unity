@@ -2399,6 +2399,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2102744252552425034, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2271420996468984039, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -2516,6 +2520,36 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
+--- !u!4 &339234731 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 918977617655005427, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
+  m_PrefabInstance: {fileID: 339234730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &339234732 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7227853505050043013, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
+  m_PrefabInstance: {fileID: 339234730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &339234733 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 409816886705122932, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
+  m_PrefabInstance: {fileID: 339234730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &339234734 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 256157394586339436, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
+  m_PrefabInstance: {fileID: 339234730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &339234735 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6076609180915032469, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
+  m_PrefabInstance: {fileID: 339234730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &339234736 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5128318192589571865, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
+  m_PrefabInstance: {fileID: 339234730}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &346881759
 GameObject:
   m_ObjectHideFlags: 0
@@ -2887,7 +2921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 254afb2a3c6d1484498e5c121df06ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Table
-  tableTransform: {fileID: 2144876517}
+  tableTransform: {fileID: 339234732}
   leftSeatPoint: {fileID: 936527897}
   rightSeatPoint: {fileID: 1526025332}
   leftSeatPos: {fileID: 0}
@@ -2911,7 +2945,7 @@ Transform:
   m_GameObject: {fileID: 408807052}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.75, y: 0, z: 1.38}
+  m_LocalPosition: {x: 0, y: 0, z: -4.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6736,7 +6770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 254afb2a3c6d1484498e5c121df06ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Table
-  tableTransform: {fileID: 2144876517}
+  tableTransform: {fileID: 339234733}
   leftSeatPoint: {fileID: 1194950124}
   rightSeatPoint: {fileID: 575494895}
   leftSeatPos: {fileID: 0}
@@ -6760,7 +6794,7 @@ Transform:
   m_GameObject: {fileID: 1063580192}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.75, y: 0, z: 1.38}
+  m_LocalPosition: {x: -2, y: 0, z: -4.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7801,7 +7835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 254afb2a3c6d1484498e5c121df06ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Table
-  tableTransform: {fileID: 2144876517}
+  tableTransform: {fileID: 339234735}
   leftSeatPoint: {fileID: 240299832}
   rightSeatPoint: {fileID: 466760100}
   leftSeatPos: {fileID: 0}
@@ -7825,7 +7859,7 @@ Transform:
   m_GameObject: {fileID: 1227038334}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.75, y: 0, z: 1.38}
+  m_LocalPosition: {x: -1.75, y: 0, z: -1.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9506,7 +9540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 254afb2a3c6d1484498e5c121df06ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Table
-  tableTransform: {fileID: 2144876517}
+  tableTransform: {fileID: 339234736}
   leftSeatPoint: {fileID: 774582334}
   rightSeatPoint: {fileID: 1075609823}
   leftSeatPos: {fileID: 0}
@@ -9530,7 +9564,7 @@ Transform:
   m_GameObject: {fileID: 1511140654}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.75, y: 0, z: 1.38}
+  m_LocalPosition: {x: 1.75, y: 0, z: 1.38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11148,7 +11182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 254afb2a3c6d1484498e5c121df06ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Table
-  tableTransform: {fileID: 2144876517}
+  tableTransform: {fileID: 339234734}
   leftSeatPoint: {fileID: 1174834206}
   rightSeatPoint: {fileID: 863249105}
   leftSeatPos: {fileID: 0}
@@ -11172,7 +11206,7 @@ Transform:
   m_GameObject: {fileID: 1751420197}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.75, y: 0, z: 1.38}
+  m_LocalPosition: {x: 1.75, y: 0, z: -1.12}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12967,7 +13001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 254afb2a3c6d1484498e5c121df06ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Table
-  tableTransform: {fileID: 2144876517}
+  tableTransform: {fileID: 339234731}
   leftSeatPoint: {fileID: 1541490269}
   rightSeatPoint: {fileID: 1654851062}
   leftSeatPos: {fileID: 0}
@@ -12991,7 +13025,7 @@ Transform:
   m_GameObject: {fileID: 2033351935}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.75, y: 0, z: 1.38}
+  m_LocalPosition: {x: 2, y: 0, z: -4.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
