@@ -14,12 +14,13 @@ public class ServerServeState : IState
     {
         stateManager.AiMove.SetDirection(
                 (
-                    stateManager.Customer.CurrentTable.transform.position - stateManager.transform.position
-                ).normalized
+                    stateManager.Customer.CurrentTable.transform.position
+                )
             );
         stateManager.AnimSetIdle();
         timer = stateManager.ServeTime;
         stateManager.GiveFood();
+        stateManager.DestroyDish();
     }
 
     public void Execute()
@@ -38,6 +39,6 @@ public class ServerServeState : IState
 
     public void Exit()
     {
-        stateManager.DestroyDish();
+        
     }
 }

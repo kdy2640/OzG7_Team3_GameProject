@@ -62,10 +62,10 @@ public class TableManager : MonoBehaviour
         waitingQueue.Enqueue(customer);
     }
 
-    public void GetSeatForWaitingCustomer()
+    public bool TryGetSeatForWaitingCustomer()
     {
         if (waitingQueue.Count == 0)
-            return;
+            return false;
 
         CustomerStateManager customer = waitingQueue.Peek();
 
@@ -86,7 +86,10 @@ public class TableManager : MonoBehaviour
                     seat
                 )
             );
+
+            return true;
         }
+        return false;
     }
 
     public bool IsThereAnyWaiting()

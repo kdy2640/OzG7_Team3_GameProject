@@ -8,10 +8,21 @@ public class Table : MonoBehaviour
     [Header("Seat")]
     [SerializeField] private Transform leftSeatPoint;
     [SerializeField] private Transform rightSeatPoint;
+    [SerializeField] private Transform leftSeatPos = null;
+    [SerializeField] private Transform rightSeatPos = null;
+
 
     [Header("Serve Point")]
     [SerializeField] private Transform leftServePoint;
     [SerializeField] private Transform rightServePoint;
+    [SerializeField] private Transform leftServePos = null;
+    [SerializeField] private Transform rightServePos = null;
+
+    [Header("Food Point")]
+    [SerializeField] private Transform leftFoodPoint;
+    [SerializeField] private Transform rightFoodPoint;
+    [SerializeField] private Transform leftFoodPos = null;
+    [SerializeField] private Transform rightFoodPos = null;
 
     [SerializeField] private TableManager tableManager;
 
@@ -45,6 +56,14 @@ public class Table : MonoBehaviour
         {
             rightServePoint = transform.Find("ServePoint Right");
         }
+        if (leftFoodPoint == null)
+        {
+            leftFoodPoint = transform.Find("FoodPoint Left");
+        }
+        if (rightFoodPoint == null)
+        {
+            rightFoodPoint = transform.Find("FoodPoint Right");
+        }
 
         leftSeatClosed = true;
     }
@@ -53,7 +72,27 @@ public class Table : MonoBehaviour
 
     private void OnValidate()
     {
+        if(tableTransform!= null)
         transform.position = tableTransform.position;
+
+        //if(leftSeatPos.position != null && rightSeatPos.position != null)
+        //{
+        //    leftSeatPoint.position = leftSeatPos.position;
+        //    rightSeatPoint.position = rightSeatPos.position;
+        //}
+        
+        //if(leftServePos.position != null && rightServePos.position != null)
+        //{
+        //    leftServePoint.position = leftServePos.position;
+        //    rightServePoint.position = rightServePos.position;
+        //}
+
+        //if (leftFoodPos.position != null && rightFoodPos.position != null)
+        //{
+        //    leftFoodPoint.position = leftFoodPos.position;
+        //    rightFoodPoint.position = rightFoodPos.position;
+        //}
+        
     }
 
     public bool HasEmptySeat()
@@ -96,10 +135,6 @@ public class Table : MonoBehaviour
 
     public void ReleaseSeat(CustomerStateManager customer)
     {
-        if(customer.CurrentTable == null)
-        {
-            return;
-        }
         if (rightCustomer == customer)
         {
             rightCustomer = null;
@@ -112,7 +147,8 @@ public class Table : MonoBehaviour
 
         if(tableManager.IsThereAnyWaiting())
         {
-            tableManager.GetSeatForWaitingCustomer();
+            tableManager.TryGetSeatForWaitingCustomer();
+            return;
         }
     }
 
@@ -124,6 +160,19 @@ public class Table : MonoBehaviour
         if (seat == rightSeatPoint)
             return rightServePoint;
 
+        return null;
+    }
+
+    public Transform GetFoodSpot(CustomerStateManager customer)
+    {
+        if(leftCustomer == customer)
+        {
+            return leftFoodPoint;
+        }
+        if(rightCustomer == customer)
+        {
+            return rightFoodPoint;
+        }
         return null;
     }
 
