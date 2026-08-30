@@ -18,6 +18,7 @@ public class ServerCleanState : IState
 
     public void Enter()
     {
+        stateManager.AiMove.SetDirection(stateManager.Customer.CurrentTable.transform.position);
         stateManager.AnimSetIdle();
         timer = cleaningTime;
     }

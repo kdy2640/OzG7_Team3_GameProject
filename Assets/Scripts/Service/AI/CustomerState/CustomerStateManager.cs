@@ -20,7 +20,6 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private float visibleCanvasHeight = 5.25f;
     [SerializeField] private Combo combo;
     [SerializeField] private DrinkZone drinkZone;
-    [SerializeField] private Transform foodSpot;
 
     private Table currentTable;
     private Transform seat;
@@ -80,8 +79,6 @@ public class CustomerStateManager : MonoBehaviour
 
     private void Start()
     {
-        currentTable = tableManager.FindEmptyTable();
-
         if (tableManager.IsThereAnyWaiting())
         {
             ChangeState(new CustomerWatingState(this, tableManager));
@@ -90,11 +87,15 @@ public class CustomerStateManager : MonoBehaviour
 
         else
         {
+            currentTable = tableManager.FindEmptyTable();
+            Debug.Log(this + " : " + CurrentTable);
+
             if (currentTable == null)
             {
                 ChangeState(new CustomerWatingState(this, tableManager));
                 return;
             }
+
             else
             {
                 seat = currentTable.ReserveSeat(this);
@@ -189,13 +190,7 @@ public class CustomerStateManager : MonoBehaviour
         tipChance *= 2;
     }
 
-    public void CreateDirty()
-    {
-        Vector3 dirtyPoint = transform.position + transform.forward * 2.0f + transform.up * 1f;
-        Dirty dirty = Instantiate(DirtyPrefab, dirtyPoint, Quaternion.identity);
-        dirty.SetCustomer(this);
-        SeatDirty = true;
-    }
+    
 
     public void Pay()  // 돈 획득 이펙트
     {
@@ -219,8 +214,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public void PayDrink()
     {
-        //int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_?);
-        int level = 3; // 드링크바 레벨
+        int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_2);
         int drinkPrice = -100 + level * 300;
         GameManager.Instance.StockManager.AddCurrency(drinkPrice);
         GameManager.Instance.Market.MarketData.TotalIncome += drinkPrice;
@@ -233,6 +227,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public void DeactiveOrderButton()
     {
+        animator.SetBool("IsSitting", true);
         StartCoroutine(DeactiveOrderButtonCo());
     }
 
@@ -249,9 +244,17 @@ public class CustomerStateManager : MonoBehaviour
         IsAutoServed = false;
     }
 
+    public void CreateDirty()
+    {
+        Vector3 dirtyPoint = transform.position + transform.forward * 2.0f + transform.up * 1f;
+        Dirty dirty = Instantiate(DirtyPrefab, dirtyPoint, Quaternion.identity);
+        dirty.SetCustomer(this);
+        SeatDirty = true;
+    }
+
     public void CreateDish()
     {
-        dishObject = Instantiate(DishDataDB.GetData(Order.dish).DishPrefab, foodSpot);
+        dishObject = Instantiate(DishDataDB.GetData(Order.dish).DishPrefab, currentTable.GetFoodSpot(this).position + Vector3.up * 2f, Quaternion.identity);
     }
 
     public void DestroyDish()
@@ -261,7 +264,6 @@ public class CustomerStateManager : MonoBehaviour
 
     private void OnDisable()
     {
-        
         GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, CustomerDie);
         Destroy(this.gameObject);
     }

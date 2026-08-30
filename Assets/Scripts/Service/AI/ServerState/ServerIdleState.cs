@@ -12,7 +12,10 @@ public class ServerIdleState : IState
 
     public void Enter()
     {
-        stateManager.AiMove.SetDirection(Vector3.back);
+        if (stateManager.Customer != null)
+        {
+            stateManager.AiMove.SetDirection(stateManager.Customer.transform.position);
+        }
         stateManager.AnimSetIdle();
         stateManager.IsBusy = false;
     }
