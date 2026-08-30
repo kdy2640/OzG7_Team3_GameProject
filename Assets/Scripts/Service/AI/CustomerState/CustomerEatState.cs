@@ -14,6 +14,7 @@ public class CustomerEatState : IState
 
     public void Enter()
     {
+        stateManager.CreateDish();
         stateManager.Animator.SetBool("IsEating", true);
         stateManager.EatSpeedApply();
         timer = stateManager.EatTime;
@@ -71,6 +72,7 @@ public class CustomerEatState : IState
 
     public void Exit()
     {
+        stateManager.DestroyDish();
         stateManager.Animator.SetBool("IsEating", false);
     }
 }

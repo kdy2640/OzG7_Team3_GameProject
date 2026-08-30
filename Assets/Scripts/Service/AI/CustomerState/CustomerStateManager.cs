@@ -20,6 +20,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private float visibleCanvasHeight = 5.25f;
     [SerializeField] private Combo combo;
     [SerializeField] private DrinkZone drinkZone;
+    [SerializeField] private Transform foodSpot;
 
     private Table currentTable;
     private Transform seat;
@@ -33,6 +34,7 @@ public class CustomerStateManager : MonoBehaviour
     private float eatSpeedUpPercentage;
     public bool SeatDirty = false;
     public bool IsAutoServed = false;
+    private GameObject dishObject;
     
 
     public float Speed => speed;
@@ -245,6 +247,16 @@ public class CustomerStateManager : MonoBehaviour
         
         OrderButton.gameObject.SetActive(false);
         IsAutoServed = false;
+    }
+
+    public void CreateDish()
+    {
+        dishObject = Instantiate(DishDataDB.GetData(Order.dish).DishPrefab, foodSpot);
+    }
+
+    public void DestroyDish()
+    {
+        Destroy(dishObject);
     }
 
     private void OnDisable()
