@@ -10,6 +10,7 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private Transform kitchen;
     [SerializeField] private Transform waitPoint;
     [SerializeField] private Transform foodSpot;
+    [SerializeField] private GameObject tray;
     [SerializeField] private SleepingButton sleepingButton;
     [SerializeField] private Image AutoWorkingImg;
     
@@ -73,6 +74,7 @@ public class ServerStateManager : MonoBehaviour
 
     private void OnEnable()
     {
+        tray.gameObject.SetActive(false);
         serviceEnd += ServerDie;
         GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, serviceEnd);
     }
@@ -288,10 +290,12 @@ public class ServerStateManager : MonoBehaviour
     public void CreateDish()
     {
         dishObject = Instantiate(DishDataDB.GetData(dish).DishPrefab, foodSpot);
+        tray.gameObject.SetActive(true);
     }
 
     public void DestroyDish()
     {
+        tray.gameObject.SetActive(false);
         Destroy(dishObject);
         dishObject = null;
     }

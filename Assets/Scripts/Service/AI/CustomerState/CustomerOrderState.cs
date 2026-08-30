@@ -63,9 +63,7 @@ public class CustomerOrderState : IState
         {
             stateManager.RequestQueue.Queue.Dequeue();
         }
-        stateManager.DeactiveOrderButton();
         stateManager.ChangeState(new CustomerWaitForFoodState(stateManager));
+        stateManager.DeactiveOrderButton();
     }
-
-    
 }
