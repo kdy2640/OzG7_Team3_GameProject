@@ -20,7 +20,6 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private float visibleCanvasHeight = 5.25f;
     [SerializeField] private Combo combo;
     [SerializeField] private DrinkZone drinkZone;
-    [SerializeField] private Transform foodSpot;
 
     private Table currentTable;
     private Transform seat;
@@ -251,7 +250,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public void CreateDish()
     {
-        dishObject = Instantiate(DishDataDB.GetData(Order.dish).DishPrefab, foodSpot);
+        dishObject = Instantiate(DishDataDB.GetData(Order.dish).DishPrefab, currentTable.GetFoodSpot(this));
     }
 
     public void DestroyDish()
