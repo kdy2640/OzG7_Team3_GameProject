@@ -19,7 +19,7 @@ public class CustomerFrame : MonoBehaviour
     }
     private void UpdateUI()
     {
-        leftCustomer.text = "Left : " + customerSpawner.SpawnCount;
+        leftCustomer.text = "남은 손님 <size=50>"+ customerSpawner.SpawnCount + "</size>";
     }
 
     private void OnDisable()
