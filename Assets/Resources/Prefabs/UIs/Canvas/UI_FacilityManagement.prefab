@@ -1025,33 +1025,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_CommonExitPanel
       objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OpenFacilityTutorial
-      objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: TutorialController, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 1144527393077091851, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_PreserveAspect
-      value: 0
+    - target: {fileID: 2056165813778242399, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
+      propertyPath: tutorialType
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5800785246385659039, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
       propertyPath: m_Pivot.x
@@ -1133,116 +1109,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8245564672149510006, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 160
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 308834104793146649, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2910964639060599204}
-    - targetCorrespondingSourceObject: {fileID: 308834104793146649, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4989712732694301560}
-    - targetCorrespondingSourceObject: {fileID: 1598866491083237135, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4137920850046240282}
-    - targetCorrespondingSourceObject: {fileID: 1598866491083237135, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4837510322306783315}
-    - targetCorrespondingSourceObject: {fileID: 8030362194592514830, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6456567437365037151}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
---- !u!1 &945057114230581072 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 308834104793146649, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-  m_PrefabInstance: {fileID: 672362953920725577}
-  m_PrefabAsset: {fileID: 0}
---- !u!225 &2910964639060599204
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945057114230581072}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!114 &4989712732694301560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 945057114230581072}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01a65b2ee7d99cd4e8beadff96a81680, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FloatPanelAnimator
-  duration: 0.6
-  startOffset: {x: 0, y: 180}
-  startScale: 0.92
---- !u!1 &2262185875294741830 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1598866491083237135, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-  m_PrefabInstance: {fileID: 672362953920725577}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4137920850046240282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2262185875294741830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
-  holdThreshold: 0.5
---- !u!114 &4837510322306783315
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2262185875294741830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
-  type: -1
 --- !u!224 &6472853513339084502 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5800785246385659039, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
   m_PrefabInstance: {fileID: 672362953920725577}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7360330216750317895 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8030362194592514830, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-  m_PrefabInstance: {fileID: 672362953920725577}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6456567437365037151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7360330216750317895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
-  type: -1
 --- !u!1001 &3116746689021254077
 PrefabInstance:
   m_ObjectHideFlags: 0
