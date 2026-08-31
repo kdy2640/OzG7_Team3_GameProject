@@ -8,21 +8,15 @@ public class Table : MonoBehaviour
     [Header("Seat")]
     [SerializeField] private Transform leftSeatPoint;
     [SerializeField] private Transform rightSeatPoint;
-    [SerializeField] private Transform leftSeatPos = null;
-    [SerializeField] private Transform rightSeatPos = null;
 
 
     [Header("Serve Point")]
     [SerializeField] private Transform leftServePoint;
     [SerializeField] private Transform rightServePoint;
-    [SerializeField] private Transform leftServePos = null;
-    [SerializeField] private Transform rightServePos = null;
 
     [Header("Food Point")]
     [SerializeField] private Transform leftFoodPoint;
     [SerializeField] private Transform rightFoodPoint;
-    [SerializeField] private Transform leftFoodPos = null;
-    [SerializeField] private Transform rightFoodPos = null;
 
     [SerializeField] private TableManager tableManager;
 
@@ -32,6 +26,7 @@ public class Table : MonoBehaviour
     [SerializeField]private bool leftSeatClosed;
 
     public bool LeftSeatClosed  => leftSeatClosed;
+
 
     private void Awake()
     {
@@ -68,31 +63,37 @@ public class Table : MonoBehaviour
         leftSeatClosed = true;
     }
 
+    private void OnEnable()
+    {
+        tableManager.SetTableDone += TableConnect;
+    }
 
+    private void TableConnect()
+    {
+        Debug.Log("TableConnectOn");
+        if (tableTransform == null)
+            return;
+        TableRoot tableRoot = tableTransform.GetComponentInChildren<TableRoot>();
 
+        if (!leftSeatClosed)
+        {
+            leftFoodPoint.position = tableRoot.transform.Find("FoodRootLeft").position;
+            leftSeatPoint.position = tableRoot.transform.Find("SeatRootLeft").position;
+        }
+
+        rightFoodPoint.position = tableRoot.transform.Find("FoodRootRight").position;
+        rightSeatPoint.position = tableRoot.transform.Find("SeatRootRight").position;
+        Debug.Log("LSP : " + leftSeatPoint.position);
+        Debug.Log("RSP : " + rightSeatPoint.position);
+        Debug.Log("LFP : " + leftFoodPoint.position);
+        Debug.Log("RFP : " + rightFoodPoint.position);
+    }
+
+    
     private void OnValidate()
     {
         if(tableTransform!= null)
-        transform.position = tableTransform.position;
-
-        //if(leftSeatPos.position != null && rightSeatPos.position != null)
-        //{
-        //    leftSeatPoint.position = leftSeatPos.position;
-        //    rightSeatPoint.position = rightSeatPos.position;
-        //}
-        
-        //if(leftServePos.position != null && rightServePos.position != null)
-        //{
-        //    leftServePoint.position = leftServePos.position;
-        //    rightServePoint.position = rightServePos.position;
-        //}
-
-        //if (leftFoodPos.position != null && rightFoodPos.position != null)
-        //{
-        //    leftFoodPoint.position = leftFoodPos.position;
-        //    rightFoodPoint.position = rightFoodPos.position;
-        //}
-        
+            transform.position = tableTransform.position;
     }
 
     public bool HasEmptySeat()
@@ -179,6 +180,11 @@ public class Table : MonoBehaviour
     public bool HasCustomer(CustomerStateManager customer)
     {
         return leftCustomer == customer || rightCustomer == customer;
+    }
+
+    private void OnDisable()
+    {
+        tableManager.SetTableDone -= TableConnect;
     }
 
     private void OnDrawGizmos()

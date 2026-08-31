@@ -11,7 +11,7 @@ public class CustomerTipState : IState
     }
     public void Enter()
     {
-        stateManager.AnimSetIdle();
+        stateManager.Animator.SetBool("IsAttack",true);
 
         timer = 3.0f;
     }
@@ -29,6 +29,7 @@ public class CustomerTipState : IState
     public void Exit() 
     {
         stateManager.AiMove.OnArrived -= Tip;
+        stateManager.Animator.SetBool("IsAttack", false);
     }
 
     private void Tip() 

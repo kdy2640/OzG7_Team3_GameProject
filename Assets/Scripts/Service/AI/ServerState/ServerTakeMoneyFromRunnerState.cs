@@ -13,6 +13,7 @@ public class ServerTakeMoneyFromRunnerState : IState
     public void Enter()
     {
         // 돈받기 메시지 ON
+        stateManager.Animator.SetBool("IsAttacking", true);
     }
 
     public void Execute()
@@ -27,5 +28,6 @@ public class ServerTakeMoneyFromRunnerState : IState
     public void Exit()
     {
         // 돈받기 메시지 OFF
+        stateManager.Animator.SetBool("IsAttacking", false);
     }
 }

@@ -2395,18 +2395,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 446718175556077169, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2102744252552425034, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_PresetInfoIsWorld
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2271420996468984039, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3013680109023167009, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2447,73 +2435,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3911982693159518390, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4035009214155708166, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4108680362510239785, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4375798022321751604, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4550056776025812529, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4907052865948164709, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5791381615130163488, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6828728867267715776, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6985484319627070182, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
       propertyPath: m_Name
       value: RestaurantModelViewer
-      objectReference: {fileID: 0}
-    - target: {fileID: 6985484319627070182, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7408835064794934391, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7458446934023435796, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: collidersEnabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7988973510186901968, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8083405999203614506, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8611082599672842650, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8729741316169996378, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9052667324550268764, guid: 758321c477e66094ca06d32a07d20e21, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2924,16 +2848,10 @@ MonoBehaviour:
   tableTransform: {fileID: 339234732}
   leftSeatPoint: {fileID: 936527897}
   rightSeatPoint: {fileID: 1526025332}
-  leftSeatPos: {fileID: 0}
-  rightSeatPos: {fileID: 0}
   leftServePoint: {fileID: 2094558018}
   rightServePoint: {fileID: 375859447}
-  leftServePos: {fileID: 0}
-  rightServePos: {fileID: 0}
   leftFoodPoint: {fileID: 1206207985}
   rightFoodPoint: {fileID: 1033069339}
-  leftFoodPos: {fileID: 0}
-  rightFoodPos: {fileID: 0}
   tableManager: {fileID: 0}
   leftSeatClosed: 0
 --- !u!4 &408807054
@@ -4669,14 +4587,12 @@ MonoBehaviour:
   tipBox: {fileID: 1672978792}
   spawnInterval: 0.5
   spawnCount: 0
-  controller: {fileID: 9100000, guid: 700f2a0e825d538428dfa44341a95dd4, type: 2}
+  controller: {fileID: 9100000, guid: 3a40cfb9039eb20449c5e6179631c6d3, type: 2}
   dirtyPrefab: {fileID: 2197768549609685042, guid: a7a12ea7e8bea054abec30d95b1ce2cb, type: 3}
   combo: {fileID: 72258501}
   drinkZone: {fileID: 346881763}
   animalPrefabs:
-  - {fileID: 919132149155446097, guid: 2f21402bd6800754aad03d28b4cc4278, type: 3}
-  - {fileID: 919132149155446097, guid: 705fef87a6dc5fe4c94fdf9d6c8e20e9, type: 3}
-  - {fileID: 919132149155446097, guid: eacf3c51f5aba8245bdbc6ccb4d640b5, type: 3}
+  - {fileID: 6432052862695897929, guid: 10648cb9f7111d74b885b6de4f938f9a, type: 3}
   animalSize: 1.6
 --- !u!1001 &642187084
 PrefabInstance:
@@ -6773,16 +6689,10 @@ MonoBehaviour:
   tableTransform: {fileID: 339234733}
   leftSeatPoint: {fileID: 1194950124}
   rightSeatPoint: {fileID: 575494895}
-  leftSeatPos: {fileID: 0}
-  rightSeatPos: {fileID: 0}
   leftServePoint: {fileID: 95400915}
   rightServePoint: {fileID: 1915830943}
-  leftServePos: {fileID: 0}
-  rightServePos: {fileID: 0}
   leftFoodPoint: {fileID: 1468416767}
   rightFoodPoint: {fileID: 668992678}
-  leftFoodPos: {fileID: 0}
-  rightFoodPos: {fileID: 0}
   tableManager: {fileID: 0}
   leftSeatClosed: 0
 --- !u!4 &1063580194
@@ -7838,16 +7748,10 @@ MonoBehaviour:
   tableTransform: {fileID: 339234735}
   leftSeatPoint: {fileID: 240299832}
   rightSeatPoint: {fileID: 466760100}
-  leftSeatPos: {fileID: 0}
-  rightSeatPos: {fileID: 0}
   leftServePoint: {fileID: 444832990}
   rightServePoint: {fileID: 1455566470}
-  leftServePos: {fileID: 0}
-  rightServePos: {fileID: 0}
   leftFoodPoint: {fileID: 609626231}
   rightFoodPoint: {fileID: 908521153}
-  leftFoodPos: {fileID: 0}
-  rightFoodPos: {fileID: 0}
   tableManager: {fileID: 0}
   leftSeatClosed: 0
 --- !u!4 &1227038336
@@ -9172,16 +9076,10 @@ MonoBehaviour:
   tableTransform: {fileID: 2144876517}
   leftSeatPoint: {fileID: 602681079}
   rightSeatPoint: {fileID: 631205984}
-  leftSeatPos: {fileID: 0}
-  rightSeatPos: {fileID: 0}
   leftServePoint: {fileID: 779934721}
   rightServePoint: {fileID: 1940081267}
-  leftServePos: {fileID: 0}
-  rightServePos: {fileID: 0}
   leftFoodPoint: {fileID: 1745615818}
   rightFoodPoint: {fileID: 1020580068}
-  leftFoodPos: {fileID: 0}
-  rightFoodPos: {fileID: 0}
   tableManager: {fileID: 0}
   leftSeatClosed: 0
 --- !u!1 &1439754151
@@ -9651,16 +9549,10 @@ MonoBehaviour:
   tableTransform: {fileID: 339234736}
   leftSeatPoint: {fileID: 774582334}
   rightSeatPoint: {fileID: 1075609823}
-  leftSeatPos: {fileID: 0}
-  rightSeatPos: {fileID: 0}
   leftServePoint: {fileID: 254048328}
   rightServePoint: {fileID: 1579506964}
-  leftServePos: {fileID: 0}
-  rightServePos: {fileID: 0}
   leftFoodPoint: {fileID: 1167419778}
   rightFoodPoint: {fileID: 1337988852}
-  leftFoodPos: {fileID: 0}
-  rightFoodPos: {fileID: 0}
   tableManager: {fileID: 0}
   leftSeatClosed: 0
 --- !u!4 &1511140656
@@ -11293,16 +11185,10 @@ MonoBehaviour:
   tableTransform: {fileID: 339234734}
   leftSeatPoint: {fileID: 1174834206}
   rightSeatPoint: {fileID: 863249105}
-  leftSeatPos: {fileID: 0}
-  rightSeatPos: {fileID: 0}
   leftServePoint: {fileID: 457747100}
   rightServePoint: {fileID: 52804910}
-  leftServePos: {fileID: 0}
-  rightServePos: {fileID: 0}
   leftFoodPoint: {fileID: 268394269}
   rightFoodPoint: {fileID: 1194194750}
-  leftFoodPos: {fileID: 0}
-  rightFoodPos: {fileID: 0}
   tableManager: {fileID: 0}
   leftSeatClosed: 0
 --- !u!4 &1751420199
@@ -13112,16 +12998,10 @@ MonoBehaviour:
   tableTransform: {fileID: 339234731}
   leftSeatPoint: {fileID: 1541490269}
   rightSeatPoint: {fileID: 1654851062}
-  leftSeatPos: {fileID: 0}
-  rightSeatPos: {fileID: 0}
   leftServePoint: {fileID: 113792423}
   rightServePoint: {fileID: 263567520}
-  leftServePos: {fileID: 0}
-  rightServePos: {fileID: 0}
   leftFoodPoint: {fileID: 1922657370}
   rightFoodPoint: {fileID: 1865508806}
-  leftFoodPos: {fileID: 0}
-  rightFoodPos: {fileID: 0}
   tableManager: {fileID: 0}
   leftSeatClosed: 0
 --- !u!4 &2033351937
