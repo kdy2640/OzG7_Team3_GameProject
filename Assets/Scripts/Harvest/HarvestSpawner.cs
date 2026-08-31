@@ -3,6 +3,7 @@ using UnityEngine;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(GridChunkHandler))]
+[RequireComponent(typeof(ItemSpawner))]
 public sealed class HarvestSpawner : MonoBehaviour
 {
     private const float StageBoundaryEpsilon = 0.01f;
@@ -13,6 +14,7 @@ public sealed class HarvestSpawner : MonoBehaviour
     [SerializeField] private List<HarvestActor> spawnedCrops = new();
 
     private GridChunkHandler gridChunkHandler;
+    private ItemSpawner itemSpawner;
     private HarvestEmployeeResolver employeeResolver;
     private HarvestManager harvestManager;
     private bool hasSpawnedPig;
@@ -21,6 +23,7 @@ public sealed class HarvestSpawner : MonoBehaviour
     private void Awake()
     {
         gridChunkHandler = GetComponent<GridChunkHandler>();
+        itemSpawner = GetComponent<ItemSpawner>();
         employeeResolver = player.GetComponent<HarvestEmployeeResolver>();
     }
 
@@ -45,7 +48,7 @@ public sealed class HarvestSpawner : MonoBehaviour
         hasSpawnedPig = false;
         ClearSpawnedCrops();
 
-        gridChunkHandler.Streamer.BeginLoading(player, this);
+        gridChunkHandler.Streamer.BeginLoading(player, this, itemSpawner);
     }
 
     private void SpawnPig()
