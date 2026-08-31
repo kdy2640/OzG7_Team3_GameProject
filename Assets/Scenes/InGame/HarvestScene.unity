@@ -237,12 +237,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 45788134}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17364816, y: 0, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: 0, y: 3, z: -3}
+  m_LocalRotation: {x: 0.17364816, y: -0, z: -0, w: 0.9848078}
+  m_LocalPosition: {x: 0, y: 3, z: -133}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2029958123}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!114 &45788136
 MonoBehaviour:
@@ -256,9 +256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66395d8d5b274ed9904a3f314004c1c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TopViewCameraController
-  target: {fileID: 0}
-  offset: {x: 0, y: 12, z: -12}
-  followSpeed: 8
+  target: {fileID: 2029958123}
+  offset: {x: 0, y: 3, z: -3}
+  followSpeed: 4
   viewEulerAngles: {x: 20, y: 0, z: 0}
 --- !u!114 &45788137
 MonoBehaviour:
@@ -6004,10 +6004,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7950566309481547272, guid: 0c73e84de52701e489fa7d4110fcb63a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 45788135}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c73e84de52701e489fa7d4110fcb63a, type: 3}
 --- !u!114 &1197255039772184435 stripped
@@ -6044,3 +6041,4 @@ SceneRoots:
   - {fileID: 1880621803}
   - {fileID: 1369978884}
   - {fileID: 189240164}
+  - {fileID: 45788135}
