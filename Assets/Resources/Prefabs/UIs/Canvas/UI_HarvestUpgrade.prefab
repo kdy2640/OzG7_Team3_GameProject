@@ -6288,29 +6288,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_CommonExitPanel
       objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+    - target: {fileID: 2056165813778242399, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
+      propertyPath: tutorialType
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OpenHarvestUpgradeTutorial
-      objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: TutorialController, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 591755288089684943, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5800785246385659039, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
       propertyPath: m_Pivot.x
@@ -6395,46 +6375,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 308834104793146649, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1237196169752627612}
-    - targetCorrespondingSourceObject: {fileID: 308834104793146649, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1040268509712938428}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
---- !u!1 &3701153752684415649 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 308834104793146649, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}
-  m_PrefabInstance: {fileID: 3968816142916743096}
-  m_PrefabAsset: {fileID: 0}
---- !u!225 &1237196169752627612
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3701153752684415649}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
---- !u!114 &1040268509712938428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3701153752684415649}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01a65b2ee7d99cd4e8beadff96a81680, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FloatPanelAnimator
-  duration: 0.6
-  startOffset: {x: 0, y: 180}
-  startScale: 0.92
 --- !u!224 &7463755630466544423 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5800785246385659039, guid: f44dd1d4782b34949a3c7ac29d17bbd4, type: 3}

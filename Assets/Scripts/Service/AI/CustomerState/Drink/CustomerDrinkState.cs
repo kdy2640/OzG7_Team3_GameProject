@@ -4,6 +4,7 @@ public class CustomerDrinkState : IState
 {
     private CustomerStateManager stateManager;
     private float timer;
+    private const float Duration = 3f;
     public CustomerDrinkState(CustomerStateManager stateManager)
     {
         this.stateManager = stateManager;
@@ -11,19 +12,23 @@ public class CustomerDrinkState : IState
 
     public void Enter()
     {
+        stateManager.SetLifecycleProgress(0.85f);
+        stateManager.AnimSetIdle();
         stateManager.Animator.SetBool("IsEating", true);
         if(!stateManager.DrinkZone.CanSpendDrink())
         {
             GoNext();
             return;
         }
-        timer = 3.0f;
+        timer = Duration;
         //멘트 ON
     }
 
     public void Execute()
     {
         timer -= Time.deltaTime;
+        stateManager.SetLifecycleProgress(
+            Mathf.Lerp(0.85f, 0.87f, 1f - timer / Duration));
 
 
 

@@ -8,8 +8,13 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
 
     private const float CutterRangeMultiplier = 1.5f;
     private const float CutterRangeBuffDuration = 5f;
+    private const float CutterOverloadCoolDown = 5f;
     private const float ChargeDuration = 1.5f;
     private const float ChargeDamageMultiplier = 100f;
+    private const float ChargeCoolDown = 8f;
+    private const float YieldChancePerUpgrade = 0.05f;
+    private const int HarvestsPerGoldBonus = 20;
+    private const int GoldBonusAmount = 10;
 
     [SerializeField] private GameObject harvester1Sidecar;
     [SerializeField] private GameObject harvester2Sidecar;
@@ -22,6 +27,17 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
     private TractorController tractorController;
     private CropCutter tractorCutter;
     private Coroutine chargeCoroutine;
+    private float extraYieldChance;
+    private float mainCropMeatChance;
+    private float vegetableMeatChance;
+    private float chargeCoolDownMultiplier;
+    private int cutterOverloadUseCount;
+    private int harvestedCropCount;
+    private bool cutterOverloadUnlocked;
+    private bool chargeUnlocked;
+    private bool harvestGoldBonusEnabled;
+    private bool isConfigured;
+    private bool isGrindSFXPlaying;
 
     #endregion
 
@@ -30,17 +46,18 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
     private void Awake()
     {
         tractorController = GetComponent<TractorController>();
-        tractorCutter = tractorController?.Cutter;
+        tractorCutter = tractorController.Cutter;
 
-        skills[0] = new SkillBase(5f);
-        skills[1] = new SkillBase(8f);
+        skills[0] = new SkillBase(CutterOverloadCoolDown, false, 0);
+        skills[1] = new SkillBase(ChargeCoolDown, false);
 
         skills[0].SetExecute(ExecuteCutterRangeBuff);
         skills[1].SetExecute(ExecuteCharge);
     }
 
     private void Start()
-    { 
+    {
+        EnsureConfigured();
 
         harvester1Cutter = ResolveSidecar(
             EmployeeType.Harvester_1,
@@ -61,11 +78,108 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
 
     }
 
+    private void ResolveUpgradeEffects()
+    {
+        extraYieldChance = YieldChancePerUpgrade * (
+            GetReachedUpgradeCount(EmployeeType.Harvester_1, 2, 4)
+            + GetReachedUpgradeCount(EmployeeType.Harvester_2, 2, 5)
+            + GetReachedUpgradeCount(EmployeeType.Harvester_3, 2, 5));
+
+        cutterOverloadUnlocked =
+            HasUpgrade(EmployeeType.Harvester_1, 3)
+            || HasUpgrade(EmployeeType.Harvester_2, 3);
+        cutterOverloadUseCount =
+            (HasUpgrade(EmployeeType.Harvester_1, 3) ? 1 : 0)
+            + (HasUpgrade(EmployeeType.Harvester_2, 3) ? 1 : 0)
+            + (HasUpgrade(EmployeeType.Harvester_2, 5) ? 1 : 0);
+
+        mainCropMeatChance = HasUpgrade(EmployeeType.Harvester_1, 5)
+            ? 0.05f
+            : 0f;
+        vegetableMeatChance = HasUpgrade(EmployeeType.Harvester_2, 1)
+            ? 0.10f
+            : 0f;
+
+        harvestGoldBonusEnabled = HasUpgrade(EmployeeType.Harvester_3, 1);
+        chargeUnlocked = HasUpgrade(EmployeeType.Harvester_3, 3);
+        chargeCoolDownMultiplier = HasUpgrade(EmployeeType.Harvester_3, 5)
+            ? 0.5f
+            : 1f;
+    }
+
+    private void ConfigureSkills()
+    {
+        skills[0].Configure(
+            CutterOverloadCoolDown,
+            cutterOverloadUnlocked,
+            cutterOverloadUseCount);
+        skills[1].Configure(
+            ChargeCoolDown * chargeCoolDownMultiplier,
+            chargeUnlocked);
+    }
+
+    private void EnsureConfigured()
+    {
+        if (isConfigured)
+        {
+            return;
+        }
+
+        ResolveUpgradeEffects();
+        ConfigureSkills();
+        isConfigured = true;
+    }
+
+    private bool HasUpgrade(EmployeeType employeeType, int requiredLevel)
+    {
+        return GameManager.Instance.Upgrade.RuntimeLevel.Get(employeeType)
+            >= requiredLevel;
+    }
+
+    private int GetReachedUpgradeCount(
+        EmployeeType employeeType,
+        int firstLevel,
+        int lastLevel)
+    {
+        int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(employeeType);
+        return Mathf.Clamp(level - firstLevel + 1, 0, lastLevel - firstLevel + 1);
+    }
+
     private void Update()
     {
         for (int i = 0; i < skills.Length; i++)
         {
             skills[i].Tick();
+        }
+
+        UpdateGrindSFX();
+    }
+
+    private void UpdateGrindSFX()
+    {
+        bool shouldPlay = GameManager.Instance.Harvest.IsRunning
+            && (tractorCutter.IsCutting
+                || (harvester1Cutter != null
+                    && harvester1Cutter.gameObject.activeInHierarchy
+                    && harvester1Cutter.IsCutting)
+                || (harvester2Cutter != null
+                    && harvester2Cutter.gameObject.activeInHierarchy
+                    && harvester2Cutter.IsCutting));
+
+        if (isGrindSFXPlaying == shouldPlay)
+            return;
+
+        isGrindSFXPlaying = shouldPlay;
+
+        if (shouldPlay)
+        {
+            GameManager.Instance.Utility.Audio.PlayLoopSFX(
+                SFXType.Harvest_Grind);
+        }
+        else
+        {
+            GameManager.Instance.Utility.Audio.StopLoopSFX(
+                SFXType.Harvest_Grind);
         }
     }
 
@@ -76,7 +190,108 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
             return null;
         }
 
+        EnsureConfigured();
         return skills[index];
+    }
+
+    #endregion
+
+    #region Harvest Rewards
+
+    public void ResolveHarvested(HarvestDataSO harvestData)
+    {
+        TryAddExtraYield(harvestData);
+        TryAddMeatBonus(harvestData);
+
+        if (!harvestData.IsMove)
+        {
+            ResolveHarvestGoldBonus();
+        }
+    }
+
+    private void TryAddExtraYield(HarvestDataSO harvestData)
+    {
+        if (Random.value >= extraYieldChance)
+        {
+            return;
+        }
+
+        for (int i = 0; i < harvestData.Rewards.Count; i++)
+        {
+            GameManager.Instance.StockManager.AddGrocery(
+                new GroceryAmount(harvestData.Rewards[i].grocery, 1));
+        }
+    }
+
+    private void TryAddMeatBonus(HarvestDataSO harvestData)
+    {
+        float chance = IsMainCrop(harvestData.HarvestType)
+            ? mainCropMeatChance
+            : IsVegetable(harvestData.HarvestType)
+                ? vegetableMeatChance
+                : 0f;
+
+        if (Random.value >= chance)
+        {
+            return;
+        }
+
+        int tier = GroceryDataDB.GetData(
+            harvestData.Rewards[0].grocery).Tier;
+        GameManager.Instance.StockManager.AddGrocery(
+            new GroceryAmount(ResolveMeatReward(tier), 1));
+    }
+
+    private void ResolveHarvestGoldBonus()
+    {
+        if (!harvestGoldBonusEnabled)
+        {
+            return;
+        }
+
+        harvestedCropCount++;
+
+        if (harvestedCropCount < HarvestsPerGoldBonus)
+        {
+            return;
+        }
+
+        int bonusCount = harvestedCropCount / HarvestsPerGoldBonus;
+        harvestedCropCount %= HarvestsPerGoldBonus;
+        GameManager.Instance.StockManager.AddCurrency(
+            GoldBonusAmount * bonusCount);
+    }
+
+    private static bool IsMainCrop(HarvestType harvestType)
+    {
+        return harvestType is HarvestType.Rice
+            or HarvestType.Wheat
+            or HarvestType.Potato
+            or HarvestType.Corn;
+    }
+
+    private static bool IsVegetable(HarvestType harvestType)
+    {
+        return harvestType is HarvestType.Carrot
+            or HarvestType.Onion
+            or HarvestType.Cabbage
+            or HarvestType.Tomato;
+    }
+
+    private static GroceryType ResolveMeatReward(int tier)
+    {
+        return tier switch
+        {
+            1 => GroceryType.Chicken,
+            2 => GroceryType.Beef,
+            3 => GroceryType.Lamb,
+            _ => Random.Range(0, 3) switch
+            {
+                0 => GroceryType.Chicken,
+                1 => GroceryType.Beef,
+                _ => GroceryType.Lamb
+            }
+        };
     }
 
     #endregion
@@ -143,6 +358,13 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
 
     private void OnDisable()
     {
+        if (isGrindSFXPlaying)
+        {
+            isGrindSFXPlaying = false;
+            GameManager.Instance.Utility.Audio.StopLoopSFX(
+                SFXType.Harvest_Grind);
+        }
+
         if (chargeCoroutine != null)
         {
             StopCoroutine(chargeCoroutine);
@@ -170,7 +392,7 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
     { 
 
         int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(employeeType);
-        bool isUnlocked = level > 1;
+        bool isUnlocked = level >= 1;
         sidecar.SetActive(isUnlocked);
 
         if (!isUnlocked)

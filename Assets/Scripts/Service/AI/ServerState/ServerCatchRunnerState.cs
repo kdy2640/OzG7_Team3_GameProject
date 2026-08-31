@@ -32,6 +32,7 @@ public class ServerCatchRunnerState : IState
         stateManager.AiMove.SetDirection(stateManager.Customer.transform.position);
         stateManager.Animator.SetBool("IsRunning", false);
         stateManager.Customer.caught?.Invoke();
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_NegativeEventResolve);
         stateManager.ChangeState(new ServerTakeMoneyFromRunnerState(stateManager));
     }
 }

@@ -25,6 +25,7 @@ public class RunnerCatchButton : MonoBehaviour
         if(serverList.TryAllocCatch(customer, out server))
         {
             isClicked = true;
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_NegativeEventSelect);
             customer.AiMove.StopMove();
             customer.AiMove.SetDirection(server.transform.position);
             customer.ChangeState(new CustomerCaughtState(customer));

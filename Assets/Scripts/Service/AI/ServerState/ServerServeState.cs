@@ -21,6 +21,7 @@ public class ServerServeState : IState
         timer = stateManager.ServeTime;
         stateManager.GiveFood();
         stateManager.DestroyDish();
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_DishServed);
     }
 
     public void Execute()

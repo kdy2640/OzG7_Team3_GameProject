@@ -8,10 +8,12 @@ public class SleepingButton : MonoBehaviour
 
     private float sleepingTime = 10.0f;
     private float timer;
+    private bool isSelected;
 
     private void OnEnable()
     {
         timer = sleepingTime;
+        isSelected = false;
         stateManager = GetComponentInParent<ServerStateManager>();
     }
 
@@ -21,6 +23,7 @@ public class SleepingButton : MonoBehaviour
         if( timer < 0 )
         {
             timer = 0;
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_NegativeEventResolve);
             stateManager.ChangeState(new ServerGetBackState(stateManager));
             
             return;
@@ -35,6 +38,12 @@ public class SleepingButton : MonoBehaviour
 
     public void OnClick()
     {
+        if (!isSelected)
+        {
+            isSelected = true;
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_NegativeEventSelect);
+        }
+
         timer -= 2.0f;
     }
 }

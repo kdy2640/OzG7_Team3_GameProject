@@ -250,7 +250,10 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
 
         if (IsCurrentDishSelected(marketData.SelectedDishes))
         {
-            marketData.DeselectDish(currentDishType);
+            if (!marketData.DeselectDish(currentDishType))
+                return;
+
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_MenuDeselect);
             return;
         }
 
@@ -260,7 +263,10 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
             return;
         }
 
-        marketData.SelectDish(currentDishType);
+        if (!marketData.SelectDish(currentDishType))
+            return;
+
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_MenuSelect);
     }
 
     private void OnMarketDataChanged()

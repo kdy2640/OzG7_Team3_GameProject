@@ -12,6 +12,8 @@ public class ServerSleepingState : IState
     public void Enter()
     {
         stateManager.IsBusy = true;
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_NegativeEventStart);
+        // 자는 애니메이션 시작
         stateManager.Animator.SetBool("IsSleeping", true);
         stateManager.AiMove.StopMove();
         stateManager.SleepingButton.gameObject.SetActive(true);

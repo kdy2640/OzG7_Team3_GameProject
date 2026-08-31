@@ -64,6 +64,7 @@ public class AccelerationButton : MonoBehaviour
         kitchenSlotHandler.Acceleration(percentage);
 
         accelCountImg[accelCount].SetActive(false);
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_Acceleration);
     }
 
     private void Decel()

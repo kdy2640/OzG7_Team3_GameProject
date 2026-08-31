@@ -21,6 +21,7 @@ public class ServerReceiveFoodState : IState
 
         if (timer <= 0)
         {
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_DishPickup);
             stateManager.ChangeState(new ServerMoveToTableState(stateManager, stateManager.AiMove, stateManager.ServePoint));
             return;
         }

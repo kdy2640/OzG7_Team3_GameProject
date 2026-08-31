@@ -12,8 +12,7 @@ public sealed class TutorialPopup : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private Image tutorialImage;
-    [SerializeField] private TMP_Text descriptionText;
-    [SerializeField] private Button closeButton;
+    [SerializeField] private TMP_Text descriptionText; 
     [SerializeField] private Button confirmButton;
 
     [Header("Animation")]
@@ -34,8 +33,7 @@ public sealed class TutorialPopup : MonoBehaviour
         }
 
         if (panelAnimator == null) panelAnimator = GetComponent<PanelAnimator>();
-
-        if (closeButton != null) closeButton.onClick.AddListener(Close);
+         
 
         if (confirmButton != null) confirmButton.onClick.AddListener(Close);
 
@@ -64,8 +62,7 @@ public sealed class TutorialPopup : MonoBehaviour
     }
 
     private void OnDestroy()
-    {
-        if (closeButton != null) closeButton.onClick.RemoveListener(Close);
+    { 
 
         if (confirmButton != null) confirmButton.onClick.RemoveListener(Close);
     }

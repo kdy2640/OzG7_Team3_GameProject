@@ -20,6 +20,7 @@ public class CustomerMoveToTableState : IState
 
     public void Enter()
     {
+        stateManager.SetLifecycleProgress(0.1f);
         stateManager.Animator.SetBool("IsWalking", true);
 
         aiMove.OnArrived += Arrived;

@@ -8,9 +8,11 @@ public class HarvestManager : MonoBehaviour
 
     private HarvestEventManager eventManager; 
     private Action<float> OnTick;
+    [SerializeField, Min(0f)] private float timeWarningThreshold = 5f;
     [SerializeField] private float timer;
     [SerializeField] private bool isPause;
     private bool isRunning = false;
+    private bool timeWarningPlayed;
 
     public float Timer { get { return timer; } }
     public float LoopDuration => loopDuration;
@@ -38,6 +40,7 @@ public class HarvestManager : MonoBehaviour
         }
 
         timer = loopDuration;
+        timeWarningPlayed = false;
         OnTick?.Invoke(Timer);
     }
     public void StartLoop()
@@ -45,6 +48,7 @@ public class HarvestManager : MonoBehaviour
         if (!IsGameLoopScene) return;
         isRunning = true;
 
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Harvest_SessionStart);
         eventManager.Invoke(HarvestEventType.LoopStarted);
     }
 
@@ -56,6 +60,14 @@ public class HarvestManager : MonoBehaviour
         timer -= Time.deltaTime;
         OnTick?.Invoke(Timer);
 
+        if (!timeWarningPlayed
+            && timer > 0f
+            && timer <= timeWarningThreshold)
+        {
+            timeWarningPlayed = true;
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Harvest_TimeWarning);
+        }
+
         if (timer <= 0f)
             EndLoop();
     }
@@ -65,6 +77,10 @@ public class HarvestManager : MonoBehaviour
         if (!isRunning) return;
         if (!IsGameLoopScene) return;
         isRunning = false;
+
+        GameManager.Instance.Utility.Audio.StopLoopSFX(SFXType.Harvest_Grind);
+        GameManager.Instance.Utility.Audio.StopLoopSFX(SFXType.Harvest_TractorEngine);
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Harvest_SessionEnd);
         eventManager.Invoke(HarvestEventType.LoopEnded);
     }
 

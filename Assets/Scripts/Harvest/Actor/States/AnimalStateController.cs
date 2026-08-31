@@ -26,6 +26,9 @@ public sealed class AnimalStateController : MonoBehaviour
     private HarvestMover mover;
     private Animator animator;
     private HarvestAnimalStat animalStat;
+    private SFXType voiceSFXType = SFXType.None;
+    private SFXType hitSFXType = SFXType.None;
+    private SFXType dieSFXType = SFXType.None;
 
     public Transform Player => player;
     public HarvestMover Mover => mover;
@@ -38,13 +41,15 @@ public sealed class AnimalStateController : MonoBehaviour
         HarvestMover mover,
         Animator animator,
         HarvestAnimalStat animalStat,
-        RuntimeAnimatorController animatorController)
+        RuntimeAnimatorController animatorController,
+        HarvestType harvestType)
     {
         this.player = player;
         this.mover = mover;
         this.animator = animator;
         this.animalStat = animalStat;
         animator.runtimeAnimatorController = animatorController;
+        ConfigureSFXTypes(harvestType);
 
         currentState = AnimalStateType.Count;
 
@@ -72,6 +77,11 @@ public sealed class AnimalStateController : MonoBehaviour
         AnimalStateBase currentStateComponent = states[(int)currentState];
         currentStateComponent.enabled = true;
         currentStateComponent.StateStart();
+
+        if (nextState == AnimalStateType.Flee)
+        {
+            GameManager.Instance.Utility.Audio.PlaySFX(voiceSFXType);
+        }
     }
 
     public bool IsPlayerWithin(float range)
@@ -96,12 +106,50 @@ public sealed class AnimalStateController : MonoBehaviour
         if (currentState == AnimalStateType.Dead)
             return;
 
+        GameManager.Instance.Utility.Audio.PlaySFX(hitSFXType);
         animator.SetTrigger(HitHash);
     }
 
     public void PlayDeath()
     {
+        GameManager.Instance.Utility.Audio.PlaySFX(dieSFXType);
         animator.SetTrigger(DeathHash);
+    }
+
+    private void ConfigureSFXTypes(HarvestType harvestType)
+    {
+        switch (harvestType)
+        {
+            case HarvestType.Chicken:
+                voiceSFXType = SFXType.Harvest_ChickenVoice;
+                hitSFXType = SFXType.Harvest_ChickenHit;
+                dieSFXType = SFXType.Harvest_ChickenDie;
+                break;
+
+            case HarvestType.Cow:
+                voiceSFXType = SFXType.Harvest_CowVoice;
+                hitSFXType = SFXType.Harvest_CowHit;
+                dieSFXType = SFXType.Harvest_CowDie;
+                break;
+
+            case HarvestType.Sheep:
+                voiceSFXType = SFXType.Harvest_SheepVoice;
+                hitSFXType = SFXType.Harvest_SheepHit;
+                dieSFXType = SFXType.Harvest_SheepDie;
+                break;
+
+            case HarvestType.Pig:
+                voiceSFXType = SFXType.Harvest_PigVoice;
+                hitSFXType = SFXType.Harvest_PigHit;
+                dieSFXType = SFXType.Harvest_PigDie;
+                break;
+
+            default:
+                Debug.LogError(
+                    $"[AnimalStateController] 동물 SFX가 없는 수확 타입입니다: {harvestType}",
+                    this);
+                break;
+        }
     }
 
     public void CompleteDeath()

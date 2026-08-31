@@ -4,6 +4,7 @@ public class CustomerTipState : IState
 {
     private CustomerStateManager stateManager;
     private float timer;
+    private const float Duration = 3f;
 
     public CustomerTipState(CustomerStateManager stateManager)
     {
@@ -11,14 +12,18 @@ public class CustomerTipState : IState
     }
     public void Enter()
     {
+        stateManager.SetLifecycleProgress(0.88f);
+        stateManager.AnimSetIdle();
         stateManager.Animator.SetBool("IsAttack",true);
 
-        timer = 3.0f;
+        timer = Duration;
     }
 
     public void Execute()
     {
         timer -= Time.deltaTime;
+        stateManager.SetLifecycleProgress(
+            Mathf.Lerp(0.88f, 0.9f, 1f - timer / Duration));
 
         if (timer <= 0)
         {

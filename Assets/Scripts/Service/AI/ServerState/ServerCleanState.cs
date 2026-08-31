@@ -35,6 +35,7 @@ public class ServerCleanState : IState
             }
             
             dirty.Customer.SeatDirty = false;
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_NegativeEventResolve);
 
             stateManager.isAutoWorking = false;
             stateManager.ChangeState(new ServerGetBackState(stateManager));

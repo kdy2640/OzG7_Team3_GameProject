@@ -9,6 +9,29 @@ public class TableManager : MonoBehaviour
     private Queue<CustomerStateManager> waitingQueue = new();
     public event Action SetTableDone;
     public IReadOnlyList<Table> Tables => tables;
+    public int WaitingCount => waitingQueue.Count;
+    public int UsableSeatCount
+    {
+        get
+        {
+            int count = 0;
+
+            for (int i = 0; i < tables.Count; i++)
+            {
+                int level = GameManager.Instance.Upgrade.RuntimeLevel.Get((FacilityType)i);
+
+                if (level <= 0)
+                    continue;
+
+                count++;
+
+                if (level > 2)
+                    count++;
+            }
+
+            return count;
+        }
+    }
 
     private void Start()
     {

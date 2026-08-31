@@ -9,7 +9,9 @@ public class CustomerGoToDrinkState : IState
     }
 
     public void Enter()
-    {stateManager.Animator.SetBool("IsWalking", true);
+    {
+        stateManager.SetLifecycleProgress(0.82f);
+        stateManager.Animator.SetBool("IsWalking", true);
         stateManager.AiMove.MoveTo(stateManager.DrinkZone.DrinkSpot);
         
         stateManager.AiMove.OnArrived += ArrivedDrink;

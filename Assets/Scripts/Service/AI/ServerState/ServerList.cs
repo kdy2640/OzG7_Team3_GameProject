@@ -72,6 +72,7 @@ public class ServerList : MonoBehaviour
             {
                 server.IsBusy = true;
                 server.SetServerDish(dish, customer);
+                GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_ServerVoice);
                 return true;
             }
         }
@@ -93,6 +94,7 @@ public class ServerList : MonoBehaviour
                 server.SetCustomer(customer);
                 server.ChangeState(new ServerCatchRunnerState(server));
                 catcher = server;
+                GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_ServerVoice);
                 return true;
             }
         }
@@ -113,7 +115,7 @@ public class ServerList : MonoBehaviour
             {
                 server.IsBusy = true;
                 server.ChangeState(new ServerMoveToCleanState(server, dirty));
-                
+                GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_ServerVoice);
                 return true;
             }
         }
