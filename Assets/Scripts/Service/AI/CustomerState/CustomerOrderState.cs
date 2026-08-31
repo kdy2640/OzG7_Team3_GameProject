@@ -15,6 +15,7 @@ public class CustomerOrderState : IState
 
     public void Enter()
     {
+        stateManager.SetLifecycleProgress(0.25f);
         stateManager.AiMove.SetDirection(stateManager.CurrentTable.transform.position);
         stateManager.Animator.SetBool("IsOrdering", true);
 

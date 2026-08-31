@@ -14,6 +14,7 @@ public class CustomerWaitForFoodState : IState
 
     public void Enter()
     {
+        stateManager.SetLifecycleProgress(0.4f);
         stateManager.Animator.SetBool("IsSitting", true);
         stateManager.foodReceived += StartEat;
     }

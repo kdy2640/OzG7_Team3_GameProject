@@ -10,6 +10,7 @@ public class CustomerGoToTipState : IState
 
     public void Enter()
     {
+        stateManager.SetLifecycleProgress(0.87f);
         stateManager.Animator.SetBool("IsWalking", true);
 
         stateManager.AiMove.MoveTo(stateManager.TipBox.TipSpot);

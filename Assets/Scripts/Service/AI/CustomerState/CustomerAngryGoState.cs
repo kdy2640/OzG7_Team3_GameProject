@@ -11,6 +11,7 @@ public class CustomerAngryGoState : IState
 
     public void Enter()
     {
+        stateManager.SetLifecycleProgress(0.9f);
         stateManager.Combo.BreakCombo();
 
         stateManager.OrderButton.gameObject.SetActive(false);
@@ -42,6 +43,6 @@ public class CustomerAngryGoState : IState
 
     private void ArrivedHome()
     {
-        GameObject.Destroy(stateManager.gameObject);
+        stateManager.FinishLifecycle();
     }
 }

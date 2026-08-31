@@ -5,6 +5,7 @@ public class CustomerEatState : IState
 {
     private CustomerStateManager stateManager;
     private float timer;
+    private float duration;
     private float dirtyChance = 1f;
     public CustomerEatState(CustomerStateManager stateManager)
     {
@@ -17,12 +18,16 @@ public class CustomerEatState : IState
         stateManager.CreateDish();
         stateManager.Animator.SetBool("IsEating", true);
         stateManager.EatSpeedApply();
-        timer = stateManager.EatTime;
+        duration = stateManager.EatTime;
+        timer = duration;
+        stateManager.SetLifecycleProgress(0.55f);
     }
 
     public void Execute()
     {
         timer -= Time.deltaTime;
+        stateManager.SetLifecycleProgress(
+            Mathf.Lerp(0.55f, 0.8f, 1f - timer / duration));
 
         if (timer <= 0)
         {
@@ -35,6 +40,9 @@ public class CustomerEatState : IState
 
     private void FinishEating()
     {
+        stateManager.SetLifecycleProgress(0.8f);
+        stateManager.NotifyProcessingCompleted();
+
         if(Random.value < dirtyChance)
         {
             stateManager.CreateDirty();

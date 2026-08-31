@@ -27,10 +27,15 @@ public class CustomerStateManager : MonoBehaviour
     private Transform customerCanvas;
     public Action foodReceived;
     public Action caught;
+    public event Action ProcessingCompleted;
+    public event Action<CustomerStateManager> LifecycleFinished;
     private float tipChance = 0.1f;
     private float eatTime = 5f;
     private float runChance = 0.1f;
     private float eatSpeedUpPercentage;
+    private bool isProcessingCompleted;
+    private bool isLifecycleFinished;
+    [SerializeField, Range(0f, 1f)] private float lifecycleProgress;
     public bool SeatDirty = false;
     public bool IsAutoServed = false;
     private GameObject dishObject;
@@ -54,6 +59,7 @@ public class CustomerStateManager : MonoBehaviour
     public DishAmount Order => order;
     public float EatTime => eatTime;
     public float RunChance => runChance;
+    public float LifecycleProgress => lifecycleProgress;
     
     [SerializeField]private IState currentState;
 
@@ -69,12 +75,8 @@ public class CustomerStateManager : MonoBehaviour
         this.dirtyPrefab = dirtyPrefab;
         this.combo = combo;
         this.drinkZone = drinkZone;
+        lifecycleProgress = 0f;
         AiMove.SetSpeed(speed);
-    }
-
-    private void OnEnable()
-    {
-        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, CustomerDie);
     }
 
     private void Start()
@@ -220,9 +222,31 @@ public class CustomerStateManager : MonoBehaviour
         GameManager.Instance.Market.MarketData.TotalIncome += drinkPrice;
     }
 
-    private void CustomerDie()
+    public void NotifyProcessingCompleted()
     {
-            ChangeState(new CustomerGameOverState(this));
+        if (isProcessingCompleted)
+            return;
+
+        isProcessingCompleted = true;
+        ProcessingCompleted?.Invoke();
+    }
+
+    public void SetLifecycleProgress(float progress)
+    {
+        lifecycleProgress = Mathf.Max(
+            lifecycleProgress,
+            Mathf.Clamp01(progress));
+    }
+
+    public void FinishLifecycle()
+    {
+        if (isLifecycleFinished)
+            return;
+
+        isLifecycleFinished = true;
+        SetLifecycleProgress(1f);
+        LifecycleFinished?.Invoke(this);
+        Destroy(gameObject);
     }
 
     public void DeactiveOrderButton()
@@ -260,12 +284,6 @@ public class CustomerStateManager : MonoBehaviour
     public void DestroyDish()
     {
         Destroy(dishObject);
-    }
-
-    private void OnDisable()
-    {
-        GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, CustomerDie);
-        Destroy(this.gameObject);
     }
 
 }

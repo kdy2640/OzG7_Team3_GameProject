@@ -11,6 +11,7 @@ public class CustomerRunState : IState
 
     public void Enter()
     {
+        stateManager.SetLifecycleProgress(0.9f);
         stateManager.Animator.SetBool("IsWalking", true);
         stateManager.AiMove.OnArrived += ArrivedHome;
         stateManager.caught += Caught;
@@ -40,7 +41,7 @@ public class CustomerRunState : IState
     private void ArrivedHome()
     {
         stateManager.Combo.BreakCombo();
-        GameObject.Destroy(stateManager.gameObject);
+        stateManager.FinishLifecycle();
     }
 
     private void Caught()
