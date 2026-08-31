@@ -20,6 +20,7 @@ public class CleaningButton : MonoBehaviour
         if(serverList.TryAllocClean(dirty))
         {
             isClicked = true;
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_NegativeEventSelect);
             Destroy(this.gameObject);
         }
         else

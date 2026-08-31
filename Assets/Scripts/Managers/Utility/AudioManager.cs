@@ -56,9 +56,9 @@ public enum SFXType
     Service_NegativeEventStart = 216,   // 먹튀, 테이블 오염, 서버 수면 등 부정 이벤트가 발생했을 때
     Service_NegativeEventSelect = 217,  // 해결할 부정 이벤트를 선택했을 때
     Service_NegativeEventResolve = 218, // 선택한 부정 이벤트를 해결했을 때
-    Service_DrinkServed = 219,      // 고객이 음료를 소비하고 음료 매출이 발생했을 때
-    Service_DrinkRefill = 220,      // 음료 리필 게이지가 가득 차 보충이 완료됐을 때
-    Service_Acceleration = 221,     // 남은 횟수를 소비해 영업 가속이 실제 발동했을 때
+    Service_DrinkServed = 220,      // 고객이 음료를 소비하고 음료 매출이 발생했을 때
+    Service_DrinkRefill = 221,      // 음료 리필 게이지가 가득 차 보충이 완료됐을 때
+    Service_Acceleration = 222,     // 남은 횟수를 소비해 영업 가속이 실제 발동했을 때
 
     // Harvest
     Harvest_SessionStart = 300,     // 수확 시작 카운트다운의 GO 또는 수확 루프 시작 시

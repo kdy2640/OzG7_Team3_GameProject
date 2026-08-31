@@ -12,6 +12,7 @@ public class CustomerAngryGoState : IState
     public void Enter()
     {
         stateManager.SetLifecycleProgress(0.9f);
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CustomerAngry);
         stateManager.Combo.BreakCombo();
 
         stateManager.OrderButton.gameObject.SetActive(false);

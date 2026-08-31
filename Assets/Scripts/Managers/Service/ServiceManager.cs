@@ -41,6 +41,7 @@ public class ServiceManager : MonoBehaviour
         if (!IsServiceScene) return;
         isRunning = true;
 
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_SessionStart);
         eventManager.Invoke(ServiceEventType.LoopStarted);
     }
 
@@ -57,6 +58,7 @@ public class ServiceManager : MonoBehaviour
                 LastSalesResult.todaySales;
         }
 
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_SessionEnd);
         eventManager.Invoke(ServiceEventType.LoopEnded);
         GameManager.Instance.Scene.ChangeScene(SceneType.Hub);
     }

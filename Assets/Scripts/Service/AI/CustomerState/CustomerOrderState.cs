@@ -25,6 +25,7 @@ public class CustomerOrderState : IState
         stateManager.CreateOrder();
         stateManager.OrderButton.SetOrder(stateManager.Order);
         stateManager.RequestQueue.Queue.Enqueue(stateManager.Order.dish);
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_OrderCreated);
         Debug.Log("주문 시작");
         stateManager.OrderButton.OnClicked += ReceiveOrder;
         stateManager.WaitBackGround.SetWaitTimeUI(timer);

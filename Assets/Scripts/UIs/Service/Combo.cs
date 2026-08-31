@@ -22,13 +22,21 @@ public class Combo : MonoBehaviour
     public void AddCount()
     {
         comboCount++;
-        
+
+        if (comboCount % 5 == 0)
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_ComboSound);
+
         UpdateUI();
     }
 
     public void BreakCombo()
     {
+        bool hadCombo = comboCount > 0;
         comboCount = 0;
+
+        if (hadCombo)
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_ComboBreak);
+
         UpdateUI();
     }
 

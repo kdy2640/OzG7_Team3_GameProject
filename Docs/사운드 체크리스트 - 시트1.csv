@@ -1,78 +1,78 @@
-EnumType,숫자,사용 상황,사용 이름,비고,적용 여부
-None,-1,,,
-Global_ButtonClick,0,활성 공용 버튼을 눌렀을 때,SFX_UI_Button_Click_Generic_2,피치 0.7
-Global_ButtonHover,1,포인터가 활성 버튼이나 카드에 처음 진입했을 때,SFX_UI_Button_Click_Generic_2,
-Global_SceneChangeStart,2,씬 전환 로딩 화면이 열릴 때,SFX_Movement_Swoosh_Slow_1,
-Global_SceneChangeEnd,3,로딩 화면이 닫히고 새 씬이 공개될 때,SFX_Movement_Swoosh_Slow_3,
-Global_Notification,4,토스트나 새 알림이 표시될 때,SFX_UI_Notification_2,
-Global_Error,5,실행 가능한 입력이 조건 부족으로 거절됐을 때,SFX_UI_Button_Click_Generic_Negative_3,
-Global_PanelPopup,6,공통 팝업이나 상세 패널이 열릴 때,SFX_UI_Button_Click_Open_1,
-Global_PanelClose,7,팝업이나 상세 패널을 닫고 이전 화면으로 돌아갈 때,SFX_UI_Button_Click_Close_1,
-Global_Confirm,8,"확인, 저장 초기화 같은 동작이 완료됐을떄",SFX_UI_Button_Click_Select_1,
-,,,,
-,,,,
-Hub_Upgrade,100,"시설,직원,요리,수확능력,스테이지 업그레이드 성공 시",SFX_Powerup_Bright_1,,완료
-Hub_Select,101,"시설,직원,요리,수확능력,스테이지 축제 항목을 탐색 선택했을 때",SFX_UI_Button_Click_Generic_2,피치 0.7,완료
-Hub_MenuSelect,103,오늘의 메뉴에 요리를 추가했을 때,SFX_UI_Button_Click_Open_3,,완료
-Hub_MenuDeselect,104,오늘의 메뉴에서 요리를 제거했을 때,SFX_UI_Button_Click_Open_3,,완료
-Hub_GetReward,105,현재 마켓 미션 보상을 수령했을 때,SFX_Player_Collect_Coin_2,,완료
-Hub_Rankup,106,마켓 승급이 확정되고 승급 패널이 열릴 때,SFX_Player_Collect_Bright_2,,완료
-Hub_FestivalStart,107,맛 또는 카테고리 축제를 실제 시작했을 때,SFX_Player_Collect_Pop_3,,완료
-Hub_NextDay,108,밤에서 다음 영업일 아침으로 넘어갈 때,STGR_Success_Calm_1,,완료
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-Service_SessionStart,200,영업 시작 카운트다운의 GO 또는 영업 루프 시작 시,SFX_UI_Bonus_Big_1,
-Service_SessionEnd,201,영업 시간이 끝나 결과 흐름으로 진입할 때,SFX_UI_Bonus_1,피치 1.2
-Service_CustomerAngry,202,주문 제한시간 초과로 고객이 화나서 떠날 때,SFX_Angry02(보류),
-Service_CustomerEat,203,고객이 식사하는 동안 한입 연출이 재생될 때,SFX__Eating(보류),
-Service_CustomerPay,204,식사 또는 음료 대금이 실제 재화로 지급될 때,SFX_Player_Collect_Coin_1,
-Service_ServerVoice,205,서버가 작업을 시작하거나 상황에 반응할 때,SFX_FingerSnap(보류),
-Service_ComboSound,206,콤보가 임계치에 도달하여 발동됐을때.,Service_ComboSound,피치3
-Service_OrderCreated,207,새 고객의 주문 UI가 나타났을 때,SFX_Pop_Mouth_Med_1,
-Service_OrderAccepted,208,주문 접수와 완성 요리 차감이 성공했을 때,SFX_Pop_Mouth_Med_1,피치 0.7
-Service_CookQueued,209,조리 요청이 성공해 조리 대기열에 들어갔을 때,SFX_Pop_Mouth_High_1,
-Service_CookComplete,210,조리가 끝나 완성 요리가 재고에 추가됐을 때,SFX_Pop_Mouth_High_2,
-Service_DishPickup,211,서버가 주방에서 완성 요리를 집었을 때,SFX_Pop_Mouth_High_Sharp_2,
-Service_DishServed,212,서버가 고객에게 요리를 전달했을 때,SFX_Pop_Mouth_High_Sharp_2,피치 0.7
-Service_TipAdded,213,고객이 팁 박스에 팁을 추가했을 때,SFX_Player_Collect_Coin_1,피치 1.2
-Service_TipCollected,214,팁 버튼으로 누적 팁을 회수했을 때,SFX_Player_Collect_Coin_1,
-Service_ComboBreak,215,제한시간 초과나 먹튀 성공으로 콤보가 끊겼을 때,SFX_UI_Button_Click_Generic_Negative_1,
-Service_NegativeEventStart,216,"먹튀, 테이블 오염, 서버 수면 등 부정 이벤트가 발생했을 때",SFX_UI_Button_Click_Generic_Negative_3,
-Service_NegativeEventSelect,217,해결할 부정 이벤트를 선택했을 때,SFX_Pop_Mouth_Low_1,
-Service_NegativeEventResolve,218,선택한 부정 이벤트를 해결했을 때,SFX_UI_Button_Click_Generic_Negative_3,피치 1.2
-Service_DrinkServed,220,고객이 음료를 소비하고 음료 매출이 발생했을 때,SFX_Player_Collect_Coin_1,
-Service_DrinkRefill,221,음료 리필 게이지가 가득 차 보충이 완료됐을 때,SFX_Pop_Mouth_Low_1,
-Service_Acceleration,222,남은 횟수를 소비해 영업 가속이 실제 발동했을 때,SFX_Movement_Swoosh_Med_1,피치 1.5
-,,,,
-,,,,
-,,,,
-,,,,
-,,,,
-Harvest_SessionStart,300,수확 시작 카운트다운의 GO 또는 수확 루프 시작 시,SFX_UI_Bonus_Big_1,
-Harvest_SessionEnd,301,수확 시간이나 연료가 끝나 조작이 종료될 때,SFX_UI_Bonus_1,피치 1.2
-Harvest_Collect,302,수확 보상 재료가 플레이어 재고에 귀속될 때,SFX_Pop_Mouth_Med_1,
-Harvest_Grind,303,커터가 수확 대상과 접촉해 절단 중일 때 사용하는 루프음,SFX_Lawn...(보류),
-Harvest_CropHarvested,304,정적 작물의 HP가 0이 되어 수확 완료됐을 때,SFX_Match_Pop_1,
-Harvest_TractorEngine,305,수확 세션에서 트랙터가 실제 주행 중일 때 사용하는 루프음,LittleCarEngine02_loop,
-Harvest_ChickenVoice,306,닭이 평상 또는 도주 상태에서 울 때,SFX_ChickenRunning02 (보류),
-Harvest_ChickenHit,307,닭이 커터에 피격됐을 때,SFX_ChickenAttacked01 (보류),
-Harvest_ChickenDie,308,닭의 HP가 0이 되어 사망할 때,SFX_ChickenDying01 (보류),
-Harvest_CowVoice,309,소가 평상 또는 도주 상태에서 울 때,SFX_CowRunning (보류),
-Harvest_CowHit,310,소가 커터에 피격됐을 때,SFX_CowAttacked01 (보류),
-Harvest_CowDie,311,소의 HP가 0이 되어 사망할 때,SFX_CowDying (보류),
-Harvest_SheepVoice,312,양이 평상 또는 도주 상태에서 울 때,SFX_SheepRunning01 (보류),
-Harvest_SheepHit,313,양이 커터에 피격됐을 때,SFX_SheepAttacked02 (보류),
-Harvest_SheepDie,314,양의 HP가 0이 되어 사망할 때,SFX_SheepDying02 (보류),
-Harvest_PigVoice,315,돼지가 평상 또는 도주 상태에서 울 때,SFX_PigRunning (보류),
-Harvest_PigHit,316,돼지가 커터에 피격됐을 때,SFX_PigAttacked (보류),
-Harvest_PigDie,317,돼지의 HP가 0이 되어 사망할 때,SFX_PigDying (보류),
-Harvest_ResultReveal,318,수확 종료 후 결과 패널과 획득량을 공개할 때,SFX_UI_Appear_1,
-Harvest_CropHit,319,정적 작물이 커터 피해를 받았을 때,SFX_Movement_Footstep_Generic_1,피치 1.2
-Harvest_GoldenPigDetected,320,황금돼지가 레이더 범위에 처음 들어왔을 때,SFX_UI_Notification_Popup_1,
-Harvest_GoldenPigCollected,321,황금돼지를 쓰러뜨리고 희귀 보상을 획득했을 때,SFX_Cash_Register_Buy_Click_1,
-Harvest_SkillActivate,322,수확 스킬이 사용 가능 검사를 통과하고 발동했을 때,Bing12,
-Harvest_SkillReady,323,수확 스킬 쿨다운이 끝나 다시 사용 가능해졌을 때,SFX_Pop_Mouth_High_1,
-Harvest_TimeWarning,324,수확 남은 시간이 경고 임계값에 처음 진입했을 때,SFX_SpinWheel_Slow_Loop_1,
+EnumType,숫자,사용 상황,사용 이름,비고,적용 여부,적용 위치
+None,-1,,,,,
+Global_ButtonClick,0,활성 공용 버튼을 눌렀을 때,SFX_UI_Button_Click_Generic_2,피치 0.7,,
+Global_ButtonHover,1,포인터가 활성 버튼이나 카드에 처음 진입했을 때,SFX_UI_Button_Click_Generic_2,,,
+Global_SceneChangeStart,2,씬 전환 로딩 화면이 열릴 때,SFX_Movement_Swoosh_Slow_1,,,
+Global_SceneChangeEnd,3,로딩 화면이 닫히고 새 씬이 공개될 때,SFX_Movement_Swoosh_Slow_3,,,
+Global_Notification,4,토스트나 새 알림이 표시될 때,SFX_UI_Notification_2,,,
+Global_Error,5,실행 가능한 입력이 조건 부족으로 거절됐을 때,SFX_UI_Button_Click_Generic_Negative_3,,,
+Global_PanelPopup,6,공통 팝업이나 상세 패널이 열릴 때,SFX_UI_Button_Click_Open_1,,,
+Global_PanelClose,7,팝업이나 상세 패널을 닫고 이전 화면으로 돌아갈 때,SFX_UI_Button_Click_Close_1,,,
+Global_Confirm,8,"확인, 저장 초기화 같은 동작이 완료됐을떄",SFX_UI_Button_Click_Select_1,,,
+,,,,,,
+,,,,,,
+Hub_Upgrade,100,"시설,직원,요리,수확능력,스테이지 업그레이드 성공 시",SFX_Powerup_Bright_1,,완료,UpgradeManager.cs:114
+Hub_Select,101,"시설,직원,요리,수확능력,스테이지 축제 항목을 탐색 선택했을 때",SFX_UI_Button_Click_Generic_2,피치 0.7,완료,"FacilityDetailPanel.cs:82; UI_StaffManagement.cs:62; UI_MenuVisualCard.cs:160; HarvestUpgradeListPanel.cs:25; UI_HarvestStageListPanel.cs:51; UI_FestivalPanel.cs:89"
+Hub_MenuSelect,103,오늘의 메뉴에 요리를 추가했을 때,SFX_UI_Button_Click_Open_3,,완료,UI_MenuVisualizer.cs:269
+Hub_MenuDeselect,104,오늘의 메뉴에서 요리를 제거했을 때,SFX_UI_Button_Click_Open_3,,완료,"UI_MenuVisualizer.cs:256; UI_SelectMenuVisualCard.cs:74"
+Hub_GetReward,105,현재 마켓 미션 보상을 수령했을 때,SFX_Player_Collect_Coin_2,,완료,UI_MarketVisualPanel.cs:275
+Hub_Rankup,106,마켓 승급이 확정되고 승급 패널이 열릴 때,SFX_Player_Collect_Bright_2,,완료,UI_MarketVisualPanel.cs:283
+Hub_FestivalStart,107,맛 또는 카테고리 축제를 실제 시작했을 때,SFX_Player_Collect_Pop_3,,완료,UI_FestivalPanel.cs:115
+Hub_NextDay,108,밤에서 다음 영업일 아침으로 넘어갈 때,STGR_Success_Calm_1,,완료,UI_PhaseButtonPanel.cs:94
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+Service_SessionStart,200,영업 시작 카운트다운의 GO 또는 영업 루프 시작 시,SFX_UI_Bonus_Big_1,,완료,ServiceManager.cs:44
+Service_SessionEnd,201,영업 시간이 끝나 결과 흐름으로 진입할 때,SFX_UI_Bonus_1,피치 1.2,완료,ServiceManager.cs:61
+Service_CustomerAngry,202,주문 제한시간 초과로 고객이 화나서 떠날 때,SFX_Angry02,,완료,CustomerAngryGoState.cs:15
+Service_CustomerEat,203,고객이 식사하는 동안 한입 연출이 재생될 때,SFX__Eating,,완료,CustomerEatState.cs:20
+Service_CustomerPay,204,식사 대금이 실제 재화로 지급될 때,SFX_Player_Collect_Coin_1,,완료,CustomerStateManager.cs:218
+Service_ServerVoice,205,서버가 작업을 시작하거나 상황에 반응할 때,SFX_FingerSnap,,완료,"ServerList.cs:75; ServerList.cs:97; ServerList.cs:118"
+Service_ComboSound,206,콤보가 임계치에 도달하여 발동됐을때.,Service_ComboSound,피치3,완료,Combo.cs:27
+Service_OrderCreated,207,새 고객의 주문 UI가 나타났을 때,SFX_Pop_Mouth_Med_1,,완료,CustomerOrderState.cs:28
+Service_OrderAccepted,208,주문 접수와 완성 요리 차감이 성공했을 때,SFX_Pop_Mouth_Med_1,피치 0.7,완료,OrderButton.cs:101
+Service_CookQueued,209,조리 요청이 성공해 조리 대기열에 들어갔을 때,SFX_Pop_Mouth_High_1,,완료,KitchenSlotHandler.cs:89
+Service_CookComplete,210,조리가 끝나 완성 요리가 재고에 추가됐을 때,SFX_Pop_Mouth_High_2,,완료,Cooker.cs:73
+Service_DishPickup,211,서버가 주방에서 완성 요리를 집었을 때,SFX_Pop_Mouth_High_Sharp_2,,완료,ServerReceiveFoodState.cs:24
+Service_DishServed,212,서버가 고객에게 요리를 전달했을 때,SFX_Pop_Mouth_High_Sharp_2,피치 0.7,완료,ServerServeState.cs:24
+Service_TipAdded,213,고객이 팁 박스에 팁을 추가했을 때,SFX_Player_Collect_Coin_1,피치 1.2,완료,TipBox.cs:23
+Service_TipCollected,214,팁 버튼으로 누적 팁을 회수했을 때,SFX_Player_Collect_Coin_1,,완료,TipButton.cs:12
+Service_ComboBreak,215,제한시간 초과나 먹튀 성공으로 콤보가 끊겼을 때,SFX_UI_Button_Click_Generic_Negative_1,,완료,Combo.cs:38
+Service_NegativeEventStart,216,"먹튀, 테이블 오염, 서버 수면 등 부정 이벤트가 발생했을 때",SFX_UI_Button_Click_Generic_Negative_3,,완료,"CustomerRunState.cs:15; CustomerStateManager.cs:287; ServerSleepingState.cs:15"
+Service_NegativeEventSelect,217,해결할 부정 이벤트를 선택했을 때,SFX_Pop_Mouth_Low_1,,완료,"CleaningButton.cs:23; RunnerCatchButton.cs:28; SleepingButton.cs:44"
+Service_NegativeEventResolve,218,선택한 부정 이벤트를 해결했을 때,SFX_UI_Button_Click_Generic_Negative_3,피치 1.2,완료,"ServerCatchRunnerState.cs:35; ServerCleanState.cs:38; SleepingButton.cs:26"
+Service_DrinkServed,220,고객이 음료를 소비하고 음료 매출이 발생했을 때,SFX_Player_Collect_Coin_1,,완료,CustomerStateManager.cs:228
+Service_DrinkRefill,221,음료 리필 게이지가 가득 차 보충이 완료됐을 때,SFX_Pop_Mouth_Low_1,,완료,DrinkZone.cs:67
+Service_Acceleration,222,남은 횟수를 소비해 영업 가속이 실제 발동했을 때,SFX_Movement_Swoosh_Med_1,피치 1.5,완료,AccelerationButton.cs:67
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+Harvest_SessionStart,300,수확 시작 카운트다운의 GO 또는 수확 루프 시작 시,SFX_UI_Bonus_Big_1,,,
+Harvest_SessionEnd,301,수확 시간이나 연료가 끝나 조작이 종료될 때,SFX_UI_Bonus_1,피치 1.2,,
+Harvest_Collect,302,수확 보상 재료가 플레이어 재고에 귀속될 때,SFX_Pop_Mouth_Med_1,,,
+Harvest_Grind,303,커터가 수확 대상과 접촉해 절단 중일 때 사용하는 루프음,SFX_Lawn...(보류),,,
+Harvest_CropHarvested,304,정적 작물의 HP가 0이 되어 수확 완료됐을 때,SFX_Match_Pop_1,,,
+Harvest_TractorEngine,305,수확 세션에서 트랙터가 실제 주행 중일 때 사용하는 루프음,LittleCarEngine02_loop,,,
+Harvest_ChickenVoice,306,닭이 평상 또는 도주 상태에서 울 때,SFX_ChickenRunning02 (보류),,,
+Harvest_ChickenHit,307,닭이 커터에 피격됐을 때,SFX_ChickenAttacked01 (보류),,,
+Harvest_ChickenDie,308,닭의 HP가 0이 되어 사망할 때,SFX_ChickenDying01 (보류),,,
+Harvest_CowVoice,309,소가 평상 또는 도주 상태에서 울 때,SFX_CowRunning (보류),,,
+Harvest_CowHit,310,소가 커터에 피격됐을 때,SFX_CowAttacked01 (보류),,,
+Harvest_CowDie,311,소의 HP가 0이 되어 사망할 때,SFX_CowDying (보류),,,
+Harvest_SheepVoice,312,양이 평상 또는 도주 상태에서 울 때,SFX_SheepRunning01 (보류),,,
+Harvest_SheepHit,313,양이 커터에 피격됐을 때,SFX_SheepAttacked02 (보류),,,
+Harvest_SheepDie,314,양의 HP가 0이 되어 사망할 때,SFX_SheepDying02 (보류),,,
+Harvest_PigVoice,315,돼지가 평상 또는 도주 상태에서 울 때,SFX_PigRunning (보류),,,
+Harvest_PigHit,316,돼지가 커터에 피격됐을 때,SFX_PigAttacked (보류),,,
+Harvest_PigDie,317,돼지의 HP가 0이 되어 사망할 때,SFX_PigDying (보류),,,
+Harvest_ResultReveal,318,수확 종료 후 결과 패널과 획득량을 공개할 때,SFX_UI_Appear_1,,,
+Harvest_CropHit,319,정적 작물이 커터 피해를 받았을 때,SFX_Movement_Footstep_Generic_1,피치 1.2,,
+Harvest_GoldenPigDetected,320,황금돼지가 레이더 범위에 처음 들어왔을 때,SFX_UI_Notification_Popup_1,,,
+Harvest_GoldenPigCollected,321,황금돼지를 쓰러뜨리고 희귀 보상을 획득했을 때,SFX_Cash_Register_Buy_Click_1,,,
+Harvest_SkillActivate,322,수확 스킬이 사용 가능 검사를 통과하고 발동했을 때,Bing12,,,
+Harvest_SkillReady,323,수확 스킬 쿨다운이 끝나 다시 사용 가능해졌을 때,SFX_Pop_Mouth_High_1,,,
+Harvest_TimeWarning,324,수확 남은 시간이 경고 임계값에 처음 진입했을 때,SFX_SpinWheel_Slow_Loop_1,,,

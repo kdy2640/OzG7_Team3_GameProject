@@ -214,6 +214,8 @@ public class CustomerStateManager : MonoBehaviour
             GameManager.Instance.Service.ResultBuilder.RecordDishSale(
                 Order.dish,
                 basicPrice + bonusCurrency);
+
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CustomerPay);
         }
     }
 
@@ -223,6 +225,7 @@ public class CustomerStateManager : MonoBehaviour
         int drinkPrice = -100 + level * 300;
         GameManager.Instance.StockManager.AddCurrency(drinkPrice);
         GameManager.Instance.Market.MarketData.TotalIncome += drinkPrice;
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_DrinkServed);
     }
 
     public void NotifyProcessingCompleted()
@@ -281,6 +284,7 @@ public class CustomerStateManager : MonoBehaviour
         Dirty dirty = Instantiate(DirtyPrefab, dirtyPoint, Quaternion.identity);
         dirty.SetCustomer(this);
         SeatDirty = true;
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_NegativeEventStart);
     }
 
     public void CreateDish()

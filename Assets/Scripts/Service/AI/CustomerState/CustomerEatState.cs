@@ -17,6 +17,7 @@ public class CustomerEatState : IState
     {
         stateManager.CreateDish();
         stateManager.Animator.SetBool("IsEating", true);
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CustomerEat);
         stateManager.EatSpeedApply();
         duration = stateManager.EatTime;
         timer = duration;
