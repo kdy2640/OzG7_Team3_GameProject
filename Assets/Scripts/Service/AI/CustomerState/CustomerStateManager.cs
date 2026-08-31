@@ -248,8 +248,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public void CreateDirty()
     {
-        Vector3 dirtyPoint = transform.position + transform.forward * 2.0f + transform.up * 1f;
-        Dirty dirty = Instantiate(DirtyPrefab, dirtyPoint, Quaternion.identity);
+        Dirty dirty = Instantiate(DirtyPrefab, currentTable.GetFoodSpot(this).position + Vector3.up, Quaternion.identity);
         dirty.SetCustomer(this);
         SeatDirty = true;
     }

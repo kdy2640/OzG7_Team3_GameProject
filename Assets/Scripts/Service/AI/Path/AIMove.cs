@@ -143,10 +143,9 @@ public class AIMove : MonoBehaviour
     private void MoveToDestination()
     {
         SetDirection(transform.position, destination.position);
-
         transform.position = Vector3.MoveTowards(
             transform.position,
-            destination.position,
+            destination.transform.position,
             moveSpeed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, destination.transform.position) < 0.05f)

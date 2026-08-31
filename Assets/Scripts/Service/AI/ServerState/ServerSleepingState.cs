@@ -12,7 +12,7 @@ public class ServerSleepingState : IState
     public void Enter()
     {
         stateManager.IsBusy = true;
-        // 자는 애니메이션 시작
+        stateManager.Animator.SetBool("IsSleeping", true);
         stateManager.AiMove.StopMove();
         stateManager.SleepingButton.gameObject.SetActive(true);
     }
@@ -25,6 +25,6 @@ public class ServerSleepingState : IState
     public void Exit()
     {
         stateManager.SleepingButton.gameObject.SetActive(false);
-        // 자는 애니메이션 종료
+        stateManager.Animator.SetBool("IsSleeping", false);
     }
 }
