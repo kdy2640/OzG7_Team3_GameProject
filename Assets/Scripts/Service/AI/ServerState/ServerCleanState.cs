@@ -18,8 +18,8 @@ public class ServerCleanState : IState
 
     public void Enter()
     {
-        stateManager.AiMove.SetDirection(stateManager.Customer.CurrentTable.transform.position);
-        stateManager.AnimSetIdle();
+        stateManager.AiMove.SetDirection(dirty.transform.position);
+        stateManager.Animator.SetBool("IsAttacking", true);
         timer = cleaningTime;
     }
 
@@ -45,5 +45,6 @@ public class ServerCleanState : IState
 
     public void Exit()
     {
+        stateManager.Animator.SetBool("IsAttacking", false);
     }
 }

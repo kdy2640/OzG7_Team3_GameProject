@@ -11,6 +11,11 @@ public class CustomerGoToTipState : IState
     public void Enter()
     {
         stateManager.SetLifecycleProgress(0.87f);
+        if(GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_6) < 1)
+        {
+            stateManager.ChangeState(new CustomerGoHomeState(stateManager));
+        }
+
         stateManager.Animator.SetBool("IsWalking", true);
 
         stateManager.AiMove.MoveTo(stateManager.TipBox.TipSpot);

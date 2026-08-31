@@ -14,6 +14,7 @@ public class CustomerTipState : IState
     {
         stateManager.SetLifecycleProgress(0.88f);
         stateManager.AnimSetIdle();
+        stateManager.Animator.SetBool("IsAttack",true);
 
         timer = Duration;
     }
@@ -33,6 +34,7 @@ public class CustomerTipState : IState
     public void Exit() 
     {
         stateManager.AiMove.OnArrived -= Tip;
+        stateManager.Animator.SetBool("IsAttack", false);
     }
 
     private void Tip() 

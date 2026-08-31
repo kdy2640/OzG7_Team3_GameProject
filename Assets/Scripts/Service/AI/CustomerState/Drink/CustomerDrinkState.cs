@@ -14,6 +14,7 @@ public class CustomerDrinkState : IState
     {
         stateManager.SetLifecycleProgress(0.85f);
         stateManager.AnimSetIdle();
+        stateManager.Animator.SetBool("IsEating", true);
         if(!stateManager.DrinkZone.CanSpendDrink())
         {
             GoNext();
@@ -41,7 +42,7 @@ public class CustomerDrinkState : IState
 
     public void Exit()
     {
-        
+        stateManager.Animator.SetBool("IsEating", false);
     }
 
     private void GoNext()
