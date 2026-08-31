@@ -14,14 +14,13 @@ public class OrderButton : MonoBehaviour
     //[SerializeField] private Image dishIcon;
     [SerializeField] private TMP_Text dishName;
     [SerializeField] private TMP_Text amountText;
-    [SerializeField] private Image autoServeImg;
     [SerializeField] private Image cookingImg;
     [SerializeField] private Image foodReadyImg;
     [SerializeField] private Image foodIcon;
 
     private CookingList cookingList;
 
-    public Image AutoServeImg => autoServeImg;
+
     public CustomerStateManager Customer => customer;
 
     public bool IsAutoServing = false;
@@ -34,7 +33,6 @@ public class OrderButton : MonoBehaviour
         serverList = FindFirstObjectByType<ServerList>();
         cookingList = FindFirstObjectByType<CookingList>();
         
-        autoServeImg.gameObject.SetActive(false);
         cookingList.cookingListChanged += UpdateCookingUI;
         
 
