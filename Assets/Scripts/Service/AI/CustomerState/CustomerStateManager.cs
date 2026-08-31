@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CustomerStateManager : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private float visibleCanvasHeight = 5.25f;
     [SerializeField] private Combo combo;
     [SerializeField] private DrinkZone drinkZone;
+    [SerializeField] private Image autoServeImg;
 
     private Table currentTable;
     private Transform seat;
@@ -39,6 +41,7 @@ public class CustomerStateManager : MonoBehaviour
     public bool SeatDirty = false;
     public bool IsAutoServed = false;
     private GameObject dishObject;
+    
     
 
     public float Speed => speed;
@@ -262,15 +265,14 @@ public class CustomerStateManager : MonoBehaviour
 
     private IEnumerator DeactiveOrderButtonCo()
     {
+        OrderButton.gameObject.SetActive(false);
         if (IsAutoServed)
         {
-            OrderButton.AutoServeImg.gameObject.SetActive(true);
-            Debug.Log("AutoServeImg : " + OrderButton.AutoServeImg);
+            autoServeImg.gameObject.SetActive(true);
             yield return new WaitForSeconds(2);
+            IsAutoServed = false;
+            autoServeImg.gameObject.SetActive(false);
         }
-        
-        OrderButton.gameObject.SetActive(false);
-        IsAutoServed = false;
     }
 
     public void CreateDirty()

@@ -54,17 +54,19 @@ public class CustomerOrderState : IState
 
     public void Exit()
     {
-        stateManager.Animator.SetBool("IsOrdering", false);
+        
         stateManager.OrderButton.OnClicked -= ReceiveOrder;
     }
 
     private void ReceiveOrder()
     {
-        if(stateManager.RequestQueue.Queue.Count > 0)
+        stateManager.Animator.SetBool("IsOrdering", false);
+        stateManager.Animator.SetBool("IsSitting", true);
+        if (stateManager.RequestQueue.Queue.Count > 0)
         {
             stateManager.RequestQueue.Queue.Dequeue();
         }
-        stateManager.ChangeState(new CustomerWaitForFoodState(stateManager));
         stateManager.DeactiveOrderButton();
+        stateManager.ChangeState(new CustomerWaitForFoodState(stateManager));
     }
 }

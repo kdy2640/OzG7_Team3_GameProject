@@ -72,6 +72,9 @@ public class KitchenSlotHandler : MonoBehaviour
     //Input
     public bool TryRequestCook(DishType dishType)
     {
+        // 개수 제한
+        if (queueSlots.Count > 2) return false;
+
         if (kitchenSlotViewerPrefab == null)
             return false;
 
@@ -88,6 +91,8 @@ public class KitchenSlotHandler : MonoBehaviour
 
     private void AddWaiting(KitchenSlotData slotData)
     {
+        
+
         QueueSlot queueSlot = new();
 
         KitchenSlotViewer slotViewer = Instantiate(kitchenSlotViewerPrefab, QueuePanel.transform);
