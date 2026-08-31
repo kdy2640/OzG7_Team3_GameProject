@@ -19,7 +19,8 @@ public class FacilityRaycaster : MonoBehaviour
         if (Pointer.current == null || !Pointer.current.press.wasPressedThisFrame) return;
 
         // UI 클릭 여부 체크 (New Input System 대응)
-        if (IsPointerOverUI()) return;
+        bool isPointerOverUI = IsPointerOverUI();
+        if (isPointerOverUI) return;
 
         EnsureCamera();
         if (targetCamera == null) return;

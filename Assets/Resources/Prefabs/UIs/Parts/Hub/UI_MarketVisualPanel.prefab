@@ -3314,6 +3314,8 @@ GameObject:
   m_Component:
   - component: {fileID: 286212564822818334}
   - component: {fileID: 3405666638438950414}
+  - component: {fileID: 6040254956209131747}
+  - component: {fileID: 3906619566112021322}
   m_Layer: 0
   m_Name: UI_MarketVisualPanel
   m_TagString: Untagged
@@ -3376,14 +3378,40 @@ MonoBehaviour:
   remainingMissionSprite: {fileID: 21300000, guid: fd9da17c01be47a498a64dea3070bb44, type: 3}
   currentMissionIndicator: {fileID: 3149237439802675479}
   currentMissionSlotOffsetY: 15
-  missionTitleText: {fileID: 0}
-  missionDescriptionText: {fileID: 0}
+  missionTitleText: {fileID: 2112046305335370039}
+  missionDescriptionText: {fileID: 4109117580270695986}
   missionSlider: {fileID: 6774823430815004822}
   missionAmountText: {fileID: 3244372499345736445}
   rewardButton: {fileID: 6097911937458946792}
   promoteButton: {fileID: 7143539648428249787}
-  inactiveColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  activeColor: {r: 0, g: 1, b: 0, a: 1}
+  inactiveColor: {r: 1, g: 1, b: 1, a: 1}
+  activeColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!225 &6040254956209131747
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4553723885990333421}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &3906619566112021322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4553723885990333421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c506973b38d4dcca7ac7ac24b49f61e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EdgePanelAnimator
+  duration: 0.6
+  offsetX: 420
 --- !u!1 &4701619263596241732
 GameObject:
   m_ObjectHideFlags: 0
@@ -3679,6 +3707,8 @@ GameObject:
   - component: {fileID: 3212082576828088230}
   - component: {fileID: 4036780578268364331}
   - component: {fileID: 7143539648428249787}
+  - component: {fileID: 7331546879399304623}
+  - component: {fileID: 6301157335748027730}
   m_Layer: 0
   m_Name: PromoteButton
   m_TagString: Untagged
@@ -3791,6 +3821,32 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7331546879399304623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5398309339624297442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
+  holdThreshold: 0.5
+--- !u!114 &6301157335748027730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5398309339624297442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  type: -1
 --- !u!1 &5423560571759331600
 GameObject:
   m_ObjectHideFlags: 0
@@ -5760,6 +5816,8 @@ GameObject:
   - component: {fileID: 304302165556601718}
   - component: {fileID: 1418197265240842270}
   - component: {fileID: 6097911937458946792}
+  - component: {fileID: 6915090579495854443}
+  - component: {fileID: 177804559368651649}
   m_Layer: 0
   m_Name: RewardButton
   m_TagString: Untagged
@@ -5872,6 +5930,32 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6915090579495854443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8277373862597164835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
+  holdThreshold: 0.5
+--- !u!114 &177804559368651649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8277373862597164835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea50798df871ab4c8bcda51b0e13fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
+  type: -1
 --- !u!1 &8297696885658700554
 GameObject:
   m_ObjectHideFlags: 0
@@ -6431,7 +6515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6, g: 0.6, b: 0.6, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6506,7 +6590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6, g: 0.6, b: 0.6, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
