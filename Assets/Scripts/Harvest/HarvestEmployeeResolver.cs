@@ -87,7 +87,9 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
         cutterOverloadUnlocked =
             HasUpgrade(EmployeeType.Harvester_1, 3)
             || HasUpgrade(EmployeeType.Harvester_2, 3);
-        cutterOverloadUseCount = 1
+        cutterOverloadUseCount =
+            (HasUpgrade(EmployeeType.Harvester_1, 3) ? 1 : 0)
+            + (HasUpgrade(EmployeeType.Harvester_2, 3) ? 1 : 0)
             + (HasUpgrade(EmployeeType.Harvester_2, 5) ? 1 : 0);
 
         mainCropMeatChance = HasUpgrade(EmployeeType.Harvester_1, 5)
