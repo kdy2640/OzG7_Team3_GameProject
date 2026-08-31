@@ -22,6 +22,8 @@ public sealed class HarvestUpgradeListPanel : MonoBehaviour
         if (upgradeType == HarvestUpgradeType.Count)
             return;
 
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_Select);
+
         for (int i = 0; i < selectionButtons.Length; i++)
         {
             HarvestUpgradeSelectionButton selectionButton = selectionButtons[i];

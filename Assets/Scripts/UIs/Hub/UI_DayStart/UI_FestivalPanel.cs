@@ -86,6 +86,7 @@ public sealed class UI_FestivalPanel : MonoBehaviour
     private void HandleElementSelected(UI_FestivalElement element)
     {
         selectedElement = element;
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_Select);
 
         if (element.IsTaste)
             dishDetailPanel.Refresh((TasteType)element.NowEnum);
@@ -111,6 +112,7 @@ public sealed class UI_FestivalPanel : MonoBehaviour
         if (!didStart)
             return;
 
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_FestivalStart);
         Refresh();
 
         if (selectedElement.IsTaste)

@@ -111,6 +111,7 @@ public class UpgradeManager : MonoBehaviour
         }
 
         state.level++;
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_Upgrade);
         RefreshRuntimeData();
         return true;
     }

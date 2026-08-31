@@ -59,7 +59,7 @@ public sealed class UI_StaffManagement : UI_Base
 
     private void OnSelectStaff(EmployeeType type)
     {
-
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_Select);
         bool isNewSelection = (selectedType != type);
 
         selectedType = type;

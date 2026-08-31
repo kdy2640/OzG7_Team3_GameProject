@@ -269,7 +269,10 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
 
     public void ClaimCurrentMissionReward()
     {
-        marketManager?.TryClaimCurrentMissionReward();
+        if (marketManager == null || !marketManager.TryClaimCurrentMissionReward())
+            return;
+
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_GetReward);
     }
 
     public void Promote()
@@ -277,6 +280,7 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
         if (marketManager == null || !marketManager.TryPromote())
             return;
 
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_Rankup);
         owner.RequestStateChange(HubCanvasController.HubCanvasState.RankUpPanel);
     }
 
