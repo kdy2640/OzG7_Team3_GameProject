@@ -68,7 +68,10 @@ public sealed class UI_SelectMenuVisualCard : MonoBehaviour
         if (!canDeselect || isLocked || dishType == DishType.None)
             return;
 
-        GameManager.Instance.Market.MarketData.DeselectDish(dishType);
+        if (!GameManager.Instance.Market.MarketData.DeselectDish(dishType))
+            return;
+
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_MenuDeselect);
     }
 
     private void OnVisualCardClicked(DishType _)

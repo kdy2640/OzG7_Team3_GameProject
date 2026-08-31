@@ -20,6 +20,7 @@ public sealed class ChunkStreamer
     private GridGeometry geometry;
     private StageResolver stageResolver;
     private HarvestSpawner spawner;
+    private ItemSpawner itemSpawner;
     private Transform cropContainer;
 
     private sealed class ChunkRuntime
@@ -46,11 +47,15 @@ public sealed class ChunkStreamer
     }
 
     // 로딩 타깃과 스포너를 설정하고 최초 청크 로딩을 시작한다.
-    public void BeginLoading(Transform target, HarvestSpawner harvestSpawner)
+    public void BeginLoading(
+        Transform target,
+        HarvestSpawner harvestSpawner,
+        ItemSpawner sceneItemSpawner)
     {
         Reset();
 
         spawner = harvestSpawner;
+        itemSpawner = sceneItemSpawner;
         cropContainer = root.Find("Crops");
 
         if (cropContainer == null)
@@ -252,6 +257,8 @@ public sealed class ChunkStreamer
                 movablePosition,
                 runtime.Root);
         }
+
+        itemSpawner.TrySpawn(coordinate, geometry, runtime.Root);
     }
 
     // 타깃 기준으로 언로드 대상과 신규 로드 대기열을 다시 계산한다.

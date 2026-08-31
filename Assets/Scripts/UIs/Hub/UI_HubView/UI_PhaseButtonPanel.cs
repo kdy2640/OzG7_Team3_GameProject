@@ -91,6 +91,7 @@ public sealed class UI_PhaseButtonPanel : MonoBehaviour
             return;
 
         GameManager.Instance.Market.MoveToNextPhase();
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_NextDay);
         owner.RequestStateChange(HubCanvasController.HubCanvasState.DayStart);
     }
 }

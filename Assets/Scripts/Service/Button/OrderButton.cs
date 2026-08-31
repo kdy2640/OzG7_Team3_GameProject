@@ -98,6 +98,7 @@ public class OrderButton : MonoBehaviour
         if (GameManager.Instance.StockManager.TryConsumeDish(dishAmount))
         {
             isClicked = true;
+            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_OrderAccepted);
             OnClicked?.Invoke();
             Debug.Log("주문 수락 성공");
         }

@@ -52,6 +52,8 @@ public class ResultUI : MonoBehaviour
         if (!isInitialized)
             yield break;
 
+        GameManager.Instance.Utility.Audio.PlaySFX(
+            SFXType.Harvest_ResultReveal);
         gameObject.SetActive(true);
         canvasGroup.alpha = 0f;
         panel.localScale = Vector3.one * 0.8f;

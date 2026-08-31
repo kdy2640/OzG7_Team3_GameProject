@@ -56,9 +56,9 @@ public enum SFXType
     Service_NegativeEventStart = 216,   // 먹튀, 테이블 오염, 서버 수면 등 부정 이벤트가 발생했을 때
     Service_NegativeEventSelect = 217,  // 해결할 부정 이벤트를 선택했을 때
     Service_NegativeEventResolve = 218, // 선택한 부정 이벤트를 해결했을 때
-    Service_DrinkServed = 219,      // 고객이 음료를 소비하고 음료 매출이 발생했을 때
-    Service_DrinkRefill = 220,      // 음료 리필 게이지가 가득 차 보충이 완료됐을 때
-    Service_Acceleration = 221,     // 남은 횟수를 소비해 영업 가속이 실제 발동했을 때
+    Service_DrinkServed = 220,      // 고객이 음료를 소비하고 음료 매출이 발생했을 때
+    Service_DrinkRefill = 221,      // 음료 리필 게이지가 가득 차 보충이 완료됐을 때
+    Service_Acceleration = 222,     // 남은 횟수를 소비해 영업 가속이 실제 발동했을 때
 
     // Harvest
     Harvest_SessionStart = 300,     // 수확 시작 카운트다운의 GO 또는 수확 루프 시작 시
@@ -116,6 +116,7 @@ public class AudioManager : MonoBehaviour
     // Value : 마지막 재생 시간(Time.time)
     private Dictionary<SFXType, float> lastPlayTimes;
     private Dictionary<SFXType, int> playingCounts;
+    private Dictionary<SFXType, AudioSource> loopingSFXSources;
 
     private BGMClipData currentBGMData;
     private Coroutine bgmBlendCoroutine;
@@ -138,6 +139,7 @@ public class AudioManager : MonoBehaviour
         // 각 효과음의 마지막 재생 시간을 저장하는 Dictionary 생성
         lastPlayTimes = new Dictionary<SFXType, float>();
         playingCounts = new Dictionary<SFXType, int>();
+        loopingSFXSources = new Dictionary<SFXType, AudioSource>();
 
         InitializeDictionary();
         StartSynchronizedBGM();
@@ -501,7 +503,49 @@ public class AudioManager : MonoBehaviour
 
         StartCoroutine(ReleaseVoice(type, data.clip.length));
     }
-    //효과음 종류 후 카운트 감소용 코루틴
+    //루프 효과음 재생
+    public void PlayLoopSFX(SFXType type)
+    {
+        if (!sfxDictionary.ContainsKey(type)) return;
+
+        SFXClipData data = sfxDictionary[type];
+        if (!data.isLoop) return;
+        if (loopingSFXSources.ContainsKey(type)) return;
+
+        AudioSource source = GetSFXSource();
+        if (source == null) return;
+
+        source.clip = data.clip;
+        source.volume = data.volume * sfxVolume * masterVolume;
+        source.pitch = data.pitch;
+        source.loop = true;
+        source.Play();
+
+        loopingSFXSources.Add(type, source);
+    }
+
+    public void StopLoopSFX(SFXType type)
+    {
+        if (!loopingSFXSources.TryGetValue(type, out AudioSource source)) return;
+
+        source.Stop();
+        source.clip = null;
+        source.volume = 1f;
+        source.loop = false;
+
+        loopingSFXSources.Remove(type);
+    }
+
+    private void UpdateLoopSFXVolume()
+    {
+        foreach (KeyValuePair<SFXType, AudioSource> pair in loopingSFXSources)
+        {
+            SFXClipData data = sfxDictionary[pair.Key];
+            pair.Value.volume = data.volume * sfxVolume * masterVolume;
+        }
+    }
+
+    //효과음 종료 후 카운트 감소용 코루틴
     private IEnumerator ReleaseVoice(SFXType type, float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -520,6 +564,7 @@ public class AudioManager : MonoBehaviour
     {
         masterVolume = Mathf.Clamp01(volume);
         UpdateBGMVolume();
+        UpdateLoopSFXVolume();
     }
     //BGM볼륨을 변경하는 녀석
     public void SetBGMVolume(float volume)
@@ -530,6 +575,7 @@ public class AudioManager : MonoBehaviour
     public void SetSFXVolume(float volume)
     {
         sfxVolume = Mathf.Clamp01(volume);
+        UpdateLoopSFXVolume();
     }
 
     public AudioSaveData CreateAudioSaveData()

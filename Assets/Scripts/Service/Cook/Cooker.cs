@@ -70,6 +70,7 @@ public class Cooker : MonoBehaviour
     {
         cookingList.Remove(data.DishType);
         GameManager.Instance.CookingManager.AddCookedDish(data.DishType);
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CookComplete);
 
         if(tipChanceApply)
             CustomerTipChanceUpApply(data.DishType);

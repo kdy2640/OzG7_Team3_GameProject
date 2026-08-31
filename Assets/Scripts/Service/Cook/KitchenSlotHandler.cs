@@ -86,6 +86,7 @@ public class KitchenSlotHandler : MonoBehaviour
 
         KitchenSlotData slotData = new(dishType, cookingTime);
         AddWaiting(slotData);
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CookQueued);
         return true;
     }
 

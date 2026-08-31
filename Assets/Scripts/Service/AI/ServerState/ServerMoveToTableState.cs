@@ -20,7 +20,7 @@ public class ServerMoveToTableState : IState
 
     public void Enter()
     {
-        stateManager.Animator.SetBool("IsServing", true);
+        stateManager.Animator.SetBool("IsWalking", true);
 
         stateManager.IsBusy = true;
 
@@ -38,7 +38,7 @@ public class ServerMoveToTableState : IState
 
     public void Exit()
     {
-        stateManager.Animator.SetBool("IsServing", false); 
+        stateManager.Animator.SetBool("IsWalking", false); 
         aiMove.OnArrived -= Arrived;
         
     }

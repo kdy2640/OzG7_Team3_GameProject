@@ -20,6 +20,7 @@ public class TipBox : MonoBehaviour
     {
         tipAmount += tip;
         GameManager.Instance.Service.ResultBuilder.RecordTip(tip);
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_TipAdded);
         UpdateUI();
     }
     public void ApplyTip()

@@ -64,6 +64,7 @@ public class DrinkZone : MonoBehaviour
         spendDrinkFillAmount = 1.0f;
         drinkFillImg.fillAmount = spendDrinkFillAmount;
         backGroundImage.gameObject.SetActive(false);
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_DrinkRefill);
     }
 
     private void OnDisable()

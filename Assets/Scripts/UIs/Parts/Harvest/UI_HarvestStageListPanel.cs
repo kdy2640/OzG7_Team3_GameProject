@@ -45,7 +45,11 @@ public sealed class UI_HarvestStageListPanel : MonoBehaviour
                 continue;
 
             int stageIndex = i;
-            UnityAction clickAction = () => Select((StageType)stageIndex);
+            UnityAction clickAction = () =>
+            {
+                Select((StageType)stageIndex);
+                GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_Select);
+            };
 
             stageButtons[i] = button;
             clickActions[i] = clickAction;

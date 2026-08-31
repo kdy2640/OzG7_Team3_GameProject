@@ -79,6 +79,8 @@ public class FacilityDetailPanel : MonoBehaviour
         if (facilityType == FacilityType.Count)
             yield break;
 
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_Select);
+
         bool wasActive = gameObject.activeSelf;
         bool isDifferentFacility = currentFacilityType != facilityType;
 

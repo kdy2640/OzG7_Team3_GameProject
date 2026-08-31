@@ -21,6 +21,8 @@ public sealed class TractorController : MonoBehaviour
     private Vector2 moveInput;
     private bool isCharging;
     private bool isStageBoundaryBlocked;
+    private bool isEngineSFXPlaying;
+    private float speedBoostAmount;
 
     public CropCutter Cutter =>
         cropCutter ??= GetComponentInChildren<CropCutter>(true);
@@ -66,6 +68,7 @@ public sealed class TractorController : MonoBehaviour
     {
         moveAction?.Disable();
         moveInput = Vector2.zero;
+        UpdateEngineSFX(false);
     }
 
     private void Update()
@@ -87,7 +90,10 @@ public sealed class TractorController : MonoBehaviour
     private void FixedUpdate()
     {
         if (GameManager.Instance?.Harvest?.IsRunning != true)
+        {
+            UpdateEngineSFX(false);
             return;
+        }
 
         float throttle = isCharging ? 1f : moveInput.y;
         float steering = isCharging ? 0f : moveInput.x;
@@ -95,6 +101,7 @@ public sealed class TractorController : MonoBehaviour
 
         if (!isMoving && Mathf.Abs(steering) <= 0.0001f)
         {
+            UpdateEngineSFX(false);
             return;
         }
 
@@ -114,24 +121,67 @@ public sealed class TractorController : MonoBehaviour
             body.rotation * Quaternion.Euler(0f, steeringAngle, 0f);
         body.MoveRotation(nextRotation);
 
+        bool didMove = false;
+
         if (isMoving && speedMultiplier > 0f)
         {
             Vector3 forward = nextRotation * Vector3.forward;
             Vector3 nextPosition =
                 body.position
                 + forward
-                * (throttle * moveSpeed * speedMultiplier * Time.fixedDeltaTime);
+                * (throttle
+                    * moveSpeed
+                    * (1f + speedBoostAmount)
+                    * speedMultiplier
+                    * Time.fixedDeltaTime);
 
             nextPosition = ClampToStageBoundary(nextPosition);
+            didMove = (nextPosition - body.position).sqrMagnitude > 0.0001f;
 
             body.MovePosition(
                 nextPosition);
+        }
+
+        UpdateEngineSFX(didMove);
+    }
+
+    private void UpdateEngineSFX(bool shouldPlay)
+    {
+        if (isEngineSFXPlaying == shouldPlay)
+            return;
+
+        isEngineSFXPlaying = shouldPlay;
+
+        if (shouldPlay)
+        {
+            GameManager.Instance.Utility.Audio.PlayLoopSFX(
+                SFXType.Harvest_TractorEngine);
+        }
+        else
+        {
+            GameManager.Instance.Utility.Audio.StopLoopSFX(
+                SFXType.Harvest_TractorEngine);
         }
     }
 
     public void SetCharging(bool value)
     {
         isCharging = value;
+    }
+
+    public void ApplySpeedBoost(float amount)
+    {
+        speedBoostAmount += amount;
+    }
+
+    public void ApplyRangeBoost(float amount)
+    {
+        cropCutter.ApplyRangeBoost(amount);
+    }
+
+    public void ApplyDamageBoost(float amount)
+    {
+        cropCutter.ApplyDamageBoost(amount);
     }
 
     private Vector3 ClampToStageBoundary(Vector3 worldPosition)

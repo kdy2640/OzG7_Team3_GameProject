@@ -9,6 +9,7 @@ public class TipButton : MonoBehaviour
     public void OnClick()
     {
         OnClicked?.Invoke();
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_TipCollected);
     }
 
     public void SetAmountText(int amount)

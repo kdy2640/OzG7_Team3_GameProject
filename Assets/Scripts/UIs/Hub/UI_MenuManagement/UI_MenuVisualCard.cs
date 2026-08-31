@@ -157,6 +157,7 @@ public class UI_MenuVisualCard : MonoBehaviour
 
     private void HandleClick(PointerEventData _)
     {
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_Select);
         onClicked?.Invoke(dishType);
     }
 

@@ -14,6 +14,7 @@ public class CustomerGoHomeState : IState
 
     public void Enter()
     {
+        stateManager.SetLifecycleProgress(0.9f);
         timer = 5.0f;
 
         stateManager.Animator.SetBool("IsWalking", true);
@@ -54,6 +55,7 @@ public class CustomerGoHomeState : IState
         // 콤보 ++;
         arrived = true;
         stateManager.Combo.AddCount();
+        stateManager.CompleteLifecycle();
     }
     private bool CheckSeatCleaned()
     {
@@ -73,7 +75,7 @@ public class CustomerGoHomeState : IState
         }
         if(CheckSeatCleaned())
         {
-            GameObject.Destroy(stateManager.gameObject);
+            stateManager.FinishLifecycle();
         }
     }
 }
