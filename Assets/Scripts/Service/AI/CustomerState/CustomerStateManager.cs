@@ -238,7 +238,7 @@ public class CustomerStateManager : MonoBehaviour
             Mathf.Clamp01(progress));
     }
 
-    public void FinishLifecycle()
+    public void CompleteLifecycle()
     {
         if (isLifecycleFinished)
             return;
@@ -246,6 +246,11 @@ public class CustomerStateManager : MonoBehaviour
         isLifecycleFinished = true;
         SetLifecycleProgress(1f);
         LifecycleFinished?.Invoke(this);
+    }
+
+    public void FinishLifecycle()
+    {
+        CompleteLifecycle();
         Destroy(gameObject);
     }
 

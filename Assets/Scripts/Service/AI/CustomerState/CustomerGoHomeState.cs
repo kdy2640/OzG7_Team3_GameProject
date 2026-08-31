@@ -55,6 +55,7 @@ public class CustomerGoHomeState : IState
         // 콤보 ++;
         arrived = true;
         stateManager.Combo.AddCount();
+        stateManager.CompleteLifecycle();
     }
     private bool CheckSeatCleaned()
     {
