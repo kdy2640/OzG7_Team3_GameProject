@@ -10,6 +10,7 @@ public sealed class GoldenPigRadarIndicator : MonoBehaviour
     private AnimalStateController animalStateController;
     private Camera targetCamera;
     private float detectionRadius;
+    private bool hasPlayedDetectedSFX;
 
     private void Start()
     {
@@ -21,12 +22,23 @@ public sealed class GoldenPigRadarIndicator : MonoBehaviour
 
         transform.localPosition = Vector3.up * indicatorHeight;
         indicatorCanvas.enabled = false;
+        hasPlayedDetectedSFX = false;
     }
 
     private void LateUpdate()
     {
-        indicatorCanvas.enabled = detectionRadius > 0f
+        bool isDetected = detectionRadius > 0f
             && animalStateController.IsPlayerWithin(detectionRadius);
+
+        indicatorCanvas.enabled = isDetected;
+
+        if (isDetected && !hasPlayedDetectedSFX)
+        {
+            hasPlayedDetectedSFX = true;
+            GameManager.Instance.Utility.Audio.PlaySFX(
+                SFXType.Harvest_GoldenPigDetected);
+        }
+
         transform.rotation = targetCamera.transform.rotation;
     }
 

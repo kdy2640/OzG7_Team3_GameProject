@@ -13,6 +13,7 @@ public sealed class UI_HarvestSkillButton : MonoBehaviour
     [SerializeField] private TMP_Text coolDownText;
 
     private SkillBase skill;
+    private bool wasCoolingDown;
 
     private void Start()
     {
@@ -66,11 +67,26 @@ public sealed class UI_HarvestSkillButton : MonoBehaviour
 
     private void OnClick()
     {
-        skill?.Execute();
+        if (!skill.CanExecute())
+            return;
+
+        skill.Execute();
+        GameManager.Instance.Utility.Audio.PlaySFX(
+            SFXType.Harvest_SkillActivate);
     }
 
     private void SetCoolDown(float remainingTime)
     {
+        bool isCoolingDown = remainingTime > 0f;
+
+        if (wasCoolingDown && !isCoolingDown && skill.CanExecute())
+        {
+            GameManager.Instance.Utility.Audio.PlaySFX(
+                SFXType.Harvest_SkillReady);
+        }
+
+        wasCoolingDown = isCoolingDown;
+
         if (coolDownOverlay != null)
         {
             coolDownOverlay.fillAmount = skill.CoolDownTime > 0f

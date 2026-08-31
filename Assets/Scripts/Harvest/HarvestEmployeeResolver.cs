@@ -37,6 +37,7 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
     private bool chargeUnlocked;
     private bool harvestGoldBonusEnabled;
     private bool isConfigured;
+    private bool isGrindSFXPlaying;
 
     #endregion
 
@@ -149,6 +150,36 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
         for (int i = 0; i < skills.Length; i++)
         {
             skills[i].Tick();
+        }
+
+        UpdateGrindSFX();
+    }
+
+    private void UpdateGrindSFX()
+    {
+        bool shouldPlay = GameManager.Instance.Harvest.IsRunning
+            && (tractorCutter.IsCutting
+                || (harvester1Cutter != null
+                    && harvester1Cutter.gameObject.activeInHierarchy
+                    && harvester1Cutter.IsCutting)
+                || (harvester2Cutter != null
+                    && harvester2Cutter.gameObject.activeInHierarchy
+                    && harvester2Cutter.IsCutting));
+
+        if (isGrindSFXPlaying == shouldPlay)
+            return;
+
+        isGrindSFXPlaying = shouldPlay;
+
+        if (shouldPlay)
+        {
+            GameManager.Instance.Utility.Audio.PlayLoopSFX(
+                SFXType.Harvest_Grind);
+        }
+        else
+        {
+            GameManager.Instance.Utility.Audio.StopLoopSFX(
+                SFXType.Harvest_Grind);
         }
     }
 
@@ -327,6 +358,13 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
 
     private void OnDisable()
     {
+        if (isGrindSFXPlaying)
+        {
+            isGrindSFXPlaying = false;
+            GameManager.Instance.Utility.Audio.StopLoopSFX(
+                SFXType.Harvest_Grind);
+        }
+
         if (chargeCoroutine != null)
         {
             StopCoroutine(chargeCoroutine);
