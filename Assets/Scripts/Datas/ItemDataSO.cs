@@ -12,6 +12,10 @@ public enum ItemType
 public sealed class ItemDataSO : ScriptableObject
 {
     [SerializeField] private ItemType itemType = ItemType.Count;
+    [SerializeField] private GameObject solidModel;
+    [SerializeField, Min(0f)] private float effectAmount = 0.3f;
 
     public ItemType ItemType => itemType;
+    public GameObject SolidModel => solidModel;
+    public float EffectAmount => effectAmount;
 }

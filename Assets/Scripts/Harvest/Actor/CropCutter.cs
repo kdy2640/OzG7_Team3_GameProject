@@ -18,6 +18,10 @@ public sealed class CropCutter : MonoBehaviour
     private readonly Dictionary<int, float> nextDamageTimes = new();
     private float cuttingUntilTime;
     private float damageMultiplier = 1f;
+    private float baseRange;
+    private float baseDamage;
+    private float rangeBoostAmount;
+    private float damageBoostAmount;
 
     public bool IsCutting => Time.time <= cuttingUntilTime;
     public float Range => cuttingRange;
@@ -35,17 +39,21 @@ public sealed class CropCutter : MonoBehaviour
         float attacksPerSecond,
         float baseDamage)
     {
-        TargetRange = Mathf.Max(0f, range);
+        baseRange = Mathf.Max(0f, range);
+        TargetRange = baseRange * (1f + rangeBoostAmount);
         ApplyRange(TargetRange);
 
         damageDelay = attacksPerSecond > 0f
             ? 1f / attacksPerSecond
             : float.MaxValue;
-        damage = Mathf.Max(0f, baseDamage);
+        this.baseDamage = Mathf.Max(0f, baseDamage);
+        damage = this.baseDamage * (1f + damageBoostAmount);
     }
 
     private void Awake()
     {
+        baseRange = cuttingRange;
+        baseDamage = damage;
         TargetRange = cuttingRange;
         ApplyRange(cuttingRange);
     }
@@ -87,6 +95,18 @@ public sealed class CropCutter : MonoBehaviour
     public void SetDamageMultiplier(float multiplier)
     {
         damageMultiplier = Mathf.Max(0f, multiplier);
+    }
+
+    public void ApplyRangeBoost(float amount)
+    {
+        rangeBoostAmount += amount;
+        SetTargetRange(baseRange * (1f + rangeBoostAmount));
+    }
+
+    public void ApplyDamageBoost(float amount)
+    {
+        damageBoostAmount += amount;
+        damage = baseDamage * (1f + damageBoostAmount);
     }
 
     private void ApplyRange(float range)
