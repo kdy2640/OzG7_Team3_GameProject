@@ -18,7 +18,6 @@ public class ServerSkillManager
 
     private void Server1Update(ServerStateManager server)
     {
-        Debug.Log("server1 LV : " + server.Level);
 
         if(server == null)
         {
