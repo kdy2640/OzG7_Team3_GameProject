@@ -8,22 +8,17 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private TMP_Text upgradeNameText;
-    [SerializeField] private TMP_Text levelText;
+    [SerializeField] private UI_FacilityLevelDisplay currentLevelDisplay;
+    [SerializeField] private UI_FacilityLevelDisplay nextLevelDisplay;
     [SerializeField] private Slider levelSlider;
-    [SerializeField] private Image[] levelSlots = new Image[5];
-    [SerializeField] private TMP_Text nextLevelText;
-    [SerializeField] private Image[] nextLevelSlots = new Image[5];
-    [SerializeField] private Color filledSlotColor = new(1f, .78f, .2f);
-    [SerializeField] private Color emptySlotColor = new(.3f, .3f, .3f);
-    [SerializeField] private TMP_Text currentEffectStateText;
-    [SerializeField] private TMP_Text currentEffectText;
-    [SerializeField] private GameObject nextEffect;
-    [SerializeField] private TMP_Text nextEffectText;
     [SerializeField] private TMP_Text costText;
     [SerializeField] private Button actionButton;
     [SerializeField] private TMP_Text actionButtonText;
+    [SerializeField] private GameObject unavailableButton;
+    [SerializeField] private TMP_Text unavailableButtonText;
     [SerializeField] private Button closeButton;
     [SerializeField] private PanelAnimator panelAnimator;
+    [SerializeField] private GameObject goldStruct;
 
     private HarvestUpgradeType currentUpgradeType = HarvestUpgradeType.Count;
     private UpgradeManager subscribedUpgradeManager;
@@ -118,12 +113,19 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
         if (upgradeNameText != null)
             upgradeNameText.text = data.DisplayName;
 
-        if (levelText != null)
-            levelText.text = $"Lv.{currentLevel}";
+        currentLevelDisplay.SetData(
+            currentLevel,
+            BuildEffectText(data, currentLevel));
+        currentLevelDisplay.SetMaxLevel(isMaxLevel);
 
-        nextLevelText.text = isMaxLevel
-            ? "MAX"
-            : $"Lv.{currentLevel + 1}";
+        nextLevelDisplay.gameObject.SetActive(!isMaxLevel);
+
+        if (!isMaxLevel)
+        {
+            nextLevelDisplay.SetData(
+                currentLevel + 1,
+                BuildEffectText(data, currentLevel + 1));
+        }
 
         if (levelSlider != null)
         {
@@ -131,48 +133,34 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
             levelSlider.value = currentLevel;
         }
 
-        for (int i = 0; i < levelSlots.Length; i++)
+        bool showCurrencyAction =
+            availability == UpgradeAvailability.Available ||
+            availability == UpgradeAvailability.InsufficientCurrency;
+
+        costText.text = showCurrencyAction
+            && data.TryGetRequiredCost(currentLevel + 1, out int cost)
+                ? cost.ToString()
+                : "-";
+
+        actionButton.gameObject.SetActive(showCurrencyAction);
+        unavailableButton.SetActive(!showCurrencyAction);
+        goldStruct.SetActive(showCurrencyAction);
+
+        actionButton.interactable =
+            availability == UpgradeAvailability.Available;
+
+        if (showCurrencyAction)
         {
-            levelSlots[i].color = i < currentLevel
-                ? filledSlotColor
-                : emptySlotColor;
+            actionButtonText.text =
+                availability == UpgradeAvailability.InsufficientCurrency
+                    ? "자금 부족"
+                    : currentLevel <= 0 ? "구매" : "업그레이드";
         }
-
-        int nextLevel = Mathf.Min(currentLevel + 1, data.MaxLevel);
-
-        for (int i = 0; i < nextLevelSlots.Length; i++)
+        else
         {
-            nextLevelSlots[i].color = i < nextLevel
-                ? filledSlotColor
-                : emptySlotColor;
+            unavailableButtonText.text =
+                GetUnavailableText(data, currentLevel, availability);
         }
-
-        currentEffectStateText.text = isMaxLevel ? "만렙" : "현재 효과";
-        nextEffect.SetActive(!isMaxLevel);
-
-        if (currentEffectText != null)
-            currentEffectText.text = BuildEffectText(data, currentLevel);
-
-        if (nextEffectText != null)
-        {
-            nextEffectText.text = isMaxLevel
-                ? "MAX"
-                : BuildEffectText(data, currentLevel + 1);
-        }
-
-        if (costText != null)
-        {
-            costText.text = !isMaxLevel
-                && data.TryGetRequiredCost(currentLevel + 1, out int cost)
-                    ? cost.ToString()
-                    : "-";
-        }
-
-        if (actionButton != null)
-            actionButton.interactable = availability == UpgradeAvailability.Available;
-
-        if (actionButtonText != null)
-            actionButtonText.text = GetAvailabilityText(data, currentLevel, availability);
     }
 
     private void RefreshInvalidData()
@@ -180,16 +168,13 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
         if (upgradeNameText != null)
             upgradeNameText.text = currentUpgradeType.ToString();
 
-        if (levelText != null)
-            levelText.text = "Lv.-";
-
-        nextLevelText.text = "Lv.-";
-
-        if (currentEffectText != null)
-            currentEffectText.text = "Data Error";
-
-        if (nextEffectText != null)
-            nextEffectText.text = "Data Error";
+        currentLevelDisplay.SetInvalidData();
+        nextLevelDisplay.gameObject.SetActive(true);
+        nextLevelDisplay.SetInvalidData();
+        actionButton.gameObject.SetActive(false);
+        unavailableButton.SetActive(true);
+        unavailableButtonText.text = "데이터 오류";
+        goldStruct.SetActive(false);
 
         if (costText != null)
             costText.text = "-";
@@ -197,8 +182,6 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
         if (actionButton != null)
             actionButton.interactable = false;
 
-        if (actionButtonText != null)
-            actionButtonText.text = "Data Error";
     }
 
     private static string BuildEffectText(
@@ -245,7 +228,7 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
         return builder.Length > 0 ? builder.ToString() : "효과 정보 없음";
     }
 
-    private static string GetAvailabilityText(
+    private static string GetUnavailableText(
         HarvestUpgradeDataSO data,
         int currentLevel,
         UpgradeAvailability availability)
@@ -255,16 +238,14 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
                 currentLevel + 1,
                 out int requiredMarketLevel))
         {
-            return $"Market Lv.{requiredMarketLevel}";
+            return $"레스토랑레벨 {requiredMarketLevel}에 해금됩니다.";
         }
 
         return availability switch
         {
-            UpgradeAvailability.Available => "Upgrade",
-            UpgradeAvailability.MaxLevel => "Max Level",
-            UpgradeAvailability.InsufficientCurrency => "Not Enough Currency",
-            UpgradeAvailability.InvalidData => "Data Error",
-            _ => "Unavailable"
+            UpgradeAvailability.MaxLevel => "최대 레벨",
+            UpgradeAvailability.InvalidData => "데이터 오류",
+            _ => "이용 불가"
         };
     }
 }
