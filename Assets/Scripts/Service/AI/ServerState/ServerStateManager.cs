@@ -305,7 +305,7 @@ public class ServerStateManager : MonoBehaviour
         Destroy(this.gameObject);
         customerChanged -= CustomerEatSpeedUp;
         customerChanged -= CustomerTipChanceUp;
-        serviceEnd -= ServerDie;
         GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, serviceEnd);
+        serviceEnd -= ServerDie;
     }
 }
