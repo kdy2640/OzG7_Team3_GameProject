@@ -20,6 +20,12 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
     [SerializeField] private Slider missionSlider;
     [SerializeField] private TMP_Text missionAmountText;
     [SerializeField] private Button rewardButton;
+    [SerializeField] private GameObject completeButton;
+    [SerializeField] private GameObject missionRewardPanel;
+    [SerializeField] private Image missionRewardIcon;
+    [SerializeField] private TMP_Text missionRewardAmountText;
+    [SerializeField] private TMP_Text missionRewardAmountShadowText;
+    [SerializeField] private Sprite currencyRewardSprite;
     [SerializeField] private Button promoteButton;
     [SerializeField] private Color inactiveColor = Color.gray;
     [SerializeField] private Color activeColor = Color.green;
@@ -80,12 +86,20 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
         bool areAllMissionsCompleted = market.LevelMissionProgress.AreAllMissionsClaimed;
         bool isFinalLevelComplete = isMaxLevel && areAllMissionsCompleted;
         bool canPromote = !isMaxLevel && market.CanPromote;
+        bool showRewardButton = !isFinalLevelComplete
+            && !areAllMissionsCompleted
+            && !canPromote;
+        bool showCompleteButton = !isFinalLevelComplete
+            && areAllMissionsCompleted
+            && !canPromote;
 
         if (rewardButton != null)
         {
-            rewardButton.gameObject.SetActive(!isFinalLevelComplete && !canPromote);
+            rewardButton.gameObject.SetActive(showRewardButton);
             rewardButton.interactable = market.LevelMissionProgress.CanClaimCurrentReward;
         }
+
+        completeButton.SetActive(showCompleteButton);
 
         if (promoteButton != null)
         {
@@ -117,10 +131,7 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
                 missionSlider.interactable = false;
 
             if (missionTitleText != null)
-                missionTitleText.text = "Max Level";
-
-            if (missionDescriptionText != null)
-                missionDescriptionText.text = string.Empty;
+                missionTitleText.text = "Max Level"; 
 
             return;
         }
@@ -197,13 +208,31 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
 
         if (currentMission != null)
         {
+            switch (currentMission.Reward)
+            {
+                case MissionCurrencyReward currencyReward:
+                    missionRewardPanel.SetActive(true);
+                    missionRewardIcon.sprite = currencyRewardSprite;
+                    missionRewardAmountText.text = $"x{currencyReward.Amount:N0}";
+                    missionRewardAmountShadowText.text = $"x{currencyReward.Amount:N0}";
+                    break;
+
+                case MissionGroceryReward groceryReward:
+                    missionRewardPanel.SetActive(true);
+                    missionRewardIcon.sprite = GroceryDataDB.GetData(groceryReward.Grocery).Icon;
+                    missionRewardAmountText.text = $"x{groceryReward.Amount:N0}";
+                    missionRewardAmountShadowText.text = $"x{groceryReward.Amount:N0}";
+                    break;
+
+                default:
+                    missionRewardPanel.SetActive(false);
+                    break;
+            }
+
             string progress = currentMission.Condition?.ToString() ?? string.Empty;
 
             if (missionTitleText != null)
-                missionTitleText.text = currentMission.Title;
-
-            if (missionDescriptionText != null)
-                missionDescriptionText.text = currentMission.Description;
+                missionTitleText.text = currentMission.Title; 
 
             if (missionAmountText != null)
                 missionAmountText.text = progress;
@@ -233,6 +262,8 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
             return;
         }
 
+        missionRewardPanel.SetActive(false);
+
         if (missionSlider != null)
         {
             missionSlider.minValue = 0f;
@@ -245,26 +276,18 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
         if (missionAmountText != null)
             missionAmountText.text = string.Empty;
 
-        bool incomeGoalReached = levelData.IncomeGoal > 0
-            && marketData.TotalIncome >= levelData.IncomeGoal;
         if (missionTitleText != null)
         {
             if (!areAllMissionsCompleted)
-                missionTitleText.text = "Promotion Mission Data Missing";
+                missionTitleText.text = "승급 미션이 없어요";
+            else if (showCompleteButton)
+                missionTitleText.text = "누적 매출액 달성 필요";
             else if (canPromote)
-                missionTitleText.text = "Promotion Ready";
-            else if (!incomeGoalReached)
-                missionTitleText.text = "All Promotion Missions Complete";
+                missionTitleText.text = "승급 가능";
             else
-                missionTitleText.text = "Promotion Data Missing";
+                missionTitleText.text = "승급 미션이 없어요";
         }
-
-        if (missionDescriptionText != null)
-        {
-            missionDescriptionText.text = areAllMissionsCompleted && !incomeGoalReached
-                ? "Reach the sales goal."
-                : string.Empty;
-        }
+         
     }
 
     public void ClaimCurrentMissionReward()
