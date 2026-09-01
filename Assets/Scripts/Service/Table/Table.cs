@@ -70,7 +70,6 @@ public class Table : MonoBehaviour
 
     private void TableConnect()
     {
-        Debug.Log("TableConnectOn");
         if (tableTransform == null)
             return;
         TableRoot tableRoot = tableTransform.GetComponentInChildren<TableRoot>();
@@ -83,10 +82,6 @@ public class Table : MonoBehaviour
 
         rightFoodPoint.position = tableRoot.transform.Find("FoodRootRight").position;
         rightSeatPoint.position = tableRoot.transform.Find("SeatRootRight").position;
-        Debug.Log("LSP : " + leftSeatPoint.position);
-        Debug.Log("RSP : " + rightSeatPoint.position);
-        Debug.Log("LFP : " + leftFoodPoint.position);
-        Debug.Log("RFP : " + rightFoodPoint.position);
     }
 
     

@@ -6,11 +6,12 @@ public class FacilityModelView : MonoBehaviour
     [SerializeField] private FacilityController facility;
 
     [Header("Model")]
-    [Tooltip("ÇöÀç ·¹º§ ¸ðµ¨ÀÌ »ý¼ºµÉ À§Ä¡")]
+    [Tooltip("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡")]
     [SerializeField] private Transform facilityModelRoot;
 
     private GameObject currentModelInstance;
     private int shownLevel = -1;
+    private bool isFacilityUpgradeViewEnabled;
 
     private void Start()
     {
@@ -22,7 +23,7 @@ public class FacilityModelView : MonoBehaviour
         if (facility == null)
         {
             Debug.LogWarning(
-                $"[FacilityModelView] FacilityController°¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù: {name}",
+                $"[FacilityModelView] FacilityControllerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½: {name}",
                 this );
             return;
         }
@@ -35,12 +36,27 @@ public class FacilityModelView : MonoBehaviour
         ShowLevel(0);
     }
 
+    internal void SetFacilityUpgradeView(bool isEnabled)
+    {
+        if (isFacilityUpgradeViewEnabled == isEnabled)
+            return;
+
+        isFacilityUpgradeViewEnabled = isEnabled;
+        Refresh();
+    }
+
     public void ShowLevel(int level)
     {
+        if (level <= 0 && !isFacilityUpgradeViewEnabled)
+        {
+            ClearCurrentModel();
+            return;
+        }
+
         if (facility == null)
         {
             Debug.LogWarning(
-                $"[FacilityModelView] FacilityController°¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù: {name}",
+                $"[FacilityModelView] FacilityControllerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½: {name}",
                 this );
             return;
         }
@@ -48,7 +64,7 @@ public class FacilityModelView : MonoBehaviour
         if (facilityModelRoot == null)
         {
             Debug.LogWarning(
-                $"[FacilityModelView] FacilityModelRoot°¡ ¿¬°áµÇÁö ¾Ê¾Ò½À´Ï´Ù: {name}",
+                $"[FacilityModelView] FacilityModelRootï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½: {name}",
                 this );
             return;
         }
@@ -58,12 +74,12 @@ public class FacilityModelView : MonoBehaviour
         if (facilityData == null)
         {
             Debug.LogWarning(
-                $"[FacilityModelView] FacilityData°¡ ¾ø½À´Ï´Ù: {facility.FacilityType}",
+                $"[FacilityModelView] FacilityDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½: {facility.FacilityType}",
                 this );
             return;
         }
 
-        // °°Àº ·¹º§ÀÇ ¸ðµ¨ÀÌ ÀÌ¹Ì Á¸ÀçÇÏ¸é ´Ù½Ã »ý¼ºÇÏÁö ¾ÊÀ½
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (shownLevel == level && currentModelInstance != null)
         {
             return;
@@ -75,7 +91,7 @@ public class FacilityModelView : MonoBehaviour
         {
             Debug.LogWarning(
                 $"[FacilityModelView] " +
-                $"{facilityData.DisplayName}ÀÇ Lv.{level} ¸ðµ¨ÀÌ ¾ø½À´Ï´Ù.",
+                $"{facilityData.DisplayName}ï¿½ï¿½ Lv.{level} ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.",
                 this
             );
             return;
@@ -96,18 +112,9 @@ public class FacilityModelView : MonoBehaviour
 
         shownLevel = level;
 
-        // ¼­ºñ½º¾À 0·¾ Á¦¿Ü
-        if (GameManager.Instance.Scene.CurrentSceneType == SceneType.Service)
-        {
-            if(level <= 0)
-            {
-                ClearCurrentModel();
-            }
-        }
-
         Debug.Log(
             $"[FacilityModelView] " +
-            $"{facility.FacilityType} ¡æ Lv.{level} ¸ðµ¨ »ý¼º",
+            $"{facility.FacilityType} ï¿½ï¿½ Lv.{level} ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½",
             this
         );
     }

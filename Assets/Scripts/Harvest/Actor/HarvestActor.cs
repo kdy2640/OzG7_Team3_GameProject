@@ -41,7 +41,7 @@ public sealed class HarvestActor : MonoBehaviour
         }
 
         hpHandler.SubscribeDying(OnDied); 
-        hpHandler.Init();
+        hpHandler.Init(harvestDataSO.HP);
 
         GameObject solid = Instantiate(harvestDataSO.SolidPrefab, transform);
         presenter.Init(solid);

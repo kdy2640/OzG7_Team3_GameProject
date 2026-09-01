@@ -6,6 +6,8 @@ public sealed class UI_StaffListPanel : MonoBehaviour
 {
     [SerializeField] private UI_StaffDevelopCard[] staffCards;
 
+    private Action<EmployeeType> onCardSelected;
+
     private void Awake()
     {
         HideAllCards();
@@ -13,11 +15,24 @@ public sealed class UI_StaffListPanel : MonoBehaviour
 
     public void Initialize(Action<EmployeeType> onCardSelected)
     {
+        this.onCardSelected = onCardSelected;
+
         foreach (UI_StaffDevelopCard card in staffCards)
         {
             if (card == null) continue;
 
             card.Initialize(onCardSelected);
+        }
+    }
+
+    public void SelectFirst()
+    {
+        foreach (UI_StaffDevelopCard card in staffCards)
+        {
+            if (card == null || !card.gameObject.activeSelf) continue;
+
+            onCardSelected.Invoke(card.EmployeeType);
+            return;
         }
     }
 

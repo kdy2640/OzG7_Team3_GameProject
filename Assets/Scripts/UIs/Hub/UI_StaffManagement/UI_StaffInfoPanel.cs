@@ -66,7 +66,8 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
 
         gameObject.SetActive(true);
 
-        if (playAnimation) yield return panelAnimator.Show();
+        if (playAnimation && panelAnimator != null)
+            yield return panelAnimator.Show();
     }
 
  
@@ -95,7 +96,8 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
 
         roleIcon.sprite = employeeData.RoleIcon;
         staffNameText.text = employeeData.DisplayName;
-        levelText.text = $"Lv.{level}";
+        if (levelText != null)
+            levelText.text = $"Lv.{level}";
 
         for (int i = 0; i < levelSlots.Length; i++)
         {
@@ -126,12 +128,17 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
             skill5Description
         );
 
-        nextLevelText.text = isMaxLevel ? "Max Level" : $"Next Level: Lv.{level + 1}";
+        if (nextLevelText != null)
+            nextLevelText.text = isMaxLevel ? "Max Level" : $"Next Level: Lv.{level + 1}";
 
-        nextLevelEffect.text = isMaxLevel
-            ? string.Empty : employeeData.GetLevelEffect(level + 1);
+        if (nextLevelEffect != null)
+        {
+            nextLevelEffect.text = isMaxLevel
+                ? string.Empty : employeeData.GetLevelEffect(level + 1);
+        }
 
-        staffDescription.text = employeeData.Description;
+        if (staffDescription != null)
+            staffDescription.text = employeeData.Description;
 
         costText.text = isMaxLevel ? "-" : cost.ToString("N0");
 
@@ -150,7 +157,8 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         skill1Name.text = skill.Name;
         skill1Description.text = unlocked ? skill.Description : "Unlock after Recruit";
 
-        skill1Effect.text = unlocked ? skill.Effect : string.Empty;
+        if (skill1Effect != null)
+            skill1Effect.text = unlocked ? skill.Effect : string.Empty;
     }
 
     private void SetLockedSkill(
