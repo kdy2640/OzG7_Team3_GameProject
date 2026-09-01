@@ -4,6 +4,7 @@ using UnityEngine;
 public class FacilityCollection : MonoBehaviour
 {
     private FacilityController[] facilities;
+    private FacilityController selectedFacility;
 
     public event Action<FacilityType> FacilitySelected;
 
@@ -16,7 +17,30 @@ public class FacilityCollection : MonoBehaviour
     {
         if (facilityType == FacilityType.Count) return;
 
+        FacilityController nextSelection =
+            facilities[FindIndex(facilityType)];
+
+        if (selectedFacility != nextSelection)
+        {
+            if (selectedFacility != null)
+                selectedFacility.SetSelected(false);
+
+            selectedFacility = nextSelection;
+            selectedFacility.SetSelected(true);
+            FacilityOutlineRendererFeature.SetSelectionActive(true);
+        }
+
         FacilitySelected?.Invoke(facilityType);
+    }
+
+    public void ClearSelection()
+    {
+        if (selectedFacility == null)
+            return;
+
+        selectedFacility.SetSelected(false);
+        selectedFacility = null;
+        FacilityOutlineRendererFeature.SetSelectionActive(false);
     }
 
     public void ShowFirstDetail()
