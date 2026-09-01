@@ -15,10 +15,10 @@ public class PathManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Initialize(graph);
+        graph.WaypointSetDone += Initialize;
     }
 
-    public void Initialize(GraphManager graph)
+    public void Initialize()
     {
         finder = new AStarPathFinder(graph);
 
@@ -34,11 +34,8 @@ public class PathManager : MonoBehaviour
                 pathTable.Add((start, goal), path);
 
             }
-
         }
-
-        
-
+        Debug.Log("AllWaypoints.Count = " + graph.AllWaypoints.Count);
     }
 
 
@@ -49,6 +46,7 @@ public class PathManager : MonoBehaviour
             return path;
         }
         Debug.Log(start + "-" + goal + " : GetPath (Waypoint)Fail");
+        Debug.Log("PathTableCount : " + pathTable.Count);
         
         return null;
     }
@@ -64,5 +62,10 @@ public class PathManager : MonoBehaviour
         }
 
         return GetPath(start, goal);
+    }
+
+    private void OnDisable()
+    {
+        graph.WaypointSetDone -= Initialize;
     }
 }
