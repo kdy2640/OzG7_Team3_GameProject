@@ -97,9 +97,8 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
         {
             rewardButton.gameObject.SetActive(showRewardButton);
             rewardButton.interactable = market.LevelMissionProgress.CanClaimCurrentReward;
+            completeButton.SetActive(showCompleteButton);
         }
-
-        completeButton.SetActive(showCompleteButton);
 
         if (promoteButton != null)
         {
@@ -208,25 +207,28 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
 
         if (currentMission != null)
         {
-            switch (currentMission.Reward)
+            if (rewardButton != null)
             {
-                case MissionCurrencyReward currencyReward:
-                    missionRewardPanel.SetActive(true);
-                    missionRewardIcon.sprite = currencyRewardSprite;
-                    missionRewardAmountText.text = $"x{currencyReward.Amount:N0}";
-                    missionRewardAmountShadowText.text = $"x{currencyReward.Amount:N0}";
-                    break;
+                switch (currentMission.Reward)
+                {
+                    case MissionCurrencyReward currencyReward:
+                        missionRewardPanel.SetActive(true);
+                        missionRewardIcon.sprite = currencyRewardSprite;
+                        missionRewardAmountText.text = $"x{currencyReward.Amount:N0}";
+                        missionRewardAmountShadowText.text = $"x{currencyReward.Amount:N0}";
+                        break;
 
-                case MissionGroceryReward groceryReward:
-                    missionRewardPanel.SetActive(true);
-                    missionRewardIcon.sprite = GroceryDataDB.GetData(groceryReward.Grocery).Icon;
-                    missionRewardAmountText.text = $"x{groceryReward.Amount:N0}";
-                    missionRewardAmountShadowText.text = $"x{groceryReward.Amount:N0}";
-                    break;
+                    case MissionGroceryReward groceryReward:
+                        missionRewardPanel.SetActive(true);
+                        missionRewardIcon.sprite = GroceryDataDB.GetData(groceryReward.Grocery).Icon;
+                        missionRewardAmountText.text = $"x{groceryReward.Amount:N0}";
+                        missionRewardAmountShadowText.text = $"x{groceryReward.Amount:N0}";
+                        break;
 
-                default:
-                    missionRewardPanel.SetActive(false);
-                    break;
+                    default:
+                        missionRewardPanel.SetActive(false);
+                        break;
+                }
             }
 
             string progress = currentMission.Condition?.ToString() ?? string.Empty;
@@ -262,7 +264,8 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
             return;
         }
 
-        missionRewardPanel.SetActive(false);
+        if (rewardButton != null)
+            missionRewardPanel.SetActive(false);
 
         if (missionSlider != null)
         {
