@@ -1,4 +1,4 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -51,7 +51,7 @@ public class PrefabIconBaker : EditorWindow
                 try
                 {
                     instance.transform.position = new Vector3(0f, 0f, 10000f);
-                    instance.transform.rotation = Quaternion.Euler(0, 0, 0f);
+                    instance.transform.rotation = Quaternion.Euler(0, 180.0f, 0f);
 
                     FitCameraToObject(instance);
 

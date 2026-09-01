@@ -12,6 +12,10 @@ public class SettingsPopup : MonoBehaviour
     [SerializeField] private Button toggleButton;
     [SerializeField] private TMP_Text toggleText;
 
+    [Header("Exit Buttons")]
+    [SerializeField] private Button gameExitButton;
+    [SerializeField] private Button serviceEndButton;
+
     [SerializeField] private AudioManager audioManager;
 
     [Header("Volume Sliders")]
@@ -42,6 +46,9 @@ public class SettingsPopup : MonoBehaviour
 
         if (toggleButton != null) toggleButton.onClick.AddListener(Toggle);
 
+        gameExitButton.onClick.AddListener(ExitGame);
+        serviceEndButton.onClick.AddListener(EndService);
+
         RefreshToggleText();
         UpdateVolumeTexts();
     }
@@ -69,6 +76,9 @@ public class SettingsPopup : MonoBehaviour
         if (closeButton != null) closeButton.onClick.RemoveListener(Close);
 
         if (toggleButton != null) toggleButton.onClick.RemoveListener(Toggle);
+
+        gameExitButton.onClick.RemoveListener(ExitGame);
+        serviceEndButton.onClick.RemoveListener(EndService);
     }
 
     private void UpdateVolumeTexts()
@@ -134,6 +144,7 @@ public class SettingsPopup : MonoBehaviour
 
         gameObject.SetActive(true);
 
+        RefreshExitButtons();
         SyncSlidersFromAudioManager();
 
         popupContainer.localScale = Vector3.zero;
@@ -173,6 +184,26 @@ public class SettingsPopup : MonoBehaviour
         }
 
         RefreshToggleText();
+    }
+
+    private void RefreshExitButtons()
+    {
+        bool isServiceScene =
+            GameManager.Instance.Scene.CurrentSceneType == SceneType.Service;
+
+        gameExitButton.gameObject.SetActive(!isServiceScene);
+        serviceEndButton.gameObject.SetActive(isServiceScene);
+    }
+
+    private void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    private void EndService()
+    {
+        Close();
+        GameManager.Instance.Service.EndLoop();
     }
 
     private void RefreshToggleText()
