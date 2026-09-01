@@ -18,7 +18,7 @@ public class ServerCleanState : IState
 
     public void Enter()
     {
-        stateManager.AiMove.SetDirection(dirty.transform.position);
+        stateManager.AiMove.SetDirection(dirty.Customer.Seat.position);
         stateManager.Animator.SetBool("IsAttacking", true);
         timer = cleaningTime;
     }

@@ -104,12 +104,6 @@ public class FacilityModelView : MonoBehaviour
                 ClearCurrentModel();
             }
         }
-
-        Debug.Log(
-            $"[FacilityModelView] " +
-            $"{facility.FacilityType} ¡æ Lv.{level} ¸ðµ¨ »ý¼º",
-            this
-        );
     }
 
     public void PlayUpgradeEffect()

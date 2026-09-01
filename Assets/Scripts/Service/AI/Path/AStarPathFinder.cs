@@ -49,16 +49,22 @@ public class AStarPathFinder
                 return RetracePath(start, goal);
             }
 
-            
+
 
 
             foreach (Waypoint neighbor in current.Neighbors)
             {
-
                 if (closedSet.Contains(neighbor))
                     continue;
 
-                int newGCost = current.GCost + 1;
+                int moveCost = Mathf.RoundToInt(
+                    Vector3.Distance(
+                        current.transform.position,
+                        neighbor.transform.position
+                    )
+                );
+
+                int newGCost = current.GCost + moveCost;
 
                 if (newGCost < neighbor.GCost || !openList.Contains(neighbor))
                 {

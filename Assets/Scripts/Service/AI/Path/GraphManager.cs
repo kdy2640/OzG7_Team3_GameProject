@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ public class GraphManager : MonoBehaviour
     [SerializeField] private Transform waypointParent;
 
     public List<Waypoint> AllWaypoints { get; private set; }
-
+    public event Action WaypointSetDone;
     private void Awake()
     {
         AllWaypoints = new List<Waypoint>();
@@ -15,9 +16,12 @@ public class GraphManager : MonoBehaviour
         {
             AllWaypoints.Add(child.GetComponent<Waypoint>());
         }
-
+        
     }
-
+    private void Start()
+    {
+        WaypointSetDone?.Invoke();
+    }
     public Waypoint GetClosestWaypoint(Vector3 position)
     {
         Waypoint closest = null;
