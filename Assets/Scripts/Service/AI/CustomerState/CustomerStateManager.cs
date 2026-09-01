@@ -41,6 +41,7 @@ public class CustomerStateManager : MonoBehaviour
     public bool SeatDirty = false;
     public bool IsAutoServed = false;
     private GameObject dishObject;
+    private Action serviceLoopEnd;
     
     
 
@@ -108,6 +109,12 @@ public class CustomerStateManager : MonoBehaviour
                 ChangeState(new CustomerMoveToTableState(this, aiMove, seat));
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        serviceLoopEnd += Die;
+        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, serviceLoopEnd);
     }
 
     private void Update()
@@ -296,4 +303,14 @@ public class CustomerStateManager : MonoBehaviour
         Destroy(dishObject);
     }
 
+    private void Die()
+    {
+        ChangeState(new CustomerGameOverState(this));
+    }
+
+    private void OnDisable()
+    {
+        serviceLoopEnd -= Die;
+        GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, serviceLoopEnd);
+    }
 }

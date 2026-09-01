@@ -59,7 +59,9 @@ public class ServerStateManager : MonoBehaviour
 
     [SerializeField] private IState currentState;
     private Action serviceEnd;
-
+    private Action servicePause;
+    private Action serviceUnPause;
+    private IState previousState;
 
     private void Awake()
     {
@@ -77,6 +79,8 @@ public class ServerStateManager : MonoBehaviour
         tray.gameObject.SetActive(false);
         serviceEnd += ServerDie;
         GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, serviceEnd);
+        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.Pause, servicePause);
+        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.UnPause, serviceUnPause);
     }
 
     private void Start()
