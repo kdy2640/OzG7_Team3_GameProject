@@ -18,6 +18,7 @@ public sealed class UI_FacilityManagement : UI_Base
 
     private FacilityCollection facilityCollection;
     private FacilityDetailPanel detailPanel;
+    private RestaurantModelViewer restaurantModelViewer;
 
     protected override void OnInit()
     {
@@ -38,7 +39,10 @@ public sealed class UI_FacilityManagement : UI_Base
     protected override IEnumerator OnShow()
     {
         facilityCollection = FindFirstObjectByType<FacilityCollection>();
+        restaurantModelViewer =
+            facilityCollection.GetComponentInParent<RestaurantModelViewer>();
 
+        restaurantModelViewer.SetFacilityUpgradeView(true);
         detailPanel.Initialize(facilityCollection);
         facilityCollection.FacilitySelected += OnFacilitySelected;
 
@@ -48,6 +52,8 @@ public sealed class UI_FacilityManagement : UI_Base
 
     protected override IEnumerator OnHide()
     {
+        restaurantModelViewer.SetFacilityUpgradeView(false);
+
         if (facilityCollection != null)
         {
             facilityCollection.FacilitySelected -= OnFacilitySelected;

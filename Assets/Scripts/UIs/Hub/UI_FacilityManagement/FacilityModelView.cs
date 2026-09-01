@@ -11,6 +11,7 @@ public class FacilityModelView : MonoBehaviour
 
     private GameObject currentModelInstance;
     private int shownLevel = -1;
+    private bool isFacilityUpgradeViewEnabled;
 
     private void Start()
     {
@@ -35,8 +36,23 @@ public class FacilityModelView : MonoBehaviour
         ShowLevel(0);
     }
 
+    internal void SetFacilityUpgradeView(bool isEnabled)
+    {
+        if (isFacilityUpgradeViewEnabled == isEnabled)
+            return;
+
+        isFacilityUpgradeViewEnabled = isEnabled;
+        Refresh();
+    }
+
     public void ShowLevel(int level)
     {
+        if (level <= 0 && !isFacilityUpgradeViewEnabled)
+        {
+            ClearCurrentModel();
+            return;
+        }
+
         if (facility == null)
         {
             Debug.LogWarning(
@@ -95,15 +111,6 @@ public class FacilityModelView : MonoBehaviour
         currentModelInstance.transform.localScale = Vector3.one;
 
         shownLevel = level;
-
-        // ¼­ºñ½º¾À 0·¾ Á¦¿Ü
-        if (GameManager.Instance.Scene.CurrentSceneType == SceneType.Service)
-        {
-            if(level <= 0)
-            {
-                ClearCurrentModel();
-            }
-        }
 
         Debug.Log(
             $"[FacilityModelView] " +
