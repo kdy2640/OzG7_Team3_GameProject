@@ -88,7 +88,6 @@ public class MarketManager : MonoBehaviour
                 marketData.CurrentPhase = MarketPhase.Night;
                 break;
             case MarketPhase.Night:
-                TryPromote();
                 marketData.CurrentBusinessDay++;
                 marketData.CurrentPhase = MarketPhase.Morning;
                 break;

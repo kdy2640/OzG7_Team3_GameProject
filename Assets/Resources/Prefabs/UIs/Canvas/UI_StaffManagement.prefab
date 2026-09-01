@@ -2690,7 +2690,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1646832676871386766, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
       propertyPath: m_Value
-      value: 0.5
+      value: 0.50000006
       objectReference: {fileID: 0}
     - target: {fileID: 2527811137772046769, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2740,6 +2740,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4442194919970861840, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
+      propertyPath: skill1Name
+      value: 
+      objectReference: {fileID: 6456546134654920699}
+    - target: {fileID: 4442194919970861840, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
+      propertyPath: skill1Description
+      value: 
+      objectReference: {fileID: 3083910714530544144}
     - target: {fileID: 5987300123559734467, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
       propertyPath: m_Name
       value: UI_StaffInfoPanel
@@ -2838,11 +2846,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8609198643908044977, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 31
+      value: -132
       objectReference: {fileID: 0}
     - target: {fileID: 8609198643908044977, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -33
+      value: 110
       objectReference: {fileID: 0}
     - target: {fileID: 8609198643908044977, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2872,6 +2880,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac58e8b09bcf42847945c8919e6322c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_StaffInfoPanel
+--- !u!114 &3083910714530544144 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3612243364977156909, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
+  m_PrefabInstance: {fileID: 1796096529667496253}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!114 &6456546134654920699 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4717316956299181766, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}
+  m_PrefabInstance: {fileID: 1796096529667496253}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!224 &8040896529622200716 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8609198643908044977, guid: 2417e9cf11a1b6641a032c9e26510532, type: 3}

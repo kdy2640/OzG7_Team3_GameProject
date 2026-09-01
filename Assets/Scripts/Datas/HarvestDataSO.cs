@@ -38,6 +38,7 @@ public sealed class HarvestDataSO : ScriptableObject
 {
     [SerializeField] private string id;
     [SerializeField] private HarvestType harvestType = HarvestType.Count;
+    [SerializeField] private int hp = 3;
     [SerializeField] private List<GroceryAmount> rewards = new();
     [SerializeField] private bool isMove;
     [SerializeField] private HarvestAnimalStat animalStat = new();
@@ -47,6 +48,7 @@ public sealed class HarvestDataSO : ScriptableObject
 
     public string Id => id;
     public HarvestType HarvestType => harvestType;
+    public int HP => hp;
     public List<GroceryAmount> Rewards => rewards;
     public bool IsMove => isMove;
     public HarvestAnimalStat AnimalStat => animalStat;

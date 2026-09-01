@@ -109,6 +109,7 @@ public sealed class HubCanvasController : MonoBehaviour
     private HubCanvasState? pendingState;
 
     public HubCanvasState CurrentState { get; private set; } = HubCanvasState.None;
+    public HubCanvasState PreviousState { get; private set; } = HubCanvasState.None;
 
     private void Awake()
     {
@@ -184,6 +185,7 @@ public sealed class HubCanvasController : MonoBehaviour
         }
 
         currentEntry = nextEntry;
+        PreviousState = CurrentState;
         CurrentState = nextState;
 
         if (currentEntry != null)

@@ -6,6 +6,9 @@ public sealed class MissionGroceryReward : MissionReward
 {
     [SerializeField] private GroceryAmount groceryAmount = new();
 
+    public GroceryType Grocery => groceryAmount.grocery;
+    public int Amount => groceryAmount.amount;
+
     public override bool TryGrant()
     {
         StockManager stockManager = GameManager.Instance?.StockManager;

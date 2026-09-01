@@ -33,6 +33,20 @@ public sealed class HarvestUpgradeListPanel : MonoBehaviour
         OnSelected?.Invoke(upgradeType);
     }
 
+    public void SelectFirst()
+    {
+        for (int i = 0; i < selectionButtons.Length; i++)
+        {
+            HarvestUpgradeSelectionButton selectionButton = selectionButtons[i];
+
+            if (!selectionButton.gameObject.activeSelf)
+                continue;
+
+            Select(selectionButton.UpgradeType);
+            return;
+        }
+    }
+
     public void ClearSelection()
     {
         if (selectionButtons == null)

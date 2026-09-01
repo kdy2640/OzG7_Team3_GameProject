@@ -6,11 +6,16 @@ public sealed class RestaurantModelViewer : MonoBehaviour
     [SerializeField] private Transform environmentRoot;
     [SerializeField] private GameObject[] modelPrefabsByMarketLevel =
         new GameObject[MarketManager.MaxMarketLevel + 1];
-    [SerializeField] private bool collidersEnabled = true;
 
     private MarketManager marketManager;
     private GameObject currentModelInstance;
     private int shownLevel = -1;
+    private bool isFacilityUpgradeViewEnabled;
+
+    private void Awake()
+    {
+        SetFacilityUpgradeView(false);
+    }
 
     private void OnEnable()
     {
@@ -24,14 +29,35 @@ public sealed class RestaurantModelViewer : MonoBehaviour
         marketManager.UnsubscribeMarketDataChanged(Refresh);
     }
 
-    private void Start()
-    {
-        ApplyColliderState();
-    }
-
     public void Refresh()
     {
         ShowLevel(marketManager.MarketData.CurrentLevel);
+    }
+
+    public void SetFacilityUpgradeView(bool isEnabled)
+    {
+        isFacilityUpgradeViewEnabled = isEnabled;
+
+        FacilityRaycaster raycaster =
+            GetComponentInChildren<FacilityRaycaster>(true);
+        raycaster.enabled = isEnabled;
+
+        FacilityWorldUI[] worldUIs =
+            GetComponentsInChildren<FacilityWorldUI>(true);
+
+        foreach (FacilityWorldUI worldUI in worldUIs)
+            worldUI.gameObject.SetActive(isEnabled);
+
+        FacilityModelView[] facilityModelViews =
+            GetComponentsInChildren<FacilityModelView>(true);
+
+        foreach (FacilityModelView modelView in facilityModelViews)
+            modelView.SetFacilityUpgradeView(isEnabled);
+
+        Collider[] colliders = GetComponentsInChildren<Collider>(true);
+
+        foreach (Collider targetCollider in colliders)
+            targetCollider.enabled = isEnabled;
     }
 
     private void ShowLevel(int level)
@@ -47,18 +73,7 @@ public sealed class RestaurantModelViewer : MonoBehaviour
             false);
 
         shownLevel = level;
-        ApplyColliderState();
-    }
-
-    private void ApplyColliderState()
-    {
-        if (collidersEnabled)
-            return;
-
-        Collider[] colliders = GetComponentsInChildren<Collider>(true);
-
-        foreach (Collider targetCollider in colliders)
-            targetCollider.enabled = false;
+        SetFacilityUpgradeView(isFacilityUpgradeViewEnabled);
     }
 
     private void ClearCurrentModel()
