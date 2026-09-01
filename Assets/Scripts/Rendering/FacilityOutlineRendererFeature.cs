@@ -44,7 +44,7 @@ public sealed class FacilityOutlineRendererFeature : ScriptableRendererFeature
         new Color(1.4f, 0.65f, 0.1f, 1f);
 
     // 화면 픽셀 기준 외곽선 두께입니다.
-    [SerializeField, Range(1f, 6f)] private float outlineWidth = 3f;
+    [SerializeField, Range(1f, 6f)] private float outlineWidth = 5f;
 
     // 0이면 비교적 선명하고, 1에 가까울수록 바깥 테두리가 부드러워집니다.
     [SerializeField, Range(0f, 1f)] private float outlineSoftness = 0.35f;
