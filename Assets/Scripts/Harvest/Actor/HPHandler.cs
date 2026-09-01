@@ -9,9 +9,9 @@ public class HPHandler : MonoBehaviour
     private Action<float> OnHPUpdate;
     private Action OnDied;
 
-    public void Init()
+    public void Init(int _maxHP)
     { 
-        nowHp = maxHp;
+        nowHp = _maxHP;
         OnHPUpdate?.Invoke(nowHp);
     } 
 

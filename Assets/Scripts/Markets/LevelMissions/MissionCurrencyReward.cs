@@ -6,6 +6,8 @@ public sealed class MissionCurrencyReward : MissionReward
 {
     [SerializeField, Min(1)] private int amount = 1;
 
+    public int Amount => amount;
+
     public override bool TryGrant()
     {
         StockManager stockManager = GameManager.Instance?.StockManager;

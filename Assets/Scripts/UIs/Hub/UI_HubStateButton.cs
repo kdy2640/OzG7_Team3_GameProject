@@ -18,6 +18,11 @@ public sealed class UI_HubStateButton : UI_EventHandler
 
     public HubCanvasController.HubCanvasState TargetState => targetState;
 
+    public void SetTargetState(HubCanvasController.HubCanvasState state)
+    {
+        targetState = state;
+    }
+
     private void Awake()
     {
         button = GetComponent<Button>();

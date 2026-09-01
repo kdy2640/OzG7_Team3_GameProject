@@ -42,7 +42,9 @@ public sealed class UI_StaffManagement : UI_Base
 
     protected override IEnumerator OnShow()
     {
+        selectedType = EmployeeType.Count;
         RefreshAll();
+        staffListPanel.SelectFirst();
 
         GetUI<PanelAnimator>((int)PanelAnimators.Header).Show();
         GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();

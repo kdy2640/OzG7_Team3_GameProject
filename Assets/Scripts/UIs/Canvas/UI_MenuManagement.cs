@@ -3,6 +3,7 @@ using UnityEngine;
 
 public sealed class UI_MenuManagement : UI_Base
 {
+    private UI_HubStateButton exitButton;
     private UI_SelectMenuPanel selectMenuPanel;
     private UI_MenuSlidePanel menuSlidePanel;
     private UI_MenuVisualizer menuVisualizer;
@@ -32,8 +33,9 @@ public sealed class UI_MenuManagement : UI_Base
     {
         Bind<GameObject>(typeof(GameObjects));
         Bind<PanelAnimator>(typeof(PanelAnimators));
-        GetUI<GameObject>((int)GameObjects.ExitButton)?
-            .GetComponent<UI_HubStateButton>()?.Init(Owner);
+        exitButton = GetUI<GameObject>((int)GameObjects.ExitButton)
+            .GetComponent<UI_HubStateButton>();
+        exitButton.Init(Owner);
 
         selectMenuPanel = GetUI<GameObject>((int)GameObjects.UI_SelectMenuPanel)?
             .GetComponent<UI_SelectMenuPanel>();
@@ -56,10 +58,17 @@ public sealed class UI_MenuManagement : UI_Base
     }
     protected override IEnumerator OnShow()
     {
+        HubCanvasController.HubCanvasState returnState =
+            Owner.PreviousState == HubCanvasController.HubCanvasState.None
+                ? HubCanvasController.HubCanvasState.HubView
+                : Owner.PreviousState;
+        exitButton.SetTargetState(returnState);
+
         selectMenuPanel?.Refresh();
         menuSlidePanel?.Refresh();
         menuVisualizer?.SetData(DishType.None);
         menuUpgradePanel?.Hide();
+        menuSlidePanel.SelectFirst();
         dayVisual?.Refresh();
 
         GetUI<PanelAnimator>((int)PanelAnimators.UI_DayVisual).Show();

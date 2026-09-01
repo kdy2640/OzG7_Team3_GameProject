@@ -156,6 +156,36 @@ public class UI_MenuSlidePanel : MonoBehaviour
         onCardClicked?.Invoke(dishType);
     }
 
+    public void SelectFirst()
+    {
+        if (eventMenuContainer.activeSelf)
+        {
+            for (int i = 0; i < eventCardContainer.childCount; i++)
+            {
+                UI_MenuVisualCard card =
+                    eventCardContainer.GetChild(i).GetComponent<UI_MenuVisualCard>();
+
+                if (card == null || !card.gameObject.activeSelf)
+                    continue;
+
+                NotifyCardClicked(card.DishType);
+                return;
+            }
+        }
+
+        for (int i = 0; i < cardContainer.childCount; i++)
+        {
+            UI_MenuVisualCard card =
+                cardContainer.GetChild(i).GetComponent<UI_MenuVisualCard>();
+
+            if (card == null || !card.gameObject.activeSelf)
+                continue;
+
+            NotifyCardClicked(card.DishType);
+            return;
+        }
+    }
+
     private MenuVisualStatus GetStatus(DishUpgradeDataSO upgradeData, int level)
     {
         if (level >= upgradeData.MaxLevel)

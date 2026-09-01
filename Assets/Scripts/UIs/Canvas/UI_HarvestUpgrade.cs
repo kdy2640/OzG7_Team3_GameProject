@@ -40,6 +40,7 @@ public sealed class UI_HarvestUpgrade : UI_Base
         upgradeListPanel?.ClearSelection();
         previewPanel?.ClearHighlight();
         detailPanel?.ClosePanel();
+        upgradeListPanel.SelectFirst();
 
         GetUI<PanelAnimator>((int)PanelAnimators.UpgradeListPanel).Show();
         GetUI<PanelAnimator>((int)PanelAnimators.PreviewPanel).Show();
