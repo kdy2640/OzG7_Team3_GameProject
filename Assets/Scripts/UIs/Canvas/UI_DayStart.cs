@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public sealed class UI_DayStart : UI_Base
@@ -7,6 +8,7 @@ public sealed class UI_DayStart : UI_Base
     private UI_DayVisualPanel dayVisualPanel;
     private UI_FestivalPanel festivalPanel;
     private UI_DishDetailPanel dishDetailPanel;
+    private UI_HubStateButton toHubButton;
 
     private enum GameObjects
     {
@@ -44,8 +46,32 @@ public sealed class UI_DayStart : UI_Base
             dayVisualPanel,
             GetButton((int)Buttons.UI_FestivalStartButton));
 
-        GetUI<UI_HubStateButton>((int)HubStateButtons.UI_ToHubButton)?
-            .Init(Owner);
+        toHubButton = GetUI<UI_HubStateButton>((int)HubStateButtons.UI_ToHubButton);
+        toHubButton.AddUIEvent(HandleToHubClicked, UI_EventHandler.UIEvent.LClick);
+    }
+
+    private void OnDestroy()
+    {
+        toHubButton.RemoveUIEvent(HandleToHubClicked, UI_EventHandler.UIEvent.LClick);
+    }
+
+    private void HandleToHubClicked(PointerEventData _)
+    {
+        MarketManager market = GameManager.Instance.Market;
+        int businessDay = market.MarketData.CurrentBusinessDay;
+        FestivalCalendar calendar = market.FestivalCalendar;
+
+        bool hasFestival =
+            calendar.GetNowTaste(businessDay) != TasteType.Count
+            || calendar.GetNowCategory(businessDay) != CategoryType.Count;
+
+        if (!hasFestival)
+        {
+            GameManager.Instance.Utility.Toast.Show("축제를 하나 이상 시작해 주세요");
+            return;
+        }
+
+        Owner.RequestStateChange(toHubButton.TargetState);
     }
 
     private void Start()
