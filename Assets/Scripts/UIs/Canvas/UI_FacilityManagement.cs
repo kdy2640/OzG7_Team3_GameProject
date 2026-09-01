@@ -45,6 +45,7 @@ public sealed class UI_FacilityManagement : UI_Base
         restaurantModelViewer.SetFacilityUpgradeView(true);
         detailPanel.Initialize(facilityCollection);
         facilityCollection.FacilitySelected += OnFacilitySelected;
+        facilityCollection.ShowFirstDetail();
 
         GetUI<PanelAnimator>((int)PanelAnimators.Header).Show();
         yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();

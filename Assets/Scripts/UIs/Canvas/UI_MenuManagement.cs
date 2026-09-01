@@ -68,6 +68,7 @@ public sealed class UI_MenuManagement : UI_Base
         menuSlidePanel?.Refresh();
         menuVisualizer?.SetData(DishType.None);
         menuUpgradePanel?.Hide();
+        menuSlidePanel.SelectFirst();
         dayVisual?.Refresh();
 
         GetUI<PanelAnimator>((int)PanelAnimators.UI_DayVisual).Show();

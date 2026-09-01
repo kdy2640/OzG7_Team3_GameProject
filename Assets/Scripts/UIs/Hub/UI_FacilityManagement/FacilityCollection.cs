@@ -19,6 +19,11 @@ public class FacilityCollection : MonoBehaviour
         FacilitySelected?.Invoke(facilityType);
     }
 
+    public void ShowFirstDetail()
+    {
+        ShowDetail(FacilityType.Table_1);
+    }
+
     public bool TryGetPrevious(FacilityType current, out FacilityType previous)
     {
         int index = FindIndex(current);
