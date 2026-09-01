@@ -22,6 +22,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private Combo combo;
     [SerializeField] private DrinkZone drinkZone;
     [SerializeField] private Image autoServeImg;
+    [SerializeField] private MoneyEffect moneyImg;
 
     private Table currentTable;
     private Transform seat;
@@ -223,6 +224,7 @@ public class CustomerStateManager : MonoBehaviour
                 basicPrice + bonusCurrency);
 
             GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CustomerPay);
+            MoneyImgOn(basicPrice + bonusCurrency);
         }
     }
 
@@ -233,6 +235,7 @@ public class CustomerStateManager : MonoBehaviour
         GameManager.Instance.StockManager.AddCurrency(drinkPrice);
         GameManager.Instance.Market.MarketData.TotalIncome += drinkPrice;
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_DrinkServed);
+        MoneyImgOn(drinkPrice);
     }
 
     public void NotifyProcessingCompleted()
@@ -306,6 +309,12 @@ public class CustomerStateManager : MonoBehaviour
     private void Die()
     {
         ChangeState(new CustomerGameOverState(this));
+    }
+
+    private void MoneyImgOn(int currencyAmount)
+    {
+        moneyImg.gameObject.SetActive(true);
+        moneyImg.SetAmount(currencyAmount);
     }
 
     private void OnDisable()
