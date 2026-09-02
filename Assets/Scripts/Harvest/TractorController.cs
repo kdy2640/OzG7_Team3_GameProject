@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +8,7 @@ public sealed class TractorController : MonoBehaviour
 {
     // 잠긴 스테이지 경계보다 5m 앞에서 멈추기 위한 의도적인 버퍼다.
     private const float StageBoundaryBuffer = 5f;
+    private const float FieldItemEffectDuration = 4f;
 
     [SerializeField] private InputActionAsset inputActions;
     [SerializeField] private string moveActionPath = "Player/Move";
@@ -172,16 +174,37 @@ public sealed class TractorController : MonoBehaviour
     public void ApplySpeedBoost(float amount)
     {
         speedBoostAmount += amount;
+        StartCoroutine(RemoveSpeedBoostAfterDuration(amount));
     }
 
     public void ApplyRangeBoost(float amount)
     {
         cropCutter.ApplyRangeBoost(amount);
+        StartCoroutine(RemoveRangeBoostAfterDuration(amount));
     }
 
     public void ApplyDamageBoost(float amount)
     {
         cropCutter.ApplyDamageBoost(amount);
+        StartCoroutine(RemoveDamageBoostAfterDuration(amount));
+    }
+
+    private IEnumerator RemoveSpeedBoostAfterDuration(float amount)
+    {
+        yield return new WaitForSeconds(FieldItemEffectDuration);
+        speedBoostAmount -= amount;
+    }
+
+    private IEnumerator RemoveRangeBoostAfterDuration(float amount)
+    {
+        yield return new WaitForSeconds(FieldItemEffectDuration);
+        cropCutter.ApplyRangeBoost(-amount);
+    }
+
+    private IEnumerator RemoveDamageBoostAfterDuration(float amount)
+    {
+        yield return new WaitForSeconds(FieldItemEffectDuration);
+        cropCutter.ApplyDamageBoost(-amount);
     }
 
     private Vector3 ClampToStageBoundary(Vector3 worldPosition)
