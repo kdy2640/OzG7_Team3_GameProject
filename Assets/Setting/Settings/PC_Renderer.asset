@@ -26,7 +26,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
   m_RendererFeatures:
   - {fileID: 7833122117494664109}
-  m_RendererFeatureMap: ad6b866f10d7b46c
+  - {fileID: 7044056858865265862}
+  m_RendererFeatureMap: ad6b866f10d7b46cc66c51626484c161
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -55,6 +56,23 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
+--- !u!114 &7044056858865265862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9017e9a5750ca804cb96faf51ad320b7, type: 3}
+  m_Name: Facility Outline
+  m_EditorClassIdentifier: Assembly-CSharp::FacilityOutlineRendererFeature
+  m_Active: 1
+  outlineMaterial: {fileID: 2100000, guid: 8991b09fede576e4092886257ac1bcdf, type: 2}
+  outlineColor: {r: 1.4, g: 0.65, b: 0.1, a: 1}
+  outlineWidth: 3
+  outlineSoftness: 0.35
 --- !u!114 &7833122117494664109
 MonoBehaviour:
   m_ObjectHideFlags: 0
