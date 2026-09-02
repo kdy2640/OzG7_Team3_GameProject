@@ -4,6 +4,7 @@ public sealed class RestaurantModelViewer : MonoBehaviour
 {
     [Header("Environment")]
     [SerializeField] private Transform environmentRoot;
+    [SerializeField] private GameObject nightLights;
     [SerializeField] private GameObject[] modelPrefabsByMarketLevel =
         new GameObject[MarketManager.MaxMarketLevel + 1];
 
@@ -31,6 +32,8 @@ public sealed class RestaurantModelViewer : MonoBehaviour
 
     public void Refresh()
     {
+        nightLights.SetActive(
+            marketManager.MarketData.CurrentPhase == MarketPhase.Night);
         ShowLevel(marketManager.MarketData.CurrentLevel);
     }
 
