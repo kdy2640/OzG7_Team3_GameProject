@@ -241,7 +241,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 3, z: -133}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 899694786}
+  - {fileID: 825698038}
+  - {fileID: 1592494416}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!114 &45788136
@@ -2291,6 +2294,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 799546930}
   m_CullTransparentMesh: 1
+--- !u!1 &825698037
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 825698038}
+  m_Layer: 0
+  m_Name: GroceryGainTarget_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &825698038
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825698037}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.9, y: -1.2, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 45788135}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &831855034
 GameObject:
   m_ObjectHideFlags: 0
@@ -2465,6 +2499,37 @@ RectTransform:
   m_AnchoredPosition: {x: -34, y: 15}
   m_SizeDelta: {x: 220, y: 100}
   m_Pivot: {x: 1, y: 0}
+--- !u!1 &899694785
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 899694786}
+  m_Layer: 0
+  m_Name: GroceryGainTarget_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &899694786
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899694785}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.3, y: -1.2, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 45788135}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &999998039
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4672,6 +4737,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1579403316}
   m_CullTransparentMesh: 1
+--- !u!1 &1592494415
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1592494416}
+  m_Layer: 0
+  m_Name: GroceryGainTarget_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1592494416
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592494415}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.5, y: -1.2, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 45788135}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1592819743
 GameObject:
   m_ObjectHideFlags: 0
@@ -4963,6 +5059,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CropSpawner
   cropPrefab: {fileID: 3303071145808237000, guid: f6b587d21ac801f4197f744e48c2c840, type: 3}
   player: {fileID: 2029958123}
+  groceryGainRoutine: {fileID: 1872267151}
   spawnHeight: 0
   spawnedCrops: []
 --- !u!114 &1720089969
@@ -5000,6 +5097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemSpawner
   itemPrefab: {fileID: 5001674842805473253, guid: d8093d4a231bfbf42a3c5f0ed19dd8ac, type: 3}
+  cropClearance: 1.2
 --- !u!1 &1764439312
 GameObject:
   m_ObjectHideFlags: 0
@@ -5276,6 +5374,72 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1817554547}
   m_CullTransparentMesh: 1
+--- !u!1 &1872267150
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1872267153}
+  - component: {fileID: 1872267152}
+  - component: {fileID: 1872267151}
+  m_Layer: 0
+  m_Name: GroceryGainRoutine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1872267151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872267150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3baa6285e497b9f40b9db52d51567174, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::GroceryGainRoutine
+  targets:
+  - {fileID: 899694786}
+  - {fileID: 825698038}
+  - {fileID: 1592494416}
+  prewarmCount: 20
+  spawnDelay: 0.12
+  moveDelay: 0.3
+  amountPerPresenter: 1
+--- !u!114 &1872267152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872267150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01e6f4c1ad332c1419ba0b2ab9e7f557, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::GroceryPooler
+  prefab: {fileID: 72214844644040441, guid: 988a49d9bfd50754688fc72487834f2e, type: 3}
+--- !u!4 &1872267153
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1872267150}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1880621800
 GameObject:
   m_ObjectHideFlags: 0
@@ -6475,3 +6639,4 @@ SceneRoots:
   - {fileID: 189240164}
   - {fileID: 45788135}
   - {fileID: 1375324980}
+  - {fileID: 1872267153}

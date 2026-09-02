@@ -193,7 +193,9 @@ MonoBehaviour:
   moveActionPath: Player/Move
   moveSpeed: 5
   rotationLerpSpeed: 120
+  chargeSpeedMultiplier: 3
   cropCutter: {fileID: 0}
+  gridChunkHandler: {fileID: 0}
 --- !u!114 &4198626954786146904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,7 +208,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5645cb83d087427e8462de41143ad1ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HarvestEmployeeResolver
-  gridChunkHandler: {fileID: 0}
   harvester1Sidecar: {fileID: 4226500702141348364}
   harvester2Sidecar: {fileID: 9095978913807925055}
 --- !u!1 &3886308101662067040
@@ -409,6 +410,7 @@ MonoBehaviour:
   gridChunkHandler: {fileID: 0}
   cutterViewer: {fileID: 8608268314207601637}
   cuttingRange: 1
+  rangeLerpSpeed: 8
   damage: 1
   damageDelay: 0.25
   cuttingMoveSpeedMultiplier: 0.9
@@ -505,6 +507,7 @@ MonoBehaviour:
   gridChunkHandler: {fileID: 0}
   cutterViewer: {fileID: 1715619154997296630}
   cuttingRange: 0.7
+  rangeLerpSpeed: 8
   damage: 1
   damageDelay: 0.25
   cuttingMoveSpeedMultiplier: 0.9
@@ -634,6 +637,7 @@ MonoBehaviour:
   gridChunkHandler: {fileID: 0}
   cutterViewer: {fileID: 8199348598215659085}
   cuttingRange: 0.7
+  rangeLerpSpeed: 8
   damage: 1
   damageDelay: 0.25
   cuttingMoveSpeedMultiplier: 0.9
