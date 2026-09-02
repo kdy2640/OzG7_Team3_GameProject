@@ -3,70 +3,63 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FacilityDetailPanel : MonoBehaviour
+public sealed class FacilityDetailPanel : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private TMP_Text facilityNameText;
-    [SerializeField] private TMP_Text levelText;
-    
-    [SerializeField] private Transform levelIndicatorRoot;
-    [SerializeField] private Image levelIndicatorPrefab;
-
-    [Header("Level Indicator Color")]
-    [SerializeField] private Color activeLevelColor = Color.green;
-    [SerializeField] private Color inactiveLevelColor = Color.white;
-
-    [SerializeField] private TMP_Text currentEffectText;
-    [SerializeField] private TMP_Text nextEffectText;
-
+    [SerializeField] private UI_FacilityLevelDisplay currentLevelDisplay;
+    [SerializeField] private UI_FacilityLevelDisplay nextLevelDisplay;
+    [SerializeField] private TMP_Text costText;
     [SerializeField] private Button actionButton;
     [SerializeField] private TMP_Text actionButtonText;
-
+    [SerializeField] private GameObject unavailableButton;
+    [SerializeField] private TMP_Text unavailableButtonText;
+    [SerializeField] private GameObject goldStruct;
     [SerializeField] private Button previousButton;
     [SerializeField] private Button nextButton;
-    [SerializeField] private Button closeButton;
+    [SerializeField] private PanelAnimator panelAnimator;
 
     private FacilityCollection facilityCollection;
     private FacilityType currentFacilityType = FacilityType.Count;
-
     private UpgradeManager subscribedUpgradeManager;
-
-    [SerializeField] private PanelAnimator panelAnimator;
+    private StockManager subscribedStockManager;
+    private MarketManager subscribedMarketManager;
 
     private void Awake()
     {
-        if (actionButton != null)
-            actionButton.onClick.AddListener(OnClickAction);
-
-        if (previousButton != null)
-            previousButton.onClick.AddListener(OnClickPrevious);
-
-        if (nextButton != null)
-            nextButton.onClick.AddListener(OnClickNext);
-
-        if (closeButton != null)
-            closeButton.onClick.AddListener(ClosePanel);
-
+        actionButton.onClick.AddListener(OnClickAction);
+        previousButton.onClick.AddListener(OnClickPrevious);
+        nextButton.onClick.AddListener(OnClickNext);
         gameObject.SetActive(false);
     }
 
     private void OnEnable()
     {
-        subscribedUpgradeManager = GameManager.Instance?.Upgrade;
+        subscribedUpgradeManager = GameManager.Instance.Upgrade;
+        subscribedStockManager = GameManager.Instance.StockManager;
+        subscribedMarketManager = GameManager.Instance.Market;
 
-        subscribedUpgradeManager?.SubscribeUpgradeChanged(Refresh);
+        subscribedUpgradeManager.SubscribeUpgradeChanged(Refresh);
+        subscribedStockManager.SubscribeStockDataChange(Refresh);
+        subscribedMarketManager.SubscribeMarketDataChanged(Refresh);
 
         Refresh();
     }
 
     private void OnDisable()
     {
-        if (subscribedUpgradeManager == null)
-            return;
+        if (subscribedUpgradeManager != null)
+            subscribedUpgradeManager.UnsubscribeUpgradeChanged(Refresh);
 
-        subscribedUpgradeManager.UnsubscribeUpgradeChanged(Refresh);
+        if (subscribedStockManager != null)
+            subscribedStockManager.UnsubscribeStockDataChange(Refresh);
+
+        if (subscribedMarketManager != null)
+            subscribedMarketManager.UnsubscribeMarketDataChanged(Refresh);
 
         subscribedUpgradeManager = null;
+        subscribedStockManager = null;
+        subscribedMarketManager = null;
     }
 
     public void Initialize(FacilityCollection collection)
@@ -82,18 +75,13 @@ public class FacilityDetailPanel : MonoBehaviour
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_Select);
 
         bool wasActive = gameObject.activeSelf;
-        bool isDifferentFacility = currentFacilityType != facilityType;
 
         currentFacilityType = facilityType;
-
         gameObject.SetActive(true);
-
         Refresh();
 
-        if (!wasActive || isDifferentFacility)
-        {
+        if (!wasActive)
             yield return panelAnimator.Show();
-        }
     }
 
     public void ClosePanel()
@@ -105,29 +93,23 @@ public class FacilityDetailPanel : MonoBehaviour
 
     private void OnClickAction()
     {
-        if (currentFacilityType == FacilityType.Count) return;
+        if (currentFacilityType == FacilityType.Count)
+            return;
 
-        UpgradeManager upgradeManager = GameManager.Instance?.Upgrade;
+        FacilityUpgradeDataSO upgradeData =
+            UpgradeDataDB.GetData(currentFacilityType);
 
-        FacilityUpgradeDataSO upgradeData = UpgradeDataDB.GetData(currentFacilityType);
+        if (upgradeData == null)
+            return;
 
-        if (upgradeManager == null || upgradeData == null) return;
-
-        bool success = upgradeManager.TryUpgrade(upgradeData);
-
-        if (!success) return;
-
-        Refresh();
+        GameManager.Instance.Upgrade.TryUpgrade(upgradeData);
     }
-
 
     private void OnClickPrevious()
     {
-        if (facilityCollection == null)
-            return;
-
-        if (facilityCollection.TryGetPrevious
-            (currentFacilityType,out FacilityType previous))
+        if (facilityCollection.TryGetPrevious(
+                currentFacilityType,
+                out FacilityType previous))
         {
             facilityCollection.ShowDetail(previous);
         }
@@ -135,10 +117,9 @@ public class FacilityDetailPanel : MonoBehaviour
 
     private void OnClickNext()
     {
-        if (facilityCollection == null)
-            return;
-
-        if (facilityCollection.TryGetNext(currentFacilityType,out FacilityType next))
+        if (facilityCollection.TryGetNext(
+                currentFacilityType,
+                out FacilityType next))
         {
             facilityCollection.ShowDetail(next);
         }
@@ -151,125 +132,135 @@ public class FacilityDetailPanel : MonoBehaviour
 
         FacilityDataSO facilityData =
             FacilityDataDB.GetData(currentFacilityType);
-
         FacilityUpgradeDataSO upgradeData =
             UpgradeDataDB.GetData(currentFacilityType);
+        UpgradeManager upgradeManager = GameManager.Instance.Upgrade;
 
-        UpgradeManager upgradeManager =
-            GameManager.Instance?.Upgrade;
-
-        int currentLevel = upgradeManager != null
-                ? upgradeManager.RuntimeLevel.Get(currentFacilityType) : 0;
-
-        int maxLevel = upgradeData != null
-                ? upgradeData.MaxLevel : 0;
-
-        bool isPurchased = currentLevel > 0;
-
-        UpgradeAvailability availability =
-            upgradeManager != null && upgradeData != null
-                ? upgradeManager.GetUpgradeAvailability(upgradeData)
-                : UpgradeAvailability.InvalidData;
-
-        if (facilityNameText != null)
+        if (facilityData == null || upgradeData == null)
         {
-            facilityNameText.text =
-                facilityData != null ? facilityData.DisplayName : currentFacilityType.ToString();
-        }
-
-        if (levelText != null)
-        {
-            levelText.text = $"Lv.{currentLevel} / Lv.{maxLevel}";
-        }
-
-        RefreshLevelIndicators(currentLevel, maxLevel);
-
-        if (currentEffectText != null)
-        {
-            currentEffectText.text =
-                isPurchased ? $"Lv.{currentLevel}" : "Not Purchased";
-        }
-
-        if (nextEffectText != null)
-        {
-            nextEffectText.text =
-                !isPurchased ? "Purchase to unlock"
-                    : availability == UpgradeAvailability.Available
-                        ? $"Lv.{currentLevel + 1}" : "Max Level";
-        }
-
-        RefreshActionButton(isPurchased, availability);
-
-        RefreshNavigationButtons();
-    }
-    private void RefreshLevelIndicators(int curentLevel, int maxLevel)
-    {
-        if (levelIndicatorRoot == null || levelIndicatorPrefab == null) return;
-
-        for(int i = levelIndicatorRoot.childCount -1; i >= 0; i--)
-        {
-            Destroy(levelIndicatorRoot.GetChild(i).gameObject);
-        }
-        for (int i = 0; i < maxLevel; i++)
-        {
-            Image indicator = Instantiate(levelIndicatorPrefab, levelIndicatorRoot);
-
-            indicator.color = i<curentLevel ? activeLevelColor : inactiveLevelColor;
-        }
-    }
-    private void RefreshActionButton(bool isPurchased, UpgradeAvailability availability)
-    {
-        if (!isPurchased)
-        {
-            actionButtonText.text =
-                availability ==
-                    UpgradeAvailability.Available ? "Purchase"
-                    : GetAvailabilityText(availability, false);
-
-            actionButton.interactable =
-                availability == UpgradeAvailability.Available;
-
+            RefreshInvalidData();
+            RefreshNavigationButtons();
             return;
         }
 
-        actionButtonText.text = GetAvailabilityText(availability, true);
+        int currentLevel =
+            upgradeManager.RuntimeLevel.Get(currentFacilityType);
+        bool isMaxLevel = currentLevel >= upgradeData.MaxLevel;
+        UpgradeAvailability availability =
+            upgradeManager.GetUpgradeAvailability(upgradeData);
 
+        facilityNameText.text = facilityData.DisplayName;
+
+        currentLevelDisplay.SetData(
+            currentLevel,
+            GetLevelEffect(facilityData, currentLevel));
+        currentLevelDisplay.SetMaxLevel(isMaxLevel);
+
+        nextLevelDisplay.gameObject.SetActive(!isMaxLevel);
+
+        if (!isMaxLevel)
+        {
+            nextLevelDisplay.SetData(
+                currentLevel + 1,
+                GetLevelEffect(facilityData, currentLevel + 1));
+        }
+        bool showCurrencyAction =
+            availability == UpgradeAvailability.Available ||
+            availability == UpgradeAvailability.InsufficientCurrency;
+
+        costText.text = showCurrencyAction
+            && upgradeData.TryGetRequiredCost(currentLevel + 1, out int cost)
+                ? cost.ToString()
+                : "-";
+
+        actionButton.gameObject.SetActive(showCurrencyAction);
+        unavailableButton.SetActive(!showCurrencyAction);
+        goldStruct.SetActive(showCurrencyAction);
         actionButton.interactable =
             availability == UpgradeAvailability.Available;
+
+        if (showCurrencyAction)
+        {
+            actionButtonText.text =
+                availability == UpgradeAvailability.InsufficientCurrency
+                    ? "자금 부족"
+                    : currentLevel <= 0 ? "구매" : "업그레이드";
+        }
+        else
+        {
+            unavailableButtonText.text =
+                GetUnavailableText(upgradeData, currentLevel, availability);
+        }
+
+        RefreshNavigationButtons();
+    }
+
+    private void RefreshInvalidData()
+    {
+        facilityNameText.text = currentFacilityType.ToString();
+        currentLevelDisplay.SetInvalidData();
+        nextLevelDisplay.gameObject.SetActive(true);
+        nextLevelDisplay.SetInvalidData();
+        costText.text = "-";
+        actionButton.gameObject.SetActive(false);
+        unavailableButton.SetActive(true);
+        unavailableButtonText.text = "데이터 오류";
+        goldStruct.SetActive(false);
     }
 
     private void RefreshNavigationButtons()
     {
-        bool hasPrevious =
-            facilityCollection != null &&
-            facilityCollection.TryGetPrevious(currentFacilityType,out _ );
+        bool hasPrevious = facilityCollection.TryGetPrevious(
+            currentFacilityType,
+            out _);
+        bool hasNext = facilityCollection.TryGetNext(
+            currentFacilityType,
+            out _);
 
-        bool hasNext =
-            facilityCollection != null &&
-            facilityCollection.TryGetNext(currentFacilityType,out _ );
-
-        if (previousButton != null)
-            previousButton.gameObject.SetActive(hasPrevious);
-
-        if (nextButton != null)
-            nextButton.gameObject.SetActive(hasNext);
+        previousButton.gameObject.SetActive(hasPrevious);
+        nextButton.gameObject.SetActive(hasNext);
     }
 
-    private string GetAvailabilityText(UpgradeAvailability availability, bool isPurchased)
+    private static string GetLevelEffect(
+        FacilityDataSO facilityData,
+        int level)
     {
+        if (level <= 0)
+            return "구매 전";
+
+        string effect = level switch
+        {
+            1 => facilityData.Level1Skill,
+            2 => facilityData.Level2Skill,
+            3 => facilityData.Level3Skill,
+            4 => facilityData.Level4Skill,
+            5 => facilityData.Level5Skill,
+            _ => string.Empty
+        };
+
+        return string.IsNullOrWhiteSpace(effect)
+            ? "효과 정보 없음"
+            : effect;
+    }
+
+    private static string GetUnavailableText(
+        FacilityUpgradeDataSO upgradeData,
+        int currentLevel,
+        UpgradeAvailability availability)
+    {
+        if (availability == UpgradeAvailability.MarketLevelLocked
+            && upgradeData.TryGetRequiredMarketLevel(
+                currentLevel + 1,
+                out int requiredMarketLevel))
+        {
+            return $"레스토랑 레벨 {requiredMarketLevel}에 잠금 해제";
+        }
+
         return availability switch
         {
-            UpgradeAvailability.Available => isPurchased ? "Upgrade" : "Purchase",
-
-            UpgradeAvailability.MaxLevel => "Max Level",
-
-            UpgradeAvailability.MarketLevelLocked => "Market Locked",
-
-            UpgradeAvailability.InsufficientCurrency => "Not Enough Currency",
-
-            UpgradeAvailability.InvalidData => "Data Error",
-
-            _ => "Unavailable"
+            UpgradeAvailability.MaxLevel => "최대 레벨",
+            UpgradeAvailability.InvalidData => "데이터 오류",
+            _ => "이용 불가"
         };
     }
 }
