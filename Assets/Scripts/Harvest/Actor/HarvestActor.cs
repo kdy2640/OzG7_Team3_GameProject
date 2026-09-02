@@ -137,16 +137,20 @@ public sealed class HarvestActor : MonoBehaviour
     {
         isDying = true;
         registry.Unregister(transform);
-        GameManager.Instance.StockManager.AddGrocery(harvestDataSO.Rewards);
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Harvest_Collect);
 
         if (harvestDataSO.HarvestType == HarvestType.Pig)
         {
+            GrantGoldenPigReward();
             GameManager.Instance.Utility.Audio.PlaySFX(
                 SFXType.Harvest_GoldenPigCollected);
         }
+        else
+        {
+            GameManager.Instance.StockManager.AddGrocery(harvestDataSO.Rewards);
+            employeeResolver.ResolveHarvested(harvestDataSO);
+        }
 
-        employeeResolver.ResolveHarvested(harvestDataSO);
         if (harvestDataSO.IsMove)
         {
             animalStateController.SetState(AnimalStateType.Dead);
@@ -155,6 +159,60 @@ public sealed class HarvestActor : MonoBehaviour
         {
             presenter.PlayDeath();
         }
+    }
+
+    private void GrantGoldenPigReward()
+    {
+        int radarLevel = GameManager.Instance.Upgrade.RuntimeLevel.Get(
+            HarvestUpgradeType.GoldenPigRadar);
+
+        int firstAmount;
+        int secondAmount;
+        int thirdAmount;
+        int goldAmount;
+
+        switch (radarLevel)
+        {
+            case 1:
+                firstAmount = 10;
+                secondAmount = 5;
+                thirdAmount = 3;
+                goldAmount = 20;
+                break;
+            case 2:
+                firstAmount = 20;
+                secondAmount = 10;
+                thirdAmount = 5;
+                goldAmount = 50;
+                break;
+            case 3:
+                firstAmount = 30;
+                secondAmount = 15;
+                thirdAmount = 10;
+                goldAmount = 100;
+                break;
+            case 4:
+                firstAmount = 50;
+                secondAmount = 30;
+                thirdAmount = 20;
+                goldAmount = 500;
+                break;
+            default:
+                Debug.LogError(
+                    $"[HarvestActor] Invalid golden pig radar level: {radarLevel}",
+                    this);
+                return;
+        }
+
+        StageDataSO stageData = StageDataDB.GetData(
+            (StageType)(radarLevel - 1));
+        GameManager.Instance.StockManager.AddGrocery(
+            new GroceryAmount(stageData.RewardList[0], firstAmount));
+        GameManager.Instance.StockManager.AddGrocery(
+            new GroceryAmount(stageData.RewardList[1], secondAmount));
+        GameManager.Instance.StockManager.AddGrocery(
+            new GroceryAmount(stageData.RewardList[2], thirdAmount));
+        GameManager.Instance.StockManager.AddCurrency(goldAmount);
     }
 
 #if UNITY_EDITOR

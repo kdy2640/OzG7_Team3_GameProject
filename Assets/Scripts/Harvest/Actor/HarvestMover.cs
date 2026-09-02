@@ -36,7 +36,9 @@ public sealed class HarvestMover : MonoBehaviour
         registry = gridChunkHandler.Registry;
         streamer = gridChunkHandler.Streamer;
 
-        if (!isChunkIndependent)
+        if (isChunkIndependent)
+            InitializeGoldenPigBounds();
+        else
             InitializeStageBounds(stageType);
 
         enabled = true;
@@ -63,8 +65,7 @@ public sealed class HarvestMover : MonoBehaviour
             * (moveSpeed * Time.fixedDeltaTime);
         nextPosition = geometry.ClampToArea(nextPosition);
 
-        if (!isChunkIndependent)
-            nextPosition = ClampToStage(nextPosition);
+        nextPosition = ClampToStage(nextPosition);
 
         Vector3 movement = nextPosition - currentPosition;
         movement.y = 0f;
@@ -95,15 +96,35 @@ public sealed class HarvestMover : MonoBehaviour
             : area.yMax;
     }
 
+    private void InitializeGoldenPigBounds()
+    {
+        Rect area = geometry.Area;
+        int unlockedStageCount =
+            GameManager.Instance.Upgrade.RuntimeLevel.Get(
+                HarvestUpgradeType.StageLevel);
+
+        if (unlockedStageCount == 1)
+        {
+            stageMinZ = StageDataDB.GetData(StageType.Stage_2).ZStart;
+            stageMaxZ = StageDataDB.GetData(StageType.Stage_3).ZStart
+                - StageBoundaryEpsilon;
+            return;
+        }
+
+        stageMinZ = area.yMin;
+        stageMaxZ = unlockedStageCount < (int)StageType.Count
+            ? StageDataDB.GetData((StageType)unlockedStageCount).ZStart
+                - StageBoundaryEpsilon
+            : area.yMax;
+    }
+
     public Vector3 GetRandomPatrolPosition()
     {
         Rect area = geometry.Area;
         Vector3 localPosition = gridOrigin.InverseTransformPoint(
             transform.position);
         localPosition.x = Random.Range(area.xMin, area.xMax);
-        localPosition.z = isChunkIndependent
-            ? Random.Range(area.yMin, area.yMax)
-            : Random.Range(stageMinZ, stageMaxZ);
+        localPosition.z = Random.Range(stageMinZ, stageMaxZ);
 
         return gridOrigin.TransformPoint(localPosition);
     }

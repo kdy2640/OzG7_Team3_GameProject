@@ -115,7 +115,7 @@ public class UI_MenuVisualCard : MonoBehaviour
             .CalculateCookableAmount(dishType);
 
         cookText.text = $"{cookableAmount:N0}";
-        priceText.text = $"{data.Cost:N0}";
+        priceText.text = $"{DishPriceCalculator.BasicPriceCalculate(dishType):N0}";
     }
 
     public void SetStatus(MenuVisualStatus status)

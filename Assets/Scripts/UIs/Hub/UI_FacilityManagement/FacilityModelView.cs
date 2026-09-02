@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class FacilityModelView : MonoBehaviour
 {
@@ -114,6 +115,13 @@ public class FacilityModelView : MonoBehaviour
 
         currentModelRenderers =
             currentModelInstance.GetComponentsInChildren<Renderer>(true);
+
+        if (level == 0)
+        {
+            foreach (Renderer targetRenderer in currentModelRenderers)
+                targetRenderer.shadowCastingMode = ShadowCastingMode.Off;
+        }
+
         ApplyOutlineRenderingLayer();
 
         shownLevel = level;

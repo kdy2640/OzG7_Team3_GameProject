@@ -12,8 +12,7 @@ public enum FestivalElementState
 
 [RequireComponent(typeof(Button))]
 public sealed class UI_FestivalElement : MonoBehaviour
-{
-    [SerializeField] private TMP_Text festivalNameText;
+{ 
     [SerializeField] private GameObject lockedPanel;
     [SerializeField] private GameObject lockedIndicator;
     [SerializeField] private GameObject progressIndicator;
@@ -44,8 +43,7 @@ public sealed class UI_FestivalElement : MonoBehaviour
         InitializeButton();
         isTaste = true;
         nowEnum = (int)tasteType;
-        this.onSelected = onSelected;
-        festivalNameText.text = tasteType.ToString();
+        this.onSelected = onSelected; 
         Refresh();
     }
 
@@ -54,8 +52,7 @@ public sealed class UI_FestivalElement : MonoBehaviour
         InitializeButton();
         isTaste = false;
         nowEnum = (int)categoryType;
-        this.onSelected = onSelected;
-        festivalNameText.text = categoryType.ToString();
+        this.onSelected = onSelected; 
         Refresh();
     }
 
