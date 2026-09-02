@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 0.86754715, g: 1, b: 0.6320754, a: 1}
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2614,8 +2614,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6375040419870808014}
-  - {fileID: 3457859549850147359}
   - {fileID: 2440410509328068076}
+  - {fileID: 3457859549850147359}
   m_Father: {fileID: 8609198643908044977}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
@@ -4679,6 +4679,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8609198643908044977}
+  - component: {fileID: 9012345678901234501}
+  - component: {fileID: 9012345678901234502}
   - component: {fileID: 4442194919970861840}
   m_Layer: 0
   m_Name: UI_StaffInfoPanel
@@ -4696,7 +4698,7 @@ RectTransform:
   m_GameObject: {fileID: 5987300123559734467}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.92, y: 0.92, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7235375328417046591}
@@ -4727,35 +4729,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac58e8b09bcf42847945c8919e6322c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_StaffInfoPanel
+  staffPortrait: {fileID: 7506053531340439058}
   roleIcon: {fileID: 4657006502058236707}
   staffNameText: {fileID: 4443276533562742164}
-  levelText: {fileID: 0}
-  levelSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  filledSlotColor: {r: 1, g: 0.78, b: 0.2, a: 1}
-  emptySlotColor: {r: 0.754717, g: 0.7369171, b: 0.7369171, a: 1}
-  skill1Name: {fileID: 0}
-  skill1Description: {fileID: 0}
-  skill1Effect: {fileID: 0}
-  nextLevelText: {fileID: 0}
-  nextLevelEffect: {fileID: 0}
-  skill3LockIcon: {fileID: 0}
-  skill3Name: {fileID: 0}
-  skill3Label: {fileID: 0}
-  skill3Description: {fileID: 0}
-  skill5LockIcon: {fileID: 0}
-  skill5Name: {fileID: 0}
-  skill5Label: {fileID: 0}
-  skill5Description: {fileID: 0}
-  staffDescription: {fileID: 0}
+  levelText: {fileID: 3237088957082769667}
+  filledLevelSlots:
+  - {fileID: 3712264685346743239}
+  - {fileID: 4379073550893139932}
+  - {fileID: 1018491455960160021}
+  - {fileID: 5292777536528773882}
+  - {fileID: 7019551222542275641}
+  levelEffectLabel: {fileID: 2315622433855200615}
+  currentLevelEffect: {fileID: 8761976378827771122}
+  nextLevelText: {fileID: 7247754305364471444}
+  nextLevelEffect: {fileID: 6651090612168561075}
+  skill1LockIcon: {fileID: 6528774163852071590}
+  skill1UnlockedBackground: {fileID: 33006383386803674}
+  skill1Name: {fileID: 4717316956299181766}
+  skill1Label: {fileID: 8438612167064202702}
+  skill1Description: {fileID: 3612243364977156909}
+  skill3LockIcon: {fileID: 1445164454635107241}
+  skill3UnlockedBackground: {fileID: 3872141171365211468}
+  skill3Name: {fileID: 7853656822796082441}
+  skill3Label: {fileID: 5066803827464073889}
+  skill3Description: {fileID: 4096722365160752095}
+  skill5LockIcon: {fileID: 2877253346721807802}
+  skill5UnlockedBackground: {fileID: 1492538563909052181}
+  skill5Name: {fileID: 5013579786586573523}
+  skill5Label: {fileID: 8339083053921124660}
+  skill5Description: {fileID: 4050332120731440062}
+  staffDescription: {fileID: 1027513712997250186}
+  skillScrollRect: {fileID: 4810165790811938483}
   actionButton: {fileID: 7610639215393069817}
   costText: {fileID: 8493119390758766342}
   actionText: {fileID: 8833440315789392428}
-  panelAnimator: {fileID: 0}
+  actionLockIcon: {fileID: 3967769625989191238}
+  panelAnimator: {fileID: 9012345678901234502}
+--- !u!225 &9012345678901234501
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5987300123559734467}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &9012345678901234502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5987300123559734467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c506973b38d4dcca7ac7ac24b49f61e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EdgePanelAnimator
+  duration: 0.6
+  offsetX: 420
 --- !u!1 &6020310870454573211
 GameObject:
   m_ObjectHideFlags: 0
@@ -5345,7 +5380,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2344939902397070243}
   m_HandleRect: {fileID: 3752385969559088885}
   m_Direction: 2
-  m_Value: 0.5
+  m_Value: 0.49999982
   m_Size: 0.5070422
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5460,7 +5495,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 306, y: 27}
+  m_AnchoredPosition: {x: 331, y: 22}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &7196807443865363078
@@ -5783,7 +5818,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3527738757580571316

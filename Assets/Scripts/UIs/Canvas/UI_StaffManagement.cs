@@ -53,20 +53,21 @@ public sealed class UI_StaffManagement : UI_Base
 
     protected override IEnumerator OnHide()
     {
+        Coroutine staffInfoHide = StartCoroutine(staffInfoPanel.Hide());
+
         GetUI<PanelAnimator>((int)PanelAnimators.StaffListPanel).Hide();
         GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
         yield return GetUI<PanelAnimator>((int)PanelAnimators.Header).Hide();
+        yield return staffInfoHide;
         staffListPanel.HideAllCards();
     }
 
     private void OnSelectStaff(EmployeeType type)
     {
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_Select);
-        bool isNewSelection = (selectedType != type);
-
         selectedType = type;
 
-        StartCoroutine(staffInfoPanel.Show(type, isNewSelection));
+        StartCoroutine(staffInfoPanel.Show(type));
     }
 
     private void OnClickRecruitOrUpgrade(EmployeeType type)
