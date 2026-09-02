@@ -325,13 +325,12 @@ public class CustomerStateManager : MonoBehaviour
     {
         GameObject money = Instantiate(moneyToast, transform.position, Quaternion.identity);
         MoneyEffect effect = money.GetComponentInChildren<MoneyEffect>();
-        Debug.Log("effect : " + effect);
         effect.SetAmount(currencyAmount);
     }
 
-    public void ToastMessageOn(string content)
+    public void ToastMessageOn(MessageType messageType)
     {
-        toastMessage.ShowMessage(content);
+        toastMessage.ShowMessage(messageType);
     }
 
 

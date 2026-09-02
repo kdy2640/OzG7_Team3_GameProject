@@ -22,7 +22,7 @@ public class CustomerEatState : IState
         duration = stateManager.EatTime;
         timer = duration;
         stateManager.SetLifecycleProgress(0.55f);
-        stateManager.ToastMessageOn("맛있어!");
+        stateManager.ToastMessageOn(MessageType.Hungry);
     }
 
     public void Execute()
