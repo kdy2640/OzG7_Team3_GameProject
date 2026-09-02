@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,9 +16,30 @@ public sealed class TutorialButton : MonoBehaviour
         button = GetComponent<Button>();
         button.onClick.AddListener(OpenTutorial);
     }
+    private void OnEnable()
+    {
+        StartCoroutine(OpenTutorialOnFirstEnable());
+    }
     private void OnDestroy()
     {
         button.onClick.RemoveListener(OpenTutorial);
+    }
+    private IEnumerator OpenTutorialOnFirstEnable()
+    {
+        yield return null;
+
+        TutorialManager tutorialManager = GameManager.Instance.Utility.Tutorial;
+
+        if (tutorialManager.GetTutorialProgressed(tutorialType))
+            yield break;
+
+        TutorialDataSO tutorialData = TutorialDataDB.GetData(tutorialType);
+
+        if (tutorialData == null)
+            yield break;
+
+        tutorialManager.ResolveTutorial(tutorialType);
+        OpenTutorial();
     }
     public void OpenTutorial()
     {
