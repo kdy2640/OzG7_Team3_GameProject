@@ -1,8 +1,11 @@
 using UnityEngine;
 
 [DisallowMultipleComponent]
+[RequireComponent(typeof(ItemPresenter))]
 public sealed class ItemActor : MonoBehaviour
 {
+    [SerializeField] private ItemPresenter presenter;
+
     private ItemDataSO itemData;
     private bool isCollected;
 
@@ -11,6 +14,7 @@ public sealed class ItemActor : MonoBehaviour
     public void Init(ItemDataSO data)
     {
         itemData = data;
+        presenter.Init(itemData.SolidModel);
     }
 
     private void OnTriggerEnter(Collider other)

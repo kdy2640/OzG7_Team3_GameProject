@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6765820017840503412}
   - component: {fileID: 7666286493396315208}
   - component: {fileID: 5001674842805473253}
+  - component: {fileID: 3849327048416203478}
   m_Layer: 0
   m_Name: ItemActor
   m_TagString: Untagged
@@ -73,6 +74,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfddf8a477e1bf14694ab7b8e06867ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemActor
+  presenter: {fileID: 3849327048416203478}
+--- !u!114 &3849327048416203478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3182905882512030629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d300a368e0c2645b7247d67cca0978, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemPresenter
+  localY: 0
+  rotationSpeed: 90
+  scale: 2
 --- !u!1 &4969820838779917513
 GameObject:
   m_ObjectHideFlags: 0
