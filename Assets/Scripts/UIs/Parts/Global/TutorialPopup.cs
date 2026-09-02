@@ -30,7 +30,7 @@ public sealed class TutorialPopup : MonoBehaviour
 
         if (tutorialManager == null)
         {
-            Debug.LogError("[TutorialPopup] TutorialManager를 찾을 수 없습니다.");
+            Debug.LogError("[TutorialPopup] TutorialManager�?찾을 ???�습?�다.");
         }
 
         if (panelAnimator == null) panelAnimator = GetComponent<PanelAnimator>();
@@ -47,7 +47,7 @@ public sealed class TutorialPopup : MonoBehaviour
 
         if (autoOpenTutorialData == null)
         {
-            Debug.LogWarning("[TutorialPopup] 자동 오픈용 TutorialDataSO가 없습니다.");
+            Debug.LogWarning("[TutorialPopup] ?�동 ?�픈??TutorialDataSO가 ?�습?�다.");
             return;
         }
 
@@ -78,7 +78,7 @@ public sealed class TutorialPopup : MonoBehaviour
     {
         if (data == null)
         {
-            Debug.LogWarning("[TutorialPopup] TutorialDataSO가 없습니다.");
+            Debug.LogWarning("[TutorialPopup] TutorialDataSO가 ?�습?�다.");
             return;
         }
 
@@ -90,9 +90,13 @@ public sealed class TutorialPopup : MonoBehaviour
 
         gameObject.SetActive(true);
 
+        SceneType currentSceneType =
+            GameManager.Instance.Scene.CurrentSceneType;
         bool shouldPauseTime =
-            data.tutorialType == TutorialManager.TutorialType.Sales
-            && GameManager.Instance.Scene.CurrentSceneType == SceneType.Service;
+            (data.tutorialType == TutorialManager.TutorialType.Sales
+                && currentSceneType == SceneType.Service)
+            || (data.tutorialType == TutorialManager.TutorialType.Harvest
+                && currentSceneType == SceneType.Harvest);
 
         if (panelAnimator != null)
         {
