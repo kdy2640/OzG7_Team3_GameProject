@@ -23,6 +23,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private DrinkZone drinkZone;
     [SerializeField] private Image autoServeImg;
     [SerializeField] private GameObject moneyToast;
+    [SerializeField] private ToastMessage toastMessage;
 
 
     private Table currentTable;
@@ -327,6 +328,12 @@ public class CustomerStateManager : MonoBehaviour
         Debug.Log("effect : " + effect);
         effect.SetAmount(currencyAmount);
     }
+
+    public void ToastMessageOn(string content)
+    {
+        toastMessage.ShowMessage(content);
+    }
+
 
     private void OnDisable()
     {
