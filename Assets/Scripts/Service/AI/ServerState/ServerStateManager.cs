@@ -13,6 +13,7 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private GameObject tray;
     [SerializeField] private SleepingButton sleepingButton;
     [SerializeField] private Image AutoWorkingImg;
+    [SerializeField] private GameObject cleaningTool;
     
 
     [SerializeField] private float baseSpeed = 8;
@@ -52,7 +53,7 @@ public class ServerStateManager : MonoBehaviour
     public float ReceiveFoodTime => receiveFoodTime;
     public SleepingButton SleepingButton => sleepingButton;
     public GameObject DishPrefab => dishPrefab;
-    
+    public GameObject CleaningTool => cleaningTool;
 
 
     public bool isAutoWorking = false;
