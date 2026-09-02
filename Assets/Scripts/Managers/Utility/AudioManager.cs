@@ -241,6 +241,41 @@ public class AudioManager : MonoBehaviour
         }
     }
 #if UNITY_EDITOR
+    [ContextMenu("Apply SFX To GameManager Prefab")]
+    private void ApplyToGameManagerPrefab()
+    {
+        const string gameManagerPrefabPath =
+            "Assets/Resources/Prefabs/Sys/GameManager.prefab";
+
+        GameObject gameManagerPrefab =
+            UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(gameManagerPrefabPath);
+        AudioManager prefabAudioManager =
+            gameManagerPrefab.GetComponentInChildren<AudioManager>(true);
+
+        UnityEditor.Undo.RecordObject(
+            prefabAudioManager,
+            "Apply SFX To GameManager Prefab");
+
+        UnityEditor.SerializedObject sourceObject =
+            new UnityEditor.SerializedObject(this);
+        UnityEditor.SerializedObject targetObject =
+            new UnityEditor.SerializedObject(prefabAudioManager);
+
+        sourceObject.Update();
+        targetObject.Update();
+        targetObject.CopyFromSerializedProperty(
+            sourceObject.FindProperty(nameof(sfxClips)));
+        targetObject.ApplyModifiedProperties();
+
+        UnityEditor.EditorUtility.SetDirty(prefabAudioManager);
+        UnityEditor.PrefabUtility.SavePrefabAsset(gameManagerPrefab);
+        UnityEditor.AssetDatabase.SaveAssets();
+
+        Debug.Log(
+            "[AudioManager] SFX 설정을 GameManager 프리팹에 적용했습니다.",
+            prefabAudioManager);
+    }
+
     [ContextMenu("Refresh SFX Clips By Type")]
     private void RefreshSFXClipsByType()
     {

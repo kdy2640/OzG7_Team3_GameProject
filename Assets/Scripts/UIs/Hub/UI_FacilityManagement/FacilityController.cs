@@ -33,6 +33,11 @@ public class FacilityController : MonoBehaviour
 
     public event Action<FacilityController> StateChanged;
 
+    internal void SetSelected(bool isSelected)
+    {
+        modelView.SetSelected(isSelected);
+    }
+
     private void OnEnable()
     {
         SubscribedUpgradeManager.SubscribeUpgradeChanged(Refresh);

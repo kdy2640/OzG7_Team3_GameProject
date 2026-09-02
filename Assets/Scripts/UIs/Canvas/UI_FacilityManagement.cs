@@ -57,6 +57,7 @@ public sealed class UI_FacilityManagement : UI_Base
 
         if (facilityCollection != null)
         {
+            facilityCollection.ClearSelection();
             facilityCollection.FacilitySelected -= OnFacilitySelected;
         }
 
