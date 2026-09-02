@@ -65,13 +65,21 @@ public sealed class UI_FacilityLevelDisplay : MonoBehaviour
         ApplyColorMode();
     }
 
-    public void SetData(int level, string description)
+    public void SetData(int level, int maxLevel, string description)
     {
         levelText.text = $"Lv.{level}";
         descriptionText.text = description;
 
+        int visibleSlotCount = Mathf.Clamp(maxLevel, 0, levelSlots.Length);
+
         for (int i = 0; i < levelSlots.Length; i++)
         {
+            bool isVisible = i < visibleSlotCount;
+            levelSlots[i].gameObject.SetActive(isVisible);
+
+            if (!isVisible)
+                continue;
+
             levelSlots[i].color = i < level
                 ? filledSlotColor
                 : emptySlotColor;
@@ -89,6 +97,10 @@ public sealed class UI_FacilityLevelDisplay : MonoBehaviour
         isMaxLevel = false;
         levelText.text = "Lv.-";
         descriptionText.text = "Data Error";
+
+        for (int i = 0; i < levelSlots.Length; i++)
+            levelSlots[i].gameObject.SetActive(true);
+
         ApplyEffectStateText();
     }
 

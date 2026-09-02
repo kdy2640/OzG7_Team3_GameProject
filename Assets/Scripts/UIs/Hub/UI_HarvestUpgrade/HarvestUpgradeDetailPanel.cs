@@ -124,6 +124,7 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
 
         currentLevelDisplay.SetData(
             currentLevel,
+            data.MaxLevel,
             BuildEffectText(data, currentLevel));
         currentLevelDisplay.SetMaxLevel(isMaxLevel);
 
@@ -133,6 +134,7 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
         {
             nextLevelDisplay.SetData(
                 currentLevel + 1,
+                data.MaxLevel,
                 BuildEffectText(data, currentLevel + 1));
         }
 
