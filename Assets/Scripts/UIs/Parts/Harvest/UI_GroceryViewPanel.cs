@@ -8,6 +8,8 @@ public class UI_GroceryViewPanel : MonoBehaviour
     [SerializeField] private Transform viewContainer;
 
     private readonly List<UI_GroceryView> groceryViews = new();
+    private readonly long[] pendingGainAmounts =
+        new long[(int)GroceryType.Count];
     private StockManager stockManager;
     private bool isReady;
 
@@ -38,7 +40,31 @@ public class UI_GroceryViewPanel : MonoBehaviour
         {
             if (groceryViews[i].gameObject.activeSelf)
             {
-                groceryViews[i].Refresh();
+                RefreshView(i);
+            }
+        }
+    }
+
+    public void ReserveGain(IReadOnlyList<GroceryAmount> rewards)
+    {
+        for (int i = 0; i < rewards.Count; i++)
+        {
+            GroceryAmount reward = rewards[i];
+            pendingGainAmounts[(int)reward.grocery] += reward.amount;
+        }
+    }
+
+    public void ApplyGain(GroceryAmount reward)
+    {
+        pendingGainAmounts[(int)reward.grocery] -= reward.amount;
+
+        for (int i = 0; i < groceryTypes.Count; i++)
+        {
+            if (groceryTypes[i] == reward.grocery)
+            {
+                RefreshView(i);
+                groceryViews[i].PlayGain();
+                return;
             }
         }
     }
@@ -80,7 +106,28 @@ public class UI_GroceryViewPanel : MonoBehaviour
             if (isVisible)
             {
                 groceryView.Initialize(groceryTypes[i]);
+                RefreshView(i);
             }
         }
+    }
+
+    private void RefreshView(int index)
+    {
+        GroceryType groceryType = groceryTypes[index];
+        IReadOnlyList<GroceryAmount> groceries = stockManager.StockData.Groceries;
+        long amount = 0;
+
+        for (int i = 0; i < groceries.Count; i++)
+        {
+            GroceryAmount grocery = groceries[i];
+
+            if (grocery != null && grocery.grocery == groceryType)
+            {
+                amount += grocery.amount;
+            }
+        }
+
+        amount -= pendingGainAmounts[(int)groceryType];
+        groceryViews[index].SetAmount(amount);
     }
 }

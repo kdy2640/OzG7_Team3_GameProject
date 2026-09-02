@@ -9,6 +9,7 @@ public sealed class GroceryGainRoutine : MonoBehaviour
     private const int TargetCount = 3;
 
     [SerializeField] private Transform[] targets = new Transform[TargetCount];
+    [SerializeField] private UI_GroceryViewPanel groceryViewPanel;
     [SerializeField, Min(0)] private int prewarmCount = 20;
 
     [Header("Timing")]
@@ -28,6 +29,7 @@ public sealed class GroceryGainRoutine : MonoBehaviour
         IReadOnlyList<GroceryAmount> rewards,
         Vector3 spawnPoint)
     {
+        groceryViewPanel.ReserveGain(rewards);
         StartCoroutine(PlayRoutine(rewards, spawnPoint));
     }
 
@@ -79,7 +81,7 @@ public sealed class GroceryGainRoutine : MonoBehaviour
         int targetIndex = GetTargetIndex(reward.grocery);
         yield return presenter.MoveToTarget(targets[targetIndex]);
 
-        // GroceryViewPanel Late 반영은 다음 구현 단계에서 연결한다.
+        groceryViewPanel.ApplyGain(reward);
     }
 
     private int GetTargetIndex(GroceryType groceryType)
