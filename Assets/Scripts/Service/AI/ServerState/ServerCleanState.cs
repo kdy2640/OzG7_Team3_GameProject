@@ -46,5 +46,6 @@ public class ServerCleanState : IState
     public void Exit()
     {
         stateManager.Animator.SetBool("IsAttacking", false);
+        stateManager.CleaningTool.SetActive(false);
     }
 }

@@ -15,6 +15,7 @@ public class ServerMoveToCleanState : IState
         stateManager.Animator.SetBool("IsWalking", true);
         stateManager.AiMove.MoveTo(dirty.Customer.CurrentTable.GetServePoint(dirty.Customer.Seat));
         stateManager.AiMove.OnArrived += ArrivedDirty;
+        stateManager.CleaningTool.SetActive(true);
     }
 
     public void Execute()
