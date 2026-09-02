@@ -1,28 +1,32 @@
 
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
 public class MoneyEffect : MonoBehaviour
 {
     [SerializeField] private TMP_Text amountText;
-    private float timer;
+    [SerializeField] private float floatingDuration;
 
     private void OnEnable()
     {
-        timer = 2.0f;
+        floatingDuration = 2.0f;
     }
 
     private void Update()
     {
-        timer -= Time.deltaTime;
-        if(timer < 0)
+        floatingDuration -= Time.deltaTime;
+        if( floatingDuration <= 0 )
         {
-            this.gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 
     public void SetAmount(int amount)
     {
         amountText.text = "+ " + amount.ToString() + "!";
+
+        transform.DOMoveY(transform.position.y + 1.0f, floatingDuration).SetEase(Ease.OutCubic).SetLink(gameObject);
+        //amountText.DOFade(0f, floatingDuration).OnComplete(() => Destroy(gameObject));
     }
 }
