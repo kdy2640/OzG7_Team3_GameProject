@@ -126,11 +126,6 @@ public class FacilityModelView : MonoBehaviour
 
         shownLevel = level;
 
-        Debug.Log(
-            $"[FacilityModelView] " +
-            $"{facility.FacilityType} �� Lv.{level} �� ����",
-            this
-        );
     }
 
     public void PlayUpgradeEffect()
