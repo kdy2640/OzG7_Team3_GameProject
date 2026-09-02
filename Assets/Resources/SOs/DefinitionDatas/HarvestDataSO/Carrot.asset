@@ -14,9 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HarvestDataSO
   id: Carrot
   harvestType: 1
+  hp: 3
   rewards:
   - grocery: 1
-    amount: 5
+    amount: 1
   isMove: 0
+  animalStat:
+    detectionRange: 3
+    fleeDistance: 4
+    patrolSpeed: 1.25
+    fleeSpeed: 2.5
+  animatorController: {fileID: 0}
   solidPrefab: {fileID: 919132149155446097, guid: 2b6ae9c5cd30ee843ab544939e513cf8, type: 3}
   itemPrefab: {fileID: 0}
