@@ -22,6 +22,8 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private Combo combo;
     [SerializeField] private DrinkZone drinkZone;
     [SerializeField] private Image autoServeImg;
+    [SerializeField] private GameObject moneyToast;
+
 
     private Table currentTable;
     private Transform seat;
@@ -41,6 +43,9 @@ public class CustomerStateManager : MonoBehaviour
     public bool SeatDirty = false;
     public bool IsAutoServed = false;
     private GameObject dishObject;
+    
+    private GameObject screenCanvas;
+    private Action serviceLoopEnd;
     
     
 
@@ -69,7 +74,8 @@ public class CustomerStateManager : MonoBehaviour
     #endregion
 
     #region State Machine Main
-    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue, Dirty dirtyPrefab, Combo combo, DrinkZone drinkZone)
+    public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue, 
+        Dirty dirtyPrefab, Combo combo, DrinkZone drinkZone)
     {
         this.exitPoint = exitPoint;
         this.tableManager = tableManager;
@@ -108,6 +114,12 @@ public class CustomerStateManager : MonoBehaviour
                 ChangeState(new CustomerMoveToTableState(this, aiMove, seat));
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        serviceLoopEnd += Die;
+        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, serviceLoopEnd);
     }
 
     private void Update()
@@ -177,6 +189,11 @@ public class CustomerStateManager : MonoBehaviour
 
     public bool IsTip()
     {
+        if(GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_3)<1)
+        {
+            return false;
+        }
+
         return UnityEngine.Random.value < tipChance;
     }
 
@@ -216,6 +233,7 @@ public class CustomerStateManager : MonoBehaviour
                 basicPrice + bonusCurrency);
 
             GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CustomerPay);
+            MoneyImgOn(basicPrice + bonusCurrency);
         }
     }
 
@@ -226,6 +244,7 @@ public class CustomerStateManager : MonoBehaviour
         GameManager.Instance.StockManager.AddCurrency(drinkPrice);
         GameManager.Instance.Market.MarketData.TotalIncome += drinkPrice;
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_DrinkServed);
+        MoneyImgOn(drinkPrice);
     }
 
     public void NotifyProcessingCompleted()
@@ -296,4 +315,22 @@ public class CustomerStateManager : MonoBehaviour
         Destroy(dishObject);
     }
 
+    private void Die()
+    {
+        ChangeState(new CustomerGameOverState(this));
+    }
+
+    private void MoneyImgOn(int currencyAmount)
+    {
+        GameObject money = Instantiate(moneyToast, transform.position, Quaternion.identity);
+        MoneyEffect effect = money.GetComponentInChildren<MoneyEffect>();
+        Debug.Log("effect : " + effect);
+        effect.SetAmount(currencyAmount);
+    }
+
+    private void OnDisable()
+    {
+        serviceLoopEnd -= Die;
+        GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, serviceLoopEnd);
+    }
 }

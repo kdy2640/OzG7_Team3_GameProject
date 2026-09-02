@@ -39,7 +39,7 @@ public class UI_SettingButton : MonoBehaviour
             settingPanel = Instantiate(settingPanelPrefab);
             DontDestroyOnLoad(settingPanel.gameObject);
         }
-
+        
         settingPanel.Open();
     }
 }
