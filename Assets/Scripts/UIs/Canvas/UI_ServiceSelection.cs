@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public sealed class UI_ServiceSelection : UI_Base
@@ -19,6 +20,11 @@ public sealed class UI_ServiceSelection : UI_Base
         ExitButton
     }
 
+    private enum Texts
+    {
+        CustomerCountText
+    }
+
     private enum PanelAnimators
     {
         UI_DayVisual,
@@ -32,6 +38,7 @@ public sealed class UI_ServiceSelection : UI_Base
     {
         Bind<GameObject>(typeof(GameObjects));
         Bind<UI_HubStateButton>(typeof(HubStateButtons));
+        Bind<TextMeshProUGUI>(typeof(Texts));
         Bind<PanelAnimator>(typeof(PanelAnimators));
 
         GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton)?.Init(Owner);
@@ -60,6 +67,7 @@ public sealed class UI_ServiceSelection : UI_Base
         selectMenuPanel?.Refresh();
         marketVisualPanel?.Refresh();
         dayVisual.Refresh();
+        RefreshCustomerCount();
 
         GetUI<PanelAnimator>((int)PanelAnimators.UI_DayVisual).Show();
         GetUI<PanelAnimator>((int)PanelAnimators.TopLeft).Show();
@@ -75,6 +83,16 @@ public sealed class UI_ServiceSelection : UI_Base
         GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
         GetUI<PanelAnimator>((int)PanelAnimators.TopLeft).Hide();
         yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_DayVisual).Hide();
+    }
+
+    private void RefreshCustomerCount()
+    {
+        int customerCount = Mathf.RoundToInt(
+            GameManager.Instance.Upgrade.RuntimeStat.Service
+                .Get(ServiceStatType.CustomerCount));
+
+        GetTextMeshPro((int)Texts.CustomerCountText).text =
+            $"오늘 손님 수 : {customerCount:N0}명";
     }
 
     private void StartService()
