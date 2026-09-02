@@ -99,6 +99,7 @@ public class FacilityDetailPanel : MonoBehaviour
     public void ClosePanel()
     {
         currentFacilityType = FacilityType.Count;
+        facilityCollection.ClearSelection();
         gameObject.SetActive(false);
     }
 
@@ -128,7 +129,7 @@ public class FacilityDetailPanel : MonoBehaviour
         if (facilityCollection.TryGetPrevious
             (currentFacilityType,out FacilityType previous))
         {
-            StartCoroutine(ShowFacility(previous));
+            facilityCollection.ShowDetail(previous);
         }
     }
 
@@ -139,7 +140,7 @@ public class FacilityDetailPanel : MonoBehaviour
 
         if (facilityCollection.TryGetNext(currentFacilityType,out FacilityType next))
         {
-            StartCoroutine(ShowFacility(next));
+            facilityCollection.ShowDetail(next);
         }
     }
 

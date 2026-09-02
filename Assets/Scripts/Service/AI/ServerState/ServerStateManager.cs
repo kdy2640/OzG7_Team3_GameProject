@@ -13,6 +13,7 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private GameObject tray;
     [SerializeField] private SleepingButton sleepingButton;
     [SerializeField] private Image AutoWorkingImg;
+    [SerializeField] private GameObject cleaningTool;
     
 
     [SerializeField] private float baseSpeed = 8;
@@ -52,14 +53,16 @@ public class ServerStateManager : MonoBehaviour
     public float ReceiveFoodTime => receiveFoodTime;
     public SleepingButton SleepingButton => sleepingButton;
     public GameObject DishPrefab => dishPrefab;
-    
+    public GameObject CleaningTool => cleaningTool;
 
 
     public bool isAutoWorking = false;
 
     [SerializeField] private IState currentState;
     private Action serviceEnd;
-
+    private Action servicePause;
+    private Action serviceUnPause;
+    private IState previousState;
 
     private void Awake()
     {
@@ -77,6 +80,8 @@ public class ServerStateManager : MonoBehaviour
         tray.gameObject.SetActive(false);
         serviceEnd += ServerDie;
         GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, serviceEnd);
+        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.Pause, servicePause);
+        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.UnPause, serviceUnPause);
     }
 
     private void Start()
@@ -305,7 +310,7 @@ public class ServerStateManager : MonoBehaviour
         Destroy(this.gameObject);
         customerChanged -= CustomerEatSpeedUp;
         customerChanged -= CustomerTipChanceUp;
-        serviceEnd -= ServerDie;
         GameManager.Instance.Service.Events.Unsubscribe(ServiceEventType.LoopEnded, serviceEnd);
+        serviceEnd -= ServerDie;
     }
 }

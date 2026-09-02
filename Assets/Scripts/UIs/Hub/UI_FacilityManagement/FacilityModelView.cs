@@ -10,8 +10,10 @@ public class FacilityModelView : MonoBehaviour
     [SerializeField] private Transform facilityModelRoot;
 
     private GameObject currentModelInstance;
+    private Renderer[] currentModelRenderers;
     private int shownLevel = -1;
     private bool isFacilityUpgradeViewEnabled;
+    private bool isSelected;
 
     private void Start()
     {
@@ -110,13 +112,12 @@ public class FacilityModelView : MonoBehaviour
 
         currentModelInstance.transform.localScale = Vector3.one;
 
+        currentModelRenderers =
+            currentModelInstance.GetComponentsInChildren<Renderer>(true);
+        ApplyOutlineRenderingLayer();
+
         shownLevel = level;
 
-        Debug.Log(
-            $"[FacilityModelView] " +
-            $"{facility.FacilityType} �� Lv.{level} �� ����",
-            this
-        );
     }
 
     public void PlayUpgradeEffect()
@@ -124,6 +125,32 @@ public class FacilityModelView : MonoBehaviour
         if (facility != null)
         {
             ShowLevel(facility.CurrentLevel);
+        }
+    }
+
+    internal void SetSelected(bool selected)
+    {
+        if (isSelected == selected)
+            return;
+
+        isSelected = selected;
+        ApplyOutlineRenderingLayer();
+    }
+
+    private void ApplyOutlineRenderingLayer()
+    {
+        if (currentModelRenderers == null)
+            return;
+
+        uint outlineMask =
+            FacilityOutlineRendererFeature.SelectedRenderingLayerMask;
+
+        foreach (Renderer targetRenderer in currentModelRenderers)
+        {
+            if (isSelected)
+                targetRenderer.renderingLayerMask |= outlineMask;
+            else
+                targetRenderer.renderingLayerMask &= ~outlineMask;
         }
     }
 
@@ -135,6 +162,7 @@ public class FacilityModelView : MonoBehaviour
         }
 
         currentModelInstance = null;
+        currentModelRenderers = null;
         shownLevel = -1;
     }
 }

@@ -14,7 +14,6 @@ public class CustomerCaughtState : IState
         stateManager.AnimSetIdle();
         stateManager.RunnerCatchButton.gameObject.SetActive(false);
         // 사과 메시지 ON
-        stateManager.caught += Pay;
     }
 
     public void Execute()
@@ -28,8 +27,7 @@ public class CustomerCaughtState : IState
 
     public void Exit()
     {
-       // 사과 메시지 OFF
-       stateManager.caught -= Pay;
+        Pay();
     }
 
     private void Pay()
