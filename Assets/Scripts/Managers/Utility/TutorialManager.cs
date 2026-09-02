@@ -14,6 +14,7 @@ public class TutorialManager : MonoBehaviour
         Staff,
         ServiceSelection,
         Sales,
+        Harvest,
         Length
     }
 

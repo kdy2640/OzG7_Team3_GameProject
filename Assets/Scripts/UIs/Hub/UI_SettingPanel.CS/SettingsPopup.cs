@@ -47,7 +47,7 @@ public class SettingsPopup : MonoBehaviour
         if (toggleButton != null) toggleButton.onClick.AddListener(Toggle);
 
         gameExitButton.onClick.AddListener(ExitGame);
-        serviceEndButton.onClick.AddListener(EndService);
+        serviceEndButton.onClick.AddListener(EndSession);
 
         RefreshToggleText();
         UpdateVolumeTexts();
@@ -78,7 +78,7 @@ public class SettingsPopup : MonoBehaviour
         if (toggleButton != null) toggleButton.onClick.RemoveListener(Toggle);
 
         gameExitButton.onClick.RemoveListener(ExitGame);
-        serviceEndButton.onClick.RemoveListener(EndService);
+        serviceEndButton.onClick.RemoveListener(EndSession);
     }
 
     private void UpdateVolumeTexts()
@@ -188,11 +188,19 @@ public class SettingsPopup : MonoBehaviour
 
     private void RefreshExitButtons()
     {
-        bool isServiceScene =
-            GameManager.Instance.Scene.CurrentSceneType == SceneType.Service;
+        SceneType currentSceneType =
+            GameManager.Instance.Scene.CurrentSceneType;
+        bool isServiceScene = currentSceneType == SceneType.Service;
+        bool isHarvestScene = currentSceneType == SceneType.Harvest;
 
-        gameExitButton.gameObject.SetActive(!isServiceScene);
-        serviceEndButton.gameObject.SetActive(isServiceScene);
+        gameExitButton.gameObject.SetActive(!isServiceScene && !isHarvestScene);
+        serviceEndButton.gameObject.SetActive(isServiceScene || isHarvestScene);
+
+        if (isServiceScene || isHarvestScene)
+        {
+            serviceEndButton.GetComponentInChildren<TMP_Text>().text =
+                isServiceScene ? "영업 종료" : "수확 종료";
+        }
     }
 
     private void ExitGame()
@@ -200,10 +208,20 @@ public class SettingsPopup : MonoBehaviour
         Application.Quit();
     }
 
-    private void EndService()
+    private void EndSession()
     {
+        Time.timeScale = 1f;
         Close();
-        GameManager.Instance.Service.EndLoop();
+
+        switch (GameManager.Instance.Scene.CurrentSceneType)
+        {
+            case SceneType.Service:
+                GameManager.Instance.Service.EndLoop();
+                break;
+            case SceneType.Harvest:
+                GameManager.Instance.Harvest.EndLoop();
+                break;
+        }
     }
 
     private void RefreshToggleText()
