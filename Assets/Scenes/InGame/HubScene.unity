@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 500a491dd5829a74ba320bc497b98af2, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::HubCanvasController
   initialState: 0
   views:
@@ -328,6 +328,7 @@ MonoBehaviour:
     prefab: {fileID: 1942963496655873677, guid: 525aeb728761ba7418d249e8aa95cd24, type: 3}
     worldVisualPrefab: {fileID: 0}
     worldVisualAnchor: {fileID: 0}
+  loopPresenterStore: {fileID: 1130973314}
 --- !u!1 &645394395
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,6 +340,7 @@ GameObject:
   - component: {fileID: 645394397}
   - component: {fileID: 645394396}
   - component: {fileID: 645394398}
+  - component: {fileID: 645394399}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -436,7 +438,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
@@ -455,6 +457,32 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!114 &645394399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645394395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdf1bac39b9dbd243acc87328bb3f118, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::HubLightingController
+  previewPhase: 0
+  hubViewSky: {fileID: 1486763176}
+  morningColor: {r: 1, g: 0.95, b: 0.82, a: 1}
+  morningIntensity: 0.65
+  morningRotation: {x: 65, y: 20, z: 0}
+  morningSkyColor: {r: 0.45, g: 0.7, b: 0.92, a: 1}
+  afternoonColor: {r: 1, g: 0.78, b: 0.58, a: 1}
+  afternoonIntensity: 0.5
+  afternoonRotation: {x: 35, y: -60, z: 0}
+  afternoonSkyColor: {r: 0.96, g: 0.78, b: 0.58, a: 1}
+  nightColor: {r: 0.44, g: 0.5717646, b: 1, a: 1}
+  nightIntensity: 0.5
+  nightRotation: {x: 25, y: 140, z: 0}
+  nightSkyColor: {r: 0.07, g: 0.1, b: 0.22, a: 1}
 --- !u!1 &870606393
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,6 +719,81 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!1 &1486763174
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1486763175}
+  - component: {fileID: 1486763177}
+  - component: {fileID: 1486763176}
+  m_Layer: 5
+  m_Name: HubViewSky
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1486763175
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486763174}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2120061636}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1486763176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486763174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.96, g: 0.78, b: 0.58, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1486763177
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486763174}
+  m_CullTransparentMesh: 1
 --- !u!1 &1602574517
 GameObject:
   m_ObjectHideFlags: 0
@@ -926,6 +1029,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1486763175}
   - {fileID: 898665188}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

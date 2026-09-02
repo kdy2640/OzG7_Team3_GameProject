@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,9 @@ using UnityEngine.UI;
 
 public sealed class UI_StaffDevelopCard : MonoBehaviour
 {
+    private const float SelectedScaleMultiplier = 1.05f;
+    private const float SelectionTweenDuration = 0.15f;
+
     private enum StaffCardState
     {
         Locked,
@@ -17,25 +21,24 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
     [SerializeField] private EmployeeType employeeType = EmployeeType.Count;
 
     [Header("UI")]
-    [SerializeField] private Image outlineImage;
+    [SerializeField] private GameObject selectedCard;
     [SerializeField] private TMP_Text levelText;
+    [SerializeField] private TMP_Text levelShadowText;
     [SerializeField] private GameObject recruitReadyText;
     [SerializeField] private GameObject upgradeArrow;
     [SerializeField] private GameObject lockOverlay;
     [SerializeField] private Button button;
 
-    [Header("Color")]
-    [SerializeField] private Color normalColor = new(1f, 1f, 1f, 0f);
-    [SerializeField] private Color availableColor = new(1f, .78f, .1f, 1f);
-    [SerializeField] private Color lockedColor = new(.35f, .35f, .35f, .85f);
-
     public EmployeeType EmployeeType => employeeType;
 
     private Action<EmployeeType> onSelected;
-    
+    private Vector3 defaultScale;
+    private Tween selectionTween;
 
     private void Awake()
     {
+        defaultScale = transform.localScale;
+
         if (button == null)
         {
             Debug.LogError($"[StaffCard] Button이 연결되지 않았습니다: {gameObject.name}",this);
@@ -47,6 +50,23 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
     public void Initialize(Action<EmployeeType> callback)
     {
         onSelected = callback;
+    }
+
+    public void SetSelected(bool isSelected)
+    {
+        selectedCard.SetActive(isSelected);
+
+        selectionTween?.Kill();
+
+        Vector3 targetScale = isSelected
+            ? defaultScale * SelectedScaleMultiplier
+            : defaultScale;
+
+        selectionTween = transform
+            .DOScale(targetScale, SelectionTweenDuration)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true)
+            .OnComplete(() => selectionTween = null);
     }
 
 
@@ -80,12 +100,15 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
         EmployeeUpgradeDataSO upgradeData = UpgradeDataDB.GetData(employeeType);
 
-        bool canUpgrade = upgrade.CanUpgrade(upgradeData);
+        UpgradeAvailability availability =
+            upgrade.GetUpgradeAvailability(upgradeData);
 
         if (level == 0)
         {
-            // 구매 전에는 재화가 충분해도 항상 Locked 상태
-            state = StaffCardState.Locked;
+            // 구매 가능 조건을 만족하면 모집 가능 상태로 표시합니다.
+            state = availability == UpgradeAvailability.Available
+                ? StaffCardState.CanRecruit
+                : StaffCardState.Locked;
         }
         else if (level >= upgradeData.MaxLevel)
         {
@@ -93,7 +116,7 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         }
         else
         {
-            state = canUpgrade
+            state = availability == UpgradeAvailability.Available
                 ? StaffCardState.CanUpgrade : StaffCardState.Normal;
         }
 
@@ -106,14 +129,13 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
         bool canRecruit = state == StaffCardState.CanRecruit;
         bool canUpgrade = state == StaffCardState.CanUpgrade;
 
-        // 구매 전이면 무조건 잠금 이미지 표시
         bool isLocked = !isPurchased;
 
-        if (levelText != null)
-        {
-            levelText.text = $"Lv.{level}";
-            levelText.gameObject.SetActive(isPurchased);
-        }
+        string levelLabel = $"Lv.{level}";
+        levelText.text = levelLabel;
+        levelShadowText.text = levelLabel;
+        levelText.gameObject.SetActive(isPurchased);
+        levelShadowText.gameObject.SetActive(isPurchased);
 
         if (recruitReadyText != null) recruitReadyText.SetActive(canRecruit);
 
@@ -121,16 +143,17 @@ public sealed class UI_StaffDevelopCard : MonoBehaviour
 
         if (lockOverlay != null) lockOverlay.SetActive(isLocked);
 
-        if (outlineImage != null)
-        {
-            outlineImage.color =
-                canRecruit || canUpgrade ? availableColor
-                    : isLocked ? lockedColor : normalColor;
-        }
     }
 
     private void OnClick()
     {
-        onSelected?.Invoke(employeeType);
+        onSelected.Invoke(employeeType);
+    }
+
+    private void OnDisable()
+    {
+        selectionTween?.Kill();
+        selectionTween = null;
+        transform.localScale = defaultScale;
     }
 }

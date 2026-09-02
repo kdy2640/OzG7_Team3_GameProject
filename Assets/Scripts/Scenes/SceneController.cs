@@ -66,6 +66,7 @@ public class SceneController : MonoBehaviour
         isChangingScene = true;
 
         yield return currentScene.Exit();
+        GameManager.Instance.Utility.Save.SaveGame();
         yield return loading.OpenLoading();
 
         switch (nextSceneType)

@@ -17,8 +17,8 @@ public sealed class HarvestSpawner : MonoBehaviour
     private ItemSpawner itemSpawner;
     private HarvestEmployeeResolver employeeResolver;
     private HarvestManager harvestManager;
-    private bool hasSpawnedPig;
-    private HarvestActor spawnedPig;
+    private bool hasSpawnedPigs;
+    private readonly List<HarvestActor> spawnedPigs = new();
 
     private void Awake()
     {
@@ -45,7 +45,7 @@ public sealed class HarvestSpawner : MonoBehaviour
 
     public void Initialize()
     {
-        hasSpawnedPig = false;
+        hasSpawnedPigs = false;
         ClearSpawnedCrops();
 
         gridChunkHandler.Streamer.BeginLoading(player, this, itemSpawner);
@@ -53,24 +53,35 @@ public sealed class HarvestSpawner : MonoBehaviour
 
     private void SpawnPig()
     {
-        if (hasSpawnedPig)
+        if (hasSpawnedPigs)
             return;
 
-        hasSpawnedPig = true;
+        int pigCount = GameManager.Instance.Upgrade.RuntimeLevel.Get(
+            HarvestUpgradeType.GoldenPigRadar);
+
+        if (pigCount <= 0)
+            return;
+
+        hasSpawnedPigs = true;
 
         Rect area = gridChunkHandler.Geometry.Area;
         float stageMinZ = StageDataDB.GetData(StageType.Stage_2).ZStart;
         float stageMaxZ = StageDataDB.GetData(StageType.Stage_3).ZStart
             - StageBoundaryEpsilon;
-        Vector2 localPosition = new(
-            Random.Range(area.xMin, area.xMax),
-            Random.Range(stageMinZ, stageMaxZ));
 
-        spawnedPig = CreateCrop(
-            HarvestType.Pig,
-            StageType.Stage_2,
-            localPosition,
-            transform);
+        for (int i = 0; i < pigCount; i++)
+        {
+            Vector2 localPosition = new(
+                Random.Range(area.xMin, area.xMax),
+                Random.Range(stageMinZ, stageMaxZ));
+
+            HarvestActor spawnedPig = CreateCrop(
+                HarvestType.Pig,
+                StageType.Stage_2,
+                localPosition,
+                transform);
+            spawnedPigs.Add(spawnedPig);
+        }
     }
 
     public void SpawnCrop(
@@ -89,12 +100,13 @@ public sealed class HarvestSpawner : MonoBehaviour
             gridChunkHandler.Registry.Unregister(crop.transform);
         }
 
-        if (spawnedPig != null)
+        foreach (HarvestActor spawnedPig in spawnedPigs)
         {
-            Destroy(spawnedPig.gameObject);
-            spawnedPig = null;
+            if (spawnedPig != null)
+                Destroy(spawnedPig.gameObject);
         }
 
+        spawnedPigs.Clear();
         spawnedCrops.Clear();
         gridChunkHandler.Streamer.Reset();
     }

@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEngine;
 
 public sealed class UI_HarvestUpgrade : UI_Base
 {
@@ -42,20 +43,35 @@ public sealed class UI_HarvestUpgrade : UI_Base
         detailPanel?.ClosePanel();
         upgradeListPanel.SelectFirst();
 
-        GetUI<PanelAnimator>((int)PanelAnimators.UpgradeListPanel).Show();
-        GetUI<PanelAnimator>((int)PanelAnimators.PreviewPanel).Show();
-        yield return GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show();
+        Coroutine listShow = StartCoroutine(
+            GetUI<PanelAnimator>((int)PanelAnimators.UpgradeListPanel).Show());
+        Coroutine previewShow = StartCoroutine(
+            GetUI<PanelAnimator>((int)PanelAnimators.PreviewPanel).Show());
+        Coroutine exitShow = StartCoroutine(
+            GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Show());
+
+        yield return listShow;
+        yield return previewShow;
+        yield return exitShow;
     }
 
     protected override IEnumerator OnHide()
     {
         upgradeListPanel?.ClearSelection();
         previewPanel?.ClearHighlight();
-        detailPanel?.ClosePanel();
 
-        GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide();
-        GetUI<PanelAnimator>((int)PanelAnimators.PreviewPanel).Hide();
-        yield return GetUI<PanelAnimator>((int)PanelAnimators.UpgradeListPanel).Hide();
+        Coroutine detailHide = StartCoroutine(detailPanel.HidePanel());
+        Coroutine exitHide = StartCoroutine(
+            GetUI<PanelAnimator>((int)PanelAnimators.UI_CommonExitPanel).Hide());
+        Coroutine previewHide = StartCoroutine(
+            GetUI<PanelAnimator>((int)PanelAnimators.PreviewPanel).Hide());
+        Coroutine listHide = StartCoroutine(
+            GetUI<PanelAnimator>((int)PanelAnimators.UpgradeListPanel).Hide());
+
+        yield return detailHide;
+        yield return exitHide;
+        yield return previewHide;
+        yield return listHide;
     }
 
     private void OnDestroy()

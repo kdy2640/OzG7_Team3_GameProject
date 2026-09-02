@@ -10,8 +10,7 @@ public sealed class TutorialPopup : MonoBehaviour
     [SerializeField] private TutorialDataSO autoOpenTutorialData;
 
     [Header("UI")]
-    [SerializeField] private TMP_Text titleText;
-    [SerializeField] private Image tutorialImage;
+    [SerializeField] private TMP_Text titleText; 
     [SerializeField] private TMP_Text descriptionText; 
     [SerializeField] private Button confirmButton;
 
@@ -22,6 +21,8 @@ public sealed class TutorialPopup : MonoBehaviour
     private TutorialDataSO currentTutorialData;
 
     private Coroutine animationCoroutine;
+    private float previousTimeScale;
+    private bool isTimePaused;
 
     private void Awake()
     {
@@ -29,7 +30,7 @@ public sealed class TutorialPopup : MonoBehaviour
 
         if (tutorialManager == null)
         {
-            Debug.LogError("[TutorialPopup] TutorialManager∏¶ √£¿ª ºˆ æ¯Ω¿¥œ¥Ÿ.");
+            Debug.LogError("[TutorialPopup] TutorialManagerÎ•º Ï∞æÏùÑ Ïàò ÏóÜÏäµÎãàÎã§.");
         }
 
         if (panelAnimator == null) panelAnimator = GetComponent<PanelAnimator>();
@@ -46,7 +47,7 @@ public sealed class TutorialPopup : MonoBehaviour
 
         if (autoOpenTutorialData == null)
         {
-            Debug.LogWarning("[TutorialPopup] ¿⁄µø ø¿«¬øÎ TutorialDataSO∞° æ¯Ω¿¥œ¥Ÿ.");
+            Debug.LogWarning("[TutorialPopup] ÏûêÎèô Ïò§ÌîàÏö© TutorialDataSOÍ∞Ä ÏóÜÏäµÎãàÎã§.");
             return;
         }
 
@@ -62,16 +63,22 @@ public sealed class TutorialPopup : MonoBehaviour
     }
 
     private void OnDestroy()
-    { 
+    {
+        ResumeTime();
 
         if (confirmButton != null) confirmButton.onClick.RemoveListener(Close);
+    }
+
+    private void OnDisable()
+    {
+        ResumeTime();
     }
 
     public void Open(TutorialDataSO data)
     {
         if (data == null)
         {
-            Debug.LogWarning("[TutorialPopup] TutorialDataSO∞° æ¯Ω¿¥œ¥Ÿ.");
+            Debug.LogWarning("[TutorialPopup] TutorialDataSOÍ∞Ä ÏóÜÏäµÎãàÎã§.");
             return;
         }
 
@@ -83,13 +90,27 @@ public sealed class TutorialPopup : MonoBehaviour
 
         gameObject.SetActive(true);
 
-        if (panelAnimator != null) animationCoroutine = StartCoroutine(ShowAnimation());
+        bool shouldPauseTime =
+            data.tutorialType == TutorialManager.TutorialType.Sales
+            && GameManager.Instance.Scene.CurrentSceneType == SceneType.Service;
+
+        if (panelAnimator != null)
+        {
+            animationCoroutine = StartCoroutine(
+                ShowAnimation(shouldPauseTime));
+            return;
+        }
+
+        if (shouldPauseTime)
+            PauseTime();
     }
 
     public void Close()
     {
         if (!gameObject.activeSelf)
             return;
+
+        ResumeTime();
 
         if (tutorialManager != null && currentTutorialData != null)
         {
@@ -116,19 +137,16 @@ public sealed class TutorialPopup : MonoBehaviour
 
         if (descriptionText != null)
             descriptionText.text = currentTutorialData.description;
-
-        if (tutorialImage != null)
-        {
-            tutorialImage.sprite = currentTutorialData.image;
-            tutorialImage.gameObject.SetActive(
-                currentTutorialData.image != null);
-        }
+         
     }
 
-    private IEnumerator ShowAnimation()
+    private IEnumerator ShowAnimation(bool shouldPauseTime)
     {
         yield return panelAnimator.Show();
         animationCoroutine = null;
+
+        if (shouldPauseTime)
+            PauseTime();
     }
 
     private IEnumerator HideAnimation()
@@ -137,5 +155,21 @@ public sealed class TutorialPopup : MonoBehaviour
 
         animationCoroutine = null;
         gameObject.SetActive(false);
+    }
+
+    private void PauseTime()
+    {
+        previousTimeScale = Time.timeScale;
+        Time.timeScale = 0f;
+        isTimePaused = true;
+    }
+
+    private void ResumeTime()
+    {
+        if (!isTimePaused)
+            return;
+
+        Time.timeScale = previousTimeScale;
+        isTimePaused = false;
     }
 }
