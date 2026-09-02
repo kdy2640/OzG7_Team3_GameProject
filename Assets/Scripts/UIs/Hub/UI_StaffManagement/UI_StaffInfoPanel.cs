@@ -7,44 +7,53 @@ using UnityEngine.UI;
 
 public sealed class UI_StaffInfoPanel : MonoBehaviour
 {
+    [SerializeField] private Image staffPortrait;
     [SerializeField] private Image roleIcon;
     [SerializeField] private TMP_Text staffNameText;
     [SerializeField] private TMP_Text levelText;
 
-    [SerializeField] private Image[] levelSlots = new Image[5];
-    [SerializeField] private Color filledSlotColor = new(1f, .78f, .2f);
-    [SerializeField] private Color emptySlotColor = new(.3f, .3f, .3f);
+    [SerializeField] private GameObject[] filledLevelSlots = new GameObject[5];
 
-    [SerializeField] private TMP_Text skill1Name;
-    [SerializeField] private TMP_Text skill1Description;
-    [SerializeField] private TMP_Text skill1Effect;
-
+    [SerializeField] private TMP_Text levelEffectLabel;
+    [SerializeField] private TMP_Text currentLevelEffect;
     [SerializeField] private TMP_Text nextLevelText;
     [SerializeField] private TMP_Text nextLevelEffect;
 
+    [SerializeField] private Image skill1LockIcon;
+    [SerializeField] private GameObject skill1UnlockedBackground;
+    [SerializeField] private TMP_Text skill1Name;
+    [SerializeField] private TMP_Text skill1Label;
+    [SerializeField] private TMP_Text skill1Description;
+
     [SerializeField] private Image skill3LockIcon;
+    [SerializeField] private GameObject skill3UnlockedBackground;
     [SerializeField] private TMP_Text skill3Name;
     [SerializeField] private TMP_Text skill3Label;
     [SerializeField] private TMP_Text skill3Description;
 
     [SerializeField] private Image skill5LockIcon;
+    [SerializeField] private GameObject skill5UnlockedBackground;
     [SerializeField] private TMP_Text skill5Name;
     [SerializeField] private TMP_Text skill5Label;
     [SerializeField] private TMP_Text skill5Description;
 
     [SerializeField] private TMP_Text staffDescription;
+    [SerializeField] private ScrollRect skillScrollRect;
 
     [SerializeField] private Button actionButton;
     [SerializeField] private TMP_Text costText;
     [SerializeField] private TMP_Text actionText;
+    [SerializeField] private GameObject actionLockIcon;
 
     private Action<EmployeeType> onAction;
     private EmployeeType selectedType = EmployeeType.Count;
+    private Color defaultCostTextColor;
 
     [SerializeField] private PanelAnimator panelAnimator;
 
     private void Awake()
     {
+        defaultCostTextColor = costText.color;
         actionButton.onClick.AddListener(OnClickAction);
         gameObject.SetActive(false);
     }
@@ -54,8 +63,9 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         onAction = callback;
     }
 
-    public IEnumerator Show(EmployeeType type, bool playAnimation = true)
+    public IEnumerator Show(EmployeeType type)
     {
+        bool wasActive = gameObject.activeSelf;
         selectedType = type;
 
         if (!CreateInfoData())
@@ -65,9 +75,27 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         }
 
         gameObject.SetActive(true);
+        ResetSkillScrollPosition();
 
-        if (playAnimation && panelAnimator != null)
+        if (!wasActive)
             yield return panelAnimator.Show();
+    }
+
+    public IEnumerator Hide()
+    {
+        if (!gameObject.activeSelf)
+            yield break;
+
+        selectedType = EmployeeType.Count;
+        yield return panelAnimator.Hide();
+        gameObject.SetActive(false);
+    }
+
+    private void ResetSkillScrollPosition()
+    {
+        Canvas.ForceUpdateCanvases();
+        skillScrollRect.StopMovement();
+        skillScrollRect.verticalNormalizedPosition = 1f;
     }
 
  
@@ -92,98 +120,112 @@ public sealed class UI_StaffInfoPanel : MonoBehaviour
         if (!isMaxLevel && upgradeData != null)
             upgradeData.TryGetRequiredCost(level + 1, out cost);
 
-        bool canAction = upgrade.CanUpgrade(upgradeData);
+        UpgradeAvailability availability =
+            upgrade.GetUpgradeAvailability(upgradeData);
+        bool canAction = availability == UpgradeAvailability.Available;
+        bool isInsufficientCurrency =
+            availability == UpgradeAvailability.InsufficientCurrency;
 
+        staffPortrait.sprite = employeeData.StaffPortrait;
         roleIcon.sprite = employeeData.RoleIcon;
         staffNameText.text = employeeData.DisplayName;
-        if (levelText != null)
-            levelText.text = $"Lv.{level}";
+        levelText.text = $"Lv.{level}";
 
-        for (int i = 0; i < levelSlots.Length; i++)
+        for (int i = 0; i < filledLevelSlots.Length; i++)
         {
-            if (levelSlots[i] != null)
-                levelSlots[i].color = i < level
-                    ? filledSlotColor : emptySlotColor;
+            filledLevelSlots[i].SetActive(i < level);
         }
 
-        SetSkill1(level, employeeData.GetSkill(1));
+        levelEffectLabel.text = employeeData.LevelEffectLabel;
+        currentLevelEffect.text = level <= 1
+            ? "-"
+            : employeeData.GetLevelEffect(level);
 
-        SetLockedSkill(
+        SetSkill(
+            level,
+            1,
+            employeeData.GetSkill(1),
+            skill1LockIcon,
+            skill1UnlockedBackground,
+            skill1Name,
+            skill1Label,
+            skill1Description
+        );
+
+        SetSkill(
             level,
             3,
             employeeData.GetSkill(3),
             skill3LockIcon,
+            skill3UnlockedBackground,
             skill3Name,
             skill3Label,
             skill3Description
         );
 
-        SetLockedSkill(
+        SetSkill(
             level,
             5,
             employeeData.GetSkill(5),
             skill5LockIcon,
+            skill5UnlockedBackground,
             skill5Name,
             skill5Label,
             skill5Description
         );
 
-        if (nextLevelText != null)
-            nextLevelText.text = isMaxLevel ? "Max Level" : $"Next Level: Lv.{level + 1}";
+        nextLevelText.text = isMaxLevel
+            ? "최대 레벨"
+            : $"다음 레벨: Lv.{level + 1}";
+        nextLevelEffect.text = isMaxLevel
+            ? string.Empty
+            : employeeData.GetLevelEffect(level + 1);
 
-        if (nextLevelEffect != null)
-        {
-            nextLevelEffect.text = isMaxLevel
-                ? string.Empty : employeeData.GetLevelEffect(level + 1);
-        }
-
-        if (staffDescription != null)
-            staffDescription.text = employeeData.Description;
+        staffDescription.text = employeeData.Description;
 
         costText.text = isMaxLevel ? "-" : cost.ToString("N0");
+        costText.color = isInsufficientCurrency
+            ? new Color32(255, 94, 94, 255)
+            : defaultCostTextColor;
 
         actionText.text = isMaxLevel
-            ? "MAX" : level == 0 ? "Recruit" : $"Lv.{level + 1} Upgrade";
+            ? "최대"
+            : availability == UpgradeAvailability.MarketLevelLocked
+                ? "레벨 부족"
+                : level == 0 ? "모집" : "업그레이드";
 
         actionButton.interactable = canAction;
+        actionLockIcon.SetActive(
+            availability == UpgradeAvailability.MarketLevelLocked ||
+            isInsufficientCurrency);
 
         return true;
     }
 
-    private void SetSkill1(int level, EmployeeSkillInfo skill)
-    {
-        bool unlocked = level >= 1;
-
-        skill1Name.text = skill.Name;
-        skill1Description.text = unlocked ? skill.Description : "Unlock after Recruit";
-
-        if (skill1Effect != null)
-            skill1Effect.text = unlocked ? skill.Effect : string.Empty;
-    }
-
-    private void SetLockedSkill(
+    private void SetSkill(
         int level,
         int unlockLevel,
         EmployeeSkillInfo skill,
         Image icon,
+        GameObject unlockedBackground,
         TMP_Text name,
         TMP_Text label,
         TMP_Text description)
     {
         bool unlocked = level >= unlockLevel;
 
-        icon.color = unlocked
-            ? Color.white : new Color(1f, 1f, 1f, .35f);
+        icon.gameObject.SetActive(!unlocked);
+        unlockedBackground.SetActive(unlocked);
 
         name.text = skill.Name;
-        label.text = unlocked ? $"Lv.{unlockLevel} Unlocked" : $"Lv.{unlockLevel} Locked";
+        label.gameObject.SetActive(!unlocked);
+        label.text = $"Lv.{unlockLevel} 잠김";
 
-        description.text = unlocked
-            ? $"{skill.Description}\n{skill.Effect}" : $"Unlocks at Lv.{unlockLevel}.";
+        description.text = $"{skill.Description}\n{skill.Effect}";
     }
 
     private void OnClickAction()
     {
-        onAction?.Invoke(selectedType);
+        onAction.Invoke(selectedType);
     }
 }

@@ -21,7 +21,7 @@ public sealed class UI_StaffListPanel : MonoBehaviour
         {
             if (card == null) continue;
 
-            card.Initialize(onCardSelected);
+            card.Initialize(HandleCardSelected);
         }
     }
 
@@ -31,9 +31,21 @@ public sealed class UI_StaffListPanel : MonoBehaviour
         {
             if (card == null || !card.gameObject.activeSelf) continue;
 
-            onCardSelected.Invoke(card.EmployeeType);
+            HandleCardSelected(card.EmployeeType);
             return;
         }
+    }
+
+    private void HandleCardSelected(EmployeeType type)
+    {
+        foreach (UI_StaffDevelopCard card in staffCards)
+        {
+            if (card == null) continue;
+
+            card.SetSelected(card.EmployeeType == type);
+        }
+
+        onCardSelected.Invoke(type);
     }
 
     public void ShowCards()

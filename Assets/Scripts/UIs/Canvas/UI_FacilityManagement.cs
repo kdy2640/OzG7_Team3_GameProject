@@ -53,6 +53,7 @@ public sealed class UI_FacilityManagement : UI_Base
 
     protected override IEnumerator OnHide()
     {
+        detailPanel.ClosePanel();
         restaurantModelViewer.SetFacilityUpgradeView(false);
 
         if (facilityCollection != null)

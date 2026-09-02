@@ -62,14 +62,23 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
             yield break;
 
         bool wasActive = gameObject.activeSelf;
-        bool isDifferentUpgrade = currentUpgradeType != upgradeType;
 
         currentUpgradeType = upgradeType;
         gameObject.SetActive(true);
         Refresh();
 
-        if (!wasActive || isDifferentUpgrade)
+        if (!wasActive)
             yield return panelAnimator.Show();
+    }
+
+    public IEnumerator HidePanel()
+    {
+        if (!gameObject.activeSelf)
+            yield break;
+
+        currentUpgradeType = HarvestUpgradeType.Count;
+        yield return panelAnimator.Hide();
+        gameObject.SetActive(false);
     }
 
     public void ClosePanel()
@@ -238,7 +247,7 @@ public sealed class HarvestUpgradeDetailPanel : MonoBehaviour
                 currentLevel + 1,
                 out int requiredMarketLevel))
         {
-            return $"레스토랑레벨 {requiredMarketLevel}에 해금됩니다.";
+            return $"레스토랑레벨 {requiredMarketLevel}에 잠금해제.";
         }
 
         return availability switch

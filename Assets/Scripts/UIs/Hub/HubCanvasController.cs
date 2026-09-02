@@ -101,6 +101,7 @@ public sealed class HubCanvasController : MonoBehaviour
 
     [SerializeField] private HubCanvasState initialState = HubCanvasState.None;
     [SerializeField] private List<ViewEntry> views = new();
+    [SerializeField] private GameObject loopPresenterStore;
 
     private readonly Dictionary<HubCanvasState, ViewEntry> viewByState = new();
 
@@ -114,6 +115,7 @@ public sealed class HubCanvasController : MonoBehaviour
     private void Awake()
     {
         BuildViewLookup();
+        loopPresenterStore.SetActive(initialState != HubCanvasState.HubView);
     }
 
     private IEnumerator Start()
@@ -187,6 +189,7 @@ public sealed class HubCanvasController : MonoBehaviour
         currentEntry = nextEntry;
         PreviousState = CurrentState;
         CurrentState = nextState;
+        loopPresenterStore.SetActive(nextState != HubCanvasState.HubView);
 
         if (currentEntry != null)
         {

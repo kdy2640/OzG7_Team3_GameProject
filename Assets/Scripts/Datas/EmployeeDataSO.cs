@@ -43,7 +43,9 @@ public sealed class EmployeeDataSO : ScriptableObject
     public string Description => description;
 
     [Header("Staff Info Panel")]
+    [SerializeField] private Sprite staffPortrait;
     [SerializeField] private Sprite roleIcon;
+    [SerializeField] private string levelEffectLabel;
     [SerializeField] private EmployeeSkillInfo level1Skill;
     [SerializeField] private EmployeeSkillInfo level3Skill;
     [SerializeField] private EmployeeSkillInfo level5Skill;
@@ -52,7 +54,9 @@ public sealed class EmployeeDataSO : ScriptableObject
     [SerializeField, TextArea] private string level4Effect;
     [SerializeField, TextArea] private string level5Effect;
 
+    public Sprite StaffPortrait => staffPortrait;
     public Sprite RoleIcon => roleIcon;
+    public string LevelEffectLabel => levelEffectLabel;
 
     public EmployeeSkillInfo GetSkill(int unlockLevel)
     {
