@@ -3,8 +3,10 @@ public static class DishPriceCalculator
 {
     public static int BasicPriceCalculate(DishType dish)
     {
+        int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(dish);
+
         UpgradeDataDB.GetData(dish).TryGetRequiredCost(
-            GameManager.Instance.Upgrade.RuntimeLevel.Get(dish),
+            level > 0 ? level : 1,
             out int cost);
 
         DishDataSO dishData = DishDataDB.GetData(dish);
