@@ -318,10 +318,12 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
 
     private IEnumerator CutterRangeBuff()
     {
+        tractorCutter.ApplyRangeBoost(CutterRangeMultiplier - 1f);
         SetCutterTargetRanges(CutterRangeMultiplier);
 
         yield return new WaitForSeconds(CutterRangeBuffDuration);
 
+        tractorCutter.ApplyRangeBoost(1f - CutterRangeMultiplier);
         SetCutterTargetRanges(1f);
     }
 
