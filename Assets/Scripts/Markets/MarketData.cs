@@ -120,9 +120,9 @@ public sealed class MarketData
             : new List<DishType>(selectedDishes);
     }
 
-    public bool SelectDish(DishType dishType)
+    public bool SelectDish(DishType dishType, int dishLevel)
     {
-        if (selectedDishes.Contains(dishType))
+        if (dishLevel <= 0 || selectedDishes.Contains(dishType))
             return false;
 
         selectedDishes.Add(dishType);

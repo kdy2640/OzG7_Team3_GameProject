@@ -14,7 +14,8 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private SleepingButton sleepingButton;
     [SerializeField] private Image AutoWorkingImg;
     [SerializeField] private GameObject cleaningTool;
-    
+    [SerializeField] private ToastMessage toastMessage;
+
 
     [SerializeField] private float baseSpeed = 8;
     [SerializeField] private float speed;
@@ -51,6 +52,7 @@ public class ServerStateManager : MonoBehaviour
     public int Level => level; 
     public float ServeTime => serveTime;
     public float ReceiveFoodTime => receiveFoodTime;
+    public float WorkDurationMultiplier { get; private set; } = 1f;
     public SleepingButton SleepingButton => sleepingButton;
     public GameObject DishPrefab => dishPrefab;
     public GameObject CleaningTool => cleaningTool;
@@ -60,16 +62,18 @@ public class ServerStateManager : MonoBehaviour
 
     [SerializeField] private IState currentState;
     private Action serviceEnd;
-    private Action servicePause;
-    private Action serviceUnPause;
-    private IState previousState;
+
+    public void Initialize()
+    {
+        animator = gameObject.GetComponentInChildren<Animator>();
+        animator.applyRootMotion = false;
+    }
 
     private void Awake()
     {
         kitchen = FindFirstObjectByType<Kitchen>().transform;
         aiMove = gameObject.GetComponent<AIMove>();
-        animator = gameObject.GetComponentInChildren<Animator>();
-        animator.applyRootMotion = false;
+        
         dishEffectQueue = FindFirstObjectByType<DishEffectQueue>();
         speed = baseSpeed;
         UpdateStatus();
@@ -80,8 +84,6 @@ public class ServerStateManager : MonoBehaviour
         tray.gameObject.SetActive(false);
         serviceEnd += ServerDie;
         GameManager.Instance.Service.Events.Subscribe(ServiceEventType.LoopEnded, serviceEnd);
-        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.Pause, servicePause);
-        GameManager.Instance.Service.Events.Subscribe(ServiceEventType.UnPause, serviceUnPause);
     }
 
     private void Start()
@@ -147,21 +149,14 @@ public class ServerStateManager : MonoBehaviour
     public void SetLevel(EmployeeType employee)
     {
         level = GameManager.Instance.Upgrade.RuntimeLevel.Get(employee);
+        UpdateStatus();
     }
     #region 스킬 관련
     public void UpdateStatus()
     {
-        speed = baseSpeed;
-        for (int i = 0; i < level - 1; i++)
-        {
-            UpgradeSpeed();
-        }
+        int speedUpgradeCount = Mathf.Max(0, level - 1);
+        speed = baseSpeed * (1f + speedUpgradeCount * 0.1f);
         aiMove.SetSpeed(speed);
-    }
-
-    private void UpgradeSpeed()
-    {
-        speed *= 1.1f;
     }
     public void UpgradeBaseSpeed()
     {
@@ -170,8 +165,9 @@ public class ServerStateManager : MonoBehaviour
     }
     public void WorkSpeedUp()
     {
-        serveTime /= 2;
-        receiveFoodTime /= 2;
+        WorkDurationMultiplier = 0.5f;
+        serveTime *= WorkDurationMultiplier;
+        receiveFoodTime *= WorkDurationMultiplier;
     }
 
     public void CustomerEatSpeedUp()
@@ -229,26 +225,14 @@ public class ServerStateManager : MonoBehaviour
 
     private void CookEffectApply()
     {
-
-        if(dishEffectQueue.EatSpeedUpQueue.Count>0)
+        if (dishEffectQueue.TryConsumeEatSpeedUp(dish))
         {
-            DishType eDish = dishEffectQueue.EatSpeedUpQueue.Peek();
-            if (eDish == dish)
-            {
-                dishEffectQueue.EatSpeedUpQueue.Dequeue();
-                CookerCustomerEatSpeedUp();
-            }
+            CookerCustomerEatSpeedUp();
         }
 
-        if (dishEffectQueue.TipChanceUpQueue.Count > 0)
+        if (dishEffectQueue.TryConsumeTipChanceUp(dish))
         {
-            DishType tDish = dishEffectQueue.TipChanceUpQueue.Peek();
-            if (tDish == dish)
-            {
-                dishEffectQueue.TipChanceUpQueue.Dequeue();
-
-                CustomerTipChanceUp();
-            }
+            CustomerTipChanceUp();
         }
     }
 
@@ -303,6 +287,17 @@ public class ServerStateManager : MonoBehaviour
         tray.gameObject.SetActive(false);
         Destroy(dishObject);
         dishObject = null;
+    }
+
+    public void ToastMessageOn(MessageType messageType)
+    {
+        toastMessage.ShowMessage(messageType);
+    }
+
+    public void SetAnimator(Animator animator)
+    {
+        this.animator = animator;
+        animator.applyRootMotion = false;
     }
 
     private void OnDisable()

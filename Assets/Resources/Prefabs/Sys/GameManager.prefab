@@ -221,6 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8effb0e507201040b5ed1c964ed39e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HarvestManager
+  timeWarningThreshold: 5
   timer: 0
   isPause: 0
 --- !u!1 &1000000000000000013
@@ -267,7 +268,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a622c36bac5647bc9b21435922c1771e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ServiceManager
-  timer: 0
   isPause: 0
 --- !u!1 &1000000000000000015
 GameObject:
@@ -585,210 +585,315 @@ MonoBehaviour:
   bgmBlendDuration: 1
   sfxClips:
   - type: 0
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: e215cafc49ef3124da09b137a4c241b0, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 1
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: cbf2fbd3254136f4f8e09d0b7dabbfea, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 2
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 395bd5f8a223ab54da774b7f2bb7fcf8, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 3
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 17db15e96dff90c43a000c32620021e8, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 4
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: b95c7f3d7c4de054ab12d2f3c7ac557b, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 5
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 99b1fe45b65677c49a69841ca7efbf46, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 6
+    clip: {fileID: 8300000, guid: 890876aacf382bc4b885d79cd11a236d, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 7
+    clip: {fileID: 8300000, guid: bd468767dc74bff44af14726fa123b5e, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 8
+    clip: {fileID: 8300000, guid: 8326b2a057e64da478e361fda7c28306, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 100
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: fb16589941c690140b327c182ba4ea59, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 101
-    clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-    isLoop: 0
-    minInterval: 0
-    maxSimultaneousCount: 5
-  - type: 102
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 65de202c152dc6a419c65c1f6de516b3, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 103
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: fe8e724099d3e8344bf423e861a68a20, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 104
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 26065a16fe26d9c41bc4d6482ebad847, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 105
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 301760336da1dfa40bbced6264d3de3a, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 106
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 29e7b2c863858624f8da020a59dbaed0, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 107
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 2cf625170441acb4f8e1c5fb21f0404b, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 108
-    clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-    isLoop: 0
-    minInterval: 0
-    maxSimultaneousCount: 5
-  - type: 109
-    clip: {fileID: 0}
-    volume: 1
-    pitch: 1
-    isLoop: 0
-    minInterval: 0
-    maxSimultaneousCount: 5
-  - type: 110
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: c5ab7cebd9dc7a945bf921c858546045, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 200
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 9390bf621eff9e54dab6f7d598e3f1ae, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 201
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: ae7228020aa93104e9171f8056fef92f, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 202
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 47e73197a51b7c34882676d9ed5e8662, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 203
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: fcf164da85ee7314d9196950b844f02b, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 204
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 86648743b8eb3ce489c56113bb473af9, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 205
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 0baaf368faaf15d439e45b70ade54df2, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 206
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 825d9ebf2e6e6ea48909a734652bc5e6, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 207
+    clip: {fileID: 8300000, guid: 1dbced90a9fa9c341bf07315daf2c0e5, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 208
+    clip: {fileID: 8300000, guid: 09d3a8d559741534f9e219578d4ee7f4, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 209
+    clip: {fileID: 8300000, guid: b3cd1921ba7f899419cf8b8469a79071, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 210
+    clip: {fileID: 8300000, guid: eb6673c152ab6af41af03ebf0256b23f, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 211
+    clip: {fileID: 8300000, guid: 57afc15baf71f1d47b11c647727ca1be, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 212
+    clip: {fileID: 8300000, guid: fc2815e55f7849749b62f209b3d071f5, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 213
+    clip: {fileID: 8300000, guid: 7a70eac3e25457946bc23c3fe32fba3b, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 214
+    clip: {fileID: 8300000, guid: bced9e48fd07e2d4abfef38ce9fa24b8, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 215
+    clip: {fileID: 8300000, guid: 81cb8084d73ef8a46be6f8894b7da5fc, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 216
+    clip: {fileID: 8300000, guid: 891c4b531bb848444b943aabb6f8c016, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 217
+    clip: {fileID: 8300000, guid: ab70c7dc3b7d1f3489094911881f8d06, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 218
+    clip: {fileID: 8300000, guid: fff13efbb3a1a5a4a91149ac7994d06d, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 220
+    clip: {fileID: 8300000, guid: 502e6f6f5429d1349963bf05d816bde1, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 221
+    clip: {fileID: 8300000, guid: da43120adb2e64745ad7613706378fb1, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 222
+    clip: {fileID: 8300000, guid: cc15387e9e713374cbfb7f70be28f8ad, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 300
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 27978080d12315946967468479ea5c66, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 301
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 6db74182e60252e41822d1581dc48c6f, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 302
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 9e786e29749b70648b5aaab1ad17cc33, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 303
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: f71b6976ec4b80142abc58a70d1fae9a, type: 3}
     volume: 1
     pitch: 1
     isLoop: 1
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 304
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: d16db58da8d376e46b8ab6fd5c07381f, type: 3}
     volume: 1
     pitch: 1
     isLoop: 0
     minInterval: 0
     maxSimultaneousCount: 5
   - type: 305
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 3493ebb81c59ff7439bb56d0709db7bd, type: 3}
     volume: 1
     pitch: 1
     isLoop: 1
@@ -877,6 +982,55 @@ MonoBehaviour:
     pitch: 0.8
     isLoop: 0
     minInterval: 0.5
+    maxSimultaneousCount: 5
+  - type: 318
+    clip: {fileID: 8300000, guid: 1a8a8851f6883f945b678d68124fdb8b, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 319
+    clip: {fileID: 8300000, guid: a4c2009430738204aaf14a954351655a, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 320
+    clip: {fileID: 8300000, guid: a68cfed42fcd4f842a24bf47519d0003, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 321
+    clip: {fileID: 8300000, guid: 1ea197576b06dc44b85a2f1f6f19ffe9, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 322
+    clip: {fileID: 8300000, guid: 37622e6e5836a4441bfc412840732316, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 323
+    clip: {fileID: 8300000, guid: 684be3b2aa160254b9da8fa9b0411eb8, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
+    maxSimultaneousCount: 5
+  - type: 324
+    clip: {fileID: 8300000, guid: d5ca725b207709647989a706744b69ed, type: 3}
+    volume: 1
+    pitch: 1
+    isLoop: 0
+    minInterval: 0
     maxSimultaneousCount: 5
 --- !u!1 &4252549227961888031
 GameObject:
@@ -1149,10 +1303,6 @@ MonoBehaviour:
     service:
       values:
       - statName: CustomerCount
-        value: 0
-      - statName: ServiceTime
-        value: 0
-      - statName: TipMultiplier
         value: 0
   runtimeLevel:
     harvestLevels:

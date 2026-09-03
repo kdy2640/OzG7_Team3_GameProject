@@ -19,7 +19,7 @@ public class CustomerOrderState : IState
         stateManager.AiMove.SetDirection(stateManager.CurrentTable.transform.position);
         stateManager.Animator.SetBool("IsOrdering", true);
 
-        timer = 10.0f;
+        timer = 20.0f;
 
         stateManager.OrderButton.gameObject.SetActive(true);
         stateManager.CreateOrder();

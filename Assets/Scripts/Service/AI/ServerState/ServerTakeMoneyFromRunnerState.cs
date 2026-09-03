@@ -3,8 +3,10 @@ using UnityEngine;
 
 public class ServerTakeMoneyFromRunnerState : IState
 {
+    private const float TakeMoneyTime = 2f;
+
     private ServerStateManager stateManager;
-    private float timer = 2f;
+    private float timer;
     public ServerTakeMoneyFromRunnerState(ServerStateManager stateManager)
     {
         this.stateManager = stateManager;
@@ -12,7 +14,9 @@ public class ServerTakeMoneyFromRunnerState : IState
 
     public void Enter()
     {
+        timer = TakeMoneyTime * stateManager.WorkDurationMultiplier;
         // 돈받기 메시지 ON
+        stateManager.ToastMessageOn(MessageType.sCatchRunner);
         stateManager.Animator.SetBool("IsAttacking", true);
     }
 

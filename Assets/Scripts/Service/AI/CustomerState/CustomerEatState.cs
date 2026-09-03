@@ -22,6 +22,12 @@ public class CustomerEatState : IState
         duration = stateManager.EatTime;
         timer = duration;
         stateManager.SetLifecycleProgress(0.55f);
+        if(stateManager.IsLateReceive)
+        {
+            stateManager.ToastMessageOn(MessageType.cLateReceive);
+            return;
+        }
+        stateManager.ToastMessageOn(MessageType.cEat);
     }
 
     public void Execute()
@@ -63,7 +69,7 @@ public class CustomerEatState : IState
 
         stateManager.Pay();
 
-        if(stateManager.DrinkZone.CanSpendDrink()&&stateManager.DrinkZone != null)
+        if(stateManager.IsDrink())
         {
             stateManager.ChangeState(new CustomerGoToDrinkState(stateManager));
             return;

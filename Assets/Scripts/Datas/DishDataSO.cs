@@ -45,7 +45,6 @@ public class DishDataSO : ScriptableObject
     [SerializeField] private string displayName;
     [SerializeField, TextArea] private string description;
     [SerializeField] private GroceryAmountWrapper ingredients;
-    [SerializeField, Min(0)] private int cost;
     [SerializeField] private int tier;
     [SerializeField] private TasteType tastes;
     [SerializeField] private CategoryType category;
@@ -57,7 +56,6 @@ public class DishDataSO : ScriptableObject
     public string DisplayName => displayName;
     public string Description => description;
     public List<GroceryAmount> Ingredients => ingredients.value;
-    public int Cost => cost;
     public int Tier => tier;
     public TasteType Tastes => tastes;
     public CategoryType Category => category;

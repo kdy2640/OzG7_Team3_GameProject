@@ -20,7 +20,7 @@ public class ServerCleanState : IState
     {
         stateManager.AiMove.SetDirection(dirty.Customer.Seat.position);
         stateManager.Animator.SetBool("IsAttacking", true);
-        timer = cleaningTime;
+        timer = cleaningTime * stateManager.WorkDurationMultiplier;
     }
 
     public void Execute()

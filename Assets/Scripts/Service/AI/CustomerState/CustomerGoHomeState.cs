@@ -24,6 +24,7 @@ public class CustomerGoHomeState : IState
         stateManager.AiMove.SetSpeed(stateManager.Speed);
 
         stateManager.AiMove.MoveTo(stateManager.ExitPoint);
+
     }
 
 
@@ -52,9 +53,7 @@ public class CustomerGoHomeState : IState
     {
 
         // 오늘의 손님 ++;
-        // 콤보 ++;
         arrived = true;
-        stateManager.Combo.AddCount();
         stateManager.CompleteLifecycle();
     }
     private bool CheckSeatCleaned()

@@ -66,8 +66,6 @@ public class OrderButton : MonoBehaviour
             cookingList.List.Contains(dishAmount.dish)
             );
         }
-
-        Debug.Log("UpdateCookingUI>>\n DishAmount = " + dishAmount + " foodReadyImg = " + foodReadyImg);
         
         foodReadyImg.gameObject.SetActive(
             GameManager.Instance.StockManager.CanConsumeDish(dishAmount)

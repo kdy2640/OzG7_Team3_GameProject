@@ -20,6 +20,7 @@ public sealed class TractorController : MonoBehaviour
 
     private Rigidbody body;
     private InputAction moveAction;
+    private CropCutter[] cropCutters;
     private Vector2 moveInput;
     private bool isCharging;
     private bool isStageBoundaryBlocked;
@@ -34,6 +35,7 @@ public sealed class TractorController : MonoBehaviour
     {
         body = GetComponent<Rigidbody>();
         cropCutter ??= GetComponentInChildren<CropCutter>(true);
+        cropCutters = GetComponentsInChildren<CropCutter>(true);
 
         if (inputActions == null)
         {
@@ -107,12 +109,35 @@ public sealed class TractorController : MonoBehaviour
             return;
         }
 
-        float speedMultiplier =
-            isCharging
-                ? chargeSpeedMultiplier
-                : cropCutter == null
-                    ? 1f
-                    : cropCutter.MoveSpeedMultiplier;
+        float currentMoveSpeed =
+            moveSpeed * (1f + speedBoostAmount);
+
+        if (isCharging)
+        {
+            currentMoveSpeed *= chargeSpeedMultiplier;
+        }
+        else
+        {
+            for (int i = 0; i < cropCutters.Length; i++)
+            {
+                CropCutter cutter = cropCutters[i];
+
+                if (!cutter.isActiveAndEnabled
+                    || !cutter.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                currentMoveSpeed = Mathf.Min(
+                    currentMoveSpeed,
+                    moveSpeed
+                    * (1f + speedBoostAmount)
+                    * cutter.MoveSpeedMultiplier);
+                currentMoveSpeed = Mathf.Min(
+                    currentMoveSpeed,
+                    cutter.CuttingSpeedLimit);
+            }
+        }
 
         float steeringAngle =
             steering
@@ -125,16 +150,14 @@ public sealed class TractorController : MonoBehaviour
 
         bool didMove = false;
 
-        if (isMoving && speedMultiplier > 0f)
+        if (isMoving && currentMoveSpeed > 0f)
         {
             Vector3 forward = nextRotation * Vector3.forward;
             Vector3 nextPosition =
                 body.position
                 + forward
                 * (throttle
-                    * moveSpeed
-                    * (1f + speedBoostAmount)
-                    * speedMultiplier
+                    * currentMoveSpeed
                     * Time.fixedDeltaTime);
 
             nextPosition = ClampToStageBoundary(nextPosition);
