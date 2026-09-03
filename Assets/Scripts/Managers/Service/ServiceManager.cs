@@ -51,6 +51,7 @@ public class ServiceManager : MonoBehaviour
         if (!IsServiceScene) return;
         isRunning = false;
 
+        FindFirstObjectByType<TipBox>().ApplyTip();
         LastSalesResult = resultBuilder.Build();
         if (LastSalesResult != null)
         {

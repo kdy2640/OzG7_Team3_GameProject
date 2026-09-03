@@ -50,6 +50,7 @@ public sealed class SalesResultBuilder
             return;
 
         currentResult.tipSales += tipAmount;
+        currentResult.todaySales += tipAmount;
     }
 
     public SalesResultData Build()
