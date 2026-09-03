@@ -11,7 +11,7 @@ public sealed class UI_RankUpPanel : UI_Base
 
     private enum GameObjects
     {
-        UI_RastaurantLevel,
+        PromotionLevelBanner,
         UI_NewDishList,
         UI_NewIngredientList,
         UI_NewFunctionList
@@ -38,26 +38,26 @@ public sealed class UI_RankUpPanel : UI_Base
         Bind<UI_HubStateButton>(typeof(HubStateButtons));
         Bind<PanelAnimator>(typeof(PanelAnimators));
 
-        rastaurantLevel = GetGameObject((int)GameObjects.UI_RastaurantLevel)?
+        rastaurantLevel = GetGameObject((int)GameObjects.PromotionLevelBanner)
             .GetComponent<UI_RastaurantLevel>();
-        newDishList = GetGameObject((int)GameObjects.UI_NewDishList)?
+        newDishList = GetGameObject((int)GameObjects.UI_NewDishList)
             .GetComponent<UI_NewDishList>();
-        newIngredientList = GetGameObject((int)GameObjects.UI_NewIngredientList)?
+        newIngredientList = GetGameObject((int)GameObjects.UI_NewIngredientList)
             .GetComponent<UI_NewIngredientList>();
-        newFunctionList = GetGameObject((int)GameObjects.UI_NewFunctionList)?
+        newFunctionList = GetGameObject((int)GameObjects.UI_NewFunctionList)
             .GetComponent<UI_NewFunctionList>();
 
         exitButton = GetUI<UI_HubStateButton>((int)HubStateButtons.ExitButton);
-        exitButton?.Init(Owner);
+        exitButton.Init(Owner);
 
     }
 
     protected override IEnumerator OnShow()
     {
-        rastaurantLevel?.Refresh();
-        newDishList?.Refresh();
-        newIngredientList?.Refresh();
-        newFunctionList?.Refresh();
+        rastaurantLevel.Refresh();
+        newDishList.Refresh();
+        newIngredientList.Refresh();
+        newFunctionList.Refresh();
 
         GetUI<PanelAnimator>((int)PanelAnimators.PanelIconImage).Show();
         GetUI<PanelAnimator>((int)PanelAnimators.Background).Show();

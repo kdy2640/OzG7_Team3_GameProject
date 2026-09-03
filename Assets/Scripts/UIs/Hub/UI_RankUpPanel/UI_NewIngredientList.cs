@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public sealed class UI_NewIngredientList : MonoBehaviour
 {
-    private const int SlotCount = 5;
+    private const int SlotCount = 3;
 
     private readonly GameObject[] slots = new GameObject[SlotCount];
     private readonly Image[] groceryImages = new Image[SlotCount];
