@@ -28,6 +28,7 @@ public class CustomerStateManager : MonoBehaviour
     private Table currentTable;
     private Transform seat;
     private DishAmount order;
+    private int paidDishPrice;
     private Transform customerCanvas;
     public Action foodReceived;
     public Action caught;
@@ -66,6 +67,7 @@ public class CustomerStateManager : MonoBehaviour
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
     public DishAmount Order => order;
+    public int PaidDishPrice => paidDishPrice;
     public float EatTime => eatTime;
     public float RunChance => runChance;
     public float LifecycleProgress => lifecycleProgress;
@@ -233,25 +235,19 @@ public class CustomerStateManager : MonoBehaviour
 
     public void Pay()  // 돈 획득 이펙트
     {
-        DishDataSO data = DishDataDB.GetData(Order.dish);
-        int basicPrice = DishPriceCalculator.BasicPriceCalculate(data.Dish);
-        if (data != null)
-        {
-            GameManager.Instance.StockManager.AddCurrency(basicPrice);
-            GameManager.Instance.Market.MarketData.TotalIncome += basicPrice;
+        paidDishPrice = DishPriceCalculator.BasicPriceCalculate(
+            Order.dish,
+            Combo.BonusRate);
 
-            int bonusCurrency = (int)(basicPrice * Combo.BonusRate / 100);
+        GameManager.Instance.StockManager.AddCurrency(paidDishPrice);
+        GameManager.Instance.Market.MarketData.TotalIncome += paidDishPrice;
 
-            GameManager.Instance.StockManager.AddCurrency(bonusCurrency);
-            GameManager.Instance.Market.MarketData.TotalIncome += bonusCurrency;
+        GameManager.Instance.Service.ResultBuilder.RecordDishSale(
+            Order.dish,
+            paidDishPrice);
 
-            GameManager.Instance.Service.ResultBuilder.RecordDishSale(
-                Order.dish,
-                basicPrice + bonusCurrency);
-
-            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CustomerPay);
-            MoneyImgOn(basicPrice + bonusCurrency);
-        }
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CustomerPay);
+        MoneyImgOn(paidDishPrice);
     }
 
     public void PayDrink()

@@ -19,14 +19,12 @@ public sealed class TempSellHamburgerButton : MonoBehaviour
 
     private void OnButtonClicked()
     {
-        if (!DishDataDB.TryGetData(DishType.CarrotSalad, out DishDataSO data))
-            return;
-
         StockManager stockManager = GameManager.Instance.StockManager;
 
         if (!stockManager.TryConsumeDish(new DishAmount(DishType.CarrotSalad, 1)))
             return;
 
-        stockManager.AddCurrency(data.Cost);
+        stockManager.AddCurrency(
+            DishPriceCalculator.BasicPriceCalculate(DishType.CarrotSalad));
     }
 }
