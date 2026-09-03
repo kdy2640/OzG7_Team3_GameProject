@@ -263,7 +263,9 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
             return;
         }
 
-        if (!marketData.SelectDish(currentDishType))
+        int dishLevel = GameManager.Instance.Upgrade.RuntimeLevel.Get(currentDishType);
+
+        if (!marketData.SelectDish(currentDishType, dishLevel))
             return;
 
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Hub_MenuSelect);
@@ -285,8 +287,12 @@ public sealed class UI_MenuVisualizer : MonoBehaviour
         bool hasDish = currentDishType != DishType.None;
         IReadOnlyList<DishType> selectedDishes = GameManager.Instance?.Market?.MarketData?.SelectedDishes;
         bool isSelected = hasDish && IsCurrentDishSelected(selectedDishes);
+        int dishLevel = hasDish
+            ? GameManager.Instance.Upgrade.RuntimeLevel.Get(currentDishType)
+            : 0;
         bool canSelect = selectedDishes != null
-            && selectedDishes.Count < GameManager.Instance.Market.LevelData.MaxDishLimit;
+            && selectedDishes.Count < GameManager.Instance.Market.LevelData.MaxDishLimit
+            && dishLevel > 0;
         string buttonText = isSelected ? "메뉴 해제" : "메뉴 추가";
 
         menuSelectionButtonText.text = buttonText;
