@@ -13,6 +13,7 @@ public sealed class HarvestActor : MonoBehaviour
 
     private HarvestDataSO harvestDataSO;
     private HarvestEmployeeResolver employeeResolver;
+    private GroceryGainRoutine groceryGainRoutine;
     private ChunkRegistry registry;
     private bool isInitialized;
     private bool isDying;
@@ -23,10 +24,12 @@ public sealed class HarvestActor : MonoBehaviour
         StageType stageType,
         Transform player,
         GridChunkHandler gridChunkHandler,
-        HarvestEmployeeResolver resolver)
+        HarvestEmployeeResolver resolver,
+        GroceryGainRoutine gainRoutine)
     {
         registry = gridChunkHandler.Registry;
         employeeResolver = resolver;
+        groceryGainRoutine = gainRoutine;
         harvestDataSO = HarvestDataDB.GetData(type);
         isDying = false;
 
@@ -135,9 +138,10 @@ public sealed class HarvestActor : MonoBehaviour
 
     private void OnDied()
     {
+        Vector3 gainPoint = transform.position;
+
         isDying = true;
         registry.Unregister(transform);
-        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Harvest_Collect);
 
         if (harvestDataSO.HarvestType == HarvestType.Pig)
         {
@@ -149,6 +153,7 @@ public sealed class HarvestActor : MonoBehaviour
         {
             GameManager.Instance.StockManager.AddGrocery(harvestDataSO.Rewards);
             employeeResolver.ResolveHarvested(harvestDataSO);
+            groceryGainRoutine.Play(harvestDataSO.Rewards, gainPoint);
         }
 
         if (harvestDataSO.IsMove)

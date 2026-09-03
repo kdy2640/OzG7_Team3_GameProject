@@ -131,6 +131,51 @@ public sealed class GridGeometry
         }
     }
 
+    public IEnumerable<Vector2> GetGapPositions(Vector2Int chunkCoordinate)
+    {
+        Rect area = GetClippedChunkArea(chunkCoordinate);
+        int xCount = Mathf.FloorToInt(areaSize.x / xSpacing);
+        int zCount = Mathf.FloorToInt(areaSize.y / zSpacing);
+
+        if (xCount < 2 || zCount < 2)
+        {
+            yield break;
+        }
+
+        float startX = (xCount - 1) * xSpacing * -0.5f;
+        float startZ = (zCount - 1) * zSpacing * -0.5f;
+        float gapStartX = startX + xSpacing * 0.5f;
+        float gapStartZ = startZ + zSpacing * 0.5f;
+        int xGapCount = xCount - 1;
+        int zGapCount = zCount - 1;
+        int minX = Mathf.Clamp(
+            Mathf.CeilToInt((area.xMin - gapStartX) / xSpacing),
+            0,
+            xGapCount);
+        int maxX = Mathf.Clamp(
+            Mathf.CeilToInt((area.xMax - gapStartX) / xSpacing),
+            0,
+            xGapCount);
+        int minZ = Mathf.Clamp(
+            Mathf.CeilToInt((area.yMin - gapStartZ) / zSpacing),
+            0,
+            zGapCount);
+        int maxZ = Mathf.Clamp(
+            Mathf.CeilToInt((area.yMax - gapStartZ) / zSpacing),
+            0,
+            zGapCount);
+
+        for (int z = minZ; z < maxZ; z++)
+        {
+            for (int x = minX; x < maxX; x++)
+            {
+                yield return new Vector2(
+                    gapStartX + x * xSpacing,
+                    gapStartZ + z * zSpacing);
+            }
+        }
+    }
+
     public Vector2 GetRandomPositionInChunk(Vector2Int chunkCoordinate)
     {
         Rect area = GetClippedChunkArea(chunkCoordinate);
