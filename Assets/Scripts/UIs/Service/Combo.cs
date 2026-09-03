@@ -51,7 +51,7 @@ public class Combo : MonoBehaviour
             backgroundImg.gameObject.SetActive(true);
         }
         bonusRate = (comboCount / 5) * 10f;
-        countText.text = "Combo : " + comboCount.ToString();
-        bonusText.text = "+ Bonus : " + bonusRate + "%";
+        countText.text = comboCount.ToString();
+        bonusText.text = "+ " + bonusRate + "%";
     }
 }
