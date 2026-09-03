@@ -19,6 +19,7 @@ public sealed class HarvestActor : MonoBehaviour
     private bool isInitialized;
     private bool isDying;
 
+    public float CurrentHp => hpHandler.nowHp;
 
     public void Init(
         HarvestType type,
