@@ -85,6 +85,10 @@ public class CustomerStateManager : MonoBehaviour
         this.combo = combo;
         this.drinkZone = drinkZone;
         lifecycleProgress = 0f;
+
+        if (GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_3) >= 1)
+            EatSpeedUp(30f);
+
         AiMove.SetSpeed(speed);
     }
 
