@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public sealed class UI_NewDishList : MonoBehaviour
 {
-    private const int SlotCount = 5;
+    private const int SlotCount = 4;
 
     private readonly GameObject[] slots = new GameObject[SlotCount];
     private readonly Image[] dishImages = new Image[SlotCount];

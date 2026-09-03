@@ -97,9 +97,10 @@ public sealed class UI_ServiceSelection : UI_Base
 
     private void StartService()
     {
-        if (GameManager.Instance.Market.MarketData.SelectedDishes.Count == 0)
+        if (GameManager.Instance.Market.MarketData.SelectedDishes.Count
+            < GameManager.Instance.Market.LevelData.MaxDishLimit)
         {
-            GameManager.Instance.Utility.Toast.Show("메뉴를 선택해 주세요");
+            GameManager.Instance.Utility.Toast.Show("장착 가능한 메뉴를 모두 선택해 주세요");
             return;
         }
 

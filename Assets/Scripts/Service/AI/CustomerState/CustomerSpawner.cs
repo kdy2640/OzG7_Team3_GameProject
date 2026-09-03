@@ -24,6 +24,7 @@ public class CustomerSpawner : MonoBehaviour
 
     
     private float spawnTimer;
+    private float nextInitialSpawnInterval;
     private int initialSpawnRemaining;
     private int targetCustomerCount;
     private int spawnedCustomerCount;
@@ -95,7 +96,7 @@ public class CustomerSpawner : MonoBehaviour
 
         if (initialSpawnRemaining > 0)
         {
-            RunSpawnTimer(intervalCalculater.InitialInterval);
+            RunSpawnTimer(nextInitialSpawnInterval);
             return;
         }
 
@@ -104,7 +105,6 @@ public class CustomerSpawner : MonoBehaviour
         if (!intervalCalculater.TryGetInterval(
             tableManager.WaitingCount,
             usableSeatCount,
-            activeCustomers.Count,
             out float arrivalInterval))
         {
             return;
@@ -124,7 +124,12 @@ public class CustomerSpawner : MonoBehaviour
         spawnTimer = 0f;
 
         if (initialSpawnRemaining > 0)
+        {
             initialSpawnRemaining--;
+
+            if (initialSpawnRemaining > 0)
+                nextInitialSpawnInterval = intervalCalculater.GetInitialInterval();
+        }
     }
 
     private void SpawnCustomer()
@@ -170,10 +175,11 @@ public class CustomerSpawner : MonoBehaviour
     {
         serviceStarted = true;
         serviceEnd = false;
-        spawnTimer = intervalCalculater.InitialInterval;
+        spawnTimer = 0f;
+        nextInitialSpawnInterval = intervalCalculater.InitialDelay;
         initialSpawnRemaining = Mathf.Min(
             targetCustomerCount,
-            tableManager.UsableSeatCount);
+            intervalCalculater.CalculateInitialCustomerCount(tableManager.UsableSeatCount));
 
         if (targetCustomerCount == 0)
             GameManager.Instance.Service.EndLoop();
