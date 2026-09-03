@@ -88,6 +88,7 @@ public class ServerStateManager : MonoBehaviour
 
     private void Start()
     {
+        aiMove.SetDirectionVector(Vector3.back);
         ChangeState(new ServerGetBackState(this));
         StartCoroutine(SleepingChanceCo());
     }
