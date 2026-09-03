@@ -69,7 +69,7 @@ public class CustomerEatState : IState
 
         stateManager.Pay();
 
-        if(stateManager.DrinkZone.CanSpendDrink()&&stateManager.DrinkZone != null)
+        if(stateManager.IsDrink())
         {
             stateManager.ChangeState(new CustomerGoToDrinkState(stateManager));
             return;

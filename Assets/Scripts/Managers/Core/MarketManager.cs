@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -201,6 +202,19 @@ public class MarketManager : MonoBehaviour
 
     public void LoadMarketSaveData(MarketSaveData saveData)
     {
+        List<DishType> developedSelectedDishes = new();
+
+        if (saveData != null && saveData.selectedDishes != null)
+        {
+            for (int i = 0; i < saveData.selectedDishes.Count; i++)
+            {
+                DishType dishType = saveData.selectedDishes[i];
+
+                if (GameManager.Instance.Upgrade.RuntimeLevel.Get(dishType) > 0)
+                    developedSelectedDishes.Add(dishType);
+            }
+        }
+
         MarketData loadedData = saveData == null
             ? new MarketData()
             : new MarketData(
@@ -209,7 +223,7 @@ public class MarketManager : MonoBehaviour
                 Mathf.Clamp(saveData.currentLevel, 0, MaxMarketLevel),
                 Mathf.Max(0, saveData.totalIncome),
                 Mathf.Max(0, saveData.yesterdaySales),
-                saveData.selectedDishes);
+                developedSelectedDishes);
 
         ReplaceMarketData(loadedData);
         LevelRefresh();

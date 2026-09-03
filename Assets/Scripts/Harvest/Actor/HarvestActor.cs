@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -18,6 +19,7 @@ public sealed class HarvestActor : MonoBehaviour
     private bool isInitialized;
     private bool isDying;
 
+    public float CurrentHp => hpHandler.nowHp;
 
     public void Init(
         HarvestType type,
@@ -145,15 +147,21 @@ public sealed class HarvestActor : MonoBehaviour
 
         if (harvestDataSO.HarvestType == HarvestType.Pig)
         {
-            GrantGoldenPigReward();
+            GrantGoldenPigReward(gainPoint);
             GameManager.Instance.Utility.Audio.PlaySFX(
                 SFXType.Harvest_GoldenPigCollected);
         }
         else
         {
             GameManager.Instance.StockManager.AddGrocery(harvestDataSO.Rewards);
-            employeeResolver.ResolveHarvested(harvestDataSO);
+            List<GroceryAmount> bonusRewards =
+                employeeResolver.ResolveHarvested(harvestDataSO);
             groceryGainRoutine.Play(harvestDataSO.Rewards, gainPoint);
+
+            if (bonusRewards.Count > 0)
+            {
+                groceryGainRoutine.Play(bonusRewards, gainPoint);
+            }
         }
 
         if (harvestDataSO.IsMove)
@@ -166,7 +174,7 @@ public sealed class HarvestActor : MonoBehaviour
         }
     }
 
-    private void GrantGoldenPigReward()
+    private void GrantGoldenPigReward(Vector3 gainPoint)
     {
         int radarLevel = GameManager.Instance.Upgrade.RuntimeLevel.Get(
             HarvestUpgradeType.GoldenPigRadar);
@@ -211,13 +219,17 @@ public sealed class HarvestActor : MonoBehaviour
 
         StageDataSO stageData = StageDataDB.GetData(
             (StageType)(radarLevel - 1));
-        GameManager.Instance.StockManager.AddGrocery(
-            new GroceryAmount(stageData.RewardList[0], firstAmount));
-        GameManager.Instance.StockManager.AddGrocery(
-            new GroceryAmount(stageData.RewardList[1], secondAmount));
-        GameManager.Instance.StockManager.AddGrocery(
-            new GroceryAmount(stageData.RewardList[2], thirdAmount));
+
+        List<GroceryAmount> rewards = new()
+        {
+            new GroceryAmount(stageData.RewardList[0], firstAmount),
+            new GroceryAmount(stageData.RewardList[1], secondAmount),
+            new GroceryAmount(stageData.RewardList[2], thirdAmount)
+        };
+
+        GameManager.Instance.StockManager.AddGrocery(rewards);
         GameManager.Instance.StockManager.AddCurrency(goldAmount);
+        groceryGainRoutine.PlayBundled(rewards, gainPoint);
     }
 
 #if UNITY_EDITOR

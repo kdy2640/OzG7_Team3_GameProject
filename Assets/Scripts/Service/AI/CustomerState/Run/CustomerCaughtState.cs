@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CustomerCaughtState : IState
 {
-    private float timer = float.MaxValue;
+    private float timer;
     private CustomerStateManager stateManager;
     public CustomerCaughtState(CustomerStateManager stateManager)
     {
@@ -13,6 +13,7 @@ public class CustomerCaughtState : IState
     {
         stateManager.AnimSetIdle();
         stateManager.RunnerCatchButton.gameObject.SetActive(false);
+        // 사과 메시지 ON
         Pay();
     }
 
@@ -27,7 +28,6 @@ public class CustomerCaughtState : IState
 
     public void Exit()
     {
-        
     }
 
     private void Pay()

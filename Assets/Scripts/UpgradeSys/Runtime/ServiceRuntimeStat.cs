@@ -5,7 +5,6 @@ using UnityEngine;
 public enum ServiceStatType
 {
     CustomerCount,
-    TipMultiplier,
     Count
 }
 
@@ -54,7 +53,6 @@ public sealed class ServiceRuntimeStat
             GameManager.Instance?.Market?.LevelData?.BaseCustomerCount ?? 0;
 
         values[(int)ServiceStatType.CustomerCount].SetValue(baseCustomerCount);
-        values[(int)ServiceStatType.TipMultiplier].SetValue(1f);
     }
 
     public float Get(ServiceStatType statType)

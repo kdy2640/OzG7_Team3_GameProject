@@ -1,13 +1,19 @@
 
 public static class DishPriceCalculator
 {
+    private const float TipRate = 0.2f;
+
     public static int BasicPriceCalculate(DishType dish)
     {
         int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(dish);
+        return BasicPriceCalculate(dish, level);
+    }
 
+    public static int BasicPriceCalculate(DishType dish, int level)
+    {
         UpgradeDataDB.GetData(dish).TryGetRequiredCost(
-            level > 0 ? level : 1,
-            out int cost);
+            level,
+            out int price);
 
         DishDataSO dishData = DishDataDB.GetData(dish);
         MarketManager market = GameManager.Instance.Market;
@@ -23,9 +29,21 @@ public static class DishPriceCalculator
             && dishData.Category == eventCategory;
 
         if (matchesTaste || matchesCategory)
-            cost += cost / 2;
+            price += price / 2;
 
-        return cost;
+        return price;
+    }
+
+    public static int BasicPriceCalculate(DishType dish, float bonusRate)
+    {
+        int basicPrice = BasicPriceCalculate(dish);
+        int bonusPrice = (int)(basicPrice * bonusRate / 100f);
+        return basicPrice + bonusPrice;
+    }
+
+    public static int TipPriceCalculate(int paidDishPrice)
+    {
+        return (int)(paidDishPrice * TipRate);
     }
 
     // 피버 단계

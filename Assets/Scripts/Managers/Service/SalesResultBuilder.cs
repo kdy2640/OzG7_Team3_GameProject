@@ -50,6 +50,15 @@ public sealed class SalesResultBuilder
             return;
 
         currentResult.tipSales += tipAmount;
+        currentResult.todaySales += tipAmount;
+    }
+
+    public void RecordDrinkSale(int salesAmount)
+    {
+        if (currentResult == null || salesAmount <= 0)
+            return;
+
+        currentResult.todaySales += salesAmount;
     }
 
     public SalesResultData Build()

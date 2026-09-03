@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -39,19 +40,20 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
     [SerializeField] private Button upgradeButton;
     [SerializeField] private TMP_Text upgradeButtonText;
     [SerializeField] private GameObject upgradeLock;
+    [SerializeField] private PanelAnimator panelAnimator;
 
     private DishType currentDishType = DishType.None;
 
     private void Awake()
     {
-        cancelButton.onClick.AddListener(Hide);
+        cancelButton.onClick.AddListener(Close);
         upgradeButton.onClick.AddListener(OnUpgradeButtonClicked);
         Hide();
     }
 
     private void OnDestroy()
     {
-        cancelButton.onClick.RemoveListener(Hide);
+        cancelButton.onClick.RemoveListener(Close);
         upgradeButton.onClick.RemoveListener(OnUpgradeButtonClicked);
     }
 
@@ -66,9 +68,14 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
         if (dishData == null || upgradeData == null)
             return;
 
+        bool wasActive = gameObject.activeSelf;
+
         currentDishType = dishType;
         gameObject.SetActive(true);
         Refresh(dishData, upgradeData);
+
+        if (!wasActive)
+            StartCoroutine(panelAnimator.Show());
     }
 
     public void Hide()
@@ -90,7 +97,8 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
         string currentLevelLabel = $"Lv.{currentLevel}";
         currentLevelText.text = currentLevelLabel;
         currentLevelTextShadow.text = currentLevelLabel;
-        currentSellPriceText.text = $"{GetSellPrice(upgradeData, currentLevel):N0}";
+        currentSellPriceText.text =
+            $"{GetSellPrice(currentDishType, currentLevel):N0}";
 
         string nextLevelLabel = isMaxLevel ? "MAX" : $"Lv.{nextLevel}";
         nextLevelText.text = nextLevelLabel;
@@ -98,7 +106,7 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
 
         string nextSellPriceLabel = isMaxLevel
             ? "-"
-            : $"{GetSellPrice(upgradeData, nextLevel):N0}";
+            : $"{GetSellPrice(currentDishType, nextLevel):N0}";
         nextSellPriceText.text = nextSellPriceLabel;
         nextSellPriceTextShadow.text = nextSellPriceLabel;
 
@@ -215,7 +223,14 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
 
         if (GameManager.Instance.Upgrade.TryUpgrade(upgradeData))
         {
-            Hide();
+            if (GameManager.Instance.Upgrade.CanUpgrade(upgradeData))
+            {
+                DishDataSO refreshedDishData = DishDataDB.GetData(currentDishType);
+                Refresh(refreshedDishData, upgradeData);
+                return;
+            }
+
+            Close();
             return;
         }
 
@@ -224,17 +239,26 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
             Refresh(dishData, upgradeData);
     }
 
+    private void Close()
+    {
+        if (!gameObject.activeSelf)
+            return;
+
+        currentDishType = DishType.None;
+        StartCoroutine(HideAnimated());
+    }
+
+    private IEnumerator HideAnimated()
+    {
+        yield return panelAnimator.Hide();
+        gameObject.SetActive(false);
+    }
+
     private static int GetSellPrice(
-        DishUpgradeDataSO upgradeData,
+        DishType dishType,
         int level)
     {
-        if (level <= 0
-            || !upgradeData.TryGetRequiredCost(level, out int sellPrice))
-        {
-            return 0;
-        }
-
-        return sellPrice;
+        return DishPriceCalculator.BasicPriceCalculate(dishType, level);
     }
 
     private static int GetOwnedAmount(GroceryType groceryType)
