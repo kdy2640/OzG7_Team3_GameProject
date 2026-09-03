@@ -153,6 +153,7 @@ public sealed class FacilityDetailPanel : MonoBehaviour
 
         currentLevelDisplay.SetData(
             currentLevel,
+            upgradeData.MaxLevel,
             GetLevelEffect(facilityData, currentLevel));
         currentLevelDisplay.SetMaxLevel(isMaxLevel);
 
@@ -162,6 +163,7 @@ public sealed class FacilityDetailPanel : MonoBehaviour
         {
             nextLevelDisplay.SetData(
                 currentLevel + 1,
+                upgradeData.MaxLevel,
                 GetLevelEffect(facilityData, currentLevel + 1));
         }
         bool showCurrencyAction =
