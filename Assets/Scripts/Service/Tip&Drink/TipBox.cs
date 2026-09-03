@@ -19,14 +19,16 @@ public class TipBox : MonoBehaviour
     public void AddTip(int tip)
     {
         tipAmount += tip;
-        GameManager.Instance.Service.ResultBuilder.RecordTip(tip);
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_TipAdded);
         UpdateUI();
     }
     public void ApplyTip()
     {
-        GameManager.Instance.StockManager.AddCurrency(tipAmount);
-        GameManager.Instance.Service.ResultBuilder.RecordTip(tipAmount);
+        int collectedTipAmount = tipAmount;
+
+        GameManager.Instance.StockManager.AddCurrency(collectedTipAmount);
+        GameManager.Instance.Market.MarketData.TotalIncome += collectedTipAmount;
+        GameManager.Instance.Service.ResultBuilder.RecordTip(collectedTipAmount);
         tipAmount = 0;
         UpdateUI();
     }

@@ -113,9 +113,11 @@ public class UI_MenuVisualCard : MonoBehaviour
 
         int cookableAmount = GameManager.Instance.CookingManager
             .CalculateCookableAmount(dishType);
+        int displayedPriceLevel = level > 0 ? level : 1;
 
         cookText.text = $"{cookableAmount:N0}";
-        priceText.text = $"{DishPriceCalculator.BasicPriceCalculate(dishType):N0}";
+        priceText.text =
+            $"{DishPriceCalculator.BasicPriceCalculate(dishType, displayedPriceLevel):N0}";
     }
 
     public void SetStatus(MenuVisualStatus status)

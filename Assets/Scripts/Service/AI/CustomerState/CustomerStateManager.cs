@@ -29,14 +29,16 @@ public class CustomerStateManager : MonoBehaviour
     private Table currentTable;
     private Transform seat;
     private DishAmount order;
+    private int paidDishPrice;
     private Transform customerCanvas;
     public Action foodReceived;
     public Action caught;
     public event Action ProcessingCompleted;
     public event Action<CustomerStateManager> LifecycleFinished;
     private float tipChance = 0.1f;
+    private float drinkChance = 0.2f;
     private float eatTime = 5f;
-    private float runChance = 1f;
+    private float runChance = 0.1f;
     private float eatSpeedUpPercentage;
     private bool isProcessingCompleted;
     private bool isLifecycleFinished;
@@ -66,6 +68,7 @@ public class CustomerStateManager : MonoBehaviour
     public Table CurrentTable => currentTable;
     public Transform Seat => seat;
     public DishAmount Order => order;
+    public int PaidDishPrice => paidDishPrice;
     public float EatTime => eatTime;
     public float RunChance => runChance;
     public float LifecycleProgress => lifecycleProgress;
@@ -86,6 +89,10 @@ public class CustomerStateManager : MonoBehaviour
         this.combo = combo;
         this.drinkZone = drinkZone;
         lifecycleProgress = 0f;
+
+        if (GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_3) >= 1)
+            EatSpeedUp(30f);
+
         AiMove.SetSpeed(speed);
     }
 
@@ -157,6 +164,7 @@ public class CustomerStateManager : MonoBehaviour
     {
         currentTable = table;
         this.seat = seat;
+        tipChance += tableManager.GetTipChanceBonus(table);
     }
 
     public void CreateOrder()
@@ -190,12 +198,23 @@ public class CustomerStateManager : MonoBehaviour
 
     public bool IsTip()
     {
-        if(GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_3)<1)
+        if(GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_6)<1)
         {
             return false;
         }
 
         return UnityEngine.Random.value < tipChance;
+    }
+
+    public bool IsDrink()
+    {
+        if (GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_2) < 1)
+            return false;
+
+        if (!drinkZone.CanSpendDrink())
+            return false;
+
+        return UnityEngine.Random.value < drinkChance;
     }
 
     public void EatSpeedUp(float percentage)
@@ -217,25 +236,21 @@ public class CustomerStateManager : MonoBehaviour
 
     public void Pay()  // 돈 획득 이펙트
     {
-        DishDataSO data = DishDataDB.GetData(Order.dish);
-        int basicPrice = DishPriceCalculator.BasicPriceCalculate(data.Dish);
-        if (data != null)
-        {
-            GameManager.Instance.StockManager.AddCurrency(basicPrice);
-            GameManager.Instance.Market.MarketData.TotalIncome += basicPrice;
+        Combo.AddCount();
 
-            int bonusCurrency = (int)(basicPrice * Combo.BonusRate / 100);
+        paidDishPrice = DishPriceCalculator.BasicPriceCalculate(
+            Order.dish,
+            Combo.BonusRate);
 
-            GameManager.Instance.StockManager.AddCurrency(bonusCurrency);
-            GameManager.Instance.Market.MarketData.TotalIncome += bonusCurrency;
+        GameManager.Instance.StockManager.AddCurrency(paidDishPrice);
+        GameManager.Instance.Market.MarketData.TotalIncome += paidDishPrice;
 
-            GameManager.Instance.Service.ResultBuilder.RecordDishSale(
-                Order.dish,
-                basicPrice + bonusCurrency);
+        GameManager.Instance.Service.ResultBuilder.RecordDishSale(
+            Order.dish,
+            paidDishPrice);
 
-            GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CustomerPay);
-            MoneyImgOn(basicPrice + bonusCurrency);
-        }
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CustomerPay);
+        MoneyImgOn(paidDishPrice);
     }
 
     public void PayDrink()
@@ -244,6 +259,7 @@ public class CustomerStateManager : MonoBehaviour
         int drinkPrice = -100 + level * 300;
         GameManager.Instance.StockManager.AddCurrency(drinkPrice);
         GameManager.Instance.Market.MarketData.TotalIncome += drinkPrice;
+        GameManager.Instance.Service.ResultBuilder.RecordDrinkSale(drinkPrice);
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_DrinkServed);
         MoneyImgOn(drinkPrice);
     }

@@ -34,12 +34,12 @@ public class AccelerationButton : MonoBehaviour
 
     private void Update()
     {
+        if (!isAcceled)
+            return;
+
         timer -= Time.deltaTime;
-        if(timer < 0)
-        {
+        if(timer <= 0f)
             Decel();
-            isAcceled = false;
-        }
     }
 
     public void OnClick()
@@ -49,16 +49,12 @@ public class AccelerationButton : MonoBehaviour
 
     private void Accel()
     {
+        if (isAcceled || accelCount <= 0)
+            return;
+
         accelCount--;
-
         timer = accelDuration;
-
-        if (isAcceled)
-            return;
-
-        if (accelCount <= 0)
-            return;
-        isAcceled = true; 
+        isAcceled = true;
 
         serverList.Acceleration(percentage);
         kitchenSlotHandler.Acceleration(percentage);

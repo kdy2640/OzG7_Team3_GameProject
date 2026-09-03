@@ -39,8 +39,9 @@ public class CustomerTipState : IState
 
     private void Tip() 
     {
-        DishDataSO data = DishDataDB.GetData(stateManager.Order.dish);
-        stateManager.TipBox.AddTip(data.Cost / 5);
+        int tipAmount = DishPriceCalculator.TipPriceCalculate(
+            stateManager.PaidDishPrice);
+        stateManager.TipBox.AddTip(tipAmount);
 
         stateManager.ChangeState(new CustomerGoHomeState(stateManager));
     }

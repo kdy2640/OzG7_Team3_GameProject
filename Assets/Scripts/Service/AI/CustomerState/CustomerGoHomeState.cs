@@ -53,9 +53,7 @@ public class CustomerGoHomeState : IState
     {
 
         // 오늘의 손님 ++;
-        // 콤보 ++;
         arrived = true;
-        stateManager.Combo.AddCount();
         stateManager.CompleteLifecycle();
     }
     private bool CheckSeatCleaned()

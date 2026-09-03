@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -94,7 +95,7 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
             + (HasUpgrade(EmployeeType.Harvester_2, 5) ? 1 : 0);
 
         mainCropMeatChance = HasUpgrade(EmployeeType.Harvester_1, 5)
-            ? 0.05f
+            ? 0.10f
             : 0f;
         vegetableMeatChance = HasUpgrade(EmployeeType.Harvester_2, 1)
             ? 0.10f
@@ -198,18 +199,24 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
 
     #region Harvest Rewards
 
-    public void ResolveHarvested(HarvestDataSO harvestData)
+    public List<GroceryAmount> ResolveHarvested(HarvestDataSO harvestData)
     {
-        TryAddExtraYield(harvestData);
-        TryAddMeatBonus(harvestData);
+        List<GroceryAmount> bonusRewards = new();
+
+        TryAddExtraYield(harvestData, bonusRewards);
+        TryAddMeatBonus(harvestData, bonusRewards);
 
         if (!harvestData.IsMove)
         {
             ResolveHarvestGoldBonus();
         }
+
+        return bonusRewards;
     }
 
-    private void TryAddExtraYield(HarvestDataSO harvestData)
+    private void TryAddExtraYield(
+        HarvestDataSO harvestData,
+        List<GroceryAmount> bonusRewards)
     {
         if (Random.value >= extraYieldChance)
         {
@@ -218,12 +225,17 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
 
         for (int i = 0; i < harvestData.Rewards.Count; i++)
         {
-            GameManager.Instance.StockManager.AddGrocery(
-                new GroceryAmount(harvestData.Rewards[i].grocery, 1));
+            GroceryAmount reward = new(
+                harvestData.Rewards[i].grocery,
+                1);
+            GameManager.Instance.StockManager.AddGrocery(reward);
+            bonusRewards.Add(reward);
         }
     }
 
-    private void TryAddMeatBonus(HarvestDataSO harvestData)
+    private void TryAddMeatBonus(
+        HarvestDataSO harvestData,
+        List<GroceryAmount> bonusRewards)
     {
         float chance = IsMainCrop(harvestData.HarvestType)
             ? mainCropMeatChance
@@ -238,8 +250,9 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
 
         int tier = GroceryDataDB.GetData(
             harvestData.Rewards[0].grocery).Tier;
-        GameManager.Instance.StockManager.AddGrocery(
-            new GroceryAmount(ResolveMeatReward(tier), 1));
+        GroceryAmount reward = new(ResolveMeatReward(tier), 1);
+        GameManager.Instance.StockManager.AddGrocery(reward);
+        bonusRewards.Add(reward);
     }
 
     private void ResolveHarvestGoldBonus()

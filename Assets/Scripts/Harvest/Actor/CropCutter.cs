@@ -14,9 +14,11 @@ public sealed class CropCutter : MonoBehaviour
     [SerializeField, Min(0f)] private float damage = 1f;
     [SerializeField, Min(0f)] private float damageDelay = 0.25f;
     [SerializeField, Range(0f, 1f)] private float cuttingMoveSpeedMultiplier = 0.35f;
+    [SerializeField, Range(0f, 1f)] private float cuttingDistanceSafetyRatio = 0.75f;
 
     private readonly Dictionary<int, float> nextDamageTimes = new();
     private float cuttingUntilTime;
+    private float cuttingSpeedLimit = float.PositiveInfinity;
     private float damageMultiplier = 1f;
     private float baseRange;
     private float baseDamage;
@@ -28,6 +30,8 @@ public sealed class CropCutter : MonoBehaviour
     public float TargetRange { get; private set; }
     public float MoveSpeedMultiplier =>
         IsCutting ? cuttingMoveSpeedMultiplier : 1f;
+    public float CuttingSpeedLimit =>
+        IsCutting ? cuttingSpeedLimit : float.PositiveInfinity;
 
     public void Initialize(GridChunkHandler handler)
     {
@@ -82,6 +86,7 @@ public sealed class CropCutter : MonoBehaviour
     {
         cuttingRange = Mathf.Max(0f, cuttingRange);
         rangeLerpSpeed = Mathf.Max(0f, rangeLerpSpeed);
+        cuttingDistanceSafetyRatio = Mathf.Clamp01(cuttingDistanceSafetyRatio);
         TargetRange = cuttingRange;
 
         ApplyRange(cuttingRange);
@@ -142,6 +147,9 @@ public sealed class CropCutter : MonoBehaviour
             gridChunkHandler.Registry.GetNearbyTransforms(
                 transform.position,
                 cuttingRange);
+        bool wasCutting = IsCutting;
+        bool foundTarget = false;
+        float frameSpeedLimit = float.PositiveInfinity;
 
         foreach (Transform target in nearbyTransforms)
         {
@@ -157,7 +165,25 @@ public sealed class CropCutter : MonoBehaviour
                 continue;
             }
 
+            foundTarget = true;
             cuttingUntilTime = Time.time + Time.fixedDeltaTime * 2f;
+
+            float effectiveDamage = damage * damageMultiplier;
+            int requiredHitCount = effectiveDamage > 0f
+                ? Mathf.CeilToInt(crop.CurrentHp / effectiveDamage)
+                : int.MaxValue;
+            float expectedCuttingTime = requiredHitCount == int.MaxValue
+                ? float.PositiveInfinity
+                : requiredHitCount * Mathf.Max(0f, damageDelay);
+            float effectiveCuttingDistance =
+                cuttingRange * 2f * cuttingDistanceSafetyRatio;
+            float targetSpeedLimit = expectedCuttingTime > 0f
+                ? effectiveCuttingDistance / expectedCuttingTime
+                : float.PositiveInfinity;
+
+            frameSpeedLimit = Mathf.Min(
+                frameSpeedLimit,
+                targetSpeedLimit);
 
             int cropId = crop.GetInstanceID();
 
@@ -170,6 +196,20 @@ public sealed class CropCutter : MonoBehaviour
             crop.TakeDamage(damage * damageMultiplier);
             nextDamageTimes[cropId] =
                 Time.time + Mathf.Max(0f, damageDelay);
+        }
+
+        if (foundTarget)
+        {
+            if (!wasCutting)
+            {
+                cuttingSpeedLimit = frameSpeedLimit;
+            }
+            else
+            {
+                cuttingSpeedLimit = Mathf.Min(
+                    cuttingSpeedLimit,
+                    frameSpeedLimit);
+            }
         }
     }
 }

@@ -41,6 +41,19 @@ public sealed class GroceryGainRoutine : MonoBehaviour
         StartCoroutine(PlayRoutine(rewards, spawnPoint));
     }
 
+    public void PlayBundled(
+        IReadOnlyList<GroceryAmount> rewards,
+        Vector3 spawnPoint)
+    {
+        for (int i = 0; i < rewards.Count; i++)
+        {
+            GroceryAmount reward = rewards[i];
+            nowAliveGrocery[(int)reward.grocery] += reward.amount;
+        }
+
+        StartCoroutine(PlayBundledRoutine(rewards, spawnPoint));
+    }
+
     private IEnumerator PlayRoutine(
         IReadOnlyList<GroceryAmount> rewards,
         Vector3 spawnPoint)
@@ -70,6 +83,19 @@ public sealed class GroceryGainRoutine : MonoBehaviour
                 yield return new WaitForSeconds(
                     spawnDelay * Random.value);
             }
+        }
+    }
+
+    private IEnumerator PlayBundledRoutine(
+        IReadOnlyList<GroceryAmount> rewards,
+        Vector3 spawnPoint)
+    {
+        for (int i = 0; i < rewards.Count; i++)
+        {
+            StartCoroutine(ApplyRoutine(spawnPoint, rewards[i]));
+
+            yield return new WaitForSeconds(
+                spawnDelay * Random.value);
         }
     }
 

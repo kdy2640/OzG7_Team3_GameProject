@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,14 +33,9 @@ public class Cooker : MonoBehaviour
         StartCoroutine(AutoCookUIUpdateCo());
     }
 
-    private void Update()
+    public void Cook(float speedMultiplier)
     {
-        if (isBusy) Cook();
-    }
-
-    public void Cook()
-    {
-        Data.RemainTime -= Time.deltaTime;
+        Data.RemainTime -= Time.deltaTime * speedMultiplier;
         viewer.Refresh();
 
         if (Data.RemainTime <= 0)
@@ -89,26 +85,20 @@ public class Cooker : MonoBehaviour
 
     private float CookSpeedApply(KitchenSlotData data)
     {
-        for (int i = 0; i < level - 1; i++)
-        {
-            data.RemainTime /= 1.1f;
-        }
-        return data.RemainTime;
+        int speedUpgradeCount = Mathf.Max(0, level - 1);
+        float speedMultiplier = 1f + speedUpgradeCount * 0.1f;
+        return data.RemainTime / speedMultiplier;
     }
 
     private IEnumerator AutoCookCo()
     {
-        bool hasDish;
-        
         while (true)
         {
-            hasDish = false;
-
             if (!isBusy && requestQueue.Queue.Count > 0)
             {
                 DishType requiredDish = requestQueue.Queue.Peek();
-                if (!GameManager.Instance.CookingManager.CanCook(requiredDish))
-                    break;
+                bool hasDish = false;
+
                 for (int i = 0; i < GameManager.Instance.StockManager.StockData.Dishes.Count; i++)
                 {
                     if (requiredDish == GameManager.Instance.StockManager.StockData.Dishes[i].dish 
@@ -117,12 +107,16 @@ public class Cooker : MonoBehaviour
                         hasDish = true; break;
                     }
                 }
-                if (!hasDish)
+
+                bool isCooking = cookingList.List.Contains(requiredDish);
+
+                if (!hasDish
+                    && !isCooking
+                    && GameManager.Instance.CookingManager.TryCook(requiredDish))
                 {
                     KitchenSlotData data = new KitchenSlotData(requiredDish, 3.0f);
                     isAutoCooking = true;
                     GetNextCook(data);
-                    requestQueue.Queue.Dequeue();
                 }
             }
             
@@ -157,13 +151,13 @@ public class Cooker : MonoBehaviour
     private void CustomerTipChanceUpApply(DishType dish)
     {
         if(UnityEngine.Random.Range(0, 2) == 0) 
-            effectQueue.TipChanceUpQueue.Enqueue(dish);
+            effectQueue.AddTipChanceUp(dish);
     }
 
     private void CustomerEatSpeedUpApply(DishType dish)
     {
         if (UnityEngine.Random.Range(0, 2) == 0)
-            effectQueue.EatSpeedUpQueue.Enqueue(dish);
+            effectQueue.AddEatSpeedUp(dish);
     }
 
     public void TipChanceUp()
