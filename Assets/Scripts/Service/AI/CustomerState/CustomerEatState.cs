@@ -22,6 +22,12 @@ public class CustomerEatState : IState
         duration = stateManager.EatTime;
         timer = duration;
         stateManager.SetLifecycleProgress(0.55f);
+        if(stateManager.IsLateReceive)
+        {
+            stateManager.ToastMessageOn(MessageType.cLateReceive);
+            return;
+        }
+        stateManager.ToastMessageOn(MessageType.cEat);
     }
 
     public void Execute()

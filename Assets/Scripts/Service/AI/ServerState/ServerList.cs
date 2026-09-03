@@ -11,8 +11,11 @@ public class ServerList : MonoBehaviour
         EmployeeType.Server_3,
         EmployeeType.Server_4
     };
-
+    [SerializeField] private List<GameObject> animalPrefabs;
     [SerializeField] private ServerStateManager serverPrefab;
+
+    [SerializeField] private RuntimeAnimatorController controller;
+
     [SerializeField] private List<Transform> serverSpots = new();
     [SerializeField] private AccelerationButton accelerationButton;
     [SerializeField] private float accelDuration;
@@ -38,11 +41,21 @@ public class ServerList : MonoBehaviour
 
     private void CreateServers()
     {
+        Debug.Log($"serverPrefab : {serverPrefab}");
+        Debug.Log($"ServerTypes.Length : {ServerTypes.Length}");
+        Debug.Log($"animalPrefabs.Length : {animalPrefabs.Count}");
+        Debug.Log($"serverSpots.Length : {serverSpots.Count}");
         for (int i = 0; i < ServerTypes.Length; i++)
         {
             if (GameManager.Instance.Upgrade.RuntimeLevel.Get(ServerTypes[i]) > 0)
             {
+                
                 ServerStateManager server = Instantiate(serverPrefab, transform.position, Quaternion.identity);
+                GameObject animal = Instantiate(animalPrefabs[i], server.transform);
+                server.Initialize();
+                Animator animator = animal.GetComponent<Animator>();
+                animator.runtimeAnimatorController = controller;
+                server.SetAnimator(animator);
                 server.SetServerSpot(serverSpots[i]);
                 server.SetLevel((EmployeeType)i);
                 servers.Add(server);
