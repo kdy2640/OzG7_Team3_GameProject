@@ -143,7 +143,6 @@ public class ServerStateManager : MonoBehaviour
     public void AnimSetIdle()
     {
         animator.SetBool("IsWalking", false);
-        animator.SetBool("IsServing", false);
         animator.SetBool("IsRunning", false);
     }
 

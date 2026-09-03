@@ -7,6 +7,7 @@ public class TableManager : MonoBehaviour
     // 테이블 매니저 인스펙터 사용
     [SerializeField] private List<Table> tables = new();
     private Queue<CustomerStateManager> waitingQueue = new();
+    [SerializeField] private List<Transform> waitingPoints = new();
     public event Action SetTableDone;
     public IReadOnlyList<Table> Tables => tables;
     public int WaitingCount => waitingQueue.Count;
@@ -108,6 +109,8 @@ public class TableManager : MonoBehaviour
     public void AddWaitingCustomer(CustomerStateManager customer)
     {
         waitingQueue.Enqueue(customer);
+
+        UpdateWaitingPositions();
     }
 
     public bool TryGetSeatForWaitingCustomer()
@@ -135,6 +138,8 @@ public class TableManager : MonoBehaviour
                 )
             );
 
+            UpdateWaitingPositions();
+
             return true;
         }
         return false;
@@ -148,4 +153,20 @@ public class TableManager : MonoBehaviour
         }
         else return false;
     }
+
+    private void UpdateWaitingPositions()
+    {
+        int index = 0;
+
+        foreach (CustomerStateManager customer in waitingQueue)
+        {
+            if (index >= waitingPoints.Count)
+                return;
+
+            customer.AiMove.MoveTo(waitingPoints[index]);
+
+            index++;
+        }
+    }
+
 }
