@@ -21,7 +21,7 @@ public class CustomerDrinkState : IState
             return;
         }
         timer = Duration;
-        //멘트 ON
+        stateManager.ToastMessageOn(MessageType.cDrink);
     }
 
     public void Execute()

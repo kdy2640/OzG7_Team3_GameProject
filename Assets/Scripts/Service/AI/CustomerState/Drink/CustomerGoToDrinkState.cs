@@ -15,6 +15,7 @@ public class CustomerGoToDrinkState : IState
         stateManager.AiMove.MoveTo(stateManager.DrinkZone.DrinkSpot);
         
         stateManager.AiMove.OnArrived += ArrivedDrink;
+        stateManager.ToastMessageOn(MessageType.cGoToDrink);
     }
 
     public void Execute()

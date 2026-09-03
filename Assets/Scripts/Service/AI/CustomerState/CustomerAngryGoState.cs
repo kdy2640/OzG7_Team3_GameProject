@@ -24,6 +24,8 @@ public class CustomerAngryGoState : IState
         stateManager.AiMove.OnArrived += ArrivedHome;
 
         stateManager.AiMove.MoveTo(stateManager.ExitPoint);
+
+        stateManager.ToastMessageOn(MessageType.cAngry);
     }
 
 

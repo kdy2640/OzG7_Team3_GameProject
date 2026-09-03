@@ -7,7 +7,7 @@ public class ToastMessage : MonoBehaviour
 {
     [SerializeField] GameObject messageImg;
     [SerializeField] TMP_Text tmpText;
-    [SerializeField] float duration = 2f;
+    [SerializeField] float duration = 1f;
 
 
     public void ShowMessage(MessageType messageType)

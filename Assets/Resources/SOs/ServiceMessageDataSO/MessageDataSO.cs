@@ -2,10 +2,21 @@ using UnityEngine;
 
 public enum MessageType
 {
-    Welcome,
-    Hungry,
-    Angry,
-    Happy,
+    cEat,
+    cHungry,
+    cCaught,
+    cTip,
+    cAngry,
+    cGoToDrink,
+    cDrink,
+    cGoHome,
+    cLateReceive,
+    sServe,
+    sGoToClean,
+    sCatchRunner,
+    sMoveToTable,
+    sAfterSleep,
+    sLateServe,
     Count
 }
 
