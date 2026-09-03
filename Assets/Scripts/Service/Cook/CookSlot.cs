@@ -76,6 +76,7 @@ public class CookSlot : MonoBehaviour
 
     public void OnClick()
     {
+
         if (kitchenSlotHandler == null)
             return;
 
