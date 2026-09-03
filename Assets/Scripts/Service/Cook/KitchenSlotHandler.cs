@@ -21,6 +21,7 @@ public class KitchenSlotHandler : MonoBehaviour
     [SerializeField] CookingList cookingList;
     [SerializeField] private int maxQueueSlots = 3;
     [SerializeField] private int maxDishAmount = 3;
+    [SerializeField] private ToastMessage warningMessage;
     private CookSkillManager skillManager = new();
 
     private readonly List<Cooker> cookers = new();
@@ -106,10 +107,17 @@ public class KitchenSlotHandler : MonoBehaviour
         }
 
         if (cookingCount + stockAmount + queueCount >= maxDishAmount)
+        {
+            warningMessage.ShowMessage(MessageType.wFullStock);
             return false;
+        }
 
         if (queueSlots.Count >= maxQueueSlots)
+        {
+            warningMessage.ShowMessage(MessageType.wFullQueue);
             return false;
+        }
+            
 
         if (kitchenSlotViewerPrefab == null)
             return false;
@@ -132,8 +140,6 @@ public class KitchenSlotHandler : MonoBehaviour
 
     private void AddWaiting(KitchenSlotData slotData)
     {
-        
-
         QueueSlot queueSlot = new();
 
         KitchenSlotViewer slotViewer = Instantiate(kitchenSlotViewerPrefab, QueuePanel.transform);

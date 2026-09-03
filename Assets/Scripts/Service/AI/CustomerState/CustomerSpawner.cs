@@ -15,6 +15,7 @@ public class CustomerSpawner : MonoBehaviour
     [SerializeField] private Dirty dirtyPrefab;
     [SerializeField] private Combo combo;
     [SerializeField] private DrinkZone drinkZone;
+    [SerializeField] private ToastMessage warningMessage;
 
 
     [Header("랜덤 동물 범위")]
@@ -134,7 +135,7 @@ public class CustomerSpawner : MonoBehaviour
         GameObject animal =
             Instantiate(animalPrefabs[UnityEngine.Random.Range(0, animalPrefabs.Count)], customer.transform);
 
-        customer.Initialize(exitPoint, tableManager, tipBox, requestQueue, dirtyPrefab, combo, drinkZone);
+        customer.Initialize(exitPoint, tableManager, tipBox, requestQueue, dirtyPrefab, combo, drinkZone, warningMessage);
         animal.transform.localScale = Vector3.one * animalSize;
         animal.transform.localPosition += Vector3.down * (1 - animalSize) * 2;
         
