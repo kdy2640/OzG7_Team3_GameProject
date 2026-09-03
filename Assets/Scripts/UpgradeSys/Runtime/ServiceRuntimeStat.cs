@@ -66,6 +66,17 @@ public sealed class ServiceRuntimeStat
         return Mathf.Max(0f, values[index].Value);
     }
 
+    internal void Set(ServiceStatType statType, float value)
+    {
+        int index = (int)statType;
+
+        if (!IsValidIndex(index))
+            return;
+
+        EnsureCapacity();
+        values[index].SetValue(value);
+    }
+
     internal void Apply(
         IReadOnlyList<ServiceStatModifier> modifiers,
         int level)

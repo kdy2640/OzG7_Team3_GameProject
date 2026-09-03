@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class MarketManager : MonoBehaviour
+public partial class MarketManager : MonoBehaviour
 {
     public const int MaxMarketLevel = 4;
 
