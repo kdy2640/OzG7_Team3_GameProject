@@ -5,11 +5,11 @@ using UnityEngine.Serialization;
 [Serializable]
 public sealed class LevelData
 {
-    [SerializeField, Min(0)] private int level;
-    [SerializeField, Min(0)] private int maxDishLimit;
+    [SerializeField, Min(0)] internal int level;
+    [SerializeField, Min(0)] internal int maxDishLimit;
     [FormerlySerializedAs("maxEXPLimit")]
-    [SerializeField, Min(0)] private int incomeGoal;
-    [SerializeField, Min(0)] private int baseCustomerCount;
+    [SerializeField, Min(0)] internal int incomeGoal;
+    [SerializeField, Min(0)] internal int baseCustomerCount;
 
     public int Level
     {

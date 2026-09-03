@@ -13,13 +13,13 @@ public enum MarketPhase
 [Serializable]
 public sealed class MarketData
 {
-    [SerializeField, Min(0)] private int currentBusinessDay;
-    [SerializeField] private MarketPhase currentPhase = MarketPhase.Morning;
-    [SerializeField, Min(0)] private int currentLevel;
+    [SerializeField, Min(0)] internal int currentBusinessDay;
+    [SerializeField] internal MarketPhase currentPhase = MarketPhase.Morning;
+    [SerializeField, Min(0)] internal int currentLevel;
     [FormerlySerializedAs("currentEXP")]
-    [SerializeField, Min(0)] private int totalIncome;
-    [SerializeField, Min(0)] private int yesterdaySales;
-    [SerializeField] private List<DishType> selectedDishes = new();
+    [SerializeField, Min(0)] internal int totalIncome;
+    [SerializeField, Min(0)] internal int yesterdaySales;
+    [SerializeField] internal List<DishType> selectedDishes = new();
 
     internal event Action OnMarketDataChanged;
 

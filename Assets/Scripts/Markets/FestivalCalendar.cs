@@ -9,10 +9,10 @@ public sealed class FestivalCalendar
     public const int TasteFestivalDuration = 4;
     public const int CategoryFestivalDuration = 3;
 
-    [SerializeField] private TasteType latestTaste = TasteType.Count;
-    [SerializeField, Min(-1)] private int tasteStartBusinessDay = -1;
-    [SerializeField] private CategoryType latestCategory = CategoryType.Count;
-    [SerializeField, Min(-1)] private int categoryStartBusinessDay = -1;
+    [SerializeField] internal TasteType latestTaste = TasteType.Count;
+    [SerializeField, Min(-1)] internal int tasteStartBusinessDay = -1;
+    [SerializeField] internal CategoryType latestCategory = CategoryType.Count;
+    [SerializeField, Min(-1)] internal int categoryStartBusinessDay = -1;
 
     public TasteType LatestTaste => latestTaste;
     public CategoryType LatestCategory => latestCategory;
