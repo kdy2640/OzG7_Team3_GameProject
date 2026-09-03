@@ -160,6 +160,7 @@ public class CustomerStateManager : MonoBehaviour
     {
         currentTable = table;
         this.seat = seat;
+        tipChance += tableManager.GetTipChanceBonus(table);
     }
 
     public void CreateOrder()

@@ -86,6 +86,25 @@ public class TableManager : MonoBehaviour
         return null;
     }
 
+    public float GetTipChanceBonus(Table table)
+    {
+        int tableIndex = tables.IndexOf(table);
+        FacilityType tableType = (FacilityType)tableIndex;
+        int level = GameManager.Instance.Upgrade.RuntimeLevel.Get(tableType);
+        float bonus = 0f;
+
+        if (tableType != FacilityType.Table_1 && level >= 2)
+            bonus += 0.1f;
+
+        if (level >= 4)
+            bonus += 0.2f;
+
+        if (level >= 5)
+            bonus += 0.2f;
+
+        return bonus;
+    }
+
     public void AddWaitingCustomer(CustomerStateManager customer)
     {
         waitingQueue.Enqueue(customer);
