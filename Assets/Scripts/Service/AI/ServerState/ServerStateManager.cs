@@ -147,21 +147,14 @@ public class ServerStateManager : MonoBehaviour
     public void SetLevel(EmployeeType employee)
     {
         level = GameManager.Instance.Upgrade.RuntimeLevel.Get(employee);
+        UpdateStatus();
     }
     #region 스킬 관련
     public void UpdateStatus()
     {
-        speed = baseSpeed;
-        for (int i = 0; i < level - 1; i++)
-        {
-            UpgradeSpeed();
-        }
+        int speedUpgradeCount = Mathf.Max(0, level - 1);
+        speed = baseSpeed * (1f + speedUpgradeCount * 0.1f);
         aiMove.SetSpeed(speed);
-    }
-
-    private void UpgradeSpeed()
-    {
-        speed *= 1.1f;
     }
     public void UpgradeBaseSpeed()
     {

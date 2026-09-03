@@ -94,7 +94,7 @@ public sealed class HarvestEmployeeResolver : MonoBehaviour
             + (HasUpgrade(EmployeeType.Harvester_2, 5) ? 1 : 0);
 
         mainCropMeatChance = HasUpgrade(EmployeeType.Harvester_1, 5)
-            ? 0.05f
+            ? 0.10f
             : 0f;
         vegetableMeatChance = HasUpgrade(EmployeeType.Harvester_2, 1)
             ? 0.10f
