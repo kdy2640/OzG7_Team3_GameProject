@@ -17,6 +17,11 @@ public enum MessageType
     sMoveToTable,
     sAfterSleep,
     sLateServe,
+    wNoDish,
+    wNoGrocery,
+    wServerBusy,
+    wFullStock,
+    wFullQueue,
     Count
 }
 

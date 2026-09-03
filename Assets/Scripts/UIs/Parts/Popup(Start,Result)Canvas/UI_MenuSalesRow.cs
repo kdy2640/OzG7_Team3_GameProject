@@ -24,7 +24,7 @@ public sealed class UI_MenuSalesRow : MonoBehaviour
 
         if (salesText != null)
         {
-            salesText.text = $"{data.salesAmount:N0}코인";
+            salesText.text = $"{data.salesAmount:N0}";
         }
     }
     public void Clear()
@@ -33,6 +33,6 @@ public sealed class UI_MenuSalesRow : MonoBehaviour
 
         if (menuIcon != null) menuIcon.sprite = null;
 
-        if (salesText != null) salesText.text = "0코인";
+        if (salesText != null) salesText.text = "0";
     }
 }

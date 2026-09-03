@@ -377,6 +377,17 @@ public class StockManager : MonoBehaviour
         return (int)Math.Min(total, int.MaxValue);
     }
 
+    // 전체 요리 없앨때 사용
+    public void ClearDishes()
+    {
+        foreach (DishAmount dishAmount in stockData.dishes)
+        {
+            dishAmount.amount = 0;
+        }
+
+        NotifyStockDataChanged();
+    }
+
     #endregion
 
     #region Save Data

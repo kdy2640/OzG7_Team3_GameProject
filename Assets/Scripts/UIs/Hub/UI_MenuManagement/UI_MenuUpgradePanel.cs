@@ -36,6 +36,7 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
     [SerializeField] private TMP_Text warningText;
 
     [Header("Buttons")]
+    [SerializeField] private Button backgroundButton;
     [SerializeField] private Button cancelButton;
     [SerializeField] private Button upgradeButton;
     [SerializeField] private TMP_Text upgradeButtonText;
@@ -46,6 +47,7 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
 
     private void Awake()
     {
+        backgroundButton.onClick.AddListener(Close);
         cancelButton.onClick.AddListener(Close);
         upgradeButton.onClick.AddListener(OnUpgradeButtonClicked);
         Hide();
@@ -53,6 +55,7 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
 
     private void OnDestroy()
     {
+        backgroundButton.onClick.RemoveListener(Close);
         cancelButton.onClick.RemoveListener(Close);
         upgradeButton.onClick.RemoveListener(OnUpgradeButtonClicked);
     }

@@ -15,6 +15,8 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
     [SerializeField] private Sprite remainingMissionSprite;
     [SerializeField] private RectTransform currentMissionIndicator;
     [SerializeField] private float currentMissionSlotOffsetY = 15f;
+    [SerializeField] private TMP_Text marketDescriptionText;
+    [SerializeField] private TMP_Text marketDescriptionShadowText;
     [SerializeField] private TMP_Text missionTitleText;
     [SerializeField] private TMP_Text missionDescriptionText;
     [SerializeField] private Slider missionSlider;
@@ -82,6 +84,10 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
         for (int i = 0; i < levelSlotCount; i++)
             SetSlotColor(levelSlots[i], i < activeLevelCount);
 
+        LevelMissionGroupSO missionGroup = market.LevelMissionProgress.MissionGroup;
+        marketDescriptionText.text = missionGroup.MarketDescription;
+        marketDescriptionShadowText.text = missionGroup.MarketDescription;
+
         bool isMaxLevel = marketData.CurrentLevel >= MarketManager.MaxMarketLevel;
         bool areAllMissionsCompleted = market.LevelMissionProgress.AreAllMissionsClaimed;
         bool isFinalLevelComplete = isMaxLevel && areAllMissionsCompleted;
@@ -148,7 +154,6 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
         if (salesAmountText != null)
             salesAmountText.text = $"{totalIncome:N0} / {incomeGoal:N0}";
 
-        LevelMissionGroupSO missionGroup = market.LevelMissionProgress.MissionGroup;
         int questSlotCount = questSlots?.Length ?? 0;
         int missionCount = Mathf.Clamp(
             missionGroup == null || missionGroup.Missions == null

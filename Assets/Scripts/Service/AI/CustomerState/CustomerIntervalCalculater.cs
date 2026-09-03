@@ -8,10 +8,15 @@ using UnityEngine;
 [Serializable]
 public sealed class CustomerIntervalCalculater
 {
-    // 처리율을 측정할 수 없는 영업 초반에는 initialInterval로 손님을 투입한다.
+    // 영업 시작 후 initialDelay가 지나면 좌석 수의 절반만큼 초기 손님을 투입한다.
+    // 초기 손님은 initialMinInterval~initialMaxInterval 사이의 무작위 간격으로 들어온다.
+    [Header("Initial Arrival")]
+    [SerializeField, Min(0f)] private float initialDelay = 5f;
+    [SerializeField, Min(0.1f)] private float initialMinInterval = 1f;
+    [SerializeField, Min(0.1f)] private float initialMaxInterval = 2f;
+
     // 처리율 측정이 시작된 뒤에는 계산된 주기를 minInterval~maxInterval 범위로 제한한다.
-    [Header("Arrival Interval")]
-    [SerializeField, Min(0.1f)] private float initialInterval = 0.4f;
+    [Header("Runtime Arrival Interval")]
     [SerializeField, Min(0.1f)] private float minInterval = 0.5f;
     [SerializeField, Min(0.1f)] private float maxInterval = 10f;
 
@@ -33,7 +38,17 @@ public sealed class CustomerIntervalCalculater
     // 이전 처리율과 새 처리율을 Lerp해서 급격한 변화를 줄인 값이다.
     private float smoothedRuntimeThroughput;
 
-    public float InitialInterval => initialInterval;
+    public float InitialDelay => initialDelay;
+
+    public int CalculateInitialCustomerCount(int usableSeatCount)
+    {
+        return usableSeatCount / 2;
+    }
+
+    public float GetInitialInterval()
+    {
+        return UnityEngine.Random.Range(initialMinInterval, initialMaxInterval);
+    }
 
     public void Reset()
     {
@@ -65,15 +80,14 @@ public sealed class CustomerIntervalCalculater
     public bool TryGetInterval(
         int waitingCustomerCount,
         int usableSeatCount,
-        int activeCustomerCount,
         out float interval)
     {
         // 아직 완료된 손님이 없거나 첫 샘플이 나오기 전에는 실제 처리율을 알 수 없다.
-        // 이 구간에서는 좌석 수만큼 초기 손님을 빠르게 채우되 그 이상은 투입하지 않는다.
+        // 초기 손님 외에는 실제 처리율이 계산될 때까지 추가로 투입하지 않는다.
         if (smoothedRuntimeThroughput <= 0f)
         {
-            interval = initialInterval;
-            return activeCustomerCount < usableSeatCount;
+            interval = 0f;
+            return false;
         }
 
         // 적정 대기열은 사용 가능한 좌석 수의 절반으로 잡는다.

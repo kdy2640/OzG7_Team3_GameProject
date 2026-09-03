@@ -15,6 +15,7 @@ public class CustomerSpawner : MonoBehaviour
     [SerializeField] private Dirty dirtyPrefab;
     [SerializeField] private Combo combo;
     [SerializeField] private DrinkZone drinkZone;
+    [SerializeField] private ToastMessage warningMessage;
 
 
     [Header("랜덤 동물 범위")]
@@ -23,6 +24,7 @@ public class CustomerSpawner : MonoBehaviour
 
     
     private float spawnTimer;
+    private float nextInitialSpawnInterval;
     private int initialSpawnRemaining;
     private int targetCustomerCount;
     private int spawnedCustomerCount;
@@ -94,7 +96,7 @@ public class CustomerSpawner : MonoBehaviour
 
         if (initialSpawnRemaining > 0)
         {
-            RunSpawnTimer(intervalCalculater.InitialInterval);
+            RunSpawnTimer(nextInitialSpawnInterval);
             return;
         }
 
@@ -103,7 +105,6 @@ public class CustomerSpawner : MonoBehaviour
         if (!intervalCalculater.TryGetInterval(
             tableManager.WaitingCount,
             usableSeatCount,
-            activeCustomers.Count,
             out float arrivalInterval))
         {
             return;
@@ -123,7 +124,12 @@ public class CustomerSpawner : MonoBehaviour
         spawnTimer = 0f;
 
         if (initialSpawnRemaining > 0)
+        {
             initialSpawnRemaining--;
+
+            if (initialSpawnRemaining > 0)
+                nextInitialSpawnInterval = intervalCalculater.GetInitialInterval();
+        }
     }
 
     private void SpawnCustomer()
@@ -134,7 +140,7 @@ public class CustomerSpawner : MonoBehaviour
         GameObject animal =
             Instantiate(animalPrefabs[UnityEngine.Random.Range(0, animalPrefabs.Count)], customer.transform);
 
-        customer.Initialize(exitPoint, tableManager, tipBox, requestQueue, dirtyPrefab, combo, drinkZone);
+        customer.Initialize(exitPoint, tableManager, tipBox, requestQueue, dirtyPrefab, combo, drinkZone, warningMessage);
         animal.transform.localScale = Vector3.one * animalSize;
         animal.transform.localPosition += Vector3.down * (1 - animalSize) * 2;
         
@@ -169,10 +175,11 @@ public class CustomerSpawner : MonoBehaviour
     {
         serviceStarted = true;
         serviceEnd = false;
-        spawnTimer = intervalCalculater.InitialInterval;
+        spawnTimer = 0f;
+        nextInitialSpawnInterval = intervalCalculater.InitialDelay;
         initialSpawnRemaining = Mathf.Min(
             targetCustomerCount,
-            tableManager.UsableSeatCount);
+            intervalCalculater.CalculateInitialCustomerCount(tableManager.UsableSeatCount));
 
         if (targetCustomerCount == 0)
             GameManager.Instance.Service.EndLoop();
