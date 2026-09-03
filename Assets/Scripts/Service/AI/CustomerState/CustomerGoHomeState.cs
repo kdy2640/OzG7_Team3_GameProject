@@ -24,6 +24,7 @@ public class CustomerGoHomeState : IState
         stateManager.AiMove.SetSpeed(stateManager.Speed);
 
         stateManager.AiMove.MoveTo(stateManager.ExitPoint);
+
     }
 
 

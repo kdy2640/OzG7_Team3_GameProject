@@ -27,6 +27,7 @@ public class ServerMoveToTableState : IState
         aiMove.OnArrived += Arrived;
 
         aiMove.MoveTo(servePoint);
+        stateManager.ToastMessageOn(MessageType.sMoveToTable);
     }
 
 

@@ -12,7 +12,7 @@ public class ServerTakeMoneyFromRunnerState : IState
 
     public void Enter()
     {
-        // 돈받기 메시지 ON
+        stateManager.ToastMessageOn(MessageType.sCatchRunner);
         stateManager.Animator.SetBool("IsAttacking", true);
     }
 

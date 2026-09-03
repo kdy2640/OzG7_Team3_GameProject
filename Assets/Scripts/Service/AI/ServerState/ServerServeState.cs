@@ -22,6 +22,12 @@ public class ServerServeState : IState
         stateManager.GiveFood();
         stateManager.DestroyDish();
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_DishServed);
+        if(stateManager.Customer.IsLateReceive)
+        {
+            stateManager.ToastMessageOn(MessageType.sLateServe);
+            return;
+        }
+        stateManager.ToastMessageOn(MessageType.sServe);
     }
 
     public void Execute()
