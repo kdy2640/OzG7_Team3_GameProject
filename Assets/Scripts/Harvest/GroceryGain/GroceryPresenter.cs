@@ -14,9 +14,9 @@ public sealed class GroceryPresenter : Poolable
     [SerializeField, Range(0f, 1f)] private float randomScaleRange = 0.2f;
 
     [Header("Spawn Area")]
-    [SerializeField, Min(0f)] private float spawnHalfWidth = 0.35f;
-    [SerializeField, Min(0f)] private float spawnMinUpOffset = 0.25f;
-    [SerializeField, Min(0f)] private float spawnMaxUpOffset = 0.65f;
+    [SerializeField, Min(0f)] private float spawnHalfWidth = 0.15f;
+    [SerializeField, Min(0f)] private float spawnMinUpOffset = 0.7f;
+    [SerializeField, Min(0f)] private float spawnMaxUpOffset = 0.9f;
 
     [Header("Popup")]
     [SerializeField, Min(0f)] private float popupDuration = 0.18f;
@@ -26,7 +26,6 @@ public sealed class GroceryPresenter : Poolable
     [Header("Move")]
     [SerializeField, Min(0f)] private float moveDuration = 0.45f;
     [SerializeField, Min(0f)] private float moveEndScale = 0.35f;
-    [SerializeField, Min(0f)] private float moveArcHeight = 0.35f;
 
     private Sequence currentSequence;
     private Transform cameraTransform;
@@ -49,7 +48,7 @@ public sealed class GroceryPresenter : Poolable
         currentSequence.Append(
             groceryRenderer.transform
                 .DOScale(targetVisualScale, popupDuration)
-                .SetEase(Ease.OutBack));
+                .SetEase(Ease.OutQuad));
         currentSequence.AppendInterval(popupStayDuration);
 
         yield return currentSequence.WaitForCompletion();
@@ -61,35 +60,22 @@ public sealed class GroceryPresenter : Poolable
         StopCurrentTween();
         groceryRenderer.gameObject.SetActive(true);
 
-        Vector3 startPosition = transform.position;
-        Vector3 startScale = groceryRenderer.transform.localScale;
         Vector3 endScale = targetVisualScale * moveEndScale;
-        float elapsed = 0f;
 
-        while (elapsed < moveDuration)
-        {
-            elapsed += Time.deltaTime;
-            float time = Mathf.Clamp01(elapsed / moveDuration);
-            float moveTime = time * time;
-            Vector3 targetPosition = target.position;
-            Vector3 arcOffset = cameraTransform.up
-                * (Mathf.Sin(time * Mathf.PI) * moveArcHeight);
+        currentSequence = DOTween.Sequence();
+        currentSequence.Append(
+            transform
+                .DOMove(target.position, moveDuration)
+                .SetEase(Ease.Linear));
+        currentSequence.Join(
+            groceryRenderer.transform
+                .DOScale(endScale, moveDuration)
+                .SetEase(Ease.Linear));
 
-            transform.position = Vector3.Lerp(
-                startPosition,
-                targetPosition,
-                moveTime) + arcOffset;
-            groceryRenderer.transform.localScale = Vector3.Lerp(
-                startScale,
-                endScale,
-                moveTime);
+        yield return currentSequence.WaitForCompletion();
 
-            yield return null;
-        }
-
-        transform.position = target.position;
-        groceryRenderer.transform.localScale = endScale;
         groceryRenderer.gameObject.SetActive(false);
+        currentSequence = null;
         RequestReturn();
     }
 

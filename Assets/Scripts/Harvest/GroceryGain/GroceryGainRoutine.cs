@@ -17,19 +17,27 @@ public sealed class GroceryGainRoutine : MonoBehaviour
     [SerializeField, Min(0f)] private float moveDelay = 0.3f;
     [SerializeField, Min(1)] private int amountPerPresenter = 1;
 
+    private readonly int[] nowAliveGrocery =
+        new int[(int)GroceryType.Count];
     private GroceryPooler pooler;
 
     private void Awake()
     {
         pooler = GetComponent<GroceryPooler>();
         pooler.Prewarm(prewarmCount);
+        groceryViewPanel.SetDelayRefresh(true);
     }
 
     public void Play(
         IReadOnlyList<GroceryAmount> rewards,
         Vector3 spawnPoint)
     {
-        groceryViewPanel.ReserveGain(rewards);
+        for (int i = 0; i < rewards.Count; i++)
+        {
+            GroceryAmount reward = rewards[i];
+            nowAliveGrocery[(int)reward.grocery] += reward.amount;
+        }
+
         StartCoroutine(PlayRoutine(rewards, spawnPoint));
     }
 
@@ -81,7 +89,12 @@ public sealed class GroceryGainRoutine : MonoBehaviour
         int targetIndex = GetTargetIndex(reward.grocery);
         yield return presenter.MoveToTarget(targets[targetIndex]);
 
-        groceryViewPanel.ApplyGain(reward);
+        int groceryIndex = (int)reward.grocery;
+        nowAliveGrocery[groceryIndex] -= reward.amount;
+
+        groceryViewPanel.RefreshOneUI(
+            reward,
+            nowAliveGrocery[groceryIndex] == 0);
     }
 
     private int GetTargetIndex(GroceryType groceryType)

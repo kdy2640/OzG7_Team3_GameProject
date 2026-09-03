@@ -151,9 +151,9 @@ public sealed class HarvestActor : MonoBehaviour
         }
         else
         {
-            groceryGainRoutine.Play(harvestDataSO.Rewards, gainPoint);
             GameManager.Instance.StockManager.AddGrocery(harvestDataSO.Rewards);
             employeeResolver.ResolveHarvested(harvestDataSO);
+            groceryGainRoutine.Play(harvestDataSO.Rewards, gainPoint);
         }
 
         if (harvestDataSO.IsMove)

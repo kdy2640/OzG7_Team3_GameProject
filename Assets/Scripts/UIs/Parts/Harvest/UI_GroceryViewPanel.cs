@@ -8,9 +8,10 @@ public class UI_GroceryViewPanel : MonoBehaviour
     [SerializeField] private Transform viewContainer;
 
     private readonly List<UI_GroceryView> groceryViews = new();
-    private readonly long[] pendingGainAmounts =
+    private readonly long[] displayAmounts =
         new long[(int)GroceryType.Count];
     private StockManager stockManager;
+    private bool isDelayRefresh;
     private bool isReady;
 
     private void Start()
@@ -24,14 +25,19 @@ public class UI_GroceryViewPanel : MonoBehaviour
         }
 
         stockManager = GameManager.Instance?.StockManager;
-        stockManager?.SubscribeStockDataChange(Refresh);
+        stockManager?.SubscribeStockDataChange(OnStockDataChanged);
         isReady = true;
         RefreshGroceryViews();
     }
 
     private void OnDestroy()
     {
-        stockManager?.UnsubscribeStockDataChange(Refresh);
+        stockManager?.UnsubscribeStockDataChange(OnStockDataChanged);
+    }
+
+    public void SetDelayRefresh(bool value)
+    {
+        isDelayRefresh = value;
     }
 
     public void Refresh()
@@ -45,24 +51,22 @@ public class UI_GroceryViewPanel : MonoBehaviour
         }
     }
 
-    public void ReserveGain(IReadOnlyList<GroceryAmount> rewards)
+    public void RefreshOneUI(
+        GroceryAmount reward,
+        bool forceRealValue)
     {
-        for (int i = 0; i < rewards.Count; i++)
-        {
-            GroceryAmount reward = rewards[i];
-            pendingGainAmounts[(int)reward.grocery] += reward.amount;
-        }
-    }
+        int groceryIndex = (int)reward.grocery;
+        long displayAmount = forceRealValue
+            ? GetStockAmount(reward.grocery)
+            : displayAmounts[groceryIndex] + reward.amount;
 
-    public void ApplyGain(GroceryAmount reward)
-    {
-        pendingGainAmounts[(int)reward.grocery] -= reward.amount;
+        displayAmounts[groceryIndex] = displayAmount;
 
         for (int i = 0; i < groceryTypes.Count; i++)
         {
             if (groceryTypes[i] == reward.grocery)
             {
-                RefreshView(i);
+                groceryViews[i].SetAmount(displayAmount);
                 groceryViews[i].PlayGain();
                 return;
             }
@@ -114,6 +118,14 @@ public class UI_GroceryViewPanel : MonoBehaviour
     private void RefreshView(int index)
     {
         GroceryType groceryType = groceryTypes[index];
+        long amount = GetStockAmount(groceryType);
+
+        displayAmounts[(int)groceryType] = amount;
+        groceryViews[index].SetAmount(amount);
+    }
+
+    private long GetStockAmount(GroceryType groceryType)
+    {
         IReadOnlyList<GroceryAmount> groceries = stockManager.StockData.Groceries;
         long amount = 0;
 
@@ -127,7 +139,16 @@ public class UI_GroceryViewPanel : MonoBehaviour
             }
         }
 
-        amount -= pendingGainAmounts[(int)groceryType];
-        groceryViews[index].SetAmount(amount);
+        return amount;
+    }
+
+    private void OnStockDataChanged()
+    {
+        if (isDelayRefresh)
+        {
+            return;
+        }
+
+        Refresh();
     }
 }
