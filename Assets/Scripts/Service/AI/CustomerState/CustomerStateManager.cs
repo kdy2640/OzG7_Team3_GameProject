@@ -235,6 +235,8 @@ public class CustomerStateManager : MonoBehaviour
 
     public void Pay()  // 돈 획득 이펙트
     {
+        Combo.AddCount();
+
         paidDishPrice = DishPriceCalculator.BasicPriceCalculate(
             Order.dish,
             Combo.BonusRate);
