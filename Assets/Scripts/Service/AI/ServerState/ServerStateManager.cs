@@ -224,26 +224,14 @@ public class ServerStateManager : MonoBehaviour
 
     private void CookEffectApply()
     {
-
-        if(dishEffectQueue.EatSpeedUpQueue.Count>0)
+        if (dishEffectQueue.TryConsumeEatSpeedUp(dish))
         {
-            DishType eDish = dishEffectQueue.EatSpeedUpQueue.Peek();
-            if (eDish == dish)
-            {
-                dishEffectQueue.EatSpeedUpQueue.Dequeue();
-                CookerCustomerEatSpeedUp();
-            }
+            CookerCustomerEatSpeedUp();
         }
 
-        if (dishEffectQueue.TipChanceUpQueue.Count > 0)
+        if (dishEffectQueue.TryConsumeTipChanceUp(dish))
         {
-            DishType tDish = dishEffectQueue.TipChanceUpQueue.Peek();
-            if (tDish == dish)
-            {
-                dishEffectQueue.TipChanceUpQueue.Dequeue();
-
-                CustomerTipChanceUp();
-            }
+            CustomerTipChanceUp();
         }
     }
 

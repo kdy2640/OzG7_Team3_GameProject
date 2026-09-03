@@ -151,13 +151,13 @@ public class Cooker : MonoBehaviour
     private void CustomerTipChanceUpApply(DishType dish)
     {
         if(UnityEngine.Random.Range(0, 2) == 0) 
-            effectQueue.TipChanceUpQueue.Enqueue(dish);
+            effectQueue.AddTipChanceUp(dish);
     }
 
     private void CustomerEatSpeedUpApply(DishType dish)
     {
         if (UnityEngine.Random.Range(0, 2) == 0)
-            effectQueue.EatSpeedUpQueue.Enqueue(dish);
+            effectQueue.AddEatSpeedUp(dish);
     }
 
     public void TipChanceUp()
