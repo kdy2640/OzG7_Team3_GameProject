@@ -123,7 +123,7 @@ public sealed class UI_NewFunctionList : MonoBehaviour
                 stageLevelData.MaxLevel,
                 stageLevelData.RequiredMarketLevel.Count);
 
-            for (int i = 0; i < stageCount; i++)
+            for (int i = 1; i < stageCount; i++)
             {
                 if (stageLevelData.RequiredMarketLevel[i] != currentLevel)
                     continue;
