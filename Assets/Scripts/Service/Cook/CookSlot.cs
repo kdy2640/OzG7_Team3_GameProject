@@ -18,13 +18,14 @@ public class CookSlot : MonoBehaviour
     private DishType dish;
     private KitchenSlotHandler kitchenSlotHandler;
     private bool isInitialized;
-
+    private ToastMessage warningMessage;
     
 
-    public void Initialize(DishType dish, KitchenSlotHandler kitchenSlotHandler)
+    public void Initialize(DishType dish, KitchenSlotHandler kitchenSlotHandler, ToastMessage warningMessage)
     {
         this.dish = dish;
         this.kitchenSlotHandler = kitchenSlotHandler;
+        this.warningMessage = warningMessage;
         isInitialized = true;
         UpdateUI();
     }
@@ -76,6 +77,11 @@ public class CookSlot : MonoBehaviour
 
     public void OnClick()
     {
+        if(!GameManager.Instance.CookingManager.CanCook(dish))
+        {
+            warningMessage.ShowMessage(MessageType.wNoGrocery);
+        }
+
         if (kitchenSlotHandler == null)
             return;
 

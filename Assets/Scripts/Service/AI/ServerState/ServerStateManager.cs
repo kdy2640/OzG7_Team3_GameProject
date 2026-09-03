@@ -16,7 +16,6 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private GameObject cleaningTool;
     [SerializeField] private ToastMessage toastMessage;
 
-
     [SerializeField] private float baseSpeed = 8;
     [SerializeField] private float speed;
     [SerializeField] private int level;
@@ -39,6 +38,7 @@ public class ServerStateManager : MonoBehaviour
 
     private GameObject dishPrefab;
     private GameObject dishObject;
+    
     
     public float Speed => speed;
     public AIMove AiMove => aiMove;
@@ -293,6 +293,8 @@ public class ServerStateManager : MonoBehaviour
     {
         toastMessage.ShowMessage(messageType);
     }
+
+    
 
     public void SetAnimator(Animator animator)
     {

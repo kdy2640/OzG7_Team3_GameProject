@@ -5,6 +5,7 @@ public class CookSlotContainer : MonoBehaviour
 {
     [SerializeField] private CookSlot CookSlotPrefab;
     [SerializeField] private KitchenSlotHandler kitchenSlotHandler;
+    [SerializeField] private ToastMessage warningMessage;
 
     private bool initialized;
 
@@ -21,7 +22,7 @@ public class CookSlotContainer : MonoBehaviour
         foreach (DishType dish in GameManager.Instance.Market.MarketData.SelectedDishes)
         {
             CookSlot slot = Instantiate(CookSlotPrefab, transform);
-            slot.Initialize(dish, kitchenSlotHandler);
+            slot.Initialize(dish, kitchenSlotHandler, warningMessage);
         }
 
     }

@@ -19,6 +19,7 @@ public class ServerList : MonoBehaviour
     [SerializeField] private List<Transform> serverSpots = new();
     [SerializeField] private AccelerationButton accelerationButton;
     [SerializeField] private float accelDuration;
+    [SerializeField] private ToastMessage warningMessage;
     private ServerSkillManager skillManager = new();
 
     private List<ServerStateManager> servers = new();
@@ -89,6 +90,7 @@ public class ServerList : MonoBehaviour
                 return true;
             }
         }
+        WarningMessageOn(MessageType.wServerBusy);
         return false;
     }
 
@@ -111,6 +113,7 @@ public class ServerList : MonoBehaviour
                 return true;
             }
         }
+        WarningMessageOn(MessageType.wServerBusy);
         catcher = null;
         return false;
     }
@@ -132,6 +135,7 @@ public class ServerList : MonoBehaviour
                 return true;
             }
         }
+        WarningMessageOn(MessageType.wServerBusy);
         return false;
     }
 
@@ -160,5 +164,9 @@ public class ServerList : MonoBehaviour
             server.AiMove.SetSpeed(server.Speed);
             server.Animator.speed = 1f;
         }
+    }
+    public void WarningMessageOn(MessageType messageType)
+    {
+        warningMessage.ShowMessage(messageType);
     }
 }
