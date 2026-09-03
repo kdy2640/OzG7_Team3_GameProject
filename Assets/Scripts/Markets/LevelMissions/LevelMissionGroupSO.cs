@@ -5,9 +5,11 @@ using UnityEngine;
 public sealed class LevelMissionGroupSO : ScriptableObject
 {
     [SerializeField, Min(0)] private int level;
+    [SerializeField, TextArea] private string marketDescription;
     [SerializeField] private List<LevelMissionInfo> missions = new();
 
     public int Level => level;
+    public string MarketDescription => marketDescription;
     public IReadOnlyList<LevelMissionInfo> Missions => missions;
 
     private void OnValidate()
