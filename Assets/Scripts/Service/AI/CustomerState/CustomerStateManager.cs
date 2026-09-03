@@ -34,6 +34,7 @@ public class CustomerStateManager : MonoBehaviour
     public event Action ProcessingCompleted;
     public event Action<CustomerStateManager> LifecycleFinished;
     private float tipChance = 0.1f;
+    private float drinkChance = 0.2f;
     private float eatTime = 5f;
     private float runChance = 0.1f;
     private float eatSpeedUpPercentage;
@@ -200,6 +201,17 @@ public class CustomerStateManager : MonoBehaviour
         }
 
         return UnityEngine.Random.value < tipChance;
+    }
+
+    public bool IsDrink()
+    {
+        if (GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_2) < 1)
+            return false;
+
+        if (!drinkZone.CanSpendDrink())
+            return false;
+
+        return UnityEngine.Random.value < drinkChance;
     }
 
     public void EatSpeedUp(float percentage)
