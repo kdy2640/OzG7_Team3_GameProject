@@ -51,6 +51,7 @@ public class ServerStateManager : MonoBehaviour
     public int Level => level; 
     public float ServeTime => serveTime;
     public float ReceiveFoodTime => receiveFoodTime;
+    public float WorkDurationMultiplier { get; private set; } = 1f;
     public SleepingButton SleepingButton => sleepingButton;
     public GameObject DishPrefab => dishPrefab;
     public GameObject CleaningTool => cleaningTool;
@@ -163,8 +164,9 @@ public class ServerStateManager : MonoBehaviour
     }
     public void WorkSpeedUp()
     {
-        serveTime /= 2;
-        receiveFoodTime /= 2;
+        WorkDurationMultiplier = 0.5f;
+        serveTime *= WorkDurationMultiplier;
+        receiveFoodTime *= WorkDurationMultiplier;
     }
 
     public void CustomerEatSpeedUp()
