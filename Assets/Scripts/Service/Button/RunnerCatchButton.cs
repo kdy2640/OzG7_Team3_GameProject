@@ -27,6 +27,7 @@ public class RunnerCatchButton : MonoBehaviour
             isClicked = true;
             GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_NegativeEventSelect);
             customer.AiMove.StopMove();
+            customer.AnimSetIdle();
             customer.AiMove.SetDirection(server.transform.position);
         }
         else

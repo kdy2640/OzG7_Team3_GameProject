@@ -15,7 +15,7 @@ public class CustomerTipState : IState
         stateManager.SetLifecycleProgress(0.88f);
         stateManager.AnimSetIdle();
         stateManager.Animator.SetBool("IsTipping",true);
-
+        stateManager.ToastMessageOn(MessageType.cTip);
         timer = Duration;
     }
 

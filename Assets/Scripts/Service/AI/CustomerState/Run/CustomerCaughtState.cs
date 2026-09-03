@@ -34,5 +34,6 @@ public class CustomerCaughtState : IState
     {
         timer = 2f;
         stateManager.Pay();
+        stateManager.ToastMessageOn(MessageType.cCaught);
     }
 }
