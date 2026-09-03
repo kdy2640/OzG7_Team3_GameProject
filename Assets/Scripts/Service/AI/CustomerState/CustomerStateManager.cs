@@ -38,7 +38,7 @@ public class CustomerStateManager : MonoBehaviour
     private float tipChance = 0.1f;
     private float drinkChance = 0.2f;
     private float eatTime = 5f;
-    private float runChance = 1f;
+    private float runChance = 0.1f;
     private float eatSpeedUpPercentage;
     private bool isProcessingCompleted;
     private bool isLifecycleFinished;
