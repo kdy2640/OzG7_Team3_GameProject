@@ -15,7 +15,7 @@ public class CustomerSpawner : MonoBehaviour
     [SerializeField] private Dirty dirtyPrefab;
     [SerializeField] private Combo combo;
     [SerializeField] private DrinkZone drinkZone;
-    [SerializeField] private ToastMessage warningMessage;
+    [SerializeField] private ServiceWarningMessage warningMessage;
 
 
     [Header("랜덤 동물 범위")]

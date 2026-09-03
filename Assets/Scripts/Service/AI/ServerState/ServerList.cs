@@ -19,7 +19,7 @@ public class ServerList : MonoBehaviour
     [SerializeField] private List<Transform> serverSpots = new();
     [SerializeField] private AccelerationButton accelerationButton;
     [SerializeField] private float accelDuration;
-    [SerializeField] private ToastMessage warningMessage;
+    [SerializeField] private ServiceWarningMessage warningMessage;
     private ServerSkillManager skillManager = new();
 
     private List<ServerStateManager> servers = new();
@@ -165,7 +165,7 @@ public class ServerList : MonoBehaviour
             server.Animator.speed = 1f;
         }
     }
-    public void WarningMessageOn(MessageType messageType)
+    private void WarningMessageOn(MessageType messageType)
     {
         warningMessage.ShowMessage(messageType);
     }
