@@ -10,6 +10,7 @@ public sealed class HarvestSpawner : MonoBehaviour
 
     [SerializeField] private HarvestActor cropPrefab;
     [SerializeField] private Transform player;
+    [SerializeField] private GroceryGainRoutine groceryGainRoutine;
     [SerializeField] private float spawnHeight;
     [SerializeField] private List<HarvestActor> spawnedCrops = new();
 
@@ -131,7 +132,8 @@ public sealed class HarvestSpawner : MonoBehaviour
             stageType,
             player,
             gridChunkHandler,
-            employeeResolver);
+            employeeResolver,
+            groceryGainRoutine);
         spawnedCrops.Add(crop);
         return crop;
     }
