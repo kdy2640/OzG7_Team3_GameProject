@@ -90,7 +90,8 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
         string currentLevelLabel = $"Lv.{currentLevel}";
         currentLevelText.text = currentLevelLabel;
         currentLevelTextShadow.text = currentLevelLabel;
-        currentSellPriceText.text = $"{GetSellPrice(upgradeData, currentLevel):N0}";
+        currentSellPriceText.text =
+            $"{GetSellPrice(currentDishType, currentLevel):N0}";
 
         string nextLevelLabel = isMaxLevel ? "MAX" : $"Lv.{nextLevel}";
         nextLevelText.text = nextLevelLabel;
@@ -98,7 +99,7 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
 
         string nextSellPriceLabel = isMaxLevel
             ? "-"
-            : $"{GetSellPrice(upgradeData, nextLevel):N0}";
+            : $"{GetSellPrice(currentDishType, nextLevel):N0}";
         nextSellPriceText.text = nextSellPriceLabel;
         nextSellPriceTextShadow.text = nextSellPriceLabel;
 
@@ -225,16 +226,10 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
     }
 
     private static int GetSellPrice(
-        DishUpgradeDataSO upgradeData,
+        DishType dishType,
         int level)
     {
-        if (level <= 0
-            || !upgradeData.TryGetRequiredCost(level, out int sellPrice))
-        {
-            return 0;
-        }
-
-        return sellPrice;
+        return DishPriceCalculator.BasicPriceCalculate(dishType, level);
     }
 
     private static int GetOwnedAmount(GroceryType groceryType)
