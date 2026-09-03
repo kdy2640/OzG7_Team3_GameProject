@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3162970854001463282}
   - component: {fileID: 8138528686778675273}
-  - component: {fileID: 7342224828697363443}
   - component: {fileID: 2822485388930160611}
   - component: {fileID: 7243758423714574476}
   m_Layer: 5
@@ -32,6 +31,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2221305644137394926}
+  - {fileID: 6068611418891371663}
   - {fileID: 3362084650353256183}
   - {fileID: 3291316931731768802}
   - {fileID: 3540109150496966840}
@@ -53,36 +54,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 246226237306824092}
   m_CullTransparentMesh: 1
---- !u!114 &7342224828697363443
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 246226237306824092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 53a4ffb50f97aca45a007eed2a0a5740, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &2822485388930160611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,15 +67,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_DailySalesPanel
   todaySalesText: {fileID: 5686985553241141066}
-  customerCountText: {fileID: 0}
-  salesDifferenceText: {fileID: 3648692053499998959}
+  customerCountText: {fileID: 1948630234988727388}
+  salesDifferenceText: {fileID: 601809031705796338}
   increaseIcon: {fileID: 6254881128134501442}
   decreaseIcon: {fileID: 1540162122820459527}
   menuSalesRows:
   - {fileID: 8572778006235254047}
-  - {fileID: 0}
-  - {fileID: 0}
-  tipSalesText: {fileID: 0}
+  - {fileID: 1194284693087443909}
+  - {fileID: 6742131080848823311}
+  - {fileID: 3227652978406617925}
+  menuDishIcons:
+  - {fileID: 4731592015264179430}
+  - {fileID: 4591481789073317604}
+  - {fileID: 2626455640003268124}
+  - {fileID: 2515960815931147282}
+  tipSalesText: {fileID: 501574167089438755}
+  restaurantLevelSlots:
+  - {fileID: 2377250992853917125}
+  - {fileID: 1415935475967295769}
+  - {fileID: 7356046030153981721}
+  - {fileID: 5573830090790033144}
+  activeLevelColor: {r: 1, g: 1, b: 1, a: 1}
+  inactiveLevelColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  totalIncomeSlider: {fileID: 2116280921856375309}
+  totalIncomeText: {fileID: 7349458264834522692}
+  totalIncomeCheckIcons:
+  - {fileID: 6057543030462418489}
+  - {fileID: 4240766085439588732}
+  missionSlots:
+  - {fileID: 7204108182888038194}
+  - {fileID: 692392121908882900}
+  - {fileID: 2886286023559499519}
+  - {fileID: 8316301778684179358}
+  - {fileID: 1620461422986096866}
+  completedMissionSprite: {fileID: 21300000, guid: ce3fae3021cc82b4990d5aaa2f862e63, type: 3}
+  currentMissionSprite: {fileID: 21300000, guid: a2fb28cc72731bc49ab7b2c47f249df8, type: 3}
+  remainingMissionSprite: {fileID: 21300000, guid: fd9da17c01be47a498a64dea3070bb44, type: 3}
+  currentMissionIndicator: {fileID: 5840348893537088707}
+  currentMissionSlotOffsetY: 15
+  missionCheckIcons:
+  - {fileID: 6631492250934400676}
+  - {fileID: 6823399226921707492}
+  cheerText: {fileID: 3677105593427083122}
+  completedCheckColor: {r: 0.898, g: 0.694, b: 0.09, a: 1}
+  incompleteCheckColor: {r: 0.819, g: 0.819, b: 0.819, a: 1}
   exitButton: {fileID: 6244309651990435132}
   canvasGroup: {fileID: 7243758423714574476}
   fadeDuration: 0.25
@@ -1012,7 +1018,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_MenuSalesRow
   menuNameText: {fileID: 0}
   menuIcon: {fileID: 0}
-  salesText: {fileID: 0}
+  salesText: {fileID: 1122583601736359938}
 --- !u!1 &788780953056827724
 GameObject:
   m_ObjectHideFlags: 0
@@ -2009,7 +2015,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3540109150496966840}
-  - component: {fileID: 7535952814965180509}
   m_Layer: 5
   m_Name: SalesPerformancePanel
   m_TagString: Untagged
@@ -2040,52 +2045,6 @@ RectTransform:
   m_AnchoredPosition: {x: -188, y: 213.7}
   m_SizeDelta: {x: 600, y: 450}
   m_Pivot: {x: 1, y: 0}
---- !u!114 &7535952814965180509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1720827347784655033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83c9f9f8121b0b74687565baea79506d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_MarketVisualPanel
-  levelSlots:
-  - {fileID: 2377250992853917125}
-  - {fileID: 1415935475967295769}
-  - {fileID: 7356046030153981721}
-  - {fileID: 5573830090790033144}
-  salesProgressPanel: {fileID: 3185991772965003107}
-  salesSlider: {fileID: 2116280921856375309}
-  salesAmountText: {fileID: 7349458264834522692}
-  missionSlotContainer: {fileID: 0}
-  questSlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  completedMissionSprite: {fileID: 0}
-  currentMissionSprite: {fileID: 0}
-  remainingMissionSprite: {fileID: 0}
-  currentMissionIndicator: {fileID: 0}
-  currentMissionSlotOffsetY: 15
-  missionTitleText: {fileID: 0}
-  missionDescriptionText: {fileID: 744554796059069093}
-  missionSlider: {fileID: 0}
-  missionAmountText: {fileID: 0}
-  rewardButton: {fileID: 0}
-  completeButton: {fileID: 0}
-  missionRewardPanel: {fileID: 0}
-  missionRewardIcon: {fileID: 0}
-  missionRewardAmountText: {fileID: 0}
-  missionRewardAmountShadowText: {fileID: 0}
-  currencyRewardSprite: {fileID: 0}
-  promoteButton: {fileID: 0}
-  inactiveColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  activeColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &1785852795831945649
 GameObject:
   m_ObjectHideFlags: 0
@@ -2673,7 +2632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_MenuSalesRow
   menuNameText: {fileID: 0}
   menuIcon: {fileID: 0}
-  salesText: {fileID: 0}
+  salesText: {fileID: 4480528164784314977}
 --- !u!1 &2685630090345203734
 GameObject:
   m_ObjectHideFlags: 0
@@ -3837,7 +3796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UI_MenuSalesRow
   menuNameText: {fileID: 0}
   menuIcon: {fileID: 0}
-  salesText: {fileID: 0}
+  salesText: {fileID: 1437880700896791053}
 --- !u!1 &3604915206577760128
 GameObject:
   m_ObjectHideFlags: 0
@@ -4590,6 +4549,81 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4265315892613449847
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6068611418891371663}
+  - component: {fileID: 1042057426280271420}
+  - component: {fileID: 6637542464604580996}
+  m_Layer: 5
+  m_Name: SalesResultBG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6068611418891371663
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4265315892613449847}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3162970854001463282}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1600, y: 800}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1042057426280271420
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4265315892613449847}
+  m_CullTransparentMesh: 1
+--- !u!114 &6637542464604580996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4265315892613449847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 53a4ffb50f97aca45a007eed2a0a5740, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &4578456802394799479
 GameObject:
   m_ObjectHideFlags: 0
@@ -5070,6 +5104,81 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 2461263072635808474, guid: 02379172b75ab3a49994679bec2db27b, type: 3}
   m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!1 &5268039666734132131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2221305644137394926}
+  - component: {fileID: 8636780720601884901}
+  - component: {fileID: 5041612140283747221}
+  m_Layer: 5
+  m_Name: SalesResultBackPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2221305644137394926
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5268039666734132131}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3162970854001463282}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &8636780720601884901
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5268039666734132131}
+  m_CullTransparentMesh: 1
+--- !u!114 &5041612140283747221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5268039666734132131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.7921569}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -9321,6 +9430,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2829661572579794009, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}
   m_PrefabInstance: {fileID: 1597036507695485409}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4731592015264179430 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6305089920249656583, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}
+  m_PrefabInstance: {fileID: 1597036507695485409}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e992da69dbae12f47b282155fbeb60a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_DishIcon
 --- !u!1001 &7509776276559997923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9426,6 +9546,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}
+--- !u!114 &4591481789073317604 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6305089920249656583, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}
+  m_PrefabInstance: {fileID: 7509776276559997923}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e992da69dbae12f47b282155fbeb60a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_DishIcon
 --- !u!224 &5727716199663581114 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2829661572579794009, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}
@@ -9536,6 +9667,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}
+--- !u!114 &2626455640003268124 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6305089920249656583, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}
+  m_PrefabInstance: {fileID: 8355064191028509467}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e992da69dbae12f47b282155fbeb60a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_DishIcon
 --- !u!224 &6104590434471126850 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2829661572579794009, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}
@@ -9646,6 +9788,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}
+--- !u!114 &2515960815931147282 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6305089920249656583, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}
+  m_PrefabInstance: {fileID: 8460663808455651605}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e992da69dbae12f47b282155fbeb60a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_DishIcon
 --- !u!224 &5921858426323971404 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2829661572579794009, guid: b6de57e89472ab64f8bec5f49bfdbd01, type: 3}

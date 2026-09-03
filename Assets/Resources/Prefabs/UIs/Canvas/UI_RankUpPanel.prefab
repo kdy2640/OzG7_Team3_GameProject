@@ -2326,8 +2326,10 @@ GameObject:
   - component: {fileID: 2601625937483633151}
   - component: {fileID: 443668475437695225}
   - component: {fileID: 5098278969128939771}
-  - component: {fileID: 3420676301949580519}
   - component: {fileID: 6774306550759147897}
+  - component: {fileID: 8035020224055661365}
+  - component: {fileID: 228056756028785938}
+  - component: {fileID: 3839174130560365153}
   m_Layer: 5
   m_Name: ExitButton
   m_TagString: Untagged
@@ -2436,19 +2438,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2601625937483633151}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UI_DailySalesPanel, Assembly-CSharp
-        m_MethodName: RequestExit
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &5098278969128939771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2464,19 +2454,6 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 4, y: -4}
   m_UseGraphicAlpha: 1
---- !u!114 &3420676301949580519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4865223825329986720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75e4d69b7209d754798f4dac9e1f0517, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_EventHandler
-  holdThreshold: 0.5
 --- !u!114 &6774306550759147897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2490,6 +2467,47 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_ButtonSound
   type: -1
+--- !u!114 &8035020224055661365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4865223825329986720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7dd6fb31c7d43b2a435f2ae13d44ac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_HubStateButton
+  holdThreshold: 0.5
+  targetState: 0
+--- !u!225 &228056756028785938
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4865223825329986720}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &3839174130560365153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4865223825329986720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a65b2ee7d99cd4e8beadff96a81680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatPanelAnimator
+  duration: 0.6
+  startOffset: {x: 0, y: 180}
+  startScale: 0.92
 --- !u!1 &4891146971733103996
 GameObject:
   m_ObjectHideFlags: 0
@@ -4747,6 +4765,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8100378448825467489}
+  - component: {fileID: 7749631530102580920}
   m_Layer: 0
   m_Name: PromotionLevelBanner
   m_TagString: Untagged
@@ -4780,6 +4799,27 @@ RectTransform:
   m_AnchoredPosition: {x: 163, y: 179}
   m_SizeDelta: {x: 500, y: 70}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &7749631530102580920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8449497388398292514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 506a7ea88beb23a4395daeca414636df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_RastaurantLevel
+  levelSlots:
+  - {fileID: 3248047203301269477}
+  - {fileID: 5730563308133682317}
+  - {fileID: 5924549404352427233}
+  - {fileID: 7306172281676818979}
+  descriptionText: {fileID: 2123080409133803003}
+  descriptionShadowText: {fileID: 8952151117979817828}
+  inactiveLevelColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  activeLevelColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &8451975861735528842
 GameObject:
   m_ObjectHideFlags: 0
