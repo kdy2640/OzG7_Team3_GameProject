@@ -24,6 +24,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private Image autoServeImg;
     [SerializeField] private GameObject moneyToast;
     [SerializeField] private ToastMessage toastMessage;
+    [SerializeField] private ToastMessage warningMessage;
 
 
     private Table currentTable;
@@ -79,7 +80,7 @@ public class CustomerStateManager : MonoBehaviour
 
     #region State Machine Main
     public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue, 
-        Dirty dirtyPrefab, Combo combo, DrinkZone drinkZone)
+        Dirty dirtyPrefab, Combo combo, DrinkZone drinkZone, ToastMessage warningMessage)
     {
         this.exitPoint = exitPoint;
         this.tableManager = tableManager;
@@ -88,6 +89,7 @@ public class CustomerStateManager : MonoBehaviour
         this.dirtyPrefab = dirtyPrefab;
         this.combo = combo;
         this.drinkZone = drinkZone;
+        this.warningMessage = warningMessage;
         lifecycleProgress = 0f;
 
         if (GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_3) >= 1)
@@ -349,6 +351,10 @@ public class CustomerStateManager : MonoBehaviour
         toastMessage.ShowMessage(messageType);
     }
 
+    public void WarningMessageOn(MessageType messageType)
+    {
+        warningMessage.ShowMessage(messageType);
+    }
 
     private void OnDisable()
     {

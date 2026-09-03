@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +19,9 @@ public class KitchenSlotHandler : MonoBehaviour
     [SerializeField] DishRequestQueue requestQueue;
     [SerializeField] DishEffectQueue effectQueue;
     [SerializeField] CookingList cookingList;
-
+    [SerializeField] private int maxQueueSlots = 3;
+    [SerializeField] private int maxDishAmount = 3;
+    [SerializeField] private ToastMessage warningMessage;
     private CookSkillManager skillManager = new();
 
     private readonly List<Cooker> cookers = new();
@@ -27,8 +30,11 @@ public class KitchenSlotHandler : MonoBehaviour
     private bool isAcceled;
     private float accelPercentage;
 
+
     private void OnEnable()
     {
+        ClearDishes();
+
         if(requestQueue ==  null)
         {
             requestQueue = FindFirstObjectByType<DishRequestQueue>();
@@ -42,6 +48,7 @@ public class KitchenSlotHandler : MonoBehaviour
             cookingList = FindFirstObjectByType<CookingList>();
         }
         skillManager.Initialize(cookers);
+
     }
 
     private void Start()
@@ -72,8 +79,45 @@ public class KitchenSlotHandler : MonoBehaviour
     //Input
     public bool TryRequestCook(DishType dishType)
     {
-        // 개수 제한
-        if (queueSlots.Count > 2) return false;
+        int cookingCount = 0;
+        int stockAmount = 0;
+        int queueCount = 0;
+
+        foreach (DishType cookingDish in cookingList.List)
+        {
+            if (cookingDish == dishType)
+                cookingCount++;
+        }
+
+        foreach (DishAmount stockDish in GameManager.Instance.StockManager.StockData.Dishes)
+        {
+            if (stockDish.dish == dishType)
+            {
+                stockAmount = stockDish.amount;
+                break;
+            }
+        }
+
+        foreach (QueueSlot queueSlot in queueSlots)
+        {
+            if(queueSlot.Data.DishType == dishType)
+            {
+                queueCount++;
+            }
+        }
+
+        if (cookingCount + stockAmount + queueCount >= maxDishAmount)
+        {
+            warningMessage.ShowMessage(MessageType.wFullStock);
+            return false;
+        }
+
+        if (queueSlots.Count >= maxQueueSlots)
+        {
+            warningMessage.ShowMessage(MessageType.wFullQueue);
+            return false;
+        }
+            
 
         if (kitchenSlotViewerPrefab == null)
             return false;
@@ -86,14 +130,16 @@ public class KitchenSlotHandler : MonoBehaviour
 
         KitchenSlotData slotData = new(dishType, cookingTime);
         AddWaiting(slotData);
-        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_CookQueued);
+
+        GameManager.Instance.Utility.Audio.PlaySFX(
+            SFXType.Service_CookQueued
+        );
+
         return true;
     }
 
     private void AddWaiting(KitchenSlotData slotData)
     {
-        
-
         QueueSlot queueSlot = new();
 
         KitchenSlotViewer slotViewer = Instantiate(kitchenSlotViewerPrefab, QueuePanel.transform);
@@ -182,4 +228,10 @@ public class KitchenSlotHandler : MonoBehaviour
         isAcceled = false;
     }
     #endregion
+
+    private void ClearDishes()
+    {
+        GameManager.Instance.StockManager.ClearDishes();
+    }
+
 }
