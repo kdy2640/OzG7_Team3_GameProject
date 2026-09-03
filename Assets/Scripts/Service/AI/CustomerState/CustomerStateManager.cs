@@ -193,7 +193,7 @@ public class CustomerStateManager : MonoBehaviour
 
     public bool IsTip()
     {
-        if(GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_3)<1)
+        if(GameManager.Instance.Upgrade.RuntimeLevel.Get(FacilityType.Decor_6)<1)
         {
             return false;
         }
