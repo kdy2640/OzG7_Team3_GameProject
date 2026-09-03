@@ -14,6 +14,8 @@ public class UI_DailySalesPanel : MonoBehaviour
     [SerializeField] private TMP_Text salesDifferenceText;
     [SerializeField] private GameObject increaseIcon;
     [SerializeField] private GameObject decreaseIcon;
+    [SerializeField] private Color decreasedSalesColor =
+        new(0.9607843f, 0.5294118f, 0.5294118f, 1f);
 
     [Header("Menu Sales")]
     [SerializeField] private UI_MenuSalesRow[] menuSalesRows = new UI_MenuSalesRow[4];
@@ -43,6 +45,7 @@ public class UI_DailySalesPanel : MonoBehaviour
     [SerializeField] private TMP_Text cheerText;
     [SerializeField] private Color completedCheckColor = new(0.898f, 0.694f, 0.09f, 1f);
     [SerializeField] private Color incompleteCheckColor = new(0.819f, 0.819f, 0.819f, 1f);
+    [SerializeField] private Color promotionIncompleteCheckColor = Color.white;
 
     [Header("Exit")]
     [SerializeField] private Button exitButton;
@@ -52,11 +55,14 @@ public class UI_DailySalesPanel : MonoBehaviour
     [SerializeField, Min(0f)] private float fadeDuration = 0.25f;
 
     private SalesResultData data;
+    private Color defaultSalesDifferenceColor;
 
     public bool IsExitRequested { get; private set; }
 
     private void Awake()
     {
+        defaultSalesDifferenceColor = salesDifferenceText.color;
+
         if (canvasGroup == null)
         {
             Debug.LogError("[UI_DailySalesPanel] CanvasGroup이 연결되지 않았습니다.", this);
@@ -102,6 +108,9 @@ public class UI_DailySalesPanel : MonoBehaviour
         {
             salesDifferenceText.text =
                 difference > 0 ? $"+{difference:N0}" : $"{difference:N0}";
+            salesDifferenceText.color = difference < 0
+                ? decreasedSalesColor
+                : defaultSalesDifferenceColor;
         }
 
         if (increaseIcon != null)
@@ -221,7 +230,9 @@ public class UI_DailySalesPanel : MonoBehaviour
         {
             totalIncomeCheckIcons[i].color = isIncomeGoalCompleted
                 ? completedCheckColor
-                : incompleteCheckColor;
+                : i == 0
+                    ? incompleteCheckColor
+                    : promotionIncompleteCheckColor;
         }
 
         LevelMissionGroupSO missionGroup = missionProgress.MissionGroup;
@@ -272,7 +283,9 @@ public class UI_DailySalesPanel : MonoBehaviour
         {
             missionCheckIcons[i].color = areMissionsCompleted
                 ? completedCheckColor
-                : incompleteCheckColor;
+                : i == 0
+                    ? incompleteCheckColor
+                    : promotionIncompleteCheckColor;
         }
 
         cheerText.text = market.CanPromote
