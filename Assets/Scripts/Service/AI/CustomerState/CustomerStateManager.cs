@@ -260,6 +260,7 @@ public class CustomerStateManager : MonoBehaviour
         int drinkPrice = -100 + level * 300;
         GameManager.Instance.StockManager.AddCurrency(drinkPrice);
         GameManager.Instance.Market.MarketData.TotalIncome += drinkPrice;
+        GameManager.Instance.Service.ResultBuilder.RecordDrinkSale(drinkPrice);
         GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Service_DrinkServed);
         MoneyImgOn(drinkPrice);
     }
