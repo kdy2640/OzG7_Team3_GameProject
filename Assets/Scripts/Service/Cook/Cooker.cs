@@ -33,9 +33,9 @@ public class Cooker : MonoBehaviour
         StartCoroutine(AutoCookUIUpdateCo());
     }
 
-    public void Cook()
+    public void Cook(float speedMultiplier)
     {
-        Data.RemainTime -= Time.deltaTime;
+        Data.RemainTime -= Time.deltaTime * speedMultiplier;
         viewer.Refresh();
 
         if (Data.RemainTime <= 0)

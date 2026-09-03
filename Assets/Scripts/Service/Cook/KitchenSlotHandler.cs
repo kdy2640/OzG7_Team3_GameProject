@@ -112,11 +112,13 @@ public class KitchenSlotHandler : MonoBehaviour
     private void ManageCookSequence()
     {
         Cook();
+        float speedMultiplier = isAcceled ? 1f + accelPercentage : 1f;
+
         foreach (Cooker cooker in cookers)
         {
             if(cooker== null) continue;
             if (!cooker.IsBusy) continue;
-            cooker.Cook();
+            cooker.Cook(speedMultiplier);
         }
     }
 
@@ -155,9 +157,6 @@ public class KitchenSlotHandler : MonoBehaviour
 
     private void StartCook(KitchenSlotData data)
     {
-        if (isAcceled)
-            data.RemainTime /= 1 + accelPercentage;
-
         for (int i = 0; i < cookers.Count; i++)
         {
             if (cookers[i] == null) continue;
