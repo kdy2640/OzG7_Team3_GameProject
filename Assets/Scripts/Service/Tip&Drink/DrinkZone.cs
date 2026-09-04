@@ -7,8 +7,10 @@ public class DrinkZone : MonoBehaviour
     [SerializeField] private Image drinkFillImg;
     [SerializeField] private Image backGroundImage;
     [SerializeField] private Transform drinkSpot;
+    [SerializeField] private ServiceWarningMessage warningMessage;
 
     private float spendDrinkFillAmount = 1.0f;
+    private GroceryAmount groceryAmount = new();
 
     public Transform DrinkSpot => drinkSpot;
 
@@ -49,12 +51,24 @@ public class DrinkZone : MonoBehaviour
 
     private bool CanFillDrink()
     {
-        // 재료
-        return true;
+        groceryAmount.grocery = GroceryType.Grape;
+        groceryAmount.amount = 1;
+        if(GameManager.Instance.StockManager.CanConsumeGrocery(groceryAmount))
+        {
+            return true;
+        }
+        warningMessage.ShowMessage(MessageType.wNoDrinkGroccery);
+        return false;
     }
 
     private void FillDrink()
     {
+        groceryAmount.grocery = GroceryType.Grape;
+        groceryAmount.amount = 1;
+        if (GameManager.Instance.StockManager.TryConsumeGrocery(groceryAmount))
+        {
+            return;
+        }
         drinkFillButton.gameObject.SetActive (true);
         backGroundImage.gameObject.SetActive (true);
     }

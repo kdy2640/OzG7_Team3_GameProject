@@ -2,10 +2,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AccelerationButton : MonoBehaviour
 {
-    [SerializeField] List<GameObject> accelCountImg = new();
+    [SerializeField] private List<GameObject> accelCountImg = new();
+    [SerializeField] private Image fillImg;
+
     private ServerList serverList;
     private KitchenSlotHandler kitchenSlotHandler;
     private int level;
@@ -17,6 +20,7 @@ public class AccelerationButton : MonoBehaviour
 
     private void OnEnable()
     {
+        fillImg.gameObject.SetActive(false);
         accelCount = accelCountImg.Count;
         serverList = FindFirstObjectByType<ServerList>();
         kitchenSlotHandler = FindFirstObjectByType<KitchenSlotHandler>();
@@ -38,6 +42,9 @@ public class AccelerationButton : MonoBehaviour
             return;
 
         timer -= Time.deltaTime;
+
+        fillImg.fillAmount = timer / accelDuration;
+
         if(timer <= 0f)
             Decel();
     }
@@ -52,6 +59,7 @@ public class AccelerationButton : MonoBehaviour
         if (isAcceled || accelCount <= 0)
             return;
 
+        fillImg.gameObject.SetActive(true);
         accelCount--;
         timer = accelDuration;
         isAcceled = true;
@@ -66,6 +74,7 @@ public class AccelerationButton : MonoBehaviour
     private void Decel()
     {
         isAcceled = false;
+        fillImg.gameObject.SetActive(false);
         serverList.Deceleration();
         kitchenSlotHandler.Deceleration();
     }
