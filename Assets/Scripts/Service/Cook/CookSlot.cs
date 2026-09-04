@@ -18,10 +18,10 @@ public class CookSlot : MonoBehaviour
     private DishType dish;
     private KitchenSlotHandler kitchenSlotHandler;
     private bool isInitialized;
-    private ToastMessage warningMessage;
+    private ServiceWarningMessage warningMessage;
     
 
-    public void Initialize(DishType dish, KitchenSlotHandler kitchenSlotHandler, ToastMessage warningMessage)
+    public void Initialize(DishType dish, KitchenSlotHandler kitchenSlotHandler, ServiceWarningMessage warningMessage)
     {
         this.dish = dish;
         this.kitchenSlotHandler = kitchenSlotHandler;

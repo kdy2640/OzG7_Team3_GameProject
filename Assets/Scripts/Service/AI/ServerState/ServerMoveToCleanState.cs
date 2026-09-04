@@ -33,6 +33,5 @@ public class ServerMoveToCleanState : IState
     {
         stateManager.Animator.SetBool("IsWalking", false);
         stateManager.ChangeState(new ServerCleanState(stateManager, dirty));
-
     }
 }

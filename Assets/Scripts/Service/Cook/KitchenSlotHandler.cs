@@ -21,7 +21,7 @@ public class KitchenSlotHandler : MonoBehaviour
     [SerializeField] CookingList cookingList;
     [SerializeField] private int maxQueueSlots = 3;
     [SerializeField] private int maxDishAmount = 3;
-    [SerializeField] private ToastMessage warningMessage;
+    [SerializeField] private ServiceWarningMessage warningMessage;
     private CookSkillManager skillManager = new();
 
     private readonly List<Cooker> cookers = new();

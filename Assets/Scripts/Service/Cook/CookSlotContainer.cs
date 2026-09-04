@@ -5,7 +5,7 @@ public class CookSlotContainer : MonoBehaviour
 {
     [SerializeField] private CookSlot CookSlotPrefab;
     [SerializeField] private KitchenSlotHandler kitchenSlotHandler;
-    [SerializeField] private ToastMessage warningMessage;
+    [SerializeField] private ServiceWarningMessage warningMessage;
 
     private bool initialized;
 

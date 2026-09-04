@@ -79,7 +79,8 @@ public class OrderButton : MonoBehaviour
 
         if (!GameManager.Instance.StockManager.CanConsumeDish(dishAmount))
         {
-            customer.WarningMessageOn(MessageType.wNoDish);
+            if(!customer.IsAutoServed)
+                customer.WarningMessageOn(MessageType.wNoDish);
             return;
         }
 

@@ -161,6 +161,7 @@ public class AIMove : MonoBehaviour
     public void MoveTo(Transform target)
     {
         destination = target;
+
         startWaypoint = graph.GetClosestWaypoint(transform.position);
 
         if (Vector3.Distance(transform.position, startWaypoint.transform.position)
@@ -216,9 +217,13 @@ public class AIMove : MonoBehaviour
     {
         direction = (goalPos - startPos).normalized;
     }
-    public void SetDirection(Vector3 dir)
+    public void SetDirection(Vector3 destination)
     {
-        SetDirection(transform.position, dir);
+        SetDirection(transform.position, destination);
+    }
+    public void SetDirectionVector(Vector3 dir)
+    {
+        direction = Vector3.Normalize(dir);
     }
 
     private void Rotate()
