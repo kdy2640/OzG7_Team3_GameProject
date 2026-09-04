@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -194,7 +194,7 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
                         out int requiredMarketLevel))
                 {
                     warningText.text =
-                        $"매장 Lv.{requiredMarketLevel} 달성이 필요합니다.";
+                        $"레스토랑 Lv.{requiredMarketLevel}에 잠금 해제";
                 }
                 else
                 {
