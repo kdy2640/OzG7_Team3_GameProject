@@ -6,8 +6,11 @@ using UnityEngine.UI;
 
 public class OrderButton : MonoBehaviour
 {
+    private static long nextOrderSequence;
+
     public event Action OnClicked;
     private DishAmount dishAmount;
+    private long orderSequence;
 
     [SerializeField] ServerList serverList;
     private CustomerStateManager customer;
@@ -22,6 +25,7 @@ public class OrderButton : MonoBehaviour
 
 
     public CustomerStateManager Customer => customer;
+    public long OrderSequence => orderSequence;
 
     public bool IsAutoServing = false;
     public bool IsCooking = false;
@@ -46,6 +50,7 @@ public class OrderButton : MonoBehaviour
     public void SetOrder(DishAmount order)
     {
         dishAmount = order;
+        orderSequence = nextOrderSequence++;
         DishDataSO data = DishDataDB.GetData(order.dish);
         if (data == null)
         {

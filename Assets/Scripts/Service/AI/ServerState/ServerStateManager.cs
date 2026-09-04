@@ -191,7 +191,23 @@ public class ServerStateManager : MonoBehaviour
         {
             if (!IsBusy)
             {
-                OrderButton orderButton = FindFirstObjectByType<OrderButton>();
+                OrderButton orderButton = null;
+                OrderButton[] orderButtons = FindObjectsByType<OrderButton>(FindObjectsSortMode.None);
+
+                for (int i = 0; i < orderButtons.Length; i++)
+                {
+                    OrderButton candidate = orderButtons[i];
+                    if (!GameManager.Instance.StockManager.CanConsumeDish(candidate.Customer.Order))
+                    {
+                        continue;
+                    }
+
+                    if (orderButton == null || candidate.OrderSequence < orderButton.OrderSequence)
+                    {
+                        orderButton = candidate;
+                    }
+                }
+
                 if (orderButton != null)
                 {
                     customer = orderButton.Customer;
