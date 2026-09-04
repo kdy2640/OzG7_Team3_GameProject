@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Level0
   m_EditorClassIdentifier: Assembly-CSharp::LevelMissionGroupSO
   level: 0
-  marketDescription: "이제 막 간판을 단 소박한 식당"
+  marketDescription: "\uC774\uC81C \uB9C9 \uAC04\uD310\uC744 \uB2E8 \uC18C\uBC15\uD55C
+    \uC2DD\uB2F9"
   missions:
   - conditionType: 1
     condition:
@@ -25,27 +26,19 @@ MonoBehaviour:
     description: 
   - conditionType: 1
     condition:
-      rid: 4385387211786289233
-    rewardType: 1
-    reward:
-      rid: 4385387211786289234
-    title: "\uC11C\uBC84 \uC9C1\uC6D0 1 \uACE0\uC6A9"
-    description: 
-  - conditionType: 1
-    condition:
-      rid: 4385387211786289235
-    rewardType: 1
-    reward:
-      rid: 4385387211786289236
-    title: "\uC694\uB9AC \uC9C1\uC6D0 1 \uACE0\uC6A9"
-    description: 
-  - conditionType: 1
-    condition:
       rid: 4385387211786289237
     rewardType: 1
     reward:
       rid: 4385387211786289238
     title: "\uD14C\uC774\uBE14 2\uAC1C \uAD6C\uB9E4"
+    description: 
+  - conditionType: 2
+    condition:
+      rid: 4858518774138536025
+    rewardType: 1
+    reward:
+      rid: 4385387211786289240
+    title: "30\uACE8\uB4DC \uBC8C\uAE30"
     description: 
   - conditionType: 6
     condition:
@@ -54,6 +47,14 @@ MonoBehaviour:
     reward:
       rid: 4385387211786289240
     title: "\uB2ED\uACE0\uAE30 \uB0A9\uD488"
+    description: 
+  - conditionType: 6
+    condition:
+      rid: 4858518774138536027
+    rewardType: 2
+    reward:
+      rid: 4858518774138536028
+    title: "\uC300 \uB0A9\uD488"
     description: 
   references:
     version: 2
@@ -72,30 +73,6 @@ MonoBehaviour:
         groceryAmount:
           grocery: 1
           amount: 10
-    - rid: 4385387211786289233
-      type: {class: UpgradeMissionCondition, ns: , asm: Assembly-CSharp}
-      data:
-        requiredSatisfiedCount: 1
-        subConditions:
-        - type: 2
-          subCondition:
-            rid: 4385387211786289242
-    - rid: 4385387211786289234
-      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
-      data:
-        amount: 10
-    - rid: 4385387211786289235
-      type: {class: UpgradeMissionCondition, ns: , asm: Assembly-CSharp}
-      data:
-        requiredSatisfiedCount: 1
-        subConditions:
-        - type: 2
-          subCondition:
-            rid: 4385387211786289243
-    - rid: 4385387211786289236
-      type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
-      data:
-        amount: 10
     - rid: 4385387211786289237
       type: {class: UpgradeMissionCondition, ns: , asm: Assembly-CSharp}
       data:
@@ -131,25 +108,15 @@ MonoBehaviour:
       data:
         groceryAmount:
           grocery: 2
-          amount: 5
+          amount: 1
     - rid: 4385387211786289240
       type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
       data:
-        amount: 50
+        amount: 20
     - rid: 4385387211786289241
       type: {class: DishUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
       data:
         dishType: 14
-        targetLevel: 1
-    - rid: 4385387211786289242
-      type: {class: EmployeeUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
-      data:
-        employeeType: 0
-        targetLevel: 1
-    - rid: 4385387211786289243
-      type: {class: EmployeeUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
-      data:
-        employeeType: 4
         targetLevel: 1
     - rid: 4385387211786289244
       type: {class: FacilityUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
@@ -186,3 +153,19 @@ MonoBehaviour:
       data:
         facilityType: 6
         targetLevel: 1
+    - rid: 4858518774138536025
+      type: {class: IncomeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        targetIncome: 30
+    - rid: 4858518774138536027
+      type: {class: GroceryDeliveryMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 0
+          amount: 10
+    - rid: 4858518774138536028
+      type: {class: MissionGroceryReward, ns: , asm: Assembly-CSharp}
+      data:
+        groceryAmount:
+          grocery: 2
+          amount: 10
