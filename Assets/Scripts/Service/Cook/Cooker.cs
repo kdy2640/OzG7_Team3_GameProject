@@ -94,29 +94,42 @@ public class Cooker : MonoBehaviour
     {
         while (true)
         {
-            if (!isBusy && requestQueue.Queue.Count > 0)
+            if (!isBusy)
             {
-                DishType requiredDish = requestQueue.Queue.Peek();
-                bool hasDish = false;
-
-                for (int i = 0; i < GameManager.Instance.StockManager.StockData.Dishes.Count; i++)
+                OrderButton[] orderButtons = FindObjectsByType<OrderButton>(FindObjectsSortMode.None);
+                foreach (OrderButton orderButton in orderButtons)
                 {
-                    if (requiredDish == GameManager.Instance.StockManager.StockData.Dishes[i].dish 
-                        && GameManager.Instance.StockManager.StockData.Dishes[i].amount > 0)
+                    DishType requiredDish = orderButton.Customer.Order.dish;
+                    int requestedAmount = 0;
+                    int stockAmount = 0;
+                    int cookingAmount = 0;
+
+                    foreach (OrderButton activeOrderButton in orderButtons)
                     {
-                        hasDish = true; break;
+                        if (activeOrderButton.Customer.Order.dish == requiredDish)
+                            requestedAmount++;
                     }
-                }
 
-                bool isCooking = cookingList.List.Contains(requiredDish);
+                    for (int i = 0; i < GameManager.Instance.StockManager.StockData.Dishes.Count; i++)
+                    {
+                        if (requiredDish == GameManager.Instance.StockManager.StockData.Dishes[i].dish)
+                            stockAmount += GameManager.Instance.StockManager.StockData.Dishes[i].amount;
+                    }
 
-                if (!hasDish
-                    && !isCooking
-                    && GameManager.Instance.CookingManager.TryCook(requiredDish))
-                {
-                    KitchenSlotData data = new KitchenSlotData(requiredDish, 3.0f);
-                    isAutoCooking = true;
-                    GetNextCook(data);
+                    foreach (DishType cookingDish in cookingList.List)
+                    {
+                        if (cookingDish == requiredDish)
+                            cookingAmount++;
+                    }
+
+                    if (stockAmount + cookingAmount < requestedAmount
+                        && GameManager.Instance.CookingManager.TryCook(requiredDish))
+                    {
+                        KitchenSlotData data = new KitchenSlotData(requiredDish, 3.0f);
+                        isAutoCooking = true;
+                        GetNextCook(data);
+                        break;
+                    }
                 }
             }
             
