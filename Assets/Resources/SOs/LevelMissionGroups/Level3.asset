@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Level3
   m_EditorClassIdentifier: Assembly-CSharp::LevelMissionGroupSO
   level: 3
-  marketDescription: "일찍 안 오면 1시간 대기하는 핫플"
+  marketDescription: "\uC77C\uCC0D \uC548 \uC624\uBA74 1\uC2DC\uAC04 \uB300\uAE30\uD558\uB294
+    \uD56B\uD50C"
   missions:
   - conditionType: 1
     condition:
@@ -23,13 +24,13 @@ MonoBehaviour:
       rid: 4385387211786289301
     title: "\uB18D\uC0AC \uC9C1\uC6D0 3 \uACE0\uC6A9"
     description: 
-  - conditionType: 6
+  - conditionType: 1
     condition:
-      rid: 4385387211786289302
+      rid: 4858518774138536022
     rewardType: 1
     reward:
       rid: 4385387211786289303
-    title: "\uC591\uBC30\uCD94 \uB0A9\uD488"
+    title: "\uB18D\uC0AC \uC9C1\uC6D0 3 3\uB808\uBCA8 \uB2EC\uC131"
     description: 
   - conditionType: 1
     condition:
@@ -70,12 +71,6 @@ MonoBehaviour:
       type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
       data:
         amount: 500
-    - rid: 4385387211786289302
-      type: {class: GroceryDeliveryMissionCondition, ns: , asm: Assembly-CSharp}
-      data:
-        groceryAmount:
-          grocery: 7
-          amount: 40
     - rid: 4385387211786289303
       type: {class: MissionCurrencyReward, ns: , asm: Assembly-CSharp}
       data:
@@ -293,3 +288,16 @@ MonoBehaviour:
       data:
         facilityType: 6
         targetLevel: 1
+    - rid: 4858518774138536022
+      type: {class: UpgradeMissionCondition, ns: , asm: Assembly-CSharp}
+      data:
+        requiredSatisfiedCount: 1
+        subConditions:
+        - type: 2
+          subCondition:
+            rid: 4858518774138536024
+    - rid: 4858518774138536024
+      type: {class: EmployeeUpgradeMissionSubCondition, ns: , asm: Assembly-CSharp}
+      data:
+        employeeType: 10
+        targetLevel: 3

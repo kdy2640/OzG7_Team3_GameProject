@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -56,7 +56,7 @@ public sealed class HarvestRuntimeStat
         EnsureCapacity();
 
         values[(int)HarvestStatType.SawSize].SetValue(1f);
-        values[(int)HarvestStatType.SawSpeed].SetValue(4f);
+        values[(int)HarvestStatType.SawSpeed].SetValue(2f);
         values[(int)HarvestStatType.SawSharpness].SetValue(1f);
         values[(int)HarvestStatType.TruckSpeed].SetValue(5f);
         values[(int)HarvestStatType.TruckCapacity].SetValue(10f);
