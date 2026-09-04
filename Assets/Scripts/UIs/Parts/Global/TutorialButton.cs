@@ -33,21 +33,11 @@ public sealed class TutorialButton : MonoBehaviour
         if (tutorialManager.GetTutorialProgressed(tutorialType))
             yield break;
 
-        TutorialDataSO tutorialData = TutorialDataDB.GetData(tutorialType);
-
-        if (tutorialData == null)
-            yield break;
-
         tutorialManager.ResolveTutorial(tutorialType);
         OpenTutorial();
     }
     public void OpenTutorial()
     {
-        TutorialDataSO tutorialData = TutorialDataDB.GetData(tutorialType);
-
-        if (tutorialData == null)
-            return;
-
         if (tutorialPopup == null)
         {
             tutorialPopup = FindFirstObjectByType<TutorialPopup>(
@@ -57,6 +47,6 @@ public sealed class TutorialButton : MonoBehaviour
         if (tutorialPopup == null)
             tutorialPopup = Instantiate(tutorialPopupPrefab);
 
-        tutorialPopup.Open(tutorialData);
+        tutorialPopup.Open(tutorialType);
     }
 }
