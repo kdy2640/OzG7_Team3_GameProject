@@ -88,6 +88,7 @@ public class ServerStateManager : MonoBehaviour
 
     private void Start()
     {
+        aiMove.SetDirectionVector(Vector3.back);
         ChangeState(new ServerGetBackState(this));
         StartCoroutine(SleepingChanceCo());
     }
@@ -142,7 +143,6 @@ public class ServerStateManager : MonoBehaviour
     public void AnimSetIdle()
     {
         animator.SetBool("IsWalking", false);
-        animator.SetBool("IsServing", false);
         animator.SetBool("IsRunning", false);
     }
 

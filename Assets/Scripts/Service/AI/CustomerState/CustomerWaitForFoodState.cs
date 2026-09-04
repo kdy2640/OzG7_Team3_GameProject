@@ -17,7 +17,8 @@ public class CustomerWaitForFoodState : IState
         stateManager.SetLifecycleProgress(0.4f);
         stateManager.Animator.SetBool("IsSitting", true);
         stateManager.foodReceived += StartEat;
-        stateManager.ToastMessageOn(MessageType.cHungry);
+        if(!stateManager.IsAutoServed)
+            stateManager.ToastMessageOn(MessageType.cHungry);
     }
 
     public void Execute()

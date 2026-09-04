@@ -19,7 +19,7 @@ public class ServerList : MonoBehaviour
     [SerializeField] private List<Transform> serverSpots = new();
     [SerializeField] private AccelerationButton accelerationButton;
     [SerializeField] private float accelDuration;
-    [SerializeField] private ToastMessage warningMessage;
+    [SerializeField] private ServiceWarningMessage warningMessage;
     private ServerSkillManager skillManager = new();
 
     private List<ServerStateManager> servers = new();
@@ -42,15 +42,10 @@ public class ServerList : MonoBehaviour
 
     private void CreateServers()
     {
-        Debug.Log($"serverPrefab : {serverPrefab}");
-        Debug.Log($"ServerTypes.Length : {ServerTypes.Length}");
-        Debug.Log($"animalPrefabs.Length : {animalPrefabs.Count}");
-        Debug.Log($"serverSpots.Length : {serverSpots.Count}");
         for (int i = 0; i < ServerTypes.Length; i++)
         {
             if (GameManager.Instance.Upgrade.RuntimeLevel.Get(ServerTypes[i]) > 0)
             {
-                
                 ServerStateManager server = Instantiate(serverPrefab, transform.position, Quaternion.identity);
                 GameObject animal = Instantiate(animalPrefabs[i], server.transform);
                 server.Initialize();
@@ -165,7 +160,7 @@ public class ServerList : MonoBehaviour
             server.Animator.speed = 1f;
         }
     }
-    public void WarningMessageOn(MessageType messageType)
+    private void WarningMessageOn(MessageType messageType)
     {
         warningMessage.ShowMessage(messageType);
     }

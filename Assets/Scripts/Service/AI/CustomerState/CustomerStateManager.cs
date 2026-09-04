@@ -24,7 +24,7 @@ public class CustomerStateManager : MonoBehaviour
     [SerializeField] private Image autoServeImg;
     [SerializeField] private GameObject moneyToast;
     [SerializeField] private ToastMessage toastMessage;
-    [SerializeField] private ToastMessage warningMessage;
+    [SerializeField] private ServiceWarningMessage warningMessage;
 
 
     private Table currentTable;
@@ -37,7 +37,7 @@ public class CustomerStateManager : MonoBehaviour
     public event Action ProcessingCompleted;
     public event Action<CustomerStateManager> LifecycleFinished;
     private float tipChance = 0.1f;
-    private float drinkChance = 0.2f;
+    private float drinkChance = 1f;
     private float eatTime = 5f;
     private float runChance = 0.1f;
     private float eatSpeedUpPercentage;
@@ -80,7 +80,7 @@ public class CustomerStateManager : MonoBehaviour
 
     #region State Machine Main
     public void Initialize(Transform exitPoint, TableManager tableManager, TipBox tipBox, DishRequestQueue queue, 
-        Dirty dirtyPrefab, Combo combo, DrinkZone drinkZone, ToastMessage warningMessage)
+        Dirty dirtyPrefab, Combo combo, DrinkZone drinkZone, ServiceWarningMessage warningMessage)
     {
         this.exitPoint = exitPoint;
         this.tableManager = tableManager;
