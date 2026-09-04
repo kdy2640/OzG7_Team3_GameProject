@@ -16,6 +16,7 @@ public class HarvestManager : MonoBehaviour
 
     public float Timer { get { return timer; } }
     public float LoopDuration => loopDuration;
+    public float TimeWarningThreshold => timeWarningThreshold;
     public bool IsPause
     {
         get => isPause;

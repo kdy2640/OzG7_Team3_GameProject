@@ -3,6 +3,11 @@ using UnityEngine;
 
 public sealed class MainSceneBootstrap : MonoBehaviour
 {
+    private void Awake()
+    {
+        Screen.SetResolution(1920, 1080, FullScreenMode.FullScreenWindow);
+    }
+
     private IEnumerator Start()
     {
         yield return null;
