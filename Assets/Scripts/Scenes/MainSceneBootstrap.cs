@@ -5,7 +5,7 @@ public sealed class MainSceneBootstrap : MonoBehaviour
 {
     private void Awake()
     {
-        Screen.SetResolution(1920, 1080, FullScreenMode.FullScreenWindow);
+        Screen.SetResolution(1920, 1080, FullScreenMode.ExclusiveFullScreen);
     }
 
     private IEnumerator Start()

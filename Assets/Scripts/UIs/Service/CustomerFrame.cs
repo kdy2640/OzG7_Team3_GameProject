@@ -12,7 +12,13 @@ public class CustomerFrame : MonoBehaviour
         customerSpawner.CustomerSpawned += UpdateUI;
         GameManager.Instance.Service.Events.Subscribe(
             ServiceEventType.LoopStarted,
-            UpdateUI);
+            UpdateUI); 
+    }
+    private void Start()
+    { 
+        leftCustomer.text = "남은 손님 <size=50>" + Mathf.RoundToInt(
+           GameManager.Instance.Upgrade.RuntimeStat.Service
+               .Get(ServiceStatType.CustomerCount)) + "</size>";
     }
 
     private void UpdateUI()
