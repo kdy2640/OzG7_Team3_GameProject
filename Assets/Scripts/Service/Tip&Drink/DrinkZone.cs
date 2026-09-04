@@ -7,6 +7,7 @@ public class DrinkZone : MonoBehaviour
     [SerializeField] private Image drinkFillImg;
     [SerializeField] private Image backGroundImage;
     [SerializeField] private Transform drinkSpot;
+    [SerializeField] private ServiceWarningMessage warningMessage;
 
     private float spendDrinkFillAmount = 1.0f;
     private GroceryAmount groceryAmount = new();
@@ -56,6 +57,7 @@ public class DrinkZone : MonoBehaviour
         {
             return true;
         }
+        warningMessage.ShowMessage(MessageType.wNoDrinkGroccery);
         return false;
     }
 
