@@ -10,6 +10,11 @@ public sealed class UI_HarvestStageDetailPanel : MonoBehaviour
     [SerializeField] private UI_GroceryViewPanel groceryViewPanel;
     [SerializeField] private Button purchaseButton;
     [SerializeField] private TMP_Text purchaseButtonText;
+    [SerializeField] private GameObject goldPanel;
+    [SerializeField] private TMP_Text goldValueText;
+    [SerializeField] private GameObject lockPanel;
+    [SerializeField] private TMP_Text lockText;
+    [SerializeField] private GameObject lockOverlay;
 
     private StageType selectedStage = StageType.Count;
     private UpgradeManager subscribedUpgradeManager;
@@ -86,7 +91,7 @@ public sealed class UI_HarvestStageDetailPanel : MonoBehaviour
 
         if (upgradeManager == null)
         {
-            SetPurchaseButton(false, "데이터 오류");
+            SetPurchaseButton(false, false, "데이터 오류");
             return;
         }
 
@@ -96,13 +101,13 @@ public sealed class UI_HarvestStageDetailPanel : MonoBehaviour
 
         if (currentLevel >= requiredLevel)
         {
-            SetPurchaseButton(false, "구매됨");
+            SetPurchaseButton(false, false, "구매됨");
             return;
         }
 
         if (requiredLevel != currentLevel + 1)
         {
-            SetPurchaseButton(false, "이전 스테이지 필요");
+            SetPurchaseButton(false, false, "이전 스테이지 필요");
             return;
         }
 
@@ -111,15 +116,32 @@ public sealed class UI_HarvestStageDetailPanel : MonoBehaviour
 
         if (upgradeData == null)
         {
-            SetPurchaseButton(false, "데이터 오류");
+            SetPurchaseButton(false, false, "데이터 오류");
             return;
         }
 
         UpgradeAvailability availability =
             upgradeManager.GetUpgradeAvailability(upgradeData);
+
+        bool showGoldPanel =
+            availability == UpgradeAvailability.Available ||
+            availability == UpgradeAvailability.InsufficientCurrency;
+
+        string conditionText = GetPurchaseButtonText(
+            upgradeData,
+            currentLevel,
+            availability);
+
+        if (showGoldPanel
+            && upgradeData.TryGetRequiredCost(currentLevel + 1, out int cost))
+        {
+            conditionText = cost.ToString("N0");
+        }
+
         SetPurchaseButton(
             availability == UpgradeAvailability.Available,
-            GetPurchaseButtonText(upgradeData, currentLevel, availability));
+            showGoldPanel,
+            conditionText);
     }
 
     private void OnClickPurchase()
@@ -143,10 +165,21 @@ public sealed class UI_HarvestStageDetailPanel : MonoBehaviour
             upgradeManager.TryUpgrade(upgradeData);
     }
 
-    private void SetPurchaseButton(bool interactable, string buttonText)
+    private void SetPurchaseButton(
+        bool interactable,
+        bool showGoldPanel,
+        string conditionText)
     {
         purchaseButton.interactable = interactable;
-        purchaseButtonText.text = buttonText;
+        purchaseButtonText.text = "개방하기";
+        lockOverlay.SetActive(!interactable);
+        goldPanel.SetActive(showGoldPanel);
+        lockPanel.SetActive(!showGoldPanel);
+
+        if (showGoldPanel)
+            goldValueText.text = conditionText;
+        else
+            lockText.text = conditionText;
     }
 
     private static string GetPurchaseButtonText(
