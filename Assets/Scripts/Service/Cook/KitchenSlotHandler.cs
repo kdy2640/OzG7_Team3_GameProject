@@ -233,5 +233,4 @@ public class KitchenSlotHandler : MonoBehaviour
     {
         GameManager.Instance.StockManager.ClearDishes();
     }
-
 }

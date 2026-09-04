@@ -22,6 +22,7 @@ public enum MessageType
     wServerBusy,
     wFullStock,
     wFullQueue,
+    wNoDrinkGroccery,
     Count
 }
 
