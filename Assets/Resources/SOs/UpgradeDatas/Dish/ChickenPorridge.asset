@@ -15,7 +15,7 @@ MonoBehaviour:
   id: chicken_porridge
   displayName: "\uB2ED\uC8FD"
   displayIcon: {fileID: 0}
-  requiredCosts: 4000000050000000600000007000000080000000
+  requiredCosts: 12000000170000001d0000002c00000058000000
   maxLevel: 5
   requiredMarketLevel: 0100000002000000020000000300000003000000
   targetDish: 12
@@ -29,13 +29,6 @@ MonoBehaviour:
       amount: 1
   - requiredGroceries:
     - grocery: 0
-      amount: 2
-    - grocery: 1
-      amount: 2
-    - grocery: 2
-      amount: 2
-  - requiredGroceries:
-    - grocery: 0
       amount: 4
     - grocery: 1
       amount: 4
@@ -43,15 +36,22 @@ MonoBehaviour:
       amount: 4
   - requiredGroceries:
     - grocery: 0
-      amount: 8
+      amount: 16
     - grocery: 1
-      amount: 8
+      amount: 16
     - grocery: 2
-      amount: 8
+      amount: 16
   - requiredGroceries:
     - grocery: 0
-      amount: 16
+      amount: 64
     - grocery: 1
-      amount: 16
+      amount: 64
     - grocery: 2
-      amount: 16
+      amount: 64
+  - requiredGroceries:
+    - grocery: 0
+      amount: 256
+    - grocery: 1
+      amount: 256
+    - grocery: 2
+      amount: 256
