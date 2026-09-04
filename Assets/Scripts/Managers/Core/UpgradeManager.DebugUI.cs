@@ -1,4 +1,3 @@
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -284,4 +283,3 @@ public partial class UpgradeManager
         DebugManager.instance.ReDrawOnScreenDebug();
     }
 }
-#endif

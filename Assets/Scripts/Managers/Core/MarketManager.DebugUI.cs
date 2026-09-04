@@ -1,4 +1,3 @@
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -314,4 +313,3 @@ public partial class MarketManager
         DebugManager.instance.ReDrawOnScreenDebug();
     }
 }
-#endif
