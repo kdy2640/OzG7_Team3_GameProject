@@ -6,6 +6,8 @@ using UnityEngine.Serialization;
 public partial class MarketManager : MonoBehaviour
 {
     public const int MaxMarketLevel = 4;
+    public const int CategoryFestivalUnlockLevel = 2;
+    public const int TasteFestivalUnlockLevel = 3;
 
     #region Fields & Properties
 
@@ -106,14 +108,16 @@ public partial class MarketManager : MonoBehaviour
 
     public bool CanStartTasteFestival(TasteType taste)
     {
-        return festivalCalendar.CanStartTasteFestival(
-            taste,
-            marketData.CurrentBusinessDay);
+        return marketData.CurrentLevel >= TasteFestivalUnlockLevel
+            && festivalCalendar.CanStartTasteFestival(
+                taste,
+                marketData.CurrentBusinessDay);
     }
 
     public bool TryStartTasteFestival(TasteType taste)
     {
-        if (!festivalCalendar.TryStartTasteFestival(
+        if (marketData.CurrentLevel < TasteFestivalUnlockLevel
+            || !festivalCalendar.TryStartTasteFestival(
                 taste,
                 marketData.CurrentBusinessDay))
             return false;
@@ -124,14 +128,16 @@ public partial class MarketManager : MonoBehaviour
 
     public bool CanStartCategoryFestival(CategoryType category)
     {
-        return festivalCalendar.CanStartCategoryFestival(
-            category,
-            marketData.CurrentBusinessDay);
+        return marketData.CurrentLevel >= CategoryFestivalUnlockLevel
+            && festivalCalendar.CanStartCategoryFestival(
+                category,
+                marketData.CurrentBusinessDay);
     }
 
     public bool TryStartCategoryFestival(CategoryType category)
     {
-        if (!festivalCalendar.TryStartCategoryFestival(
+        if (marketData.CurrentLevel < CategoryFestivalUnlockLevel
+            || !festivalCalendar.TryStartCategoryFestival(
                 category,
                 marketData.CurrentBusinessDay))
             return false;

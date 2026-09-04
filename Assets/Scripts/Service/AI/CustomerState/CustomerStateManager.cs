@@ -36,10 +36,14 @@ public class CustomerStateManager : MonoBehaviour
     public Action caught;
     public event Action ProcessingCompleted;
     public event Action<CustomerStateManager> LifecycleFinished;
-    private float tipChance = 0.1f;
-    private float drinkChance = 1f;
+
+    [Header("Customer Event Chances")]
+    [SerializeField, Range(0f, 1f)] private float dirtyChance = 0.2f;
+    [SerializeField, Range(0f, 1f)] private float runChance = 0.2f;
+    [SerializeField, Range(0f, 1f)] private float tipChance = 0.1f;
+    [SerializeField, Range(0f, 1f)] private float drinkChance = 0.2f;
+
     private float eatTime = 5f;
-    private float runChance = 0.1f;
     private float eatSpeedUpPercentage;
     private bool isProcessingCompleted;
     private bool isLifecycleFinished;
@@ -206,6 +210,11 @@ public class CustomerStateManager : MonoBehaviour
         }
 
         return UnityEngine.Random.value < tipChance;
+    }
+
+    public bool IsDirty()
+    {
+        return UnityEngine.Random.value < dirtyChance;
     }
 
     public bool IsDrink()

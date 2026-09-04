@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class UI_DayVisual : MonoBehaviour
 {
+    [SerializeField] private GameObject festivalLayout;
+    [SerializeField] private GameObject nonFestivalLayout;
     [SerializeField] private TMP_Text dayText;
     [SerializeField] private TMP_Text dayShadowText;
+    [SerializeField] private TMP_Text nonFestivalDayText;
+    [SerializeField] private TMP_Text nonFestivalDayShadowText;
     [SerializeField] private TMP_Text flavorText;
     [SerializeField] private TMP_Text themeText;
     [SerializeField] private List<GameObject> tasteFlavors;
@@ -36,11 +40,19 @@ public class UI_DayVisual : MonoBehaviour
 
         MarketManager market = GameManager.Instance.Market;
         int currentBusinessDay = market.MarketData.CurrentBusinessDay;
+        FestivalCalendar festivalCalendar = market.FestivalCalendar;
+        TasteType nowTaste = festivalCalendar.GetNowTaste(currentBusinessDay);
+        CategoryType nowCategory = festivalCalendar.GetNowCategory(currentBusinessDay);
+        bool hasFestival = nowTaste != TasteType.Count
+            || nowCategory != CategoryType.Count;
+
+        festivalLayout.SetActive(hasFestival);
+        nonFestivalLayout.SetActive(!hasFestival);
 
         dayText.text = $"{currentBusinessDay:D2}";
         dayShadowText.text = $"{currentBusinessDay:D2}";
-        FestivalCalendar festivalCalendar = market.FestivalCalendar;
-        TasteType nowTaste = festivalCalendar.GetNowTaste(currentBusinessDay);
+        nonFestivalDayText.text = $"{currentBusinessDay:D2}";
+        nonFestivalDayShadowText.text = $"{currentBusinessDay:D2}";
 
         flavorText.text = nowTaste switch
         {
@@ -56,8 +68,6 @@ public class UI_DayVisual : MonoBehaviour
                 nowTaste != TasteType.Count
                 && i == (int)nowTaste);
         }
-
-        CategoryType nowCategory = festivalCalendar.GetNowCategory(currentBusinessDay);
 
         themeText.text = nowCategory switch
         {

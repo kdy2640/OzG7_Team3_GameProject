@@ -113,6 +113,23 @@ public sealed class UI_NewFunctionList : MonoBehaviour
             slotIndex++;
         }
 
+        if (currentLevel == MarketManager.CategoryFestivalUnlockLevel
+            && slotIndex < SlotCount)
+        {
+            slots[slotIndex].SetActive(true);
+            descriptionTexts[slotIndex].text =
+                "- 카테고리 축제 개최 기능 해금";
+            slotIndex++;
+        }
+        else if (currentLevel == MarketManager.TasteFestivalUnlockLevel
+            && slotIndex < SlotCount)
+        {
+            slots[slotIndex].SetActive(true);
+            descriptionTexts[slotIndex].text =
+                "- 맛 축제 개최 기능 해금";
+            slotIndex++;
+        }
+
         HarvestUpgradeDataSO stageLevelData =
             UpgradeDataDB.GetData(HarvestUpgradeType.StageLevel);
         int unlockedStage = 0;

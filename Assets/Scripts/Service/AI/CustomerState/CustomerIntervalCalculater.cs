@@ -42,7 +42,9 @@ public sealed class CustomerIntervalCalculater
 
     public int CalculateInitialCustomerCount(int usableSeatCount)
     {
-        return usableSeatCount / 2;
+        return Mathf.Min(
+            usableSeatCount,
+            usableSeatCount * 3 / 4 + 1);
     }
 
     public float GetInitialInterval()
