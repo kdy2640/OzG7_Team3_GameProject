@@ -10,13 +10,11 @@ public class CustomerFrame : MonoBehaviour
     {
         customerSpawner = FindFirstObjectByType<CustomerSpawner>();
         customerSpawner.CustomerSpawned += UpdateUI;
-        
+        GameManager.Instance.Service.Events.Subscribe(
+            ServiceEventType.LoopStarted,
+            UpdateUI);
     }
 
-    private void Start()
-    {
-        UpdateUI();
-    }
     private void UpdateUI()
     {
         leftCustomer.text = "남은 손님 <size=50>"+ customerSpawner.SpawnCount + "</size>";
@@ -25,5 +23,8 @@ public class CustomerFrame : MonoBehaviour
     private void OnDisable()
     {
         customerSpawner.CustomerSpawned -= UpdateUI;
+        GameManager.Instance.Service.Events.Unsubscribe(
+            ServiceEventType.LoopStarted,
+            UpdateUI);
     }
 }
