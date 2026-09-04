@@ -221,11 +221,23 @@ public class KitchenSlotHandler : MonoBehaviour
     {
         accelPercentage = percentage;
         isAcceled = true;
+
+        foreach (Cooker cooker in cookers)
+        {
+            if (cooker == null) continue;
+            cooker.AccelVFXOn();
+        }
     }
 
     public void Deceleration()
     {
         isAcceled = false;
+
+        foreach (Cooker cooker in cookers)
+        {
+            if (cooker == null) continue;
+            cooker.AccelVFXOff();
+        }
     }
     #endregion
 

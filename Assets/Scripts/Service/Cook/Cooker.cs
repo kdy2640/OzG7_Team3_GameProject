@@ -22,6 +22,8 @@ public class Cooker : MonoBehaviour
     public KitchenSlotViewer Viewer => viewer;
 
     [SerializeField] Image autoCookingImg;
+    [SerializeField] private GameObject accelVFXPrefab;
+    private GameObject accelVFX;
 
     private bool isAutoCooking = false;
     
@@ -181,5 +183,15 @@ public class Cooker : MonoBehaviour
     public void EatSpeedUp()
     {
         eatSpeedApply = true;
+    }
+
+    public void AccelVFXOn()
+    {
+        accelVFX = Instantiate(accelVFXPrefab, transform.position, Quaternion.identity);
+    }
+
+    public void AccelVFXOff()
+    {
+        Destroy(accelVFX);
     }
 }

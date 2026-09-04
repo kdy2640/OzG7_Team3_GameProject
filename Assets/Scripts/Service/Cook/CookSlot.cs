@@ -14,11 +14,13 @@ public class CookSlot : MonoBehaviour
     [SerializeField] private Image dishIcon;
     [SerializeField] private GameObject servingCountBackground;
     [SerializeField] private GameObject lockBackground;
+    
 
     private DishType dish;
     private KitchenSlotHandler kitchenSlotHandler;
     private bool isInitialized;
     private ServiceWarningMessage warningMessage;
+
     
 
     public void Initialize(DishType dish, KitchenSlotHandler kitchenSlotHandler, ServiceWarningMessage warningMessage)
@@ -91,6 +93,8 @@ public class CookSlot : MonoBehaviour
             OnClicked?.Invoke();
         }
     }
+
+    
 
     private void OnDisable()
     {
