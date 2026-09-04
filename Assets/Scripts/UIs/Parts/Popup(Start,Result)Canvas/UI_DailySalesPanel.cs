@@ -1,5 +1,4 @@
 using System.Collections;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,9 +49,12 @@ public class UI_DailySalesPanel : MonoBehaviour
     [Header("Exit")]
     [SerializeField] private Button exitButton;
 
-    [Header("Fade")]
-    [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField, Min(0f)] private float fadeDuration = 0.25f;
+    [Header("Show Animation")]
+    [SerializeField] private PanelAnimator salesResultAnimator;
+    [SerializeField] private PanelAnimator dailySalesAnimator;
+    [SerializeField] private PanelAnimator salesPerformanceAnimator;
+    [SerializeField] private PanelAnimator promotionAnimator;
+    [SerializeField] private PanelAnimator decorationAnimator;
 
     private SalesResultData data;
     private Color defaultSalesDifferenceColor;
@@ -62,16 +64,6 @@ public class UI_DailySalesPanel : MonoBehaviour
     private void Awake()
     {
         defaultSalesDifferenceColor = salesDifferenceText.color;
-
-        if (canvasGroup == null)
-        {
-            Debug.LogError("[UI_DailySalesPanel] CanvasGroup이 연결되지 않았습니다.", this);
-            return;
-        }
-
-        canvasGroup.alpha = 0f;
-        canvasGroup.interactable = false;
-        canvasGroup.blocksRaycasts = false;
         gameObject.SetActive(false);
     }
 
@@ -129,41 +121,38 @@ public class UI_DailySalesPanel : MonoBehaviour
 
     public IEnumerator Show()
     {
-        if (canvasGroup == null)
-            yield break;
-
         IsExitRequested = false;
         gameObject.SetActive(true);
         Refresh();
 
-        if (exitButton != null)
-            exitButton.interactable = true;
+        exitButton.interactable = false;
 
-        canvasGroup.DOKill();
-        canvasGroup.alpha = 0f;
-        canvasGroup.interactable = true;
-        canvasGroup.blocksRaycasts = true;
+        yield return salesResultAnimator.Show();
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Global_PanelPopup);
+        yield return dailySalesAnimator.Show();
 
-        yield return canvasGroup
-            .DOFade(1f, fadeDuration)
-            .WaitForCompletion();
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Global_PanelPopup);
+        Coroutine salesPerformanceShow =
+            StartCoroutine(salesPerformanceAnimator.Show());
+        Coroutine promotionShow = StartCoroutine(promotionAnimator.Show());
+
+        yield return salesPerformanceShow;
+        yield return promotionShow;
+
+        GameManager.Instance.Utility.Audio.PlaySFX(SFXType.Global_PanelPopup);
+        yield return decorationAnimator.Show();
+
+        exitButton.interactable = true;
     }
 
     public IEnumerator Hide()
     {
-        if (canvasGroup == null || !gameObject.activeSelf)
+        if (!gameObject.activeSelf)
             yield break;
 
-        if (exitButton != null)
-            exitButton.interactable = false;
+        exitButton.interactable = false;
 
-        canvasGroup.DOKill();
-        canvasGroup.interactable = false;
-        canvasGroup.blocksRaycasts = false;
-
-        yield return canvasGroup
-            .DOFade(0f, fadeDuration)
-            .WaitForCompletion();
+        yield return salesResultAnimator.Hide();
 
         gameObject.SetActive(false);
     }
