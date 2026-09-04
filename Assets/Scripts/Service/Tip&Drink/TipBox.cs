@@ -4,8 +4,8 @@ public class TipBox : MonoBehaviour
 {
     [SerializeField] private int tipAmount;
     [SerializeField] private Transform tipSpot;
+    [SerializeField] private GameObject tipGetVfxPrefab;
     private TipButton tipButton;
-
     public Transform TipSpot => tipSpot;
 
     private void OnEnable()
@@ -31,6 +31,7 @@ public class TipBox : MonoBehaviour
         GameManager.Instance.Service.ResultBuilder.RecordTip(collectedTipAmount);
         tipAmount = 0;
         UpdateUI();
+        VFXOn();
     }
 
     private void UpdateUI()
@@ -48,6 +49,11 @@ public class TipBox : MonoBehaviour
             tipButton.SetAmountText(tipAmount);
 
         }
+    }
+
+    private void VFXOn()
+    {
+        Instantiate(tipGetVfxPrefab, tipButton.transform.position, Quaternion.identity);
     }
 
     private void OnDisable()

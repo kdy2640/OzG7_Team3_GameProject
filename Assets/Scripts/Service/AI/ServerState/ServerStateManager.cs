@@ -15,13 +15,17 @@ public class ServerStateManager : MonoBehaviour
     [SerializeField] private Image AutoWorkingImg;
     [SerializeField] private GameObject cleaningTool;
     [SerializeField] private ToastMessage toastMessage;
+    [SerializeField] private GameObject accelVFXPrefab;
+    [SerializeField] private GameObject accelVFXPrefab_remaining;
 
     [SerializeField] private float baseSpeed = 8;
     [SerializeField] private float speed;
     [SerializeField] private int level;
     [SerializeField] private float serveTime = 3f;
     [SerializeField] private float receiveFoodTime = 3f;
-   
+    
+    
+
     private Animator animator;
 
     private DishType dish;
@@ -38,6 +42,7 @@ public class ServerStateManager : MonoBehaviour
 
     private GameObject dishPrefab;
     private GameObject dishObject;
+
     
     
     public float Speed => speed;
@@ -57,6 +62,8 @@ public class ServerStateManager : MonoBehaviour
     public GameObject DishPrefab => dishPrefab;
     public GameObject CleaningTool => cleaningTool;
 
+    private GameObject vfx;
+    private GameObject vfx_r;
 
     public bool isAutoWorking = false;
 
@@ -310,12 +317,22 @@ public class ServerStateManager : MonoBehaviour
         toastMessage.ShowMessage(messageType);
     }
 
-    
-
     public void SetAnimator(Animator animator)
     {
         this.animator = animator;
         animator.applyRootMotion = false;
+    }
+
+    public void AccelVFXOn()
+    {
+        vfx = Instantiate(accelVFXPrefab, transform);
+        vfx_r = Instantiate(accelVFXPrefab_remaining, transform);
+    }
+
+    public void AccelVFXOff()
+    {
+        Destroy(vfx);
+        Destroy(vfx_r);
     }
 
     private void OnDisable()

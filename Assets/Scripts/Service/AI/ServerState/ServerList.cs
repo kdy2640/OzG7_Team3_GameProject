@@ -148,6 +148,7 @@ public class ServerList : MonoBehaviour
             if (server == null) continue;
             server.AiMove.SetSpeed(server.Speed * (1+ percentage));
             server.Animator.speed = 2f;
+            server.AccelVFXOn();
         }
     }
 
@@ -158,6 +159,7 @@ public class ServerList : MonoBehaviour
             if (server == null) continue;
             server.AiMove.SetSpeed(server.Speed);
             server.Animator.speed = 1f;
+            server.AccelVFXOff();
         }
     }
     private void WarningMessageOn(MessageType messageType)
