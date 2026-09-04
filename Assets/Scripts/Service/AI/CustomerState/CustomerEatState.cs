@@ -6,7 +6,6 @@ public class CustomerEatState : IState
     private CustomerStateManager stateManager;
     private float timer;
     private float duration;
-    private float dirtyChance = 1f;
     public CustomerEatState(CustomerStateManager stateManager)
     {
         this.stateManager = stateManager;
@@ -50,7 +49,7 @@ public class CustomerEatState : IState
         stateManager.SetLifecycleProgress(0.8f);
         stateManager.NotifyProcessingCompleted();
 
-        if(Random.value < dirtyChance)
+        if(stateManager.IsDirty())
         {
             stateManager.CreateDirty();
         }

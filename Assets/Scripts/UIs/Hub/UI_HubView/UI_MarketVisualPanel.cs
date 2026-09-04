@@ -95,8 +95,7 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
         bool showRewardButton = !isFinalLevelComplete
             && !areAllMissionsCompleted
             && !canPromote;
-        bool showCompleteButton = !isFinalLevelComplete
-            && areAllMissionsCompleted
+        bool showCompleteButton = areAllMissionsCompleted
             && !canPromote;
 
         if (rewardButton != null)
@@ -113,30 +112,68 @@ public sealed class UI_MarketVisualPanel : MonoBehaviour
         }
 
         if (salesProgressPanel != null)
-            salesProgressPanel.SetActive(!isFinalLevelComplete);
+            salesProgressPanel.SetActive(true);
 
         if (missionSlotContainer != null)
-            missionSlotContainer.SetActive(!isFinalLevelComplete);
+            missionSlotContainer.SetActive(true);
 
         if (isFinalLevelComplete)
         {
+            int finalMissionCount = Mathf.Clamp(
+                missionGroup.Missions.Count,
+                0,
+                questSlots?.Length ?? 0);
+
             for (int i = 0; i < (questSlots?.Length ?? 0); i++)
             {
-                if (questSlots[i] != null)
-                    questSlots[i].gameObject.SetActive(false);
+                Image questSlot = questSlots[i];
+
+                if (questSlot == null)
+                    continue;
+
+                bool isVisible = i < finalMissionCount;
+                questSlot.gameObject.SetActive(isVisible);
+
+                if (!isVisible)
+                    continue;
+
+                questSlot.sprite = completedMissionSprite;
+                questSlot.color = Color.white;
+
+                Vector2 slotPosition = questSlot.rectTransform.anchoredPosition;
+                slotPosition.y = 0f;
+                questSlot.rectTransform.anchoredPosition = slotPosition;
             }
 
             if (currentMissionIndicator != null)
                 currentMissionIndicator.gameObject.SetActive(false);
 
+            if (salesSlider != null)
+            {
+                salesSlider.minValue = 0f;
+                salesSlider.maxValue = 1f;
+                salesSlider.value = 1f;
+            }
+
+            if (salesAmountText != null)
+                salesAmountText.text = "MAX / MAX";
+
+            if (missionRewardPanel != null)
+                missionRewardPanel.SetActive(false);
+
             if (missionAmountText != null)
                 missionAmountText.text = string.Empty;
 
             if (missionSlider != null)
+            {
+                missionSlider.minValue = 0f;
+                missionSlider.maxValue = 1f;
+                missionSlider.value = 1f;
                 missionSlider.interactable = false;
+            }
 
             if (missionTitleText != null)
-                missionTitleText.text = "Max Level"; 
+                missionTitleText.text = "게임클리어!";
 
             return;
         }

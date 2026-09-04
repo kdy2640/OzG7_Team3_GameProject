@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
@@ -5,8 +6,10 @@ using UnityEngine.EventSystems;
 public class FacilityRaycaster : MonoBehaviour
 {
     [SerializeField] private Camera targetCamera;
-    [SerializeField] private LayerMask clickableLayer; // Å¬¸¯ÇÒ ·¹ÀÌ¾î¸¦ Inspector¿¡¼­ ÁöÁ¤ÇÏ¼¼¿ä.
+    [SerializeField] private LayerMask clickableLayer; // í´ë¦­í•  ë ˆì´ì–´ë¥¼ Inspectorì—ì„œ ì§€ì •í•˜ì„¸ìš”.
     [SerializeField] private float maxDistance = 1000f;
+
+    private readonly List<RaycastResult> uiRaycastResults = new();
 
     private void Awake()
     {
@@ -15,21 +18,24 @@ public class FacilityRaycaster : MonoBehaviour
 
     private void Update()
     {
-        // ¸¶¿ì½º ¶Ç´Â ÅÍÄ¡ Æ÷ÀÎÅÍ °Ë»ç
+        // ë§ˆìš°ìŠ¤ ë˜ëŠ” í„°ì¹˜ í¬ì¸í„° ê²€ì‚¬
         if (Pointer.current == null || !Pointer.current.press.wasPressedThisFrame) return;
-
-        // UI Å¬¸¯ ¿©ºÎ Ã¼Å© (New Input System ´ëÀÀ)
-        bool isPointerOverUI = IsPointerOverUI();
-        if (isPointerOverUI) return;
 
         EnsureCamera();
         if (targetCamera == null) return;
 
-        // ScreenPointToRay »ı¼º
         Vector2 mousePos = Pointer.current.position.ReadValue();
+
+        if (TryGetFacilityFromUI(mousePos, out FacilityClickTarget uiTarget))
+        {
+            uiTarget.OnClicked();
+            return;
+        }
+
+        // ScreenPointToRay ìƒì„±
         Ray ray = targetCamera.ScreenPointToRay(mousePos);
 
-        // LayerMask¿Í MaxDistance¸¦ Àû¿ëÇÏ¿© Raycast
+        // LayerMaskì™€ MaxDistanceë¥¼ ì ìš©í•˜ì—¬ Raycast
         if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, clickableLayer))
         {
             FacilityClickTarget target = hit.collider.GetComponent<FacilityClickTarget>();
@@ -37,12 +43,28 @@ public class FacilityRaycaster : MonoBehaviour
         }
     }
 
-    private bool IsPointerOverUI()
+    private bool TryGetFacilityFromUI(
+        Vector2 screenPosition,
+        out FacilityClickTarget target)
     {
+        target = null;
         if (EventSystem.current == null) return false;
 
-        // ¸¶¿ì½º/Æ÷ÀÎÅÍ ID¸¦ ¸í½ÃÀûÀ¸·Î Àü´Ş
-        return EventSystem.current.IsPointerOverGameObject();
+        PointerEventData eventData = new(EventSystem.current)
+        {
+            position = screenPosition
+        };
+
+        uiRaycastResults.Clear();
+        EventSystem.current.RaycastAll(eventData, uiRaycastResults);
+
+        foreach (RaycastResult result in uiRaycastResults)
+        {
+            target = result.gameObject.GetComponentInParent<FacilityClickTarget>();
+            if (target != null) return true;
+        }
+
+        return false;
     }
 
     private void EnsureCamera()

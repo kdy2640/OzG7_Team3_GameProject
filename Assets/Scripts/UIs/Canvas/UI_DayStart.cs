@@ -9,12 +9,16 @@ public sealed class UI_DayStart : UI_Base
     private UI_FestivalPanel festivalPanel;
     private UI_DishDetailPanel dishDetailPanel;
     private UI_HubStateButton toHubButton;
+    private GameObject festivalButton;
+    private GameObject tasteFestivalListPanel;
 
     private enum GameObjects
     {
         UI_DayVisualPanel,
         UI_FestivalPanel,
-        UI_DishDetailPanel
+        UI_DishDetailPanel,
+        FestivalButton,
+        UI_TasteFestivalListPanel
     }
 
     private enum HubStateButtons
@@ -39,6 +43,8 @@ public sealed class UI_DayStart : UI_Base
             .GetComponent<UI_FestivalPanel>();
         dishDetailPanel = GetGameObject((int)GameObjects.UI_DishDetailPanel)?
             .GetComponent<UI_DishDetailPanel>();
+        festivalButton = GetGameObject((int)GameObjects.FestivalButton);
+        tasteFestivalListPanel = GetGameObject((int)GameObjects.UI_TasteFestivalListPanel);
 
         dayVisualPanel?.Init();
         festivalPanel?.Init(
@@ -57,20 +63,6 @@ public sealed class UI_DayStart : UI_Base
 
     private void HandleToHubClicked(PointerEventData _)
     {
-        MarketManager market = GameManager.Instance.Market;
-        int businessDay = market.MarketData.CurrentBusinessDay;
-        FestivalCalendar calendar = market.FestivalCalendar;
-
-        bool hasFestival =
-            calendar.GetNowTaste(businessDay) != TasteType.Count
-            || calendar.GetNowCategory(businessDay) != CategoryType.Count;
-
-        if (!hasFestival)
-        {
-            GameManager.Instance.Utility.Toast.Show("축제를 하나 이상 시작해 주세요");
-            return;
-        }
-
         Owner.RequestStateChange(toHubButton.TargetState);
     }
 
@@ -86,6 +78,17 @@ public sealed class UI_DayStart : UI_Base
             Debug.LogError($"[{nameof(UI_DayStart)}] 날짜 연출에 필요한 참조를 찾을 수 없습니다.", this);
             yield break;
         }
+
+        int marketLevel = GameManager.Instance.Market.MarketData.CurrentLevel;
+        bool isFestivalUnlocked =
+            marketLevel >= MarketManager.CategoryFestivalUnlockLevel;
+        bool isTasteFestivalUnlocked =
+            marketLevel >= MarketManager.TasteFestivalUnlockLevel;
+
+        festivalButton.SetActive(isFestivalUnlocked);
+        dishDetailPanel.gameObject.SetActive(isFestivalUnlocked);
+        festivalPanel.gameObject.SetActive(isFestivalUnlocked);
+        tasteFestivalListPanel.SetActive(isTasteFestivalUnlocked);
 
         festivalPanel?.Refresh();
 
