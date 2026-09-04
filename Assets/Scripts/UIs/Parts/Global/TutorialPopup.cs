@@ -1,5 +1,4 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,18 +6,17 @@ public sealed class TutorialPopup : MonoBehaviour
 {
     [Header("Auto Open")]
     [SerializeField] private bool autoOpenOnStart = false;
-    [SerializeField] private TutorialDataSO autoOpenTutorialData;
+    [SerializeField] private TutorialManager.TutorialType autoOpenTutorialType;
 
     [Header("UI")]
-    [SerializeField] private TMP_Text titleText; 
-    [SerializeField] private TMP_Text descriptionText; 
+    [SerializeField] private RectTransform[] tutorialPanels;
     [SerializeField] private Button confirmButton;
 
     [Header("Animation")]
     [SerializeField] private PanelAnimator panelAnimator;
 
     private TutorialManager tutorialManager;
-    private TutorialDataSO currentTutorialData;
+    private TutorialManager.TutorialType currentTutorialType;
 
     private Coroutine animationCoroutine;
     private float previousTimeScale;
@@ -30,7 +28,7 @@ public sealed class TutorialPopup : MonoBehaviour
 
         if (tutorialManager == null)
         {
-            Debug.LogError("[TutorialPopup] TutorialManagerÎ•?Ï∞æÏùÑ ???ÜÏäµ?àÎã§.");
+            Debug.LogError("[TutorialPopup] TutorialManager not found.");
         }
 
         if (panelAnimator == null) panelAnimator = GetComponent<PanelAnimator>();
@@ -45,21 +43,15 @@ public sealed class TutorialPopup : MonoBehaviour
     {
         if (!autoOpenOnStart) return;
 
-        if (autoOpenTutorialData == null)
-        {
-            Debug.LogWarning("[TutorialPopup] ?êÎèô ?§Ìîà??TutorialDataSOÍ∞Ä ?ÜÏäµ?àÎã§.");
-            return;
-        }
-
         if (tutorialManager == null) return;
 
         if (tutorialManager.GetTutorialProgressed(
-            autoOpenTutorialData.tutorialType))
+            autoOpenTutorialType))
         {
             return;
         }
 
-        Open(autoOpenTutorialData);
+        Open(autoOpenTutorialType);
     }
 
     private void OnDestroy()
@@ -74,28 +66,23 @@ public sealed class TutorialPopup : MonoBehaviour
         ResumeTime();
     }
 
-    public void Open(TutorialDataSO data)
+    public void Open(TutorialManager.TutorialType tutorialType)
     {
-        if (data == null)
-        {
-            Debug.LogWarning("[TutorialPopup] TutorialDataSOÍ∞Ä ?ÜÏäµ?àÎã§.");
-            return;
-        }
-
-        currentTutorialData = data;
+        currentTutorialType = tutorialType;
 
         if (animationCoroutine != null) StopCoroutine(animationCoroutine);
 
-        RefreshUI();
+        for (int i = 0; i < tutorialPanels.Length; i++)
+            tutorialPanels[i].gameObject.SetActive(i == (int)tutorialType);
 
         gameObject.SetActive(true);
 
         SceneType currentSceneType =
             GameManager.Instance.Scene.CurrentSceneType;
         bool shouldPauseTime =
-            (data.tutorialType == TutorialManager.TutorialType.Sales
+            (tutorialType == TutorialManager.TutorialType.Sales
                 && currentSceneType == SceneType.Service)
-            || (data.tutorialType == TutorialManager.TutorialType.Harvest
+            || (tutorialType == TutorialManager.TutorialType.Harvest
                 && currentSceneType == SceneType.Harvest);
 
         if (panelAnimator != null)
@@ -116,10 +103,8 @@ public sealed class TutorialPopup : MonoBehaviour
 
         ResumeTime();
 
-        if (tutorialManager != null && currentTutorialData != null)
-        {
-            tutorialManager.ResolveTutorial(currentTutorialData.tutorialType);
-        }
+        if (tutorialManager != null)
+            tutorialManager.ResolveTutorial(currentTutorialType);
 
         if (animationCoroutine != null) StopCoroutine(animationCoroutine);
 
@@ -130,18 +115,6 @@ public sealed class TutorialPopup : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-    }
-
-    private void RefreshUI()
-    {
-        if (currentTutorialData == null) return;
-
-        if (titleText != null)
-            titleText.text = currentTutorialData.title;
-
-        if (descriptionText != null)
-            descriptionText.text = currentTutorialData.description;
-         
     }
 
     private IEnumerator ShowAnimation(bool shouldPauseTime)
