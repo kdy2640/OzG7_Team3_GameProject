@@ -12,7 +12,7 @@ public enum UpgradeAvailability
     InsufficientIngredients
 }
 
-public class UpgradeManager : MonoBehaviour
+public partial class UpgradeManager : MonoBehaviour
 {
     #region Fields
 

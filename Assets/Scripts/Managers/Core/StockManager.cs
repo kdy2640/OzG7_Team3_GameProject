@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StockManager : MonoBehaviour
+public partial class StockManager : MonoBehaviour
 {
     [SerializeField] private StockData stockData = new();
 
