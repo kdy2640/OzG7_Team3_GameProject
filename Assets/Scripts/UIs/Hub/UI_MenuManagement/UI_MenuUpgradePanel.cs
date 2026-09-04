@@ -194,11 +194,11 @@ public sealed class UI_MenuUpgradePanel : MonoBehaviour
                         out int requiredMarketLevel))
                 {
                     warningText.text =
-                        $"시장 Lv.{requiredMarketLevel} 달성이 필요합니다.";
+                        $"매장 Lv.{requiredMarketLevel} 달성이 필요합니다.";
                 }
                 else
                 {
-                    warningText.text = "필요 시장 레벨 정보를 확인할 수 없습니다.";
+                    warningText.text = "필요 매장 레벨 정보를 확인할 수 없습니다.";
                 }
                 break;
 
