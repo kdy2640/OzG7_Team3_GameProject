@@ -224,7 +224,6 @@ public class AIMove : MonoBehaviour
     public void SetDirectionVector(Vector3 dir)
     {
         direction = Vector3.Normalize(dir);
-        Debug.Log($"SetDirectionVector : {direction}");
     }
 
     private void Rotate()

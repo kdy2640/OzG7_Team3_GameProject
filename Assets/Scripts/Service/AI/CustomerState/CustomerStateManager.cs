@@ -37,7 +37,7 @@ public class CustomerStateManager : MonoBehaviour
     public event Action ProcessingCompleted;
     public event Action<CustomerStateManager> LifecycleFinished;
     private float tipChance = 0.1f;
-    private float drinkChance = 0.2f;
+    private float drinkChance = 1f;
     private float eatTime = 5f;
     private float runChance = 0.1f;
     private float eatSpeedUpPercentage;

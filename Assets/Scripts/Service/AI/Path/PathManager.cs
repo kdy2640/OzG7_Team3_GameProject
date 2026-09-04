@@ -35,7 +35,6 @@ public class PathManager : MonoBehaviour
 
             }
         }
-        Debug.Log("AllWaypoints.Count = " + graph.AllWaypoints.Count);
     }
 
 
