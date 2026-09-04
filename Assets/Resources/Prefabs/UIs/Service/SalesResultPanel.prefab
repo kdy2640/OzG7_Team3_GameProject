@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8138528686778675273}
   - component: {fileID: 2822485388930160611}
   - component: {fileID: 7243758423714574476}
+  - component: {fileID: 5367999495747531919}
   m_Layer: 5
   m_Name: SalesResultPanel
   m_TagString: Untagged
@@ -114,8 +115,11 @@ MonoBehaviour:
   incompleteCheckColor: {r: 0.819, g: 0.819, b: 0.819, a: 1}
   promotionIncompleteCheckColor: {r: 1, g: 1, b: 1, a: 1}
   exitButton: {fileID: 6244309651990435132}
-  canvasGroup: {fileID: 7243758423714574476}
-  fadeDuration: 0.25
+  salesResultAnimator: {fileID: 5367999495747531919}
+  dailySalesAnimator: {fileID: 6966906429827438954}
+  salesPerformanceAnimator: {fileID: 301002499436977483}
+  promotionAnimator: {fileID: 7514844828349089673}
+  decorationAnimator: {fileID: 5469573929189213176}
 --- !u!225 &7243758423714574476
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -128,6 +132,24 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &5367999495747531919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 246226237306824092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd13109681a8fb34b82ef7e7c6db1f1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FallingPanelAnimator
+  duration: 0.6
+  startOffset: {x: 0, y: 180}
+  curveOffset: {x: 0, y: 0}
+  startRotation: 0
+  startScale: 1
+  startAlpha: 1
 --- !u!1 &256664905144183695
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,6 +462,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1973258685828429004}
+  - component: {fileID: 4464400497879108366}
+  - component: {fileID: 5469573929189213176}
   m_Layer: 5
   m_Name: Decoration
   m_TagString: Untagged
@@ -468,6 +492,33 @@ RectTransform:
   m_AnchoredPosition: {x: -157, y: 33}
   m_SizeDelta: {x: 600, y: 80}
   m_Pivot: {x: 1, y: 0}
+--- !u!225 &4464400497879108366
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 553237427496386569}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &5469573929189213176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 553237427496386569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a65b2ee7d99cd4e8beadff96a81680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatPanelAnimator
+  duration: 0.6
+  startOffset: {x: 0, y: -35}
+  startScale: 0.92
 --- !u!1 &597414974294418652
 GameObject:
   m_ObjectHideFlags: 0
@@ -2017,6 +2068,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3540109150496966840}
+  - component: {fileID: 7358884027181970226}
+  - component: {fileID: 301002499436977483}
   m_Layer: 5
   m_Name: SalesPerformancePanel
   m_TagString: Untagged
@@ -2047,6 +2100,33 @@ RectTransform:
   m_AnchoredPosition: {x: -188, y: 213.7}
   m_SizeDelta: {x: 600, y: 450}
   m_Pivot: {x: 1, y: 0}
+--- !u!225 &7358884027181970226
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720827347784655033}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &301002499436977483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720827347784655033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a65b2ee7d99cd4e8beadff96a81680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatPanelAnimator
+  duration: 0.6
+  startOffset: {x: 0, y: 35}
+  startScale: 0.92
 --- !u!1 &1785852795831945649
 GameObject:
   m_ObjectHideFlags: 0
@@ -2322,6 +2402,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3291316931731768802}
+  - component: {fileID: 4486075305522663152}
+  - component: {fileID: 6966906429827438954}
   m_Layer: 5
   m_Name: DailySalesPanel
   m_TagString: Untagged
@@ -2356,6 +2438,32 @@ RectTransform:
   m_AnchoredPosition: {x: 149, y: 32}
   m_SizeDelta: {x: 700, y: 580}
   m_Pivot: {x: 0, y: 0.5}
+--- !u!225 &4486075305522663152
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105711860692220731}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &6966906429827438954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105711860692220731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebfb6a3c9a44e38409d61df828093e7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlidePanelAnimator
+  duration: 0.6
+  startOffset: {x: 301, y: 0}
 --- !u!1 &2294913546316084145
 GameObject:
   m_ObjectHideFlags: 0
@@ -8779,6 +8887,8 @@ GameObject:
   - component: {fileID: 8792004634140882195}
   - component: {fileID: 6194868233649378987}
   - component: {fileID: 4531827926015988584}
+  - component: {fileID: 5306501427983102794}
+  - component: {fileID: 7514844828349089673}
   m_Layer: 0
   m_Name: Promotion_panel
   m_TagString: Untagged
@@ -8853,6 +8963,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &5306501427983102794
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9040960527030567197}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &7514844828349089673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9040960527030567197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a65b2ee7d99cd4e8beadff96a81680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FloatPanelAnimator
+  duration: 0.6
+  startOffset: {x: 0, y: 35}
+  startScale: 0.92
 --- !u!1 &9041284586763345913
 GameObject:
   m_ObjectHideFlags: 0
